@@ -1,0 +1,1098 @@
+
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>US Market Sovereign Alpha Report</title>
+        <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --bg: #1e1e1e;
+                --card: #2c2c2c;
+                --green: #00e676;
+                --blue: #29b6f6;
+                --warning: #ffa726;
+                --red: #ff5252;
+                --purple: #d500f9;
+                --text: #e0e0e0;
+                --text-sub: #aaaaaa;
+                --tooltip-bg: rgba(0, 0, 0, 0.95);
+            }
+            
+            body {
+                font-family: 'Segoe UI', sans-serif;
+                background-color: var(--bg);
+                color: var(--text);
+                padding: 40px;
+                margin: 0;
+            }
+            
+            h1 {
+                color: var(--green);
+                border-bottom: 2px solid #333;
+                padding-bottom: 15px;
+                margin-bottom: 30px;
+                letter-spacing: 1px;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+                margin-top: 60px;
+                margin-bottom: 20px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border-left: 5px solid;
+                padding-left: 15px;
+            }
+            
+            /* Dashboard */
+            .dashboard { display: flex; gap: 20px; margin-bottom: 40px; }
+            .card { 
+                flex: 1; 
+                background: var(--card); 
+                padding: 20px 25px; 
+                border-radius: 12px; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                border: 1px solid #333;
+            }
+            .card h3 { margin: 0 0 10px 0; font-size: 0.85rem; color: var(--text-sub); text-transform: uppercase; }
+            .card .value { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 5px; }
+            .card .desc { font-size: 0.85rem; color: var(--text-sub); line-height: 1.5; }
+            
+            /* Table System */
+            table { 
+                width: 100%; 
+                border-collapse: collapse; 
+                background: var(--card);
+                border-radius: 12px;
+                overflow: visible;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+            
+            th {
+                background: #333;
+                color: var(--green);
+                text-align: center;
+                padding: 18px;
+                font-size: 0.85rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                border-right: 1px solid #444;
+                position: relative;
+                cursor: help;
+                z-index: 1;
+            }
+            th:last-child { border-right: none; }
+            
+            td {
+                padding: 0;
+                border-bottom: 1px solid #3a3a3a;
+                border-right: 1px solid #3a3a3a;
+                font-size: 0.95rem;
+                vertical-align: top;
+                position: relative;
+            }
+            td:last-child { border-right: none; }
+            
+            .td-content { padding: 20px 18px; }
+            tr:hover { background-color: #333; }
+            
+            /* Tooltip Engine */
+            .has-tooltip {
+                position: relative;
+                cursor: help;
+            }
+            
+            .has-tooltip:hover .tooltip {
+                visibility: visible;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            .tooltip {
+                visibility: hidden;
+                opacity: 0;
+                width: 280px;
+                background-color: var(--tooltip-bg);
+                color: #fff;
+                text-align: left;
+                border-radius: 6px;
+                padding: 12px;
+                position: absolute;
+                z-index: 10000;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -140px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                border: 1px solid rgba(255,255,255,0.1);
+                backdrop-filter: blur(5px);
+                transition: opacity 0.2s, transform 0.2s;
+                transform: translateY(10px);
+                font-size: 0.8rem;
+                line-height: 1.5;
+                pointer-events: none;
+            }
+            
+            th:first-child .tooltip { left: 0; margin-left: 0; }
+            th:last-child .tooltip { left: auto; right: 0; margin-left: 0; }
+            
+            .tooltip strong { color: var(--green); display: block; margin-bottom: 5px; }
+            
+            /* Components */
+            .ticker-box { font-weight:700; font-size: 1.1rem; display:block; margin-bottom: 4px; color: #fff; }
+            .name-sub { font-size: 0.85rem; color: var(--text-sub); }
+            
+            .score-box {
+                display: inline-block;
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-weight: 800;
+                font-size: 1.2rem;
+                min-width: 60px;
+                text-align: center;
+                margin-top: 15px; 
+            }
+            
+            .signal-text { font-weight: 700; font-size: 0.95rem; display: block; margin-top: 20px; }
+            
+            .badge {
+                display: inline-block;
+                font-size: 0.7rem;
+                font-weight: 700;
+                padding: 2px 6px;
+                border-radius: 4px;
+                margin-left: 5px;
+                vertical-align: middle;
+            }
+            .badge.s-tier { background: gold; color: #000; }
+            .badge.whale { background: var(--blue); color: #000; }
+            .badge.squeeze { background: var(--red); color: #fff; }
+
+            /* Split Analysis Styling */
+            .split-container { display: flex; flex-direction: column; height: 100%; }
+            .split-row { flex: 1; padding: 15px; display: flex; align-items: center; }
+            .split-row.short { border-bottom: 1px solid #3a3a3a; }
+            
+            .label-mini { 
+                font-size: 0.7rem; font-weight: 700; text-transform: uppercase; 
+                width: 60px; flex-shrink: 0; margin-right: 10px;
+            }
+            
+            .tag {
+                display: inline-block;
+                background: #383838;
+                border-radius: 4px;
+                padding: 3px 8px;
+                font-size: 0.8rem;
+                color: #ccc;
+                margin-right: 5px;
+            }
+            
+            .diagnosis-text { font-size: 0.85rem; color: #ccc; line-height: 1.4; }
+ 
+            /* Future Value Section */
+            .fv-box { 
+                border-left: 3px solid var(--purple); 
+                padding-left: 10px; 
+                margin-top: 5px;
+            }
+            .fv-pred { color: var(--purple); font-weight: 700; display: block; margin-bottom: 3px; }
+            .fv-reason { font-size: 0.75rem; color: #999; }
+            
+            /* Colors */
+            .t-green { color: var(--green); }
+            .t-red { color: var(--red); }
+            .t-blue { color: var(--blue); }
+            .t-warn { color: var(--warning); }
+            .t-purple { color: var(--purple); }
+            
+            /* Macro & Badges */
+            .macro-badge {
+                display: inline-block;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                margin-top: 5px;
+            }
+            .macro-risk { background: rgba(255, 82, 82, 0.2); color: var(--red); border: 1px solid var(--red); }
+            .macro-fav { background: rgba(0, 230, 118, 0.2); color: var(--green); border: 1px solid var(--green); }
+            .macro-neu { background: #333; color: #aaa; }
+            
+            summary {
+                list-style: none; text-align: center; padding: 15px; color: #888;
+                font-weight: 600; cursor: pointer; transition: color 0.2s;
+            }
+            summary:hover { color: #fff; }
+            details[open] summary { display: none; }
+
+            /* Track Labels */
+            .track-label {
+                font-size: 0.75rem;
+                font-weight: 800;
+                padding: 4px 10px;
+                border-radius: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                display: inline-block;
+            }
+            .track-short { background: rgba(213, 0, 249, 0.15); color: var(--purple); border: 1px solid var(--purple); }
+            .track-long { background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid var(--green); }
+            
+            /* Modal System */
+            .modal {
+                display: none; 
+                position: fixed; 
+                z-index: 20000; 
+                left: 0;
+                top: 0;
+                width: 100%; 
+                height: 100%; 
+                overflow: auto; 
+                background-color: rgba(0,0,0,0.8); 
+                backdrop-filter: blur(5px);
+            }
+
+            .modal-content {
+                background-color: #252525;
+                margin: 5% auto; 
+                padding: 0; 
+                border: 1px solid #444;
+                width: 80%; 
+                max-width: 900px;
+                border-radius: 16px;
+                box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+                animation: modalFadeIn 0.3s;
+                position: relative;
+            }
+
+            @keyframes modalFadeIn {
+                from {opacity: 0; transform: translateY(-20px);}
+                to {opacity: 1; transform: translateY(0);}
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                padding: 10px 20px;
+                cursor: pointer;
+                transition: color 0.2s;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: #fff;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .modal-header {
+                padding: 20px 30px;
+                border-bottom: 1px solid #333;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modal-body {
+                padding: 30px;
+                color: #ddd;
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            .modal-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin-top: 20px;
+            }
+
+            .info-box {
+                background: #333;
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .clickable-ticker {
+                cursor: pointer;
+                transition: opacity 0.2s;
+                text-decoration: underline;
+                text-decoration-color: var(--green);
+                text-underline-offset: 4px;
+            }
+            .clickable-ticker:hover {
+                opacity: 0.8;
+                color: var(--green);
+            }
+            .quality-banner {
+                background: #2a1f1f;
+                border: 1px solid #6b2c2c;
+                color: #ffb3b3;
+                border-radius: 10px;
+                padding: 12px 16px;
+                margin-bottom: 18px;
+                font-size: 0.9rem;
+            }
+            .empty-state {
+                background: #262626;
+                border: 1px dashed #555;
+                border-radius: 12px;
+                padding: 26px;
+                text-align: center;
+                color: #bbb;
+                margin: 18px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>🚀 DUAL QUANT : US MARKET SYSTEM</h1>
+        <div style="text-align: center; color: var(--green); font-size: 1.1rem; margin-top: -15px; margin-bottom: 40px; font-weight: 600;">
+            ANALYSIS TIMESTAMP: 2026-02-14 17:22
+        </div>
+        
+        <div class="dashboard">
+            <div class="card" style="border-left: 5px solid var(--green);">
+                <h3>Top Alpha</h3>
+                <div class="value">AMD</div>
+                <div class="desc">최고 점수 자산</div>
+            </div>
+            <div class="card" style="border-left: 5px solid var(--blue);">
+                <h3>Market Sentiment</h3>
+                <div class="value">47.2</div>
+                <div class="desc">시장 편향 점수</div>
+            </div>
+            <div class="card" style="border-left: 5px solid var(--purple);">
+                <h3>Future Value Focus</h3>
+                <div class="value">0</div>
+                <div class="desc">고성장 예상 종목</div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+             <div class="card has-tooltip">
+                <h3 style="color: var(--red);">🌡️ RSI (Psychology)</h3>
+                <div class="desc"><strong style="color:var(--red)">70↑</strong> 과열(Overheat), <strong style="color:var(--blue)">30↓</strong> 침체(Oversold).</div>
+                <span class="tooltip"><strong>RSI (Relative Strength Index)</strong><br>시장의 심리적 온도입니다. 80 이상은 과열이나, Smart Flow 동반 시 '강력한 추세 확장'으로 해석합니다.</span>
+            </div>
+            <div class="card has-tooltip">
+                <h3 style="color: var(--green);">💰 PEG (Growth Value)</h3>
+                <div class="desc">Forward PE / Growth. <strong style="color:var(--green)">1.0↓</strong> 저평가(Undervalued).</div>
+                <span class="tooltip"><strong>Forward PEG</strong><br>이익 성장률 대비 가격표입니다. 1 미만은 성장을 공짜로 사는 구간, 0.5 미만은 헤지펀드 집중 매집 타겟입니다.</span>
+            </div>
+            <div class="card has-tooltip">
+                <h3 style="color: var(--purple);">🔮 Future Value</h3>
+                <div class="desc">애널리스트 목표가 & 성장률 (Analyst Target & Growth).</div>
+                <span class="tooltip"><strong>Future Value Prediction</strong><br>애널리스트 컨센서스 및 이익 성장률 기반의 목표가 추정입니다.</span>
+            </div>
+        </div>
+
+    
+        <h2 style="border-color: var(--green); color: var(--green);">🏆 Synthesis Alpha Ranking (Aggregator)</h2>
+    
+        <table>
+            <thead>
+                <tr>
+                    <th width="5%">RANK</th>
+                    <th width="20%">ASSET Info</th>
+                    <th width="15%" style="text-align:center;">SYNTHESIS SCORE</th>
+                    <th width="25%">COMPONENT SCORES</th>
+                    <th width="35%">EXTERNAL DATA (Source verified)</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+            <tr style="border-bottom: 1px solid #333;">
+                <td align="center" style="font-weight:bold; font-size:1.1rem; color:#666;">
+                    1
+                </td>
+                <td>
+                    <div style="padding: 15px;">
+                        <span class="clickable-ticker" onclick="openModal('AMD')" style="font-size:1.1rem; font-weight:700; color:#fff; display:block;">
+                            AMD 
+                        </span>
+                        <div style="font-size:0.85rem; color:#aaa; margin-top:4px;">AMD</div>
+                        <div style="margin-top:5px;"><span style="font-weight:700;">$207</span> <span style="font-size:0.8rem; color:var(--green);">(+0.7%)</span></div>
+                    </div>
+                </td>
+                <td align="center">
+                    <div class="score-box" style="color:#fff; background:var(--warning); border:none;">
+                        47.8
+                    </div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--warning); margin-top:8px;">Neutral/Watch</div>
+                </td>
+                <td>
+                    <div style="padding:10px;">
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Expert</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(40%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Whale</span>
+                            <span style="color:var(--warning); font-weight:700;">40</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(30%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Macro</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(20%)</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="padding:10px; font-size:0.9rem;">
+                        <div style="margin-bottom:8px;">
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">MARKET CONSENSUS</strong>
+                            <div style="color:#fff;">Neutral</div>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">WHALE ACTIVITY</strong>
+                            <div style="color:#888; font-weight:700;">Neutral</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #333;">
+                <td align="center" style="font-weight:bold; font-size:1.1rem; color:#666;">
+                    2
+                </td>
+                <td>
+                    <div style="padding: 15px;">
+                        <span class="clickable-ticker" onclick="openModal('ACN')" style="font-size:1.1rem; font-weight:700; color:#fff; display:block;">
+                            ACN 
+                        </span>
+                        <div style="font-size:0.85rem; color:#aaa; margin-top:4px;">ACN</div>
+                        <div style="margin-top:5px;"><span style="font-weight:700;">$224</span> <span style="font-size:0.8rem; color:var(--green);">(+1.0%)</span></div>
+                    </div>
+                </td>
+                <td align="center">
+                    <div class="score-box" style="color:#fff; background:var(--warning); border:none;">
+                        47.2
+                    </div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--warning); margin-top:8px;">Neutral/Watch</div>
+                </td>
+                <td>
+                    <div style="padding:10px;">
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Expert</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(40%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Whale</span>
+                            <span style="color:var(--warning); font-weight:700;">40</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(30%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Macro</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(20%)</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="padding:10px; font-size:0.9rem;">
+                        <div style="margin-bottom:8px;">
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">MARKET CONSENSUS</strong>
+                            <div style="color:#fff;">Neutral</div>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">WHALE ACTIVITY</strong>
+                            <div style="color:#888; font-weight:700;">Neutral</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #333;">
+                <td align="center" style="font-weight:bold; font-size:1.1rem; color:#666;">
+                    3
+                </td>
+                <td>
+                    <div style="padding: 15px;">
+                        <span class="clickable-ticker" onclick="openModal('MMM')" style="font-size:1.1rem; font-weight:700; color:#fff; display:block;">
+                            MMM 
+                        </span>
+                        <div style="font-size:0.85rem; color:#aaa; margin-top:4px;">MMM</div>
+                        <div style="margin-top:5px;"><span style="font-weight:700;">$172</span> <span style="font-size:0.8rem; color:var(--red);">(-1.2%)</span></div>
+                    </div>
+                </td>
+                <td align="center">
+                    <div class="score-box" style="color:#fff; background:var(--warning); border:none;">
+                        47.0
+                    </div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--warning); margin-top:8px;">Neutral/Watch</div>
+                </td>
+                <td>
+                    <div style="padding:10px;">
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Expert</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(40%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Whale</span>
+                            <span style="color:var(--warning); font-weight:700;">40</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(30%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Macro</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(20%)</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="padding:10px; font-size:0.9rem;">
+                        <div style="margin-bottom:8px;">
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">MARKET CONSENSUS</strong>
+                            <div style="color:#fff;">Neutral</div>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">WHALE ACTIVITY</strong>
+                            <div style="color:#888; font-weight:700;">Neutral</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #333;">
+                <td align="center" style="font-weight:bold; font-size:1.1rem; color:#666;">
+                    4
+                </td>
+                <td>
+                    <div style="padding: 15px;">
+                        <span class="clickable-ticker" onclick="openModal('ABBV')" style="font-size:1.1rem; font-weight:700; color:#fff; display:block;">
+                            ABBV 
+                        </span>
+                        <div style="font-size:0.85rem; color:#aaa; margin-top:4px;">ABBV</div>
+                        <div style="margin-top:5px;"><span style="font-weight:700;">$232</span> <span style="font-size:0.8rem; color:var(--green);">(+1.8%)</span></div>
+                    </div>
+                </td>
+                <td align="center">
+                    <div class="score-box" style="color:#fff; background:var(--warning); border:none;">
+                        47.0
+                    </div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--warning); margin-top:8px;">Neutral/Watch</div>
+                </td>
+                <td>
+                    <div style="padding:10px;">
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Expert</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(40%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Whale</span>
+                            <span style="color:var(--warning); font-weight:700;">40</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(30%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Macro</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(20%)</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="padding:10px; font-size:0.9rem;">
+                        <div style="margin-bottom:8px;">
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">MARKET CONSENSUS</strong>
+                            <div style="color:#fff;">Neutral</div>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">WHALE ACTIVITY</strong>
+                            <div style="color:#888; font-weight:700;">Neutral</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #333;">
+                <td align="center" style="font-weight:bold; font-size:1.1rem; color:#666;">
+                    5
+                </td>
+                <td>
+                    <div style="padding: 15px;">
+                        <span class="clickable-ticker" onclick="openModal('ADBE')" style="font-size:1.1rem; font-weight:700; color:#fff; display:block;">
+                            ADBE 
+                        </span>
+                        <div style="font-size:0.85rem; color:#aaa; margin-top:4px;">ADBE</div>
+                        <div style="margin-top:5px;"><span style="font-weight:700;">$264</span> <span style="font-size:0.8rem; color:var(--green);">(+0.6%)</span></div>
+                    </div>
+                </td>
+                <td align="center">
+                    <div class="score-box" style="color:#fff; background:var(--warning); border:none;">
+                        47.0
+                    </div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--warning); margin-top:8px;">Neutral/Watch</div>
+                </td>
+                <td>
+                    <div style="padding:10px;">
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Expert</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(40%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Whale</span>
+                            <span style="color:var(--warning); font-weight:700;">40</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(30%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Macro</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(20%)</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="padding:10px; font-size:0.9rem;">
+                        <div style="margin-bottom:8px;">
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">MARKET CONSENSUS</strong>
+                            <div style="color:#fff;">Neutral</div>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">WHALE ACTIVITY</strong>
+                            <div style="color:#888; font-weight:700;">Neutral</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #333;">
+                <td align="center" style="font-weight:bold; font-size:1.1rem; color:#666;">
+                    6
+                </td>
+                <td>
+                    <div style="padding: 15px;">
+                        <span class="clickable-ticker" onclick="openModal('AES')" style="font-size:1.1rem; font-weight:700; color:#fff; display:block;">
+                            AES 
+                        </span>
+                        <div style="font-size:0.85rem; color:#aaa; margin-top:4px;">AES</div>
+                        <div style="margin-top:5px;"><span style="font-weight:700;">$16</span> <span style="font-size:0.8rem; color:var(--green);">(+0.5%)</span></div>
+                    </div>
+                </td>
+                <td align="center">
+                    <div class="score-box" style="color:#fff; background:var(--warning); border:none;">
+                        47.0
+                    </div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--warning); margin-top:8px;">Neutral/Watch</div>
+                </td>
+                <td>
+                    <div style="padding:10px;">
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Expert</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(40%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Whale</span>
+                            <span style="color:var(--warning); font-weight:700;">40</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(30%)</span>
+                        </div>
+                        <div style="margin-bottom:6px; font-size:0.85rem;">
+                            <span style="color:#aaa; width:60px; display:inline-block;">Macro</span>
+                            <span style="color:var(--blue); font-weight:700;">50</span>
+                            <span style="font-size:0.75rem; color:#666; margin-left:5px;">(20%)</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="padding:10px; font-size:0.9rem;">
+                        <div style="margin-bottom:8px;">
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">MARKET CONSENSUS</strong>
+                            <div style="color:#fff;">Neutral</div>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text-sub); font-size:0.75rem; display:block;">WHALE ACTIVITY</strong>
+                            <div style="color:#888; font-weight:700;">Neutral</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody></table>
+        <div id="modal-AMD" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin:0; font-size:1.5rem;">AMD <span style="color:#888; font-size:1rem; margin-left:10px;">AMD</span></h2>
+                    <span class="close" onclick="closeModal('AMD')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div style="display:flex; gap:20px; margin-bottom:30px;">
+                        <div class="info-box" style="flex:1; text-align:center;">
+                            <div style="font-size:0.8rem; color:#aaa; margin-bottom:5px;">FINAL SCORE</div>
+                            <div style="font-size:2.5rem; font-weight:800; color:var(--blue);">47.8</div>
+                            <div style="color:var(--text); font-weight:600;">Neutral/Watch</div>
+                        </div>
+                        <div class="info-box" style="flex:2;">
+                             <h4 style="margin-top:0; color:var(--white); border-bottom:1px solid #444; padding-bottom:5px;">Future Value Prediction</h4>
+                             <div style="font-size:1.1rem; color:var(--purple); font-weight:700; margin-bottom:5px;">
+                                N/A
+                             </div>
+                             <div style="font-size:0.9rem; color:#aaa;">
+                                Calculating...
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:15px;">🔍 Detailed Breakdown</h3>
+                    
+                    <div class="modal-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="info-box">
+                            <h4 style="color:var(--green); margin-top:0;">1. Expert Consensus (40%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>⚠️ No Analyst Coverage</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--blue); margin-top:0;">2. Whale Flow (30%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">40</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>🌧️ Volume Selling</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--warning); margin-top:0;">3. Macro Environment (20%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                -
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:#aaa; margin-top:0;">4. News Sentiment (10%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">58</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>📰 News tone pos:3 / neg:0</li><li style='margin-bottom:4px;'>• Dell's Presidents' Day sale is a goldmine for business professionals - these are the deskt</li><li style='margin-bottom:4px;'>• These Viture Luma Pro Smart Glasses Are Cheaper Than Ever During Amazon's Early Presidents</li><li style='margin-bottom:4px;'>📄 No recent SEC filings signal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modal-ACN" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin:0; font-size:1.5rem;">ACN <span style="color:#888; font-size:1rem; margin-left:10px;">ACN</span></h2>
+                    <span class="close" onclick="closeModal('ACN')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div style="display:flex; gap:20px; margin-bottom:30px;">
+                        <div class="info-box" style="flex:1; text-align:center;">
+                            <div style="font-size:0.8rem; color:#aaa; margin-bottom:5px;">FINAL SCORE</div>
+                            <div style="font-size:2.5rem; font-weight:800; color:var(--blue);">47.2</div>
+                            <div style="color:var(--text); font-weight:600;">Neutral/Watch</div>
+                        </div>
+                        <div class="info-box" style="flex:2;">
+                             <h4 style="margin-top:0; color:var(--white); border-bottom:1px solid #444; padding-bottom:5px;">Future Value Prediction</h4>
+                             <div style="font-size:1.1rem; color:var(--purple); font-weight:700; margin-bottom:5px;">
+                                N/A
+                             </div>
+                             <div style="font-size:0.9rem; color:#aaa;">
+                                Calculating...
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:15px;">🔍 Detailed Breakdown</h3>
+                    
+                    <div class="modal-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="info-box">
+                            <h4 style="color:var(--green); margin-top:0;">1. Expert Consensus (40%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>⚠️ No Analyst Coverage</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--blue); margin-top:0;">2. Whale Flow (30%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">40</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>🌧️ Volume Selling</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--warning); margin-top:0;">3. Macro Environment (20%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                -
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:#aaa; margin-top:0;">4. News Sentiment (10%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">52</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>📰 News tone pos:1 / neg:0</li><li style='margin-bottom:4px;'>• Palantir Just Received DISA Authorization. Does That Make PLTR Stock a Buy, Sell, or Hold?</li><li style='margin-bottom:4px;'>• Modern Dental Group Celebrates 40 Years: 'Redefining Smiles. The Digital Way.' (MENAFN - A</li><li style='margin-bottom:4px;'>📄 No recent SEC filings signal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modal-MMM" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin:0; font-size:1.5rem;">MMM <span style="color:#888; font-size:1rem; margin-left:10px;">MMM</span></h2>
+                    <span class="close" onclick="closeModal('MMM')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div style="display:flex; gap:20px; margin-bottom:30px;">
+                        <div class="info-box" style="flex:1; text-align:center;">
+                            <div style="font-size:0.8rem; color:#aaa; margin-bottom:5px;">FINAL SCORE</div>
+                            <div style="font-size:2.5rem; font-weight:800; color:var(--blue);">47.0</div>
+                            <div style="color:var(--text); font-weight:600;">Neutral/Watch</div>
+                        </div>
+                        <div class="info-box" style="flex:2;">
+                             <h4 style="margin-top:0; color:var(--white); border-bottom:1px solid #444; padding-bottom:5px;">Future Value Prediction</h4>
+                             <div style="font-size:1.1rem; color:var(--purple); font-weight:700; margin-bottom:5px;">
+                                N/A
+                             </div>
+                             <div style="font-size:0.9rem; color:#aaa;">
+                                Calculating...
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:15px;">🔍 Detailed Breakdown</h3>
+                    
+                    <div class="modal-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="info-box">
+                            <h4 style="color:var(--green); margin-top:0;">1. Expert Consensus (40%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>⚠️ No Analyst Coverage</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--blue); margin-top:0;">2. Whale Flow (30%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">40</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>🌧️ Volume Selling</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--warning); margin-top:0;">3. Macro Environment (20%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                -
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:#aaa; margin-top:0;">4. News Sentiment (10%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>📰 News tone pos:0 / neg:0</li><li style='margin-bottom:4px;'>• Short story: Bokarina, by Breton Dukes Things go horribly wrong on a family holiday to the</li><li style='margin-bottom:4px;'>• Wedbush Securities Inc. Cuts Position in 3M Company $MMM Wedbush Securities Inc. trimmed i</li><li style='margin-bottom:4px;'>📄 No recent SEC filings signal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modal-ABBV" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin:0; font-size:1.5rem;">ABBV <span style="color:#888; font-size:1rem; margin-left:10px;">ABBV</span></h2>
+                    <span class="close" onclick="closeModal('ABBV')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div style="display:flex; gap:20px; margin-bottom:30px;">
+                        <div class="info-box" style="flex:1; text-align:center;">
+                            <div style="font-size:0.8rem; color:#aaa; margin-bottom:5px;">FINAL SCORE</div>
+                            <div style="font-size:2.5rem; font-weight:800; color:var(--blue);">47.0</div>
+                            <div style="color:var(--text); font-weight:600;">Neutral/Watch</div>
+                        </div>
+                        <div class="info-box" style="flex:2;">
+                             <h4 style="margin-top:0; color:var(--white); border-bottom:1px solid #444; padding-bottom:5px;">Future Value Prediction</h4>
+                             <div style="font-size:1.1rem; color:var(--purple); font-weight:700; margin-bottom:5px;">
+                                N/A
+                             </div>
+                             <div style="font-size:0.9rem; color:#aaa;">
+                                Calculating...
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:15px;">🔍 Detailed Breakdown</h3>
+                    
+                    <div class="modal-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="info-box">
+                            <h4 style="color:var(--green); margin-top:0;">1. Expert Consensus (40%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>⚠️ No Analyst Coverage</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--blue); margin-top:0;">2. Whale Flow (30%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">40</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>🌧️ Volume Selling</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--warning); margin-top:0;">3. Macro Environment (20%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                -
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:#aaa; margin-top:0;">4. News Sentiment (10%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>📰 News tone pos:0 / neg:0</li><li style='margin-bottom:4px;'>• Dividend Stocks To Add to Your Watchlist – February 13th UnitedHealth Group, Direxion Dail</li><li style='margin-bottom:4px;'>• Best Pharmaceutical Stocks To Follow Today – February 13th Eli Lilly and Company, AbbVie, </li><li style='margin-bottom:4px;'>📄 No recent SEC filings signal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modal-ADBE" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin:0; font-size:1.5rem;">ADBE <span style="color:#888; font-size:1rem; margin-left:10px;">ADBE</span></h2>
+                    <span class="close" onclick="closeModal('ADBE')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div style="display:flex; gap:20px; margin-bottom:30px;">
+                        <div class="info-box" style="flex:1; text-align:center;">
+                            <div style="font-size:0.8rem; color:#aaa; margin-bottom:5px;">FINAL SCORE</div>
+                            <div style="font-size:2.5rem; font-weight:800; color:var(--blue);">47.0</div>
+                            <div style="color:var(--text); font-weight:600;">Neutral/Watch</div>
+                        </div>
+                        <div class="info-box" style="flex:2;">
+                             <h4 style="margin-top:0; color:var(--white); border-bottom:1px solid #444; padding-bottom:5px;">Future Value Prediction</h4>
+                             <div style="font-size:1.1rem; color:var(--purple); font-weight:700; margin-bottom:5px;">
+                                N/A
+                             </div>
+                             <div style="font-size:0.9rem; color:#aaa;">
+                                Calculating...
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:15px;">🔍 Detailed Breakdown</h3>
+                    
+                    <div class="modal-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="info-box">
+                            <h4 style="color:var(--green); margin-top:0;">1. Expert Consensus (40%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>⚠️ No Analyst Coverage</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--blue); margin-top:0;">2. Whale Flow (30%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">40</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>🌧️ Volume Selling</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--warning); margin-top:0;">3. Macro Environment (20%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                -
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:#aaa; margin-top:0;">4. News Sentiment (10%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>📰 News tone pos:0 / neg:0</li><li style='margin-bottom:4px;'>• The Tech Sector Wall Street Is Shunning Right Now for All the Wrong Reasons Fears about ar</li><li style='margin-bottom:4px;'>• Digital Media Stocks To Consider – February 13th Adobe, DoubleVerify, Ziff Davis, Xunlei, </li><li style='margin-bottom:4px;'>📄 No recent SEC filings signal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modal-AES" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin:0; font-size:1.5rem;">AES <span style="color:#888; font-size:1rem; margin-left:10px;">AES</span></h2>
+                    <span class="close" onclick="closeModal('AES')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div style="display:flex; gap:20px; margin-bottom:30px;">
+                        <div class="info-box" style="flex:1; text-align:center;">
+                            <div style="font-size:0.8rem; color:#aaa; margin-bottom:5px;">FINAL SCORE</div>
+                            <div style="font-size:2.5rem; font-weight:800; color:var(--blue);">47.0</div>
+                            <div style="color:var(--text); font-weight:600;">Neutral/Watch</div>
+                        </div>
+                        <div class="info-box" style="flex:2;">
+                             <h4 style="margin-top:0; color:var(--white); border-bottom:1px solid #444; padding-bottom:5px;">Future Value Prediction</h4>
+                             <div style="font-size:1.1rem; color:var(--purple); font-weight:700; margin-bottom:5px;">
+                                N/A
+                             </div>
+                             <div style="font-size:0.9rem; color:#aaa;">
+                                Calculating...
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:15px;">🔍 Detailed Breakdown</h3>
+                    
+                    <div class="modal-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="info-box">
+                            <h4 style="color:var(--green); margin-top:0;">1. Expert Consensus (40%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>⚠️ No Analyst Coverage</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--blue); margin-top:0;">2. Whale Flow (30%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">40</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>🌧️ Volume Selling</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:var(--warning); margin-top:0;">3. Macro Environment (20%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                -
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4 style="color:#aaa; margin-top:0;">4. News Sentiment (10%)</h4>
+                            <div style="font-size:1.5rem; font-weight:700; margin-bottom:10px;">50</div>
+                            <ul style="padding-left:20px; color:#ddd; font-size:0.9rem;">
+                                <li style='margin-bottom:4px;'>📰 News tone pos:0 / neg:0</li><li style='margin-bottom:4px;'>• This Sleek USB Gadget Uses Your iPhone Or Android Phone To Lock Your Data A new portable S</li><li style='margin-bottom:4px;'>• South Korea intelligence says Kim Jong Un grooming daughter to be his successor South Kore</li><li style='margin-bottom:4px;'>📄 No recent SEC filings signal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    <script>
+        function openModal(id) {
+            document.getElementById('modal-' + id).style.display = "block";
+        }
+
+        function closeModal(id) {
+            document.getElementById('modal-' + id).style.display = "none";
+        }
+        
+        // Close when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+    </body></html>
+    

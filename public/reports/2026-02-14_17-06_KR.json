@@ -1,0 +1,876 @@
+{
+  "meta": {
+    "market": "KR",
+    "date": "2026-02-14",
+    "time": "17:05:29",
+    "timestamp": "2026-02-14T17:05:29.668703",
+    "avg_score": 45.0,
+    "buy_count": 0,
+    "sell_count": 20,
+    "high_growth_count": 0,
+    "top_alpha_ticker": "005930.KS",
+    "failed_count": 0
+  },
+  "reports": [
+    {
+      "ticker": "005930.KS",
+      "name": "삼성전자",
+      "score": 45.0,
+      "rank": 1,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 181200,
+        "change_pct": 1.4557670772676372,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "000660.KS",
+      "name": "SK하이닉스",
+      "score": 45.0,
+      "rank": 2,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 880000,
+        "change_pct": -0.9009009009009009,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "005935.KS",
+      "name": "삼성전자우",
+      "score": 45.0,
+      "rank": 3,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 127600,
+        "change_pct": 4.504504504504505,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "005380.KS",
+      "name": "현대차",
+      "score": 45.0,
+      "rank": 4,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 499000,
+        "change_pct": -1.383399209486166,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "373220.KS",
+      "name": "LG에너지솔루션",
+      "score": 45.0,
+      "rank": 5,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 395000,
+        "change_pct": -3.6585365853658534,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "207940.KS",
+      "name": "삼성바이오로직스",
+      "score": 45.0,
+      "rank": 6,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 1710000,
+        "change_pct": -0.5235602094240838,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "402340.KS",
+      "name": "SK스퀘어",
+      "score": 45.0,
+      "rank": 7,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 558000,
+        "change_pct": -2.1052631578947367,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "000270.KS",
+      "name": "기아",
+      "score": 45.0,
+      "rank": 8,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 164100,
+        "change_pct": -1.32291040288635,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "105560.KS",
+      "name": "KB금융",
+      "score": 45.0,
+      "rank": 9,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 167900,
+        "change_pct": -0.35608308605341243,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "034020.KS",
+      "name": "두산에너빌리티",
+      "score": 45.0,
+      "rank": 10,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 96700,
+        "change_pct": 1.256544502617801,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "329180.KS",
+      "name": "HD현대중공업",
+      "score": 45.0,
+      "rank": 11,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 543000,
+        "change_pct": 0.7421150278293136,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "012450.KS",
+      "name": "한화에어로스페이스",
+      "score": 45.0,
+      "rank": 12,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 1105000,
+        "change_pct": -2.2988505747126435,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "068270.KS",
+      "name": "셀트리온",
+      "score": 45.0,
+      "rank": 13,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 238000,
+        "change_pct": -0.20964360587002098,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "028260.KS",
+      "name": "삼성물산",
+      "score": 45.0,
+      "rank": 14,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 318000,
+        "change_pct": -4.790419161676647,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "196170.KQ",
+      "name": "알테오젠",
+      "score": 45.0,
+      "rank": 15,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 382000,
+        "change_pct": -2.051282051282051,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "086520.KQ",
+      "name": "에코프로",
+      "score": 45.0,
+      "rank": 16,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 150400,
+        "change_pct": -3.279742765273312,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "247540.KQ",
+      "name": "에코프로비엠",
+      "score": 45.0,
+      "rank": 17,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 196100,
+        "change_pct": -5.265700483091788,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "277810.KQ",
+      "name": "레인보우로보틱스",
+      "score": 45.0,
+      "rank": 18,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 670000,
+        "change_pct": -0.7407407407407408,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "000250.KQ",
+      "name": "삼천당제약",
+      "score": 45.0,
+      "rank": 19,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 535000,
+        "change_pct": 2.6871401151631478,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "298380.KQ",
+      "name": "에이비엘바이오",
+      "score": 45.0,
+      "rank": 20,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 40,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Net Selling"
+        ],
+        "macro": [
+          "💸 High FX Rate (1,443)"
+        ],
+        "news": [
+          "📰 No external news signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Selling",
+      "badges": [],
+      "price_info": {
+        "current": 184400,
+        "change_pct": -2.536997885835095,
+        "currency": "KRW"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (Skipped)",
+        "layers": []
+      }
+    }
+  ]
+}

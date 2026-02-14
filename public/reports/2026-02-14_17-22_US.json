@@ -1,0 +1,280 @@
+{
+  "meta": {
+    "market": "US",
+    "date": "2026-02-14",
+    "time": "17:22:53",
+    "timestamp": "2026-02-14T17:22:53.378842",
+    "avg_score": 47.17,
+    "buy_count": 0,
+    "sell_count": 6,
+    "high_growth_count": 0,
+    "top_alpha_ticker": "AMD",
+    "failed_count": 0
+  },
+  "reports": [
+    {
+      "ticker": "AMD",
+      "name": "AMD",
+      "score": 47.8,
+      "rank": 1,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 50,
+        "news": 58
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Volume Selling"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:3 / neg:0",
+          "• Dell's Presidents' Day sale is a goldmine for business professionals - these are the deskt",
+          "• These Viture Luma Pro Smart Glasses Are Cheaper Than Ever During Amazon's Early Presidents",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 207.32,
+        "change_pct": 0.6700980868214022,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ACN",
+      "name": "ACN",
+      "score": 47.2,
+      "rank": 2,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Volume Selling"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Palantir Just Received DISA Authorization. Does That Make PLTR Stock a Buy, Sell, or Hold?",
+          "• Modern Dental Group Celebrates 40 Years: 'Redefining Smiles. The Digital Way.' (MENAFN - A",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 224.23,
+        "change_pct": 0.9817608646701096,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "MMM",
+      "name": "MMM",
+      "score": 47.0,
+      "rank": 3,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Volume Selling"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Short story: Bokarina, by Breton Dukes Things go horribly wrong on a family holiday to the",
+          "• Wedbush Securities Inc. Cuts Position in 3M Company $MMM Wedbush Securities Inc. trimmed i",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 171.82,
+        "change_pct": -1.1511273960726252,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABBV",
+      "name": "ABBV",
+      "score": 47.0,
+      "rank": 4,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Volume Selling"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Dividend Stocks To Add to Your Watchlist – February 13th UnitedHealth Group, Direxion Dail",
+          "• Best Pharmaceutical Stocks To Follow Today – February 13th Eli Lilly and Company, AbbVie, ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 231.5,
+        "change_pct": 1.7582417582417582,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ADBE",
+      "name": "ADBE",
+      "score": 47.0,
+      "rank": 5,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Volume Selling"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• The Tech Sector Wall Street Is Shunning Right Now for All the Wrong Reasons Fears about ar",
+          "• Digital Media Stocks To Consider – February 13th Adobe, DoubleVerify, Ziff Davis, Xunlei, ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 263.97,
+        "change_pct": 0.5600000000000104,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AES",
+      "name": "AES",
+      "score": 47.0,
+      "rank": 6,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 40,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "🌧️ Volume Selling"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• This Sleek USB Gadget Uses Your iPhone Or Android Phone To Lock Your Data A new portable S",
+          "• South Korea intelligence says Kim Jong Un grooming daughter to be his successor South Kore",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 16.28,
+        "change_pct": 0.4938271604938386,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    }
+  ]
+}
