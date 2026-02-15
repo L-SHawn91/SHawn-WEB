@@ -1,0 +1,953 @@
+{
+  "meta": {
+    "market": "US",
+    "date": "2026-02-15",
+    "time": "19:12:40",
+    "timestamp": "2026-02-15T19:12:40.804833",
+    "avg_score": 51.57,
+    "strong_buy_count": 0,
+    "buy_count": 5,
+    "watch_count": 10,
+    "sell_count": 5,
+    "high_growth_count": 0,
+    "top_alpha_ticker": "AKAM",
+    "failed_count": 0
+  },
+  "reports": [
+    {
+      "ticker": "AKAM",
+      "name": "AKAM",
+      "score": 66.8,
+      "rank": 1,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 76,
+        "whale": 68,
+        "macro": 50,
+        "news": 60
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +22.1%",
+          "🟢 Trend Above MA20/MA60",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Uptrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:4 / neg:0",
+          "• Akamai Technologies (NASDAQ:AKAM) Sets New 1-Year High Following Analyst Upgrade Akamai Te",
+          "• Akamai Technologies (NASDAQ:AKAM) Reaches New 1-Year High on Analyst Upgrade Akamai Techno",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 111.76,
+        "change_pct": 6.834910620399586,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALGN",
+      "name": "ALGN",
+      "score": 65.0,
+      "rank": 2,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 74,
+        "whale": 68,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +8.9%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (63.9)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Uptrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• ING Groep NV Has $1.09 Million Stake in Align Technology, Inc. $ALGN ING Groep NV lifted i",
+          "• ING Groep NV Purchases 5,450 Shares of Align Technology, Inc. $ALGN ING Groep NV increased",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 186.77,
+        "change_pct": 1.5827259871641446,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AES",
+      "name": "AES",
+      "score": 61.2,
+      "rank": 3,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 76,
+        "whale": 50,
+        "macro": 50,
+        "news": 58
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +12.7%",
+          "🟢 Trend Above MA20/MA60",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:3 / neg:0",
+          "• President Mahama, UN Chief discuss African security President John Dramani Mahama and Anto",
+          "• Erasca Touts Early ERAS-0015 Responses, Potency Edge in Guggenheim Fireside Chat Erasca (N",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 16.28,
+        "change_pct": 0.4938271604938386,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALL",
+      "name": "ALL",
+      "score": 60.4,
+      "rank": 4,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 74,
+        "whale": 50,
+        "macro": 50,
+        "news": 58
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +6.2%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (62.9)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:3 / neg:0",
+          "• Michiganders celebrate Polish history in Detroit ahead of Fat Tuesday Hundreds celebrated ",
+          "• Jacob Ramsey provokes reaction from Aston Villa star after kissing Newcastle United badge ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 207.51,
+        "change_pct": 0.4599147947327598,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABBV",
+      "name": "ABBV",
+      "score": 60.1,
+      "rank": 5,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 74,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +6.8%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (62.4)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:2 / neg:0",
+          "• Dividend Stocks To Consider – February 14th UnitedHealth Group, AbbVie, and Chevron are th",
+          "• Dividend Stocks To Add to Your Watchlist – February 13th UnitedHealth Group, Direxion Dail",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 231.5,
+        "change_pct": 1.7582417582417582,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "APD",
+      "name": "APD",
+      "score": 59.6,
+      "rank": 6,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 74,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +5.2%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (62.7)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Austin police investigating homicide in South Austin The Austin Police Department is inves",
+          "• Sensitive detection of cancer antigens enabled by user-defined peptide libraries Human leu",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 279.74,
+        "change_pct": -4.034305317324182,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALLE",
+      "name": "ALLE",
+      "score": 59.2,
+      "rank": 7,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 73,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +9.8%",
+          "🟢 Trend Above MA20/MA60",
+          "🛡️ Low Volatility (0.19)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Bollywood Actor Akshay Kumar To Lead BMC's Clean Clean Mumbai League To Improve Mumbai's R",
+          "• Dozens Gather In Swiss Town Crans‐Montana To Honour New Year's Fire Victims (MENAFN - Swis",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 179.5,
+        "change_pct": 0.7295173961840693,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "LNT",
+      "name": "LNT",
+      "score": 59.2,
+      "rank": 8,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 73,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +6.2%",
+          "🟢 Trend Above MA20/MA60",
+          "🛡️ Low Volatility (0.15)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Alliant Energy (NASDAQ:LNT) Hits New 52-Week High – Should You Buy? Alliant Energy Corpora",
+          "• ProShare Advisors LLC Cuts Position in Alliant Energy Corporation $LNT ProShare Advisors L",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 71.19,
+        "change_pct": 2.1670493685418926,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AFL",
+      "name": "AFL",
+      "score": 55.4,
+      "rank": 9,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 63,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "🟢 Trend Above MA20/MA60",
+          "🛡️ Low Volatility (0.18)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• AFL fans divided after Nick Daicos and Marcus Bontempelli snubbed in shock State of Origin",
+          "• FAA Mandates Airlines To Affirm Merit Hiring For Pilots FAA Mandates Airlines To Affirm Me",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 114.91,
+        "change_pct": -0.8370728339661709,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AOS",
+      "name": "AOS",
+      "score": 55.0,
+      "rank": 10,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 62,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +11.8%",
+          "🟢 Trend Above MA20/MA60",
+          "🔥 RSI Overheat (82.1)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• 23,659 Shares in Nutanix $NTNX Acquired by Caprock Group LLC Caprock Group LLC purchased a",
+          "• Caprock Group LLC Invests $1.76 Million in Nutanix $NTNX Caprock Group LLC purchased a new",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 80.46,
+        "change_pct": 1.055011303692526,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "MMM",
+      "name": "MMM",
+      "score": 53.2,
+      "rank": 11,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 58,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "🟢 Trend Above MA20/MA60",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• How To Retire On $500,000 With A Near-Perfect Portfolio The Near-Perfect Strategy portfoli",
+          "• 'I'm over 20 weeks with baby. We are certain is his': Survivors' diaries reveal Epstein's ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 171.82,
+        "change_pct": -1.5978466296317624,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABT",
+      "name": "ABT",
+      "score": 48.4,
+      "rank": 12,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 46,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -8.8%",
+          "🌡️ RSI Healthy (62.2)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Best Pharmaceutical Stocks To Keep An Eye On – February 14th Eli Lilly and Company, AbbVie",
+          "• Alex Jones’ unintentionally hysterical sing-song rant about “liberals” is somehow a meme a",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 112.68,
+        "change_pct": 1.0854938548488453,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALB",
+      "name": "ALB",
+      "score": 47.7,
+      "rank": 13,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 43,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "⚠️ High Volatility (0.59)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:3 / neg:1",
+          "• Guehi scores as Man City beat Salford in FA Cup, Burnley upset by Mansfield Feb 14 : Manch",
+          "• Burton Albion 0-1 West Ham: FA Cup fourth round – live reaction - The Guardian Burton Albi",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 166.35,
+        "change_pct": 4.668722078902653,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ARE",
+      "name": "ARE",
+      "score": 46.2,
+      "rank": 14,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 40,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -8.3%",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Azerbaijan's Ministry of Finance opens tender to purchase license extension service Azerba",
+          "• Jacob Ramsey provokes reaction from Aston Villa star after kissing Newcastle United badge ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 52.49,
+        "change_pct": 4.146825396825403,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "score": 44.4,
+      "rank": 15,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 36,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -8.1%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (23.4)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• What Is 1 of the Best AI Stocks to Own for the Next 10 Years? Investors should be looking ",
+          "• The Catch-22 Behind Amazon's Big AI Spending Plans Most investors aren't fans of the plan,",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 305.72,
+        "change_pct": -1.0614886731391497,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AMD",
+      "name": "AMD",
+      "score": 40.0,
+      "rank": 16,
+      "synthesis_verdict": "Sell (Aggregated)",
+      "scores": {
+        "expert": 25,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -9.0%",
+          "🔴 Trend Below MA20/MA60",
+          "⚠️ High Volatility (0.62)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:1",
+          "• EyePoint Pharmaceuticals Teases Mid-2026 DURAVYU Wet AMD Data, Starts Phase III DME Progra",
+          "• Stars Who Were Married In Vegas Quickie Weddings: A-List Duos Who Said ‘I Do’ In Sin City ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 207.32,
+        "change_pct": 0.6700980868214022,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABNB",
+      "name": "ABNB",
+      "score": 38.5,
+      "rank": 17,
+      "synthesis_verdict": "Sell (Aggregated)",
+      "scores": {
+        "expert": 32,
+        "whale": 35,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -8.5%",
+          "🔴 Trend Below MA20/MA60",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:2 / neg:1",
+          "• Leisure Stocks To Follow Now – February 14th Airbnb, Norwegian Cruise Line, Royal Caribbea",
+          "• Top Leisure Stocks To Follow Today – February 13th Airbnb, Norwegian Cruise Line, and Roya",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 121.35,
+        "change_pct": 4.648154536046913,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ACN",
+      "name": "ACN",
+      "score": 37.5,
+      "rank": 18,
+      "synthesis_verdict": "Sell (Aggregated)",
+      "scores": {
+        "expert": 28,
+        "whale": 35,
+        "macro": 50,
+        "news": 58
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -22.1%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (20.3)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:3 / neg:0",
+          "• Accenture’s Dividend Won’t Wow You – But Maybe It Should Accenture just paid shareholders ",
+          "• Palantir Just Received DISA Authorization. Does That Make PLTR Stock a Buy, Sell, or Hold?",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 224.23,
+        "change_pct": 0.9817608646701096,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ADBE",
+      "name": "ADBE",
+      "score": 36.9,
+      "rank": 19,
+      "synthesis_verdict": "Sell (Aggregated)",
+      "scores": {
+        "expert": 28,
+        "whale": 35,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -13.2%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (23.8)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Digital Media Stocks To Consider – February 13th Adobe, DoubleVerify, Ziff Davis, Xunlei, ",
+          "• Best Digital Media Stocks To Follow Today – February 14th Adobe, DoubleVerify, Ziff Davis,",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 263.97,
+        "change_pct": 0.5600000000000104,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "A",
+      "name": "A",
+      "score": 36.7,
+      "rank": 20,
+      "synthesis_verdict": "Sell (Aggregated)",
+      "scores": {
+        "expert": 28,
+        "whale": 35,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -13.1%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (26.8)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Sebastian Hoeneß: “We got our reward” Stuttgart recovered from last week’s shocking defeat",
+          "• Tumbler Ridge, B.C., teacher says he knew school staff would protect students TUMBLER RIDG",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 125.81,
+        "change_pct": 0.7447149263292816,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    }
+  ]
+}
