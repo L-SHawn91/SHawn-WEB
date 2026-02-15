@@ -1,0 +1,896 @@
+{
+  "meta": {
+    "market": "US",
+    "date": "2026-02-15",
+    "time": "13:14:15",
+    "timestamp": "2026-02-15T13:14:15.968697",
+    "avg_score": 50.23,
+    "buy_count": 0,
+    "sell_count": 20,
+    "high_growth_count": 0,
+    "top_alpha_ticker": "AKAM",
+    "failed_count": 0
+  },
+  "reports": [
+    {
+      "ticker": "AKAM",
+      "name": "AKAM",
+      "score": 51.0,
+      "rank": 1,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 60
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:4 / neg:0",
+          "• Akamai Technologies (NASDAQ:AKAM) Sets New 1-Year High Following Analyst Upgrade Akamai Te",
+          "• Akamai Technologies (NASDAQ:AKAM) Reaches New 1-Year High on Analyst Upgrade Akamai Techno",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 111.76000213623047,
+        "change_pct": 6.834912039156786,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ACN",
+      "name": "ACN",
+      "score": 50.8,
+      "rank": 2,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 58
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:3 / neg:0",
+          "• Accenture’s Dividend Won’t Wow You – But Maybe It Should Accenture just paid shareholders ",
+          "• Palantir Just Received DISA Authorization. Does That Make PLTR Stock a Buy, Sell, or Hold?",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 224.22999572753906,
+        "change_pct": 0.9817575527225342,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AOS",
+      "name": "AOS",
+      "score": 50.5,
+      "rank": 3,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:2 / neg:0",
+          "• 23,659 Shares in Nutanix $NTNX Acquired by Caprock Group LLC Caprock Group LLC purchased a",
+          "• Caprock Group LLC Invests $1.76 Million in Nutanix $NTNX Caprock Group LLC purchased a new",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 80.45999908447266,
+        "change_pct": 1.0550066678146213,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABBV",
+      "name": "ABBV",
+      "score": 50.5,
+      "rank": 4,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:2 / neg:0",
+          "• How To Retire On $500,000 With A Near-Perfect Portfolio The Near-Perfect Strategy portfoli",
+          "• 2 Unstoppable Dividend Stocks to Buy If There's a Stock Market Sell-Off These two stocks h",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 231.5,
+        "change_pct": 1.7582417582417582,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AES",
+      "name": "AES",
+      "score": 50.5,
+      "rank": 5,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:2 / neg:0",
+          "• Roast Beef Showdown as Arby’s Targets Former Checkers Spot on Englewood’s McCall Road AES ",
+          "• Your Buyer Isn’t Human Anymore. Neither Is Your Seller. Welcome to AI-Led Growth. With Fir",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 16.280000686645508,
+        "change_pct": 0.4938266662867668,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABNB",
+      "name": "ABNB",
+      "score": 50.5,
+      "rank": 6,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:3 / neg:1",
+          "• Airbnb, Inc. (NASDAQ:ABNB) Q4 2025 Earnings Call Transcript Airbnb, Inc. (NASDAQ:ABNB) Q4 ",
+          "• Airbnb, Inc. $ABNB Shares Purchased by Varma Mutual Pension Insurance Co Varma Mutual Pens",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 121.3499984741211,
+        "change_pct": 4.6481540463983775,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALL",
+      "name": "ALL",
+      "score": 50.5,
+      "rank": 7,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:2 / neg:0",
+          "• Barcelona confirm Marcus Rashford contract and penalty clause details after statement Marc",
+          "• February arts abundant in Norfolk There is a lot of art to love in Norfolk this February. ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 207.50999450683594,
+        "change_pct": 0.4599133227490996,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ADBE",
+      "name": "ADBE",
+      "score": 50.2,
+      "rank": 8,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• SA Asks: Which software stocks are best positioned for AI? Which software stocks are best ",
+          "• AWS CEO flags what’s next for AI and beaten-down software stocks Here’s what could be ahea",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 263.9700012207031,
+        "change_pct": 0.5600004650297619,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AFL",
+      "name": "AFL",
+      "score": 50.2,
+      "rank": 9,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Marlin Briscoe was an NFL pioneer with the Broncos in 1968 Marlin Briscoe became the first",
+          "• Ranking the 10 best cornerbacks in Las Vegas Raiders history Cornerbacks are among the mos",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 114.91000366210938,
+        "change_pct": -0.8370673233511687,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALB",
+      "name": "ALB",
+      "score": 50.2,
+      "rank": 10,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:2 / neg:1",
+          "• Burton Albion 0-1 West Ham: FA Cup fourth round – live reaction - The Guardian Burton Albi",
+          "• Mizuho Forecasts Strong Price Appreciation for Albemarle (NYSE:ALB) Stock Albemarle (NYSE:",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 166.35000610351562,
+        "change_pct": 4.668730742894625,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "score": 50.2,
+      "rank": 11,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Should You Forget Nvidia and Buy 2 Other Artificial Intelligence (AI) Stocks Instead? Thes",
+          "• Should You Forget Nvidia and Buy 2 Other Artificial Intelligence (AI) Stocks Instead? Thes",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 305.7200012207031,
+        "change_pct": -1.0614882780896036,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "MMM",
+      "name": "MMM",
+      "score": 50.0,
+      "rank": 12,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• How To Retire On $500,000 With A Near-Perfect Portfolio The Near-Perfect Strategy portfoli",
+          "• 'I'm over 20 weeks with baby. We are certain is his': Survivors' diaries reveal Epstein's ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 171.82000732421875,
+        "change_pct": -1.5978427789819334,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABT",
+      "name": "ABT",
+      "score": 50.0,
+      "rank": 13,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Alex Jones’ unintentionally hysterical sing-song rant about “liberals” is somehow a meme a",
+          "• How To Retire On $500,000 With A Near-Perfect Portfolio The Near-Perfect Strategy portfoli",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 112.68000030517578,
+        "change_pct": 1.0854930216399112,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AMD",
+      "name": "AMD",
+      "score": 50.0,
+      "rank": 14,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:1",
+          "• AMD Ryzen 7 9800X3D Reportedly Dies At Less Than 10% Usage On ASUS X870 Motherboard - Wccf",
+          "• OpenAI rolls out new model built for speed, coding Bringing Taiwan to the World and the Wo",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 207.32000732421875,
+        "change_pct": 0.6701004498653131,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "APD",
+      "name": "APD",
+      "score": 50.0,
+      "rank": 15,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Air Products and Chemicals, Inc. $APD Shares Acquired by Varma Mutual Pension Insurance Co",
+          "• Assetmark Inc. Has $35.35 Million Holdings in Air Products and Chemicals, Inc. $APD Assetm",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 279.739990234375,
+        "change_pct": -4.03430866745283,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ARE",
+      "name": "ARE",
+      "score": 50.0,
+      "rank": 16,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• HMRC sending UK households with certain tax code into 'negative Personal Allowance' Tax co",
+          "• February arts abundant in Norfolk There is a lot of art to love in Norfolk this February. ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 52.4900016784668,
+        "change_pct": 4.146825574032449,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALGN",
+      "name": "ALGN",
+      "score": 50.0,
+      "rank": 17,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• ING Groep NV Has $1.09 Million Stake in Align Technology, Inc. $ALGN ING Groep NV lifted i",
+          "• ING Groep NV Purchases 5,450 Shares of Align Technology, Inc. $ALGN ING Groep NV increased",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 186.77000427246094,
+        "change_pct": 1.582727973702366,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALLE",
+      "name": "ALLE",
+      "score": 50.0,
+      "rank": 18,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Dozens Gather In Swiss Town Crans‐Montana To Honour New Year's Fire Victims (MENAFN - Swis",
+          "• Entertainment News | Akshay Kumar Inaugurates Andheri's Flower Show Get latest articles an",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 179.5,
+        "change_pct": 0.7295191212238885,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "LNT",
+      "name": "LNT",
+      "score": 50.0,
+      "rank": 19,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Alliant Energy (NASDAQ:LNT) Hits New 52-Week High – Should You Buy? Alliant Energy Corpora",
+          "• ProShare Advisors LLC Cuts Position in Alliant Energy Corporation $LNT ProShare Advisors L",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 71.19000244140625,
+        "change_pct": 2.1670524248236935,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "A",
+      "name": "A",
+      "score": 49.5,
+      "rank": 20,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 45
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:2",
+          "• Linda Market NELIGH — A celebration of life for Linda K. Market, 75, of Neligh will be 10:",
+          "• Go proposes regional nursing homes to boost geriatric care in Philippines SEN. Bong Go has",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 125.80999755859375,
+        "change_pct": 0.7447151870835961,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    }
+  ]
+}
