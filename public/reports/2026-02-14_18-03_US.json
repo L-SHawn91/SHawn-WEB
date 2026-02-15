@@ -1,0 +1,896 @@
+{
+  "meta": {
+    "market": "US",
+    "date": "2026-02-14",
+    "time": "18:03:29",
+    "timestamp": "2026-02-14T18:03:29.393477",
+    "avg_score": 50.06,
+    "buy_count": 0,
+    "sell_count": 20,
+    "high_growth_count": 0,
+    "top_alpha_ticker": "AOS",
+    "failed_count": 0
+  },
+  "reports": [
+    {
+      "ticker": "AOS",
+      "name": "AOS",
+      "score": 50.5,
+      "rank": 1,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:2 / neg:0",
+          "• AI Telecom Stocks In The News - AI Strategies For Innovation (NOK) (IQST) (DOX) (SFTBY) (M",
+          "• Rhumbline Advisers Purchases 438,268 Shares of Nutanix $NTNX Rhumbline Advisers increased ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 80.45999908447266,
+        "change_pct": 1.0550066678146213,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABNB",
+      "name": "ABNB",
+      "score": 50.5,
+      "rank": 2,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:3 / neg:1",
+          "• Equities Research Analysts’ Price Target Changes for February 13th (ABNB, AEE, AEP, AIG, A",
+          "• Equities Research Analysts’ Updated EPS Estimates for February 13th (ABNB, AIP, AMAT, AX, ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 121.3499984741211,
+        "change_pct": 4.6481540463983775,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABT",
+      "name": "ABT",
+      "score": 50.2,
+      "rank": 3,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Formula E Jeddah: Pascal Wehrlein scores commanding victory to take points lead Porsche's ",
+          "• Vicki Abt, Who Said TV Talk Shows Coarsened Society, Dies at 83 A Penn State sociology pro",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 112.68000030517578,
+        "change_pct": 1.0854930216399112,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ACN",
+      "name": "ACN",
+      "score": 50.2,
+      "rank": 4,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Palantir Just Received DISA Authorization. Does That Make PLTR Stock a Buy, Sell, or Hold?",
+          "• Modern Dental Group Celebrates 40 Years: 'Redefining Smiles. The Digital Way.' (MENAFN - A",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 224.22999572753906,
+        "change_pct": 0.9817575527225342,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "APD",
+      "name": "APD",
+      "score": 50.2,
+      "rank": 5,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Hedge Fund and Insider Trading News: Bill Ackman, Ray Dalio, Warren Buffett, Catherine D. ",
+          "• Major push to digital, climate-resilient and self-reliant agriculture SLSC clears ₹289 Cr ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 279.739990234375,
+        "change_pct": -4.03430866745283,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AKAM",
+      "name": "AKAM",
+      "score": 50.2,
+      "rank": 6,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Akamai Technologies (NASDAQ:AKAM) Price Target Raised to $125.00 at DA Davidson Akamai Tec",
+          "• Akamai Technologies (NASDAQ:AKAM) Stock Price Expected to Rise, DA Davidson Analyst Says A",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 111.76000213623047,
+        "change_pct": 6.834912039156786,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "score": 50.2,
+      "rank": 7,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:0",
+          "• Software firms need a ‘Google moment’ to prove their relevance amid AI disruptions – analy",
+          "• Technology Stocks To Follow Now – February 13th NVIDIA, Sandisk, Micron Technology, Micros",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 305.7200012207031,
+        "change_pct": -1.0614882780896036,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "MMM",
+      "name": "MMM",
+      "score": 50.0,
+      "rank": 8,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Short story: Bokarina, by Breton Dukes Things go horribly wrong on a family holiday to the",
+          "• Wedbush Securities Inc. Cuts Position in 3M Company $MMM Wedbush Securities Inc. trimmed i",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 171.82000732421875,
+        "change_pct": -1.5978427789819334,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ABBV",
+      "name": "ABBV",
+      "score": 50.0,
+      "rank": 9,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Dividend Stocks To Add to Your Watchlist – February 13th UnitedHealth Group, Direxion Dail",
+          "• Best Pharmaceutical Stocks To Follow Today – February 13th Eli Lilly and Company, AbbVie, ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 231.5,
+        "change_pct": 1.7582417582417582,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ADBE",
+      "name": "ADBE",
+      "score": 50.0,
+      "rank": 10,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• The Tech Sector Wall Street Is Shunning Right Now for All the Wrong Reasons Fears about ar",
+          "• Digital Media Stocks To Consider – February 13th Adobe, DoubleVerify, Ziff Davis, Xunlei, ",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 263.9700012207031,
+        "change_pct": 0.5600004650297619,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AMD",
+      "name": "AMD",
+      "score": 50.0,
+      "rank": 11,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• New cleanup proposed for old San Jose Superfund site near San Jose State Lorentz Barrel an",
+          "• New cleanup proposed for old San Jose Superfund site near San Jose State Lorentz Barrel an",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 207.32000732421875,
+        "change_pct": 0.6701004498653131,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AES",
+      "name": "AES",
+      "score": 50.0,
+      "rank": 12,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• This Sleek USB Gadget Uses Your iPhone Or Android Phone To Lock Your Data A new portable S",
+          "• South Korea intelligence says Kim Jong Un grooming daughter to be his successor South Kore",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 16.280000686645508,
+        "change_pct": 0.4938266662867668,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "AFL",
+      "name": "AFL",
+      "score": 50.0,
+      "rank": 13,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• How to watch NBA All-Star Weekend 2026: live streams, preview, schedule All the ways to wa",
+          "• What To Watch: Reality Check: Inside America’s Next Top Model, Neighbors, AFL State Of Ori",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 114.91000366210938,
+        "change_pct": -0.8370673233511687,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "A",
+      "name": "A",
+      "score": 50.0,
+      "rank": 14,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Behind the scenes sorting through tips in cases like the Nancy Guthrie disappearance More ",
+          "• New Pokemon Scarlet and Violet Mystery Gift Now Available (But It Won’t Last Long) A new M",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 125.80999755859375,
+        "change_pct": 0.7447151870835961,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALB",
+      "name": "ALB",
+      "score": 50.0,
+      "rank": 15,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:1 / neg:1",
+          "• Equities Research Analysts’ Price Target Changes for February 13th (ABNB, AEE, AEP, AIG, A",
+          "• 10 Materials Stocks Whale Activity In Today's Session This whale alert can help traders di",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 166.35000610351562,
+        "change_pct": 4.668730742894625,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ARE",
+      "name": "ARE",
+      "score": 50.0,
+      "rank": 16,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• New Pokemon Scarlet and Violet Mystery Gift Now Available (But It Won’t Last Long) A new M",
+          "• These ASX 200 shares could rise 25% to 65% Brokers think these shares could be cheap at cu",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 52.4900016784668,
+        "change_pct": 4.146825574032449,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALGN",
+      "name": "ALGN",
+      "score": 50.0,
+      "rank": 17,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Angelalign Technology Inc. (6699.HK) Says a Preliminary European Court Ruling on Certain S",
+          "• Angelalign Technology Inc. (6699.HK) Says a Preliminary European Court Ruling on Certain S",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 186.77000427246094,
+        "change_pct": 1.582727973702366,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "LNT",
+      "name": "LNT",
+      "score": 50.0,
+      "rank": 18,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:0",
+          "• Alliant Energy (NASDAQ:LNT) Sets New 12-Month High – Here’s Why Alliant Energy Corporation",
+          "• Tennant Company Appoints James T. Glerum, Jr., Patrick Allen to Its Board of Directors MIN",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 71.19000244140625,
+        "change_pct": 2.1670524248236935,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALLE",
+      "name": "ALLE",
+      "score": 49.8,
+      "rank": 19,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 48
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:1",
+          "• ThyssenKrupp (OTCMKTS:TKAMY) Trading Down 11.6% After Earnings Miss ThyssenKrupp AG Sponso",
+          "• Equities Analysts Offer Predictions for Allegion Q1 Earnings Allegion PLC (NYSE:ALLE – Fre",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 179.5,
+        "change_pct": 0.7295191212238885,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    },
+    {
+      "ticker": "ALL",
+      "name": "ALL",
+      "score": 49.5,
+      "rank": 20,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 50,
+        "whale": 50,
+        "macro": 50,
+        "news": 45
+      },
+      "details": {
+        "expert": [
+          "⚠️ No Analyst Coverage"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News tone pos:0 / neg:2",
+          "• Walmart's bestselling $90 wire shelving unit that can hold 1,250 pounds is on sale for $48",
+          "• NCAA attorney: 'I love Tennessee football,' but Joey Aguilar should be ineligible NCAA att",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 207.50999450683594,
+        "change_pct": 0.4599133227490996,
+        "currency": "USD"
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      }
+    }
+  ]
+}
