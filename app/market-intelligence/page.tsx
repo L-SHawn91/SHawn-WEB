@@ -21,6 +21,8 @@ type ReportData = {
 export default function MarketIntelligencePage() {
     const [indexData, setIndexData] = useState<ReportData>({ KR: [], US: [] });
     const [activeTab, setActiveTab] = useState<"KR" | "US">("KR");
+    const [cursor, setCursor] = useState<{ KR: number; US: number }>({ KR: 0, US: 0 });
+    const [hasMore, setHasMore] = useState<{ KR: boolean; US: boolean }>({ KR: false, US: false });
 
     // Selected Report State
     const [selectedReportPath, setSelectedReportPath] = useState<string | null>(null);
@@ -59,25 +61,23 @@ export default function MarketIntelligencePage() {
     const fetchIndex = useCallback(async () => {
         setLoadingIndex(true);
         try {
-            const res = await fetch("/reports/index.json", { cache: "no-store" });
-            if (res.ok) {
-                const rawData = await res.json();
+            const resKR = await fetch(`/api/reports?type=KR&limit=60&offset=0`, { cache: "no-store" });
+            const resUS = await fetch(`/api/reports?type=US&limit=60&offset=0`, { cache: "no-store" });
+            if (!resKR.ok || !resUS.ok) return;
 
-                // Group by type (KR/US)
-                const grouped: ReportData = { KR: [], US: [] };
-                rawData.forEach((r: any) => {
-                    if (r.type === 'KR') grouped.KR.push(r);
-                    if (r.type === 'US') grouped.US.push(r);
-                });
+            const dataKR = await resKR.json();
+            const dataUS = await resUS.json();
+            const grouped: ReportData = {
+                KR: Array.isArray(dataKR.items) ? dataKR.items : [],
+                US: Array.isArray(dataUS.items) ? dataUS.items : [],
+            };
 
-                setIndexData(grouped);
+            setIndexData(grouped);
+            setCursor({ KR: grouped.KR.length, US: grouped.US.length });
+            setHasMore({ KR: Boolean(dataKR.hasMore), US: Boolean(dataUS.hasMore) });
 
-                // Auto-select first report if available
-                const currentList = grouped[activeTab];
-                if (currentList.length > 0 && !selectedReportPath) {
-                    void handleSelectReport(currentList[0]);
-                }
-            }
+            const currentList = grouped[activeTab];
+            if (currentList.length > 0 && !selectedReportPath) void handleSelectReport(currentList[0]);
         } catch (error) {
             console.error("Failed to load index", error);
         } finally {
@@ -90,6 +90,25 @@ export default function MarketIntelligencePage() {
     }, [fetchIndex]);
 
     const currentList = indexData[activeTab];
+    const canLoadMore = hasMore[activeTab];
+
+    const loadMore = useCallback(async () => {
+        const offset = cursor[activeTab];
+        try {
+            const res = await fetch(`/api/reports?type=${activeTab}&limit=60&offset=${offset}`, { cache: "no-store" });
+            if (!res.ok) return;
+            const data = await res.json();
+            const items = Array.isArray(data.items) ? data.items : [];
+            setIndexData(prev => ({
+                ...prev,
+                [activeTab]: [...prev[activeTab], ...items],
+            }));
+            setCursor(prev => ({ ...prev, [activeTab]: offset + items.length }));
+            setHasMore(prev => ({ ...prev, [activeTab]: Boolean(data.hasMore) }));
+        } catch (e) {
+            console.error(e);
+        }
+    }, [activeTab, cursor]);
 
     return (
         <div className="min-h-screen bg-[#1e1e1e] text-white p-4 md:p-8 font-sans">
@@ -192,6 +211,14 @@ export default function MarketIntelligencePage() {
                                                 </motion.div>
                                             );
                                         })}
+                                        {canLoadMore && (
+                                            <button
+                                                onClick={loadMore}
+                                                className="w-full mt-2 py-2 text-xs rounded-lg border border-gray-700 bg-[#1e1e1e] text-gray-300 hover:bg-[#2c2c2c] transition-colors"
+                                            >
+                                                Load more
+                                            </button>
+                                        )}
                                     </div>
                                 </AnimatePresence>
                             )}

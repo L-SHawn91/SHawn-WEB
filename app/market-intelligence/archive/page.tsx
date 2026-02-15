@@ -25,43 +25,88 @@ export default function ReportsPage() {
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
+    const [offset, setOffset] = useState(0);
+    const [hasMore, setHasMore] = useState(false);
+    const LIMIT = 60;
 
     useEffect(() => {
-        fetch('/reports/index.json')
-            .then(res => {
+        const load = async () => {
+            setLoading(true);
+            try {
+                const params = new URLSearchParams();
+                params.set("limit", String(LIMIT));
+                params.set("offset", "0");
+                if (searchQuery.trim()) params.set("q", searchQuery.trim());
+                if (selectedDate) params.set("date", selectedDate);
+
+                const res = await fetch(`/api/reports?${params.toString()}`, { cache: "no-store" });
                 if (!res.ok) throw new Error("Failed to load index");
-                return res.json();
-            })
-            .then(data => {
-                setReports(data);
-                setFilteredReports(data);
-                setLoading(false);
-            })
-            .catch(err => {
+                const data = await res.json();
+                const items = Array.isArray(data.items) ? data.items : [];
+                setReports(items);
+                setFilteredReports(items);
+                setOffset(items.length);
+                setHasMore(Boolean(data.hasMore));
+            } catch (err) {
                 console.error(err);
+            } finally {
                 setLoading(false);
-            });
-    }, []);
+            }
+        };
+
+        void load();
+    }, [searchQuery, selectedDate]);
 
     // Filter Logic
     useEffect(() => {
-        let result = reports;
+        // Server-driven pagination: reset and refetch for new filters.
+        const load = async () => {
+            setLoading(true);
+            try {
+                const params = new URLSearchParams();
+                params.set("limit", String(LIMIT));
+                params.set("offset", "0");
+                if (searchQuery.trim()) params.set("q", searchQuery.trim());
+                if (selectedDate) params.set("date", selectedDate);
 
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            result = result.filter(r =>
-                r.title.toLowerCase().includes(query) ||
-                r.type.toLowerCase().includes(query) ||
-                r.date.includes(query)
-            );
+                const res = await fetch(`/api/reports?${params.toString()}`, { cache: "no-store" });
+                if (!res.ok) throw new Error("Failed to load index");
+                const data = await res.json();
+                const items = Array.isArray(data.items) ? data.items : [];
+                setReports(items);
+                setFilteredReports(items);
+                setOffset(items.length);
+                setHasMore(Boolean(data.hasMore));
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        void load();
+    }, [searchQuery, selectedDate]);
+
+    const loadMore = async () => {
+        try {
+            const params = new URLSearchParams();
+            params.set("limit", String(LIMIT));
+            params.set("offset", String(offset));
+            if (searchQuery.trim()) params.set("q", searchQuery.trim());
+            if (selectedDate) params.set("date", selectedDate);
+
+            const res = await fetch(`/api/reports?${params.toString()}`, { cache: "no-store" });
+            if (!res.ok) return;
+            const data = await res.json();
+            const items = Array.isArray(data.items) ? data.items : [];
+            setReports(prev => [...prev, ...items]);
+            setFilteredReports(prev => [...prev, ...items]);
+            setOffset(offset + items.length);
+            setHasMore(Boolean(data.hasMore));
+        } catch (err) {
+            console.error(err);
         }
-
-        if (selectedDate) {
-            result = result.filter(r => r.date === selectedDate);
-        }
-
-        setFilteredReports(result);
-    }, [searchQuery, selectedDate, reports]);
+    };
 
     return (
         <div className="min-h-screen flex flex-col bg-background">
@@ -104,8 +149,9 @@ export default function ReportsPage() {
                         <p className="text-sm text-muted-foreground mt-2">검색어 또는 날짜를 변경해보세요.</p>
                     </div>
                 ) : (
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {filteredReports.map((report, idx) => (
+                    <>
+                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            {filteredReports.map((report, idx) => (
                             <Card key={idx} className="group hover:shadow-lg transition-all duration-300 border-primary/20 hover:border-primary">
                                 <CardHeader className="pb-3">
                                     <div className="flex justify-between items-start">
@@ -143,8 +189,19 @@ export default function ReportsPage() {
                                     </div>
                                 </CardContent>
                             </Card>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                        {hasMore && (
+                            <div className="flex justify-center mt-10">
+                                <button
+                                    onClick={loadMore}
+                                    className="px-4 py-2 rounded-md border border-primary/30 hover:border-primary bg-card hover:bg-primary/10 transition-colors text-sm"
+                                >
+                                    더 보기
+                                </button>
+                            </div>
+                        )}
+                    </>
                 )}
             </main>
             <Footer />
