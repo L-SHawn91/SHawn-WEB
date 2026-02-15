@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, FileText, ExternalLink, RefreshCw, TrendingUp, Globe, AlertTriangle } from "lucide-react";
 import Link from "next/link";
@@ -28,42 +28,8 @@ export default function MarketIntelligencePage() {
     const [isLoadingReport, setIsLoadingReport] = useState(false);
     const [loadingIndex, setLoadingIndex] = useState(true);
 
-    useEffect(() => {
-        fetchIndex();
-    }, []);
-
-    // Fetch the list of reports
-    const fetchIndex = async () => {
-        setLoadingIndex(true);
-        try {
-            const res = await fetch("/reports/index.json", { cache: "no-store" });
-            if (res.ok) {
-                const rawData = await res.json();
-
-                // Group by type (KR/US)
-                const grouped: ReportData = { KR: [], US: [] };
-                rawData.forEach((r: any) => {
-                    if (r.type === 'KR') grouped.KR.push(r);
-                    if (r.type === 'US') grouped.US.push(r);
-                });
-
-                setIndexData(grouped);
-
-                // Auto-select first report if available
-                const currentList = grouped[activeTab];
-                if (currentList.length > 0 && !selectedReportPath) {
-                    handleSelectReport(currentList[0]);
-                }
-            }
-        } catch (error) {
-            console.error("Failed to load index", error);
-        } finally {
-            setLoadingIndex(false);
-        }
-    };
-
     // Handle Report Selection
-    const handleSelectReport = async (report: ReportRequest) => {
+    const handleSelectReport = useCallback(async (report: ReportRequest) => {
         setSelectedReportPath(report.path);
 
         // If JSON data exists, load it
@@ -87,7 +53,41 @@ export default function MarketIntelligencePage() {
             // Legacy report (HTML only) -> ReportDetailView handles null data or we show iframe
             setReportJsonData(null);
         }
-    };
+    }, []);
+
+    // Fetch the list of reports
+    const fetchIndex = useCallback(async () => {
+        setLoadingIndex(true);
+        try {
+            const res = await fetch("/reports/index.json", { cache: "no-store" });
+            if (res.ok) {
+                const rawData = await res.json();
+
+                // Group by type (KR/US)
+                const grouped: ReportData = { KR: [], US: [] };
+                rawData.forEach((r: any) => {
+                    if (r.type === 'KR') grouped.KR.push(r);
+                    if (r.type === 'US') grouped.US.push(r);
+                });
+
+                setIndexData(grouped);
+
+                // Auto-select first report if available
+                const currentList = grouped[activeTab];
+                if (currentList.length > 0 && !selectedReportPath) {
+                    void handleSelectReport(currentList[0]);
+                }
+            }
+        } catch (error) {
+            console.error("Failed to load index", error);
+        } finally {
+            setLoadingIndex(false);
+        }
+    }, [activeTab, handleSelectReport, selectedReportPath]);
+
+    useEffect(() => {
+        void fetchIndex();
+    }, [fetchIndex]);
 
     const currentList = indexData[activeTab];
 

@@ -47,7 +47,7 @@ export default function BrainDashboard() {
     cartridge: {
       active: activeCartridge,
       status: `🧬 ${activeCartridge} world active`,
-      available: ["biology", "investment", "sns"]
+      available: ["biology", "investment", "astronomy", "literature"]
     },
     overall_health: 82.5,
     system_status: "OPERATIONAL"
@@ -80,7 +80,7 @@ export default function BrainDashboard() {
             {connected && <span className="text-lg">✅ Live</span>}
           </h1>
           <p className="text-gray-400">
-            운영 중인 Bio/Investment/SNS 상태를 실시간으로 모니터합니다
+            Digital Da Vinci의 신경 시스템을 실시간으로 모니터합니다
           </p>
         </div>
 
@@ -278,7 +278,8 @@ export default function BrainDashboard() {
                       <span>
                         {cartridge === 'biology' && '🧬 Biology'}
                         {cartridge === 'investment' && '📈 Investment'}
-                        {cartridge === 'sns' && '📣 SNS'}
+                        {cartridge === 'astronomy' && '🌌 Astronomy'}
+                        {cartridge === 'literature' && '📚 Literature'}
                       </span>
                       {activeCartridge === cartridge && <span>✅</span>}
                     </button>

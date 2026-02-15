@@ -154,9 +154,9 @@ export default function ContentDashboard() {
                             <div className="aspect-square bg-[#1a1a1a] rounded-[40px] border border-gray-800 p-8 flex flex-col gap-4 font-mono text-[10px] text-gray-500 shadow-xl overflow-hidden">
                                 <div className="p-4 bg-black/40 rounded-xl space-y-1">
                                     <p className="text-[#bc13fe]">---</p>
-                                    <p>title: <span className="text-[#00ff9f]">"{topic || 'Untitled Post'}"</span></p>
+                                    <p>title: <span className="text-[#00ff9f]">&quot;{topic || 'Untitled Post'}&quot;</span></p>
                                     <p>date: {new Date().toISOString().split('T')[0]}</p>
-                                    <p>category: "research"</p>
+                                    <p>category: &quot;research&quot;</p>
                                     <p>featured: true</p>
                                     <p className="text-[#bc13fe]">---</p>
                                 </div>

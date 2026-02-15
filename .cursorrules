@@ -1,0 +1,63 @@
+# 🤖 SHawn-WEB Cursor Rules
+
+> **Web Development & Frontend Projects**
+
+---
+
+## 🚀 UV 사용 규칙 (Python 백엔드)
+
+### Python 패키지 관리
+- **Python 백엔드는 `uv`를 사용합니다**
+- ❌ `pip install` 사용 금지
+- ❌ `conda` 사용 금지
+
+### 필수 명령어
+```bash
+# Python 백엔드 가상환경
+uv venv
+
+# 패키지 설치
+uv pip install fastapi uvicorn httpx
+
+# 개발 모드
+uv pip install -e ".[dev]"
+```
+
+---
+
+## 🌐 웹 기술 스택
+
+### Python 백엔드
+```toml
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "httpx>=0.25.0",
+    "pydantic>=2.5.0",
+]
+```
+
+### 프론트엔드
+- Next.js 14+ (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+
+---
+
+## 📁 프로젝트 구조
+
+```
+project/
+├── backend/           # Python (UV 사용)
+│   ├── pyproject.toml
+│   └── main.py
+├── frontend/          # Next.js
+│   ├── package.json
+│   └── app/
+└── docker-compose.yml
+```
+
+---
+
+*UV Rules Applied - 2026-02-09*

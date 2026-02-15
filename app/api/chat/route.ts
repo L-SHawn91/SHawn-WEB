@@ -5,10 +5,6 @@ import { jwtVerify } from 'jose';
 const GCP_BRAIN_URL = process.env.GCP_BRAIN_URL || "https://shawn-brain-1009266651998.asia-northeast3.run.app";
 const JWT_SECRET = process.env.JWT_SECRET;
 
-if (!JWT_SECRET) {
-  console.error("❌ CRITICAL: JWT_SECRET is not set in environment variables!");
-}
-
 export async function POST(req: Request) {
     try {
         const { prompt } = await req.json();
@@ -37,6 +33,10 @@ export async function POST(req: Request) {
         let authHeader: Record<string, string> = {};
 
         // 2. JWT Verification
+        if (token && !JWT_SECRET) {
+            console.error('JWT_SECRET is not set; treating request as guest');
+        }
+
         if (token && JWT_SECRET) {
             try {
                 const secret = new TextEncoder().encode(JWT_SECRET);

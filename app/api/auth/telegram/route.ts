@@ -3,10 +3,6 @@ import { jwtVerify } from 'jose';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-if (!JWT_SECRET) {
-  console.error("❌ CRITICAL: JWT_SECRET is not set in environment variables!");
-}
-
 /**
  * Telegram Magic Link Authentication
  * 
@@ -28,6 +24,7 @@ export async function POST(req: Request) {
     }
 
     if (!JWT_SECRET) {
+      console.error('JWT_SECRET is not set');
       return NextResponse.json(
         { success: false, error: 'Server configuration error' },
         { status: 500 }
