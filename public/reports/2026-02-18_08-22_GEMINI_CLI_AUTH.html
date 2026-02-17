@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini CLI 인증 이슈 분석 / Gemini CLI Auth Incident</title>
+  <style>
+    :root { --bg:#0b1020; --card:#121a31; --text:#e9eefc; --muted:#9fb0d6; --ok:#3ddc97; --warn:#ffb020; --bad:#ff5d73; --line:#2a3764; }
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0b1020,#0d1328);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6}
+    .wrap{max-width:980px;margin:40px auto;padding:0 16px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:16px}
+    h1{font-size:30px;line-height:1.2;margin:0 0 10px} h2{margin:0 0 10px;font-size:22px}
+    .meta{color:var(--muted);font-size:14px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    button{background:#1b2547;color:var(--text);border:1px solid #3a4c86;padding:8px 12px;border-radius:10px;cursor:pointer}
+    button.active{background:#31479c}
+    .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;border:1px solid}
+    .ok{color:var(--ok);border-color:var(--ok)} .warn{color:var(--warn);border-color:var(--warn)} .bad{color:var(--bad);border-color:var(--bad)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media(max-width:800px){.grid{grid-template-columns:1fr}}
+    img{width:100%;border-radius:12px;border:1px solid var(--line)}
+    .lang-en{display:none}
+    .chart{width:100%;height:auto;display:block;background:#0e1530;border:1px solid var(--line);border-radius:12px;padding:10px}
+    code{background:#0f1a3a;padding:2px 6px;border-radius:6px;color:#d7e3ff}
+    ul{margin:8px 0 0 20px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1 class="lang-ko">Gemini CLI 인증 이슈: Google 로그인 차단, API Key 경로는 정상</h1>
+      <h1 class="lang-en">Gemini CLI Auth Incident: Google Login Blocked, API Key Path Works</h1>
+      <div class="meta">2026-02-18 08:22 KST · SHawn Ops Blog</div>
+      <div class="toolbar">
+        <button id="btn-ko" class="active" onclick="setLang('ko')">한국어</button>
+        <button id="btn-en" onclick="setLang('en')">English</button>
+        <span class="badge bad lang-ko">Google Login 차단</span>
+        <span class="badge bad lang-en">Google Login blocked</span>
+        <span class="badge ok lang-ko">API Key 경로 정상</span>
+        <span class="badge ok lang-en">API key path healthy</span>
+      </div>
+    </div>
+
+    <div class="card grid">
+      <div>
+        <h2 class="lang-ko">핵심 요약</h2>
+        <h2 class="lang-en">Executive Summary</h2>
+        <ul class="lang-ko">
+          <li><b>원인:</b> Gemini CLI의 <code>Login with Google</code> 인증 경로가 정책 플래그로 비활성화.</li>
+          <li><b>영향:</b> 로그인 기반 CLI는 실패하지만, API Key 기반 호출은 정상 가능.</li>
+          <li><b>운영 결론:</b> 당분간 Kimi + OpenCode를 주력, Gemini는 API Key 경로 중심으로 제한 운영.</li>
+        </ul>
+        <ul class="lang-en">
+          <li><b>Cause:</b> Gemini CLI <code>Login with Google</code> auth path is policy-disabled.</li>
+          <li><b>Impact:</b> Login-based CLI fails, while API-key calls can still succeed.</li>
+          <li><b>Ops decision:</b> Keep Kimi + OpenCode as primary; use Gemini mostly via API key path.</li>
+        </ul>
+      </div>
+      <div>
+        <img src="/reports/assets/2026-02-18_gemini-cli-disabled.jpg" alt="Gemini CLI disabled screenshot" />
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="lang-ko">시각화: 인증 경로 상태 맵</h2>
+      <h2 class="lang-en">Visualization: Auth Path Health Map</h2>
+      <svg class="chart" viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Auth path health chart">
+        <rect x="40" y="40" width="220" height="36" rx="8" fill="#2d3c70"/>
+        <text x="52" y="63" fill="#e9eefc" font-size="14">Gemini CLI: Login with Google</text>
+        <rect x="300" y="40" width="180" height="36" rx="8" fill="#5a1d2b"/>
+        <text x="318" y="63" fill="#ffd7de" font-size="14">Blocked (ToS)</text>
+
+        <rect x="40" y="110" width="220" height="36" rx="8" fill="#2d3c70"/>
+        <text x="52" y="133" fill="#e9eefc" font-size="14">Gemini CLI: API Key</text>
+        <rect x="300" y="110" width="180" height="36" rx="8" fill="#1f5b46"/>
+        <text x="352" y="133" fill="#d6ffe6" font-size="14">Healthy</text>
+
+        <rect x="40" y="180" width="220" height="36" rx="8" fill="#2d3c70"/>
+        <text x="52" y="203" fill="#e9eefc" font-size="14">Kimi CLI / OpenCode</text>
+        <rect x="300" y="180" width="180" height="36" rx="8" fill="#1f5b46"/>
+        <text x="352" y="203" fill="#d6ffe6" font-size="14">Healthy</text>
+
+        <line x1="260" y1="58" x2="300" y2="58" stroke="#8ea2db" stroke-width="2"/>
+        <line x1="260" y1="128" x2="300" y2="128" stroke="#8ea2db" stroke-width="2"/>
+        <line x1="260" y1="198" x2="300" y2="198" stroke="#8ea2db" stroke-width="2"/>
+
+        <text x="540" y="70" fill="#9fb0d6" font-size="13">Policy risk is path-specific, not always account-wide.</text>
+        <text x="540" y="130" fill="#9fb0d6" font-size="13">Use API key path for Gemini continuity.</text>
+        <text x="540" y="200" fill="#9fb0d6" font-size="13">Run production parallel on Kimi + OpenCode.</text>
+      </svg>
+    </div>
+
+    <div class="card">
+      <h2 class="lang-ko">운영 액션 플랜</h2>
+      <h2 class="lang-en">Operational Action Plan</h2>
+      <ul class="lang-ko">
+        <li>기본 병렬 조합: <code>Kimi CLI + OpenCode</code></li>
+        <li>Gemini는 <code>API Key</code> 경로 우선 사용, 로그인 경로는 보조/점검용</li>
+        <li>오류정책: 401/403 즉시 격리, 429는 30~60분 쿨다운, timeout 1회 재시도</li>
+        <li>정기 점검 리포트에 경로별 상태(로그인/API/CLI)를 분리 표시</li>
+      </ul>
+      <ul class="lang-en">
+        <li>Primary parallel combo: <code>Kimi CLI + OpenCode</code></li>
+        <li>Use Gemini mainly via <code>API key</code>; keep login path as secondary/check-only</li>
+        <li>Error policy: isolate on 401/403, cooldown 30–60m on 429, one retry on timeout</li>
+        <li>Report path-level health separately (login/API/CLI) in regular ops reports</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function setLang(lang){
+      const ko = document.querySelectorAll('.lang-ko');
+      const en = document.querySelectorAll('.lang-en');
+      const btnKo = document.getElementById('btn-ko');
+      const btnEn = document.getElementById('btn-en');
+      if(lang==='ko'){
+        ko.forEach(el=>el.style.display=''); en.forEach(el=>el.style.display='none');
+        btnKo.classList.add('active'); btnEn.classList.remove('active');
+        document.documentElement.lang='ko';
+      }else{
+        ko.forEach(el=>el.style.display='none'); en.forEach(el=>el.style.display='');
+        btnEn.classList.add('active'); btnKo.classList.remove('active');
+        document.documentElement.lang='en';
+      }
+      localStorage.setItem('blogLang',lang);
+    }
+    setLang(localStorage.getItem('blogLang') || 'ko');
+  </script>
+</body>
+</html>
