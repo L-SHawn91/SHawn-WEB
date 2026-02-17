@@ -71,9 +71,9 @@ export default function Home() {
                   📝 Blog
                 </button>
               </Link>
-              <Link href="/brain">
+              <Link href="/market-intelligence">
                 <button className="px-6 py-3 bg-green-500/20 text-green-400 rounded-lg border border-green-500/50 hover:border-green-400 hover:bg-green-500/30 transition">
-                  ⚙️ Control Dashboard
+                  ⚙️ Operations Dashboard
                 </button>
               </Link>
             </div>
