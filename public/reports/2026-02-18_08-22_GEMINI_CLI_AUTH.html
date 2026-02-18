@@ -5,23 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gemini CLI 인증 이슈 분석 / Gemini CLI Auth Incident</title>
   <style>
-    :root { --bg:#0b1020; --card:#121a31; --text:#e9eefc; --muted:#9fb0d6; --ok:#3ddc97; --warn:#ffb020; --bad:#ff5d73; --line:#2a3764; }
-    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0b1020,#0d1328);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6}
-    .wrap{max-width:980px;margin:40px auto;padding:0 16px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:16px}
-    h1{font-size:30px;line-height:1.2;margin:0 0 10px} h2{margin:0 0 10px;font-size:22px}
-    .meta{color:var(--muted);font-size:14px}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-    button{background:#1b2547;color:var(--text);border:1px solid #3a4c86;padding:8px 12px;border-radius:10px;cursor:pointer}
-    button.active{background:#31479c}
-    .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;border:1px solid}
-    .ok{color:var(--ok);border-color:var(--ok)} .warn{color:var(--warn);border-color:var(--warn)} .bad{color:var(--bad);border-color:var(--bad)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media(max-width:800px){.grid{grid-template-columns:1fr}}
+    :root { --bg:#f5f8ff; --card:#ffffff; --text:#0e1730; --muted:#4f5f86; --ok:#147d4b; --warn:#a35b00; --bad:#b31f3a; --line:#cfd8f0; --primary:#2f58d8; }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#eef3ff,#f8faff);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.75;font-size:18px}
+    .wrap{max-width:1080px;margin:34px auto;padding:0 18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;margin-bottom:18px;box-shadow:0 8px 24px rgba(13,27,62,.08)}
+    h1{font-size:36px;line-height:1.25;margin:0 0 12px;font-weight:800}
+    h2{margin:0 0 12px;font-size:26px;line-height:1.35}
+    .meta{color:var(--muted);font-size:15px}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+    button{background:#edf2ff;color:#10225b;border:1px solid #b7c7f1;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+    button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .badge{display:inline-block;padding:6px 11px;border-radius:999px;font-size:13px;border:1px solid;font-weight:700}
+    .ok{color:var(--ok);border-color:#74d8ac;background:#e8fff3}
+    .warn{color:var(--warn);border-color:#ffca7a;background:#fff6e8}
+    .bad{color:var(--bad);border-color:#f4a0b1;background:#fff0f4}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px} @media(max-width:920px){.grid{grid-template-columns:1fr}}
     img{width:100%;border-radius:12px;border:1px solid var(--line)}
     .lang-en{display:none}
-    .chart{width:100%;height:auto;display:block;background:#0e1530;border:1px solid var(--line);border-radius:12px;padding:10px}
-    code{background:#0f1a3a;padding:2px 6px;border-radius:6px;color:#d7e3ff}
-    ul{margin:8px 0 0 20px}
+    .chart{width:100%;height:auto;display:block;background:#f7f9ff;border:1px solid var(--line);border-radius:12px;padding:10px}
+    code{background:#edf2ff;padding:3px 7px;border-radius:7px;color:#0f2b77;font-size:90%}
+    ul{margin:10px 0 0 22px}
+    li{margin:6px 0}
   </style>
 </head>
 <body>
@@ -64,20 +69,20 @@
       <h2 class="lang-ko">시각화: 인증 경로 상태 맵</h2>
       <h2 class="lang-en">Visualization: Auth Path Health Map</h2>
       <svg class="chart" viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Auth path health chart">
-        <rect x="40" y="40" width="220" height="36" rx="8" fill="#2d3c70"/>
-        <text x="52" y="63" fill="#e9eefc" font-size="14">Gemini CLI: Login with Google</text>
-        <rect x="300" y="40" width="180" height="36" rx="8" fill="#5a1d2b"/>
-        <text x="318" y="63" fill="#ffd7de" font-size="14">Blocked (ToS)</text>
+        <rect x="40" y="40" width="240" height="40" rx="8" fill="#2f58d8"/>
+        <text x="54" y="66" fill="#ffffff" font-size="15" font-weight="700">Gemini CLI: Login with Google</text>
+        <rect x="300" y="40" width="190" height="40" rx="8" fill="#b31f3a"/>
+        <text x="327" y="66" fill="#ffffff" font-size="15" font-weight="700">Blocked (ToS)</text>
 
-        <rect x="40" y="110" width="220" height="36" rx="8" fill="#2d3c70"/>
-        <text x="52" y="133" fill="#e9eefc" font-size="14">Gemini CLI: API Key</text>
-        <rect x="300" y="110" width="180" height="36" rx="8" fill="#1f5b46"/>
-        <text x="352" y="133" fill="#d6ffe6" font-size="14">Healthy</text>
+        <rect x="40" y="110" width="240" height="40" rx="8" fill="#2f58d8"/>
+        <text x="54" y="136" fill="#ffffff" font-size="15" font-weight="700">Gemini CLI: API Key</text>
+        <rect x="300" y="110" width="190" height="40" rx="8" fill="#147d4b"/>
+        <text x="365" y="136" fill="#ffffff" font-size="15" font-weight="700">Healthy</text>
 
-        <rect x="40" y="180" width="220" height="36" rx="8" fill="#2d3c70"/>
-        <text x="52" y="203" fill="#e9eefc" font-size="14">Kimi CLI / OpenCode</text>
-        <rect x="300" y="180" width="180" height="36" rx="8" fill="#1f5b46"/>
-        <text x="352" y="203" fill="#d6ffe6" font-size="14">Healthy</text>
+        <rect x="40" y="180" width="240" height="40" rx="8" fill="#2f58d8"/>
+        <text x="54" y="206" fill="#ffffff" font-size="15" font-weight="700">Kimi CLI / OpenCode</text>
+        <rect x="300" y="180" width="190" height="40" rx="8" fill="#147d4b"/>
+        <text x="365" y="206" fill="#ffffff" font-size="15" font-weight="700">Healthy</text>
 
         <line x1="260" y1="58" x2="300" y2="58" stroke="#8ea2db" stroke-width="2"/>
         <line x1="260" y1="128" x2="300" y2="128" stroke="#8ea2db" stroke-width="2"/>
