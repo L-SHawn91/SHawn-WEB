@@ -3,7 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gemini CLI 인증 이슈 분석 / Gemini CLI Auth Incident</title>
+  <title>Gemini CLI 인증 장애 분석 보고서 | Google Login 차단, API Key 우회 운영 전략</title>
+  <meta name="description" content="Gemini CLI 인증 경로 장애를 경로별로 분해해 분석한 전문가 보고서. Google Login 차단과 API Key 경로 정상 상태를 비교하고 병렬 운영 전략을 제시합니다." />
+  <meta name="keywords" content="Gemini CLI, 인증 오류, Google Login, API Key, Kimi CLI, OpenCode, 병렬 운영, 모델 라우팅" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Gemini CLI 인증 장애 분석 보고서" />
+  <meta property="og:description" content="Login 경로 차단 시 API Key 경로 중심으로 운영을 전환하는 실무 가이드" />
+  <meta property="og:url" content="/reports/2026-02-18_08-22_GEMINI_CLI_AUTH.html" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <style>
     :root { --bg:#f5f8ff; --card:#ffffff; --text:#0e1730; --muted:#4f5f86; --ok:#147d4b; --warn:#a35b00; --bad:#b31f3a; --line:#cfd8f0; --primary:#2f58d8; }
     *{box-sizing:border-box}
@@ -27,14 +36,21 @@
     code{background:#edf2ff;padding:3px 7px;border-radius:7px;color:#0f2b77;font-size:90%}
     ul{margin:10px 0 0 22px}
     li{margin:6px 0}
+    .kicker{display:inline-block;background:#e9efff;border:1px solid #bfd0ff;color:#1b3c96;border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px}
+    .sublead{font-size:19px;color:#22386d;margin-top:8px}
+    .adbox{border:1.5px dashed #8aa4ea;background:#f1f6ff;padding:16px;border-radius:12px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
+      <span class="kicker lang-ko">MODEL OPS INCIDENT REPORT</span>
+      <span class="kicker lang-en">MODEL OPS INCIDENT REPORT</span>
       <h1 class="lang-ko">Gemini CLI 인증 이슈: Google 로그인 차단, API Key 경로는 정상</h1>
       <h1 class="lang-en">Gemini CLI Auth Incident: Google Login Blocked, API Key Path Works</h1>
-      <div class="meta">2026-02-18 08:22 KST · SHawn Ops Blog</div>
+      <p class="sublead lang-ko">이번 이슈의 핵심은 계정 전체 장애가 아니라 인증 경로 분리 장애입니다. 따라서 경로별 운영 정책이 정답입니다.</p>
+      <p class="sublead lang-en">The issue is path-specific rather than account-wide. A path-aware routing policy is the practical answer.</p>
+      <div class="meta">2026-02-18 08:22 KST · SHawn Ops Blog · Expert Editorial</div>
       <div class="toolbar">
         <button id="btn-ko" class="active" onclick="setLang('ko')">한국어</button>
         <button id="btn-en" onclick="setLang('en')">English</button>
@@ -94,6 +110,13 @@
       </svg>
     </div>
 
+    <div class="card adbox">
+      <div class="lang-ko"><strong>ADVERTISEMENT</strong></div>
+      <div class="lang-en"><strong>ADVERTISEMENT</strong></div>
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
     <div class="card">
       <h2 class="lang-ko">운영 액션 플랜</h2>
       <h2 class="lang-en">Operational Action Plan</h2>
@@ -109,6 +132,15 @@
         <li>Error policy: isolate on 401/403, cooldown 30–60m on 429, one retry on timeout</li>
         <li>Report path-level health separately (login/API/CLI) in regular ops reports</li>
       </ul>
+    </div>
+
+    <div class="card">
+      <h2 class="lang-ko">FAQ (검색 확장 블록)</h2>
+      <h2 class="lang-en">FAQ (SEO Expansion Block)</h2>
+      <p class="lang-ko"><strong>Q.</strong> Google 로그인만 막히면 Gemini를 완전히 중단해야 하나요?<br/><strong>A.</strong> 아닙니다. API Key 경로가 정상이라면 경로를 분리해 제한 운영하는 것이 실무적으로 효율적입니다.</p>
+      <p class="lang-ko"><strong>Q.</strong> 429가 반복될 때 가장 안전한 운영 방식은?<br/><strong>A.</strong> 해당 경로만 30~60분 쿨다운하고, Kimi/OpenCode 보조 경로로 트래픽을 분산하는 것이 안정적입니다.</p>
+      <p class="lang-en"><strong>Q.</strong> Should Gemini be fully disabled if only Google Login fails?<br/><strong>A.</strong> No. If API-key path is healthy, keep Gemini in restricted path-specific operation.</p>
+      <p class="lang-en"><strong>Q.</strong> What is the safest strategy under repeated 429?<br/><strong>A.</strong> Cool down the affected route for 30–60 minutes and shift load to Kimi/OpenCode fallback tracks.</p>
     </div>
   </div>
 
