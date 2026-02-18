@@ -66,14 +66,14 @@
         <h2 class="lang-ko">핵심 요약</h2>
         <h2 class="lang-en">Executive Summary</h2>
         <ul class="lang-ko">
-          <li><b>원인:</b> Gemini CLI의 <code>Login with Google</code> 인증 경로가 정책 플래그로 비활성화.</li>
-          <li><b>영향:</b> 로그인 기반 CLI는 실패하지만, API Key 기반 호출은 정상 가능.</li>
-          <li><b>운영 결론:</b> 당분간 Kimi + OpenCode를 주력, Gemini는 API Key 경로 중심으로 제한 운영.</li>
+          <li><b>원인:</b> Gemini CLI의 <code>Login with Google</code> 인증 경로가 정책 플래그/계정 상태 영향으로 차단되었습니다.</li>
+          <li><b>영향:</b> 동일 계정에서도 인증 경로에 따라 성공/실패가 갈리며, 로그인 경로는 실패하고 API Key 경로는 정상 응답합니다.</li>
+          <li><b>운영 결론:</b> Gemini 운영을 중단할 필요는 없으며, <b>API Key 경로를 표준 경로</b>로 고정하고 Login 경로는 진단용으로 분리해야 합니다.</li>
         </ul>
         <ul class="lang-en">
-          <li><b>Cause:</b> Gemini CLI <code>Login with Google</code> auth path is policy-disabled.</li>
-          <li><b>Impact:</b> Login-based CLI fails, while API-key calls can still succeed.</li>
-          <li><b>Ops decision:</b> Keep Kimi + OpenCode as primary; use Gemini mostly via API key path.</li>
+          <li><b>Cause:</b> Gemini CLI <code>Login with Google</code> path is blocked by policy/account-state conditions.</li>
+          <li><b>Impact:</b> Success depends on auth path: login fails while API-key calls remain healthy.</li>
+          <li><b>Ops decision:</b> Keep Gemini active via API-key as the default path, and isolate Login path as diagnostic-only.</li>
         </ul>
       </div>
       <div>
@@ -96,7 +96,7 @@
         <text x="365" y="136" fill="#ffffff" font-size="15" font-weight="700">Healthy</text>
 
         <rect x="40" y="180" width="240" height="40" rx="8" fill="#2f58d8"/>
-        <text x="54" y="206" fill="#ffffff" font-size="15" font-weight="700">Kimi CLI / OpenCode</text>
+        <text x="54" y="206" fill="#ffffff" font-size="15" font-weight="700">Gemini API Key (Server/CI)</text>
         <rect x="300" y="180" width="190" height="40" rx="8" fill="#147d4b"/>
         <text x="365" y="206" fill="#ffffff" font-size="15" font-weight="700">Healthy</text>
 
@@ -106,7 +106,7 @@
 
         <text x="540" y="70" fill="#9fb0d6" font-size="13">Policy risk is path-specific, not always account-wide.</text>
         <text x="540" y="130" fill="#9fb0d6" font-size="13">Use API key path for Gemini continuity.</text>
-        <text x="540" y="200" fill="#9fb0d6" font-size="13">Run production parallel on Kimi + OpenCode.</text>
+        <text x="540" y="200" fill="#9fb0d6" font-size="13">Standardize production calls on Gemini API-key routes.</text>
       </svg>
     </div>
 
@@ -121,16 +121,43 @@
       <h2 class="lang-ko">운영 액션 플랜</h2>
       <h2 class="lang-en">Operational Action Plan</h2>
       <ul class="lang-ko">
-        <li>기본 병렬 조합: <code>Kimi CLI + OpenCode</code></li>
-        <li>Gemini는 <code>API Key</code> 경로 우선 사용, 로그인 경로는 보조/점검용</li>
-        <li>오류정책: 401/403 즉시 격리, 429는 30~60분 쿨다운, timeout 1회 재시도</li>
-        <li>정기 점검 리포트에 경로별 상태(로그인/API/CLI)를 분리 표시</li>
+        <li>표준 호출 경로를 <code>Gemini API Key</code>로 고정하고, Login 경로는 진단/복구 테스트 용도로만 사용</li>
+        <li>실패 코드 정책: <code>401/403</code> 즉시 격리, <code>429</code> 30~60분 쿨다운, <code>timeout</code> 1회 재시도</li>
+        <li>환경 분리: 로컬 개발(Login 가능 시)과 운영 서버(API Key 전용)를 분리해 재현성과 안정성 확보</li>
+        <li>정기 점검 리포트에 경로별 상태(Login/API)와 최근 24시간 오류율을 함께 기록</li>
       </ul>
       <ul class="lang-en">
-        <li>Primary parallel combo: <code>Kimi CLI + OpenCode</code></li>
-        <li>Use Gemini mainly via <code>API key</code>; keep login path as secondary/check-only</li>
-        <li>Error policy: isolate on 401/403, cooldown 30–60m on 429, one retry on timeout</li>
-        <li>Report path-level health separately (login/API/CLI) in regular ops reports</li>
+        <li>Set <code>Gemini API key path</code> as the production default; keep Login path for diagnostics only.</li>
+        <li>Error policy: isolate on <code>401/403</code>, cooldown 30–60m on <code>429</code>, retry once on timeout.</li>
+        <li>Separate environments: local development vs production API-key path for reproducibility.</li>
+        <li>Track path-level health (Login/API) and 24h error rates in regular ops reporting.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2 class="lang-ko">상세 분석: 왜 경로별로 결과가 달라지는가</h2>
+      <h2 class="lang-en">Deep Dive: Why outcomes differ by auth path</h2>
+      <p class="lang-ko">이번 사례는 “Gemini가 전체적으로 죽었다”가 아니라, 인증 계층이 분리되어 작동한다는 점을 보여줍니다. 즉, 동일한 모델/계정이라도 인증 토큰 발급 체인, 정책 판정 지점, 지역/세션 상태에 따라 실제 호출 가능 여부가 달라질 수 있습니다. 운영에서는 이 차이를 구조적으로 반영해야 장애 전파를 막을 수 있습니다.</p>
+      <p class="lang-ko">특히 로그인 기반 흐름은 사용자 세션 상태, 계정 정책 플래그, 브라우저/OAuth 토큰 조건에 영향을 받는 반면, API Key 기반 흐름은 서버 측 자격증명 검증으로 단순화됩니다. 그래서 실무에서는 API Key 경로를 기준선으로 삼고, 로그인 경로는 부가 채널로 관리하는 방식이 재현성·안정성 측면에서 유리합니다.</p>
+      <p class="lang-en">This incident indicates path-level divergence rather than a full Gemini outage. The same account/model may produce different outcomes depending on token issuance chain, policy checkpoints, and session state. In production operations, this must be modeled explicitly to avoid cascading failures.</p>
+    </div>
+
+    <div class="card">
+      <h2 class="lang-ko">운영 체크리스트 (Gemini 전용)</h2>
+      <h2 class="lang-en">Operational checklist (Gemini-only)</h2>
+      <ul class="lang-ko">
+        <li><b>경로 표준화:</b> 배치/자동화/서버 호출은 API Key로만 실행</li>
+        <li><b>진단 분리:</b> Login 경로는 주기 진단 1회/일로 제한, 운영 경로와 분리</li>
+        <li><b>모니터링:</b> 401/403/429/timeout 비율을 시간대별로 기록</li>
+        <li><b>복구 절차:</b> 429 급증 시 쿨다운 후 재시도, 401/403은 즉시 자격증명 재검증</li>
+        <li><b>리포트 표준:</b> 결론 1줄 + 원인 2줄 + 조치 2줄 포맷 고정</li>
+      </ul>
+      <ul class="lang-en">
+        <li><b>Standardize path:</b> use API key for all production/server automation.</li>
+        <li><b>Isolate diagnostics:</b> run Login-path checks separately from production calls.</li>
+        <li><b>Monitor:</b> track 401/403/429/timeout rates by time window.</li>
+        <li><b>Recovery:</b> cooldown on 429, immediate credential validation on 401/403.</li>
+        <li><b>Reporting:</b> fixed format—1-line conclusion, 2-line cause, 2-line action.</li>
       </ul>
     </div>
 
