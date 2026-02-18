@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>소놀봇(mybot_ver2) 정적 분석: 재사용 가능한 것과 버려야 할 것</title>
+  <title>소놀봇(mybot_ver2) 정적 분석 보고서 | 실행 리스크, 재사용 전략, OpenClaw 이식 가이드</title>
+  <meta name="description" content="소놀봇(mybot_ver2) 패키지의 정적 분석 결과를 전문가 관점으로 정리했습니다. 실행 리스크, 재사용 가능한 아키텍처 패턴, OpenClaw 맥북 이식 전략을 시각화와 함께 제공합니다." />
+  <meta name="keywords" content="소놀봇, mybot_ver2, OpenClaw, 정적분석, Telegram bot, 보안리스크, 운영자동화, AdSense" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="소놀봇(mybot_ver2) 정적 분석 보고서" />
+  <meta property="og:description" content="실행 리스크와 재사용 전략을 분리해 제시하는 운영형 분석 보고서" />
+  <meta property="og:url" content="/reports/2026-02-18_10-00_SONOLBOT_ANALYSIS.html" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta name="twitter:card" content="summary_large_image" />
   <!-- Google AdSense (replace ca-pub-XXXXXXXXXXXXXXXX and slot ids before production) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <style>
@@ -34,13 +42,17 @@
     .ad-copy{color:#2a3c6f}
     .ad-cta{display:inline-block;margin-top:12px;background:#2f58d8;color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
     .ad-cta:hover{opacity:.92}
+    .kicker{display:inline-block;background:#e9efff;border:1px solid #bfd0ff;color:#1b3c96;border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px;letter-spacing:.02em}
+    .sublead{font-size:19px;color:#22386d;margin-top:10px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>소놀봇(mybot_ver2) 정적 분석: 재사용 가능한 것과 버려야 할 것</h1>
-      <div class="meta">2026-02-18 10:00 KST · SHawn Ops Blog</div>
+      <span class="kicker">SECURITY & OPS ANALYSIS</span>
+      <h1>소놀봇(mybot_ver2) 정적 분석 보고서: 실행 리스크와 재사용 전략 분리</h1>
+      <p class="sublead">핵심은 간단합니다. 코드 실행은 막고, 운영 패턴만 이식하면 성과는 유지하고 리스크는 크게 줄일 수 있습니다.</p>
+      <div class="meta">2026-02-18 10:00 KST · SHawn Ops Blog · Technical Editorial</div>
       <div style="margin-top:12px">
         <span class="badge warn">정적 분석 전용</span>
         <span class="badge bad">설치/실행 비권장</span>
@@ -56,6 +68,34 @@
         <li>대신 상태머신(체크→예약→실행→보고→완료)과 보고 포맷은 매우 유용합니다.</li>
         <li>OpenClaw 맥북 운영에 패턴만 이식하는 방식이 가장 안전하고 효과적입니다.</li>
       </ul>
+    </div>
+
+    <div class="card">
+      <h2>리스크-가치 시각화</h2>
+      <svg viewBox="0 0 980 320" width="100%" role="img" aria-label="risk value matrix">
+        <rect x="40" y="40" width="420" height="220" fill="#f7f9ff" stroke="#cfd8f0" />
+        <line x1="250" y1="40" x2="250" y2="260" stroke="#cfd8f0"/>
+        <line x1="40" y1="150" x2="460" y2="150" stroke="#cfd8f0"/>
+        <text x="48" y="30" fill="#26428f" font-size="14" font-weight="700">Risk (↑) vs Reuse Value (→)</text>
+        <text x="52" y="274" fill="#5a6e9f" font-size="12">Low Risk</text>
+        <text x="388" y="274" fill="#5a6e9f" font-size="12">High Value</text>
+
+        <circle cx="360" cy="85" r="10" fill="#b4233c"/>
+        <text x="376" y="90" fill="#233b73" font-size="13">권한 우회 옵션/자동실행 루프 (폐기)</text>
+
+        <circle cx="370" cy="120" r="10" fill="#b4233c"/>
+        <text x="386" y="125" fill="#233b73" font-size="13">스케줄러 영속화 로직 (폐기)</text>
+
+        <circle cx="365" cy="210" r="10" fill="#157347"/>
+        <text x="381" y="215" fill="#233b73" font-size="13">상태머신/보고 템플릿 (재사용)</text>
+
+        <rect x="520" y="50" width="400" height="200" rx="12" fill="#eef4ff" stroke="#c5d5ff"/>
+        <text x="540" y="86" fill="#1f3f9d" font-size="18" font-weight="800">운영 판단</text>
+        <text x="540" y="122" fill="#213a72" font-size="15">1) 실행 코드는 격리/배제</text>
+        <text x="540" y="148" fill="#213a72" font-size="15">2) 상태 전이 패턴만 OpenClaw로 이식</text>
+        <text x="540" y="174" fill="#213a72" font-size="15">3) done/failed 지표를 리포트에 자동 반영</text>
+        <text x="540" y="210" fill="#1a2f5f" font-size="14" font-weight="700">= 보안 리스크 최소화 + 운영 생산성 최대화</text>
+      </svg>
     </div>
 
     <div class="card adbox">
