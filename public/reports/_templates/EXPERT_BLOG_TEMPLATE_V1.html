@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{META_DESCRIPTION}}" />
+  <meta name="keywords" content="{{META_KEYWORDS}}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="{{OG_TITLE}}" />
+  <meta property="og:description" content="{{OG_DESCRIPTION}}" />
+  <meta property="og:url" content="{{OG_URL}}" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- AdSense: replace before production -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+  <style>
+    :root { --bg:#f4f7ff; --card:#fff; --text:#101a34; --muted:#4e5d83; --line:#cfd8f0; --primary:#2f58d8; }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#edf3ff,#f9fbff);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.85;font-size:18px}
+    .wrap{max-width:1100px;margin:34px auto;padding:0 18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;margin-bottom:18px;box-shadow:0 8px 24px rgba(15,30,72,.08)}
+    h1{font-size:38px;line-height:1.25;margin:0 0 12px}
+    h2{font-size:27px;margin:0 0 12px}
+    .meta{font-size:15px;color:var(--muted)}
+    .kicker{display:inline-block;background:#e9efff;border:1px solid #bfd0ff;color:#1b3c96;border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px}
+    .sublead{font-size:19px;color:#22386d;margin-top:10px}
+    ul{margin:10px 0 0 22px} li{margin:8px 0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:920px){.grid{grid-template-columns:1fr}}
+    .adbox{border:1.5px dashed #8aa4ea;background:#f1f6ff;padding:18px;border-radius:14px}
+    .faq q{font-weight:700}
+    code{background:#edf2ff;color:#17348f;padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <span class="kicker">{{CATEGORY_TAG}}</span>
+      <h1>{{H1_TITLE}}</h1>
+      <p class="sublead">{{SUBLEAD}}</p>
+      <div class="meta">{{DATE_TIME}} · SHawn Ops Blog · Expert Editorial</div>
+    </section>
+
+    <section class="card">
+      <h2>결론 (TL;DR)</h2>
+      <p><strong>{{TLDR_1LINE}}</strong></p>
+      <ul>
+        <li>{{TLDR_BULLET_1}}</li>
+        <li>{{TLDR_BULLET_2}}</li>
+        <li>{{TLDR_BULLET_3}}</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>시각화 1) 핵심 비교 차트</h2>
+      <svg viewBox="0 0 960 260" width="100%" role="img" aria-label="before after chart">
+        <text x="20" y="30" font-size="18" fill="#1f3f9d" font-weight="800">Before vs After</text>
+        <rect x="40" y="70" width="300" height="28" fill="#d7e2ff"/><text x="350" y="89">Before: {{METRIC1_BEFORE}}</text>
+        <rect x="40" y="120" width="500" height="28" fill="#6f93ff"/><text x="550" y="139">After: {{METRIC1_AFTER}}</text>
+        <rect x="40" y="170" width="260" height="28" fill="#d7e2ff"/><text x="310" y="189">Before: {{METRIC2_BEFORE}}</text>
+        <rect x="40" y="220" width="520" height="28" fill="#6f93ff"/><text x="570" y="239">After: {{METRIC2_AFTER}}</text>
+      </svg>
+    </section>
+
+    <section class="card adbox">
+      <div><strong>ADVERTISEMENT</strong></div>
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </section>
+
+    <section class="card">
+      <h2>시각화 2) 실행 플로우</h2>
+      <svg viewBox="0 0 960 180" width="100%" role="img" aria-label="workflow">
+        <rect x="30" y="60" width="150" height="46" rx="10" fill="#e6edff"/><text x="65" y="88">입력</text>
+        <rect x="220" y="60" width="180" height="46" rx="10" fill="#d5e0ff"/><text x="265" y="88">분석</text>
+        <rect x="450" y="60" width="180" height="46" rx="10" fill="#b9cbff"/><text x="490" y="88">의사결정</text>
+        <rect x="680" y="60" width="180" height="46" rx="10" fill="#8ea9ff"/><text x="730" y="88">실행</text>
+        <line x1="180" y1="83" x2="220" y2="83" stroke="#6b89e8" stroke-width="3"/>
+        <line x1="400" y1="83" x2="450" y2="83" stroke="#6b89e8" stroke-width="3"/>
+        <line x1="630" y1="83" x2="680" y2="83" stroke="#6b89e8" stroke-width="3"/>
+      </svg>
+    </section>
+
+    <section class="card grid">
+      <div>
+        <h2>핵심 분석</h2>
+        <p>{{MAIN_BODY_LEFT}}</p>
+      </div>
+      <div>
+        <h2>실행 체크리스트</h2>
+        <ul>
+          <li>{{CHECK_1}}</li>
+          <li>{{CHECK_2}}</li>
+          <li>{{CHECK_3}}</li>
+          <li>{{CHECK_4}}</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>시각화 3) KPI 스냅샷</h2>
+      <div class="grid">
+        <div class="card" style="margin:0"><h3>CTR</h3><p><strong>{{KPI_CTR}}</strong></p></div>
+        <div class="card" style="margin:0"><h3>체류시간</h3><p><strong>{{KPI_TIME}}</strong></p></div>
+      </div>
+    </section>
+
+    <section class="card faq">
+      <h2>FAQ (SEO 확장 블록)</h2>
+      <p><q>{{FAQ_Q1}}</q><br/>{{FAQ_A1}}</p>
+      <p><q>{{FAQ_Q2}}</q><br/>{{FAQ_A2}}</p>
+    </section>
+
+    <section class="card adbox">
+      <div><strong>ADVERTISEMENT</strong></div>
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </section>
+  </div>
+</body>
+</html>
