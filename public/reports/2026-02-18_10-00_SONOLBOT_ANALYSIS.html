@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>소놀봇(mybot_ver2) 정적 분석: 재사용 가능한 것과 버려야 할 것</title>
+  <style>
+    :root { --bg:#f5f8ff; --card:#fff; --text:#101a34; --muted:#4e5d83; --line:#cfd8f0; --ok:#157347; --bad:#b4233c; --warn:#9a5a00; --primary:#2f58d8; }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#edf3ff,#f9fbff);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.75}
+    .wrap{max-width:1040px;margin:34px auto;padding:0 18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 8px 24px rgba(15,30,72,.08)}
+    h1{font-size:34px;line-height:1.25;margin:0 0 10px}
+    h2{font-size:24px;margin:0 0 10px}
+    .meta{font-size:14px;color:var(--muted)}
+    .badge{display:inline-block;padding:6px 10px;border:1px solid;border-radius:999px;font-size:12px;font-weight:700;margin-right:6px}
+    .ok{color:var(--ok);border-color:#74d8ac;background:#ebfff4}
+    .bad{color:var(--bad);border-color:#f3a6b5;background:#fff1f5}
+    .warn{color:var(--warn);border-color:#ffd089;background:#fff8eb}
+    ul{margin:8px 0 0 20px}
+    li{margin:6px 0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:920px){.grid{grid-template-columns:1fr}}
+    table{width:100%;border-collapse:collapse;font-size:15px}
+    th,td{border:1px solid var(--line);padding:10px;vertical-align:top}
+    th{background:#eef3ff;text-align:left}
+    code{background:#edf2ff;color:#17348f;padding:2px 6px;border-radius:6px}
+    .conclusion{font-size:18px;font-weight:700;color:#132765}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>소놀봇(mybot_ver2) 정적 분석: 재사용 가능한 것과 버려야 할 것</h1>
+      <div class="meta">2026-02-18 10:00 KST · SHawn Ops Blog</div>
+      <div style="margin-top:12px">
+        <span class="badge warn">정적 분석 전용</span>
+        <span class="badge bad">설치/실행 비권장</span>
+        <span class="badge ok">패턴 재사용 권장</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>한줄 결론</h2>
+      <p class="conclusion">소놀봇은 “실행 대상”이 아니라 “아키텍처 참고서”로 쓰는 게 최적입니다.</p>
+      <ul>
+        <li>패키지 자체 실행은 보안/지속성 리스크가 큽니다.</li>
+        <li>대신 상태머신(체크→예약→실행→보고→완료)과 보고 포맷은 매우 유용합니다.</li>
+        <li>OpenClaw 맥북 운영에 패턴만 이식하는 방식이 가장 안전하고 효과적입니다.</li>
+      </ul>
+    </div>
+
+    <div class="card grid">
+      <div>
+        <h2>확인된 사실</h2>
+        <ul>
+          <li>분석 대상: <code>mybot_ver2.zip</code> (약 56MB)</li>
+          <li>SHA256: <code>ada776c6c51b6a03846a9f9ac6a8d780d9797d84ce8966454fe3ec2d91561d5d</code></li>
+          <li>분석 방식: 설치/실행 없이 정적 분석</li>
+          <li>중심 구성: Python Telegram 처리 + BAT 자동실행/스케줄링 + 대형 번들</li>
+        </ul>
+      </div>
+      <div>
+        <h2>리스크 포인트</h2>
+        <ul>
+          <li>권한 우회 성격 옵션 사용 흔적</li>
+          <li>스케줄러/루프 기반 강한 지속성</li>
+          <li>원격 명령 실행 성향</li>
+          <li>번들 크기/구성 복잡도로 검증 표면 증가</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>무엇을 가져오고 무엇을 버릴지</h2>
+      <table>
+        <thead>
+          <tr><th>구분</th><th>판정</th><th>이유</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>작업 상태머신(check→reserve→execute→report→done)</td><td>가져오기</td><td>운영 가시성과 장애 추적성 개선에 직접 기여</td></tr>
+          <tr><td>중간/완료 보고 템플릿</td><td>가져오기</td><td>실무 보고 품질 표준화 가능</td></tr>
+          <tr><td>BAT 자동실행/스케줄러 등록</td><td>버리기</td><td>OS 종속 + 지속성 리스크</td></tr>
+          <tr><td>권한 우회성 실행 옵션</td><td>버리기</td><td>보안 통제 우회 가능성</td></tr>
+          <tr><td>대형 번들 전체 이식</td><td>버리기</td><td>공급망/업데이트 리스크 증가</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>적용 결과 (OpenClaw 맥북)</h2>
+      <ul>
+        <li><code>tools/ask</code>, <code>tools/askp</code>에 상태 추적 계측 적용</li>
+        <li>상태 저장: <code>_logs/task_state.json</code></li>
+        <li>스키마: <code>_logs/task_state.schema.json</code></li>
+        <li>평가 문서: <code>_logs/SONOLBOT_OPTIMIZATION_BEFORE_AFTER.md</code></li>
+      </ul>
+      <p>결과적으로 “로그 기반 운영”에서 “상태 지표 기반 운영”으로 한 단계 올라갔습니다.</p>
+    </div>
+  </div>
+</body>
+</html>

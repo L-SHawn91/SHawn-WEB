@@ -1,6 +1,16 @@
 [
   {
     "date": "2026-02-18",
+    "time": "10:00",
+    "type": "BLOG",
+    "title": "Sonnolbot Static Analysis: What to Reuse vs What to Drop",
+    "path": "/reports/2026-02-18_10-00_SONOLBOT_ANALYSIS.html",
+    "filename": "2026-02-18_10-00_SONOLBOT_ANALYSIS.html",
+    "timestamp": "2026-02-18T10:00:00+09:00",
+    "json_path": "/reports/2026-02-18_10-00_SONOLBOT_ANALYSIS.json"
+  },
+  {
+    "date": "2026-02-18",
     "time": "08:22",
     "type": "BLOG",
     "title": "Gemini CLI Auth Incident: Google Login Blocked, API Key Path Works",
