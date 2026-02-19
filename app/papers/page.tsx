@@ -14,12 +14,34 @@ interface Paper {
   url: string;
   pdfUrl?: string;
   citations?: number;
+  meshTerms?: string[];
+  techniques?: string[];
+  influenceScore?: number;
+  rankScore?: number;
 }
+
+interface TrackStatus {
+  t1: 'idle' | 'loading' | 'done' | 'error';
+  t2: 'idle' | 'loading' | 'done' | 'error';
+  t3: 'idle' | 'loading' | 'done' | 'error';
+  t4: 'idle' | 'loading' | 'done' | 'error';
+}
+
+const trackNames = {
+  t1: 'PubMed (OpenCode)',
+  t2: 'arXiv (Kimi)', 
+  t3: 'Semantic (Gemini)',
+  t4: 'Integration (Codex)'
+};
 
 export default function PapersPage() {
   const [query, setQuery] = useState('');
   const [papers, setPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(false);
+  const [trackStatus, setTrackStatus] = useState<TrackStatus>({
+    t1: 'idle', t2: 'idle', t3: 'idle', t4: 'idle'
+  });
+  const [meta, setMeta] = useState<any>(null);
   const [filters, setFilters] = useState({
     sources: ['pubmed', 'arxiv', 'semantic'] as string[],
     yearFrom: '',
@@ -30,16 +52,28 @@ export default function PapersPage() {
     if (!query.trim()) return;
     
     setLoading(true);
+    setTrackStatus({ t1: 'loading', t2: 'loading', t3: 'loading', t4: 'idle' });
+    setMeta(null);
+    
     try {
-      const response = await fetch('/api/papers/search', {
+      // Simulate track updates for UX
+      setTimeout(() => setTrackStatus(s => ({ ...s, t1: 'done' })), 800);
+      setTimeout(() => setTrackStatus(s => ({ ...s, t2: 'done' })), 1200);
+      setTimeout(() => setTrackStatus(s => ({ ...s, t3: 'done' })), 1500);
+      
+      const response = await fetch('/api/papers/search-parallel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, filters }),
       });
       const data = await response.json();
+      
       setPapers(data.papers || []);
+      setMeta(data.meta);
+      setTrackStatus({ t1: 'done', t2: 'done', t3: 'done', t4: 'done' });
     } catch (error) {
       console.error('Search failed:', error);
+      setTrackStatus({ t1: 'error', t2: 'error', t3: 'error', t4: 'error' });
     }
     setLoading(false);
   };
@@ -101,6 +135,47 @@ export default function PapersPage() {
               {loading ? 'Searching...' : 'Search'}
             </button>
           </div>
+
+          {/* Parallel Track Status */}
+          {loading && (
+            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                4-Track Parallel Search
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {(Object.keys(trackStatus) as Array<keyof TrackStatus>).map((track) => (
+                  <div
+                    key={track}
+                    className={`p-3 rounded-lg border ${
+                      trackStatus[track] === 'done' ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-700' :
+                      trackStatus[track] === 'loading' ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-700 animate-pulse' :
+                      trackStatus[track] === 'error' ? 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-700' :
+                      'bg-gray-100 border-gray-200 dark:bg-gray-800 dark:border-gray-700'
+                    }`}
+                  >
+                    <div className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                      {trackNames[track]}
+                    </div>
+                    <div className="text-sm font-semibold mt-1">
+                      {trackStatus[track] === 'done' && '✓ Complete'}
+                      {trackStatus[track] === 'loading' && '⏳ Running...'}
+                      {trackStatus[track] === 'error' && '✗ Error'}
+                      {trackStatus[track] === 'idle' && '⏸ Idle'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {meta && (
+                <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                  Total time: {meta.totalTime}ms | 
+                  PubMed: {meta.trackResults?.t1 || 0} | 
+                  arXiv: {meta.trackResults?.t2 || 0} | 
+                  Semantic: {meta.trackResults?.t3 || 0} | 
+                  Final: {meta.trackResults?.final || 0}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Filters */}
           <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -183,6 +258,11 @@ export default function PapersPage() {
                         {paper.source}
                       </span>
                       <span className="text-sm text-gray-500">{paper.year}</span>
+                      {paper.rankScore && (
+                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">
+                          Score: {paper.rankScore}
+                        </span>
+                      )}
                       {paper.citations && (
                         <span className="text-sm text-gray-500">
                           {paper.citations} citations
@@ -197,6 +277,22 @@ export default function PapersPage() {
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                       {paper.authors.join(', ')}
                     </p>
+                    
+                    <{/* Tags */}>
+                    {(paper.meshTerms?.length || paper.techniques?.length) && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {paper.meshTerms?.map((term) => (
+                          <span key={term} className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                            {term}
+                          </span>
+                        ))}
+                        {paper.techniques?.map((tech) => (
+                          <span key={tech} className="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     
                     <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3 mb-4">
                       {paper.abstract}
