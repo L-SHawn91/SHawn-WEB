@@ -2,193 +2,160 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gemini CLI 인증 장애 분석 보고서 | Google Login 차단, API Key 우회 운영 전략</title>
-  <meta name="description" content="Gemini CLI 인증 경로 장애를 경로별로 분해해 분석한 전문가 보고서. Google Login 차단과 API Key 경로 정상 상태를 비교하고 병렬 운영 전략을 제시합니다." />
-  <meta name="keywords" content="Gemini CLI, 인증 오류, Google Login, API Key, Kimi CLI, OpenCode, 병렬 운영, 모델 라우팅" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gemini CLI 로그인 차단 이슈, 왜 전체 장애가 아니었나</title>
+  <meta name="description" content="Gemini CLI 로그인 차단 이슈를 처음 보는 사람도 이해할 수 있게 정리한 실전형 블로그. 원인, 재현 포인트, API Key 운영 전환 전략, 체크리스트와 시각화를 제공합니다." />
+  <meta name="keywords" content="Gemini CLI 로그인 오류, Gemini API Key, Google 로그인 차단, 인증 경로 분리, Gemini 운영 전략" />
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="Gemini CLI 인증 장애 분석 보고서" />
-  <meta property="og:description" content="Login 경로 차단 시 API Key 경로 중심으로 운영을 전환하는 실무 가이드" />
+  <meta property="og:title" content="Gemini CLI 로그인 차단 이슈, 왜 전체 장애가 아니었나" />
+  <meta property="og:description" content="모델 장애가 아니라 인증 경로 이슈였던 실제 사례와 운영 대응 전략" />
   <meta property="og:url" content="/reports/2026-02-18_08-22_GEMINI_CLI_AUTH.html" />
   <meta property="og:locale" content="ko_KR" />
   <meta name="twitter:card" content="summary_large_image" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <style>
-    :root { --bg:#f5f8ff; --card:#ffffff; --text:#0e1730; --muted:#4f5f86; --ok:#147d4b; --warn:#a35b00; --bad:#b31f3a; --line:#cfd8f0; --primary:#2f58d8; }
+    :root{
+      --bg:#f6f8ff; --card:#fff; --text:#101936; --muted:#5b678a; --line:#dde4f5;
+      --blue:#2f58d8; --ok:#157347; --bad:#b4233c;
+    }
     *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#eef3ff,#f8faff);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.75;font-size:18px}
-    .wrap{max-width:880px;margin:34px auto;padding:0 18px}
-    .card{background:var(--card);border:1px solid #e8ecf6;border-radius:14px;padding:30px 32px;margin-bottom:20px;box-shadow:0 3px 10px rgba(13,27,62,.05)}
-    h1{font-size:42px;line-height:1.24;margin:0 0 14px;font-weight:800}
-    h2{margin:0 0 14px;font-size:30px;line-height:1.35}
-    .meta{color:var(--muted);font-size:15px}
-    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
-    button{background:#edf2ff;color:#10225b;border:1px solid #b7c7f1;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
-    button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-    .badge{display:inline-block;padding:6px 11px;border-radius:999px;font-size:13px;border:1px solid;font-weight:700}
-    .ok{color:var(--ok);border-color:#74d8ac;background:#e8fff3}
-    .warn{color:var(--warn);border-color:#ffca7a;background:#fff6e8}
-    .bad{color:var(--bad);border-color:#f4a0b1;background:#fff0f4}
-    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px} @media(max-width:920px){.grid{grid-template-columns:1fr} body{font-size:18px} .card{padding:22px 20px} h1{font-size:34px} h2{font-size:25px}}
-    img{width:100%;border-radius:12px;border:1px solid var(--line)}
-    .lang-en{display:none}
-    .chart{width:100%;height:auto;display:block;background:#f7f9ff;border:1px solid var(--line);border-radius:12px;padding:10px}
-    code{background:#edf2ff;padding:3px 7px;border-radius:7px;color:#0f2b77;font-size:90%}
-    ul{margin:12px 0 0 24px}
-    li{margin:10px 0}
-    .kicker{display:inline-block;background:#e9efff;border:1px solid #bfd0ff;color:#1b3c96;border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px}
-    .sublead{font-size:19px;color:#22386d;margin-top:8px}
-    .adbox{border:1.5px dashed #8aa4ea;background:#f1f6ff;padding:16px;border-radius:12px}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:"Pretendard Variable","Noto Sans KR",Inter,system-ui,-apple-system,"Apple SD Gothic Neo",Segoe UI,Roboto,sans-serif;
+      line-height:1.92; font-size:19px; letter-spacing:-0.01em;
+    }
+    .wrap{max-width:880px; margin:24px auto; padding:0 12px}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:14px;
+      padding:22px 18px; margin:0 0 14px; box-shadow:0 2px 8px rgba(18,30,80,.05);
+    }
+    h1{font-size:34px; line-height:1.28; margin:0 0 10px}
+    h2{font-size:26px; line-height:1.35; margin:0 0 10px}
+    p{margin:10px 0}
+    ul{margin:8px 0 0 20px; padding:0}
+    li{margin:8px 0}
+    .kicker{display:inline-block; padding:5px 10px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid #bfd0ff; background:#eaf0ff; color:#20419d}
+    .meta{font-size:14px; color:var(--muted)}
+    .lead{font-size:21px; font-weight:700; color:#1a2f68}
+    .quote{border-left:4px solid #c8d6ff; padding:8px 12px; background:#f7f9ff; border-radius:8px}
+    .adbox{border:1.5px dashed #9fb2ea; background:#f2f6ff; border-radius:12px; padding:14px}
+    code{background:#edf2ff; color:#1b3c94; padding:1px 6px; border-radius:6px}
+    pre{margin:10px 0; background:#0f1730; color:#e7eeff; padding:12px; border-radius:10px; overflow:auto; font-size:14px; line-height:1.6}
+    table{width:100%; border-collapse:collapse; font-size:16px}
+    th,td{border:1px solid var(--line); padding:10px; vertical-align:top}
+    th{background:#f1f5ff; text-align:left}
+    .note{font-size:14px; color:var(--muted)}
+    @media(max-width:720px){
+      body{font-size:18px}
+      .card{padding:16px 13px}
+      h1{font-size:30px}
+      h2{font-size:24px}
+      table{font-size:15px}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <span class="kicker lang-ko">MODEL OPS INCIDENT REPORT</span>
-      <span class="kicker lang-en">MODEL OPS INCIDENT REPORT</span>
-      <h1 class="lang-ko">Gemini CLI 인증 이슈: Google 로그인 차단, API Key 경로는 정상</h1>
-      <h1 class="lang-en">Gemini CLI Auth Incident: Google Login Blocked, API Key Path Works</h1>
-      <p class="sublead lang-ko">이번 이슈의 핵심은 계정 전체 장애가 아니라 인증 경로 분리 장애입니다. 따라서 경로별 운영 정책이 정답입니다.</p>
-      <p class="sublead lang-en">The issue is path-specific rather than account-wide. A path-aware routing policy is the practical answer.</p>
-      <div class="meta">2026-02-18 08:22 KST · SHawn Ops Blog · Expert Editorial</div>
-      <div class="toolbar">
-        <button id="btn-ko" class="active" onclick="setLang('ko')">한국어</button>
-        <button id="btn-en" onclick="setLang('en')">English</button>
-        <span class="badge bad lang-ko">Google Login 차단</span>
-        <span class="badge bad lang-en">Google Login blocked</span>
-        <span class="badge ok lang-ko">API Key 경로 정상</span>
-        <span class="badge ok lang-en">API key path healthy</span>
-      </div>
-    </div>
+  <main class="wrap">
+    <section class="card">
+      <span class="kicker">MODEL OPS INCIDENT</span>
+      <h1>Gemini CLI 로그인 차단 이슈, 왜 ‘전체 장애’처럼 보였을까</h1>
+      <p class="lead">이번 이슈의 핵심은 모델 자체 장애가 아니라 인증 경로 분리였습니다. 로그인 경로가 막혀도 API Key 경로가 살아 있으면 운영은 계속할 수 있습니다.</p>
+      <div class="meta">2026-02-18 08:22 KST · SHawn Ops Blog</div>
+    </section>
 
-    <div class="card grid">
-      <div>
-        <h2 class="lang-ko">핵심 요약</h2>
-        <h2 class="lang-en">Executive Summary</h2>
-        <ul class="lang-ko">
-          <li><b>원인:</b> Gemini CLI의 <code>Login with Google</code> 인증 경로가 정책 플래그/계정 상태 영향으로 차단되었습니다.</li>
-          <li><b>영향:</b> 동일 계정에서도 인증 경로에 따라 성공/실패가 갈리며, 로그인 경로는 실패하고 API Key 경로는 정상 응답합니다.</li>
-          <li><b>운영 결론:</b> Gemini 운영을 중단할 필요는 없으며, <b>API Key 경로를 표준 경로</b>로 고정하고 Login 경로는 진단용으로 분리해야 합니다.</li>
-        </ul>
-        <ul class="lang-en">
-          <li><b>Cause:</b> Gemini CLI <code>Login with Google</code> path is blocked by policy/account-state conditions.</li>
-          <li><b>Impact:</b> Success depends on auth path: login fails while API-key calls remain healthy.</li>
-          <li><b>Ops decision:</b> Keep Gemini active via API-key as the default path, and isolate Login path as diagnostic-only.</li>
-        </ul>
-      </div>
-      <div>
-        <img src="/reports/assets/2026-02-18_gemini-cli-disabled.jpg" alt="Gemini CLI disabled screenshot" />
-      </div>
-    </div>
+    <section class="card">
+      <h2>처음 보는 사람을 위한 30초 요약</h2>
+      <ul>
+        <li><b>증상:</b> Gemini CLI의 <code>Login with Google</code> 방식이 실패</li>
+        <li><b>반대 증거:</b> 같은 시점에 <code>API Key</code> 방식은 정상 응답</li>
+        <li><b>결론:</b> 모델 품질 문제가 아니라 인증 경로 분리 이슈</li>
+      </ul>
+      <div class="quote">즉, “Gemini 전체 장애”가 아니라 “Gemini에 들어가는 문 중 하나가 막힌 상태”였습니다.</div>
+    </section>
 
-    <div class="card">
-      <h2 class="lang-ko">시각화: 인증 경로 상태 맵</h2>
-      <h2 class="lang-en">Visualization: Auth Path Health Map</h2>
-      <svg class="chart" viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Auth path health chart">
-        <rect x="40" y="40" width="240" height="40" rx="8" fill="#2f58d8"/>
-        <text x="54" y="66" fill="#ffffff" font-size="15" font-weight="700">Gemini CLI: Login with Google</text>
-        <rect x="300" y="40" width="190" height="40" rx="8" fill="#b31f3a"/>
-        <text x="327" y="66" fill="#ffffff" font-size="15" font-weight="700">Blocked (ToS)</text>
+    <section class="card">
+      <h2>왜 이 이슈가 실무에서 크게 보였나</h2>
+      <p>운영팀 입장에서는 같은 모델 호출인데 어떤 환경에서는 되고, 어떤 환경에서는 안 되면 원인 분리가 늦어집니다. 특히 로그인 기반 호출과 API Key 기반 호출이 혼합돼 있으면 장애가 더 크게 보입니다.</p>
+      <p>이번 케이스도 마찬가지였습니다. 처음에는 모델 장애처럼 보였지만, 호출 경로를 나눠서 확인하니 이슈가 빠르게 분리됐습니다.</p>
+    </section>
 
-        <rect x="40" y="110" width="240" height="40" rx="8" fill="#2f58d8"/>
-        <text x="54" y="136" fill="#ffffff" font-size="15" font-weight="700">Gemini CLI: API Key</text>
-        <rect x="300" y="110" width="190" height="40" rx="8" fill="#147d4b"/>
-        <text x="365" y="136" fill="#ffffff" font-size="15" font-weight="700">Healthy</text>
+    <section class="card">
+      <h2>시각화 1) 인증 경로 상태 맵</h2>
+      <svg viewBox="0 0 920 285" width="100%" role="img" aria-label="Gemini auth path map">
+        <rect x="28" y="34" width="320" height="46" rx="9" fill="#2f58d8"/>
+        <text x="44" y="63" fill="#fff" font-size="15" font-weight="700">Gemini CLI: Login with Google</text>
+        <rect x="380" y="34" width="220" height="46" rx="9" fill="#b4233c"/>
+        <text x="447" y="63" fill="#fff" font-size="15" font-weight="700">Blocked</text>
 
-        <rect x="40" y="180" width="240" height="40" rx="8" fill="#2f58d8"/>
-        <text x="54" y="206" fill="#ffffff" font-size="15" font-weight="700">Gemini API Key (Server/CI)</text>
-        <rect x="300" y="180" width="190" height="40" rx="8" fill="#147d4b"/>
-        <text x="365" y="206" fill="#ffffff" font-size="15" font-weight="700">Healthy</text>
+        <rect x="28" y="116" width="320" height="46" rx="9" fill="#2f58d8"/>
+        <text x="44" y="145" fill="#fff" font-size="15" font-weight="700">Gemini CLI: API Key</text>
+        <rect x="380" y="116" width="220" height="46" rx="9" fill="#157347"/>
+        <text x="455" y="145" fill="#fff" font-size="15" font-weight="700">Healthy</text>
 
-        <line x1="260" y1="58" x2="300" y2="58" stroke="#8ea2db" stroke-width="2"/>
-        <line x1="260" y1="128" x2="300" y2="128" stroke="#8ea2db" stroke-width="2"/>
-        <line x1="260" y1="198" x2="300" y2="198" stroke="#8ea2db" stroke-width="2"/>
+        <rect x="28" y="198" width="320" height="46" rx="9" fill="#2f58d8"/>
+        <text x="44" y="227" fill="#fff" font-size="15" font-weight="700">Gemini Server/CI API Key</text>
+        <rect x="380" y="198" width="220" height="46" rx="9" fill="#157347"/>
+        <text x="455" y="227" fill="#fff" font-size="15" font-weight="700">Healthy</text>
 
-        <text x="540" y="70" fill="#9fb0d6" font-size="13">Policy risk is path-specific, not always account-wide.</text>
-        <text x="540" y="130" fill="#9fb0d6" font-size="13">Use API key path for Gemini continuity.</text>
-        <text x="540" y="200" fill="#9fb0d6" font-size="13">Standardize production calls on Gemini API-key routes.</text>
+        <line x1="348" y1="57" x2="380" y2="57" stroke="#9bb1ea" stroke-width="2"/>
+        <line x1="348" y1="139" x2="380" y2="139" stroke="#9bb1ea" stroke-width="2"/>
+        <line x1="348" y1="221" x2="380" y2="221" stroke="#9bb1ea" stroke-width="2"/>
+
+        <text x="630" y="94" fill="#516498" font-size="13">핵심: 모델 장애 X · 인증 경로 문제 O</text>
+        <text x="630" y="130" fill="#516498" font-size="13">운영 기준선은 API Key 경로</text>
+        <text x="630" y="166" fill="#516498" font-size="13">Login은 진단 트랙으로 분리</text>
       </svg>
-    </div>
+    </section>
 
-    <div class="card adbox">
-      <div class="lang-ko"><strong>ADVERTISEMENT</strong></div>
-      <div class="lang-en"><strong>ADVERTISEMENT</strong></div>
+    <section class="card adbox">
+      <strong>ADVERTISEMENT</strong>
       <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2 class="lang-ko">운영 액션 플랜</h2>
-      <h2 class="lang-en">Operational Action Plan</h2>
-      <ul class="lang-ko">
-        <li>표준 호출 경로를 <code>Gemini API Key</code>로 고정하고, Login 경로는 진단/복구 테스트 용도로만 사용</li>
-        <li>실패 코드 정책: <code>401/403</code> 즉시 격리, <code>429</code> 30~60분 쿨다운, <code>timeout</code> 1회 재시도</li>
-        <li>환경 분리: 로컬 개발(Login 가능 시)과 운영 서버(API Key 전용)를 분리해 재현성과 안정성 확보</li>
-        <li>정기 점검 리포트에 경로별 상태(Login/API)와 최근 24시간 오류율을 함께 기록</li>
+    <section class="card">
+      <h2>실전 대응: 우리는 이렇게 바꿨다</h2>
+      <p>핵심은 복잡하지 않습니다. 운영 기준 경로를 하나로 고정하고, 나머지는 진단 트랙으로 분리합니다.</p>
+      <table>
+        <thead><tr><th>구분</th><th>기존</th><th>변경 후</th></tr></thead>
+        <tbody>
+          <tr><td>운영 호출 경로</td><td>Login/API 혼용</td><td><b>API Key 고정</b></td></tr>
+          <tr><td>장애 해석</td><td>모델 장애로 오인</td><td><b>경로 단위 분리</b></td></tr>
+          <tr><td>로그 분석</td><td>원인 추적 지연</td><td><b>경로별 코드 분류</b></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>오류코드별 플레이북 (Gemini-only)</h2>
+      <ul>
+        <li><code>401/403</code>: 자격증명/권한 검증 후 해당 경로 즉시 격리</li>
+        <li><code>429</code>: 30~60분 쿨다운 후 재시도 (연타 금지)</li>
+        <li><code>timeout</code>: 1회 재시도 후 다음 주기로 이관</li>
       </ul>
-      <ul class="lang-en">
-        <li>Set <code>Gemini API key path</code> as the production default; keep Login path for diagnostics only.</li>
-        <li>Error policy: isolate on <code>401/403</code>, cooldown 30–60m on <code>429</code>, retry once on timeout.</li>
-        <li>Separate environments: local development vs production API-key path for reproducibility.</li>
-        <li>Track path-level health (Login/API) and 24h error rates in regular ops reporting.</li>
-      </ul>
-    </div>
+      <pre># 운영 공통 원칙
+- Production 호출: API Key 경로만
+- Login 경로: 일 1회 진단용
+- 보고 형식: 결론 1줄 + 원인 2줄 + 조치 2줄</pre>
+    </section>
 
-    <div class="card">
-      <h2 class="lang-ko">상세 분석: 왜 경로별로 결과가 달라지는가</h2>
-      <h2 class="lang-en">Deep Dive: Why outcomes differ by auth path</h2>
-      <p class="lang-ko">이번 사례는 “Gemini가 전체적으로 죽었다”가 아니라, 인증 계층이 분리되어 작동한다는 점을 보여줍니다. 즉, 동일한 모델/계정이라도 인증 토큰 발급 체인, 정책 판정 지점, 지역/세션 상태에 따라 실제 호출 가능 여부가 달라질 수 있습니다. 운영에서는 이 차이를 구조적으로 반영해야 장애 전파를 막을 수 있습니다.</p>
-      <p class="lang-ko">특히 로그인 기반 흐름은 사용자 세션 상태, 계정 정책 플래그, 브라우저/OAuth 토큰 조건에 영향을 받는 반면, API Key 기반 흐름은 서버 측 자격증명 검증으로 단순화됩니다. 그래서 실무에서는 API Key 경로를 기준선으로 삼고, 로그인 경로는 부가 채널로 관리하는 방식이 재현성·안정성 측면에서 유리합니다.</p>
-      <p class="lang-en">This incident indicates path-level divergence rather than a full Gemini outage. The same account/model may produce different outcomes depending on token issuance chain, policy checkpoints, and session state. In production operations, this must be modeled explicitly to avoid cascading failures.</p>
-    </div>
+    <section class="card">
+      <h2>시각화 2) 전/후 운영 효과</h2>
+      <svg viewBox="0 0 920 250" width="100%" role="img" aria-label="Before after ops">
+        <text x="20" y="28" font-size="18" fill="#1e3f9d" font-weight="800">Before vs After</text>
+        <rect x="40" y="60" width="260" height="28" fill="#d8e2ff"/><text x="312" y="79" font-size="14">원인 분리 속도: 느림</text>
+        <rect x="40" y="95" width="520" height="28" fill="#6c8ff8"/><text x="572" y="114" font-size="14">원인 분리 속도: 빠름</text>
+        <rect x="40" y="140" width="250" height="28" fill="#d8e2ff"/><text x="302" y="159" font-size="14">장애 전파 위험: 큼</text>
+        <rect x="40" y="175" width="540" height="28" fill="#6c8ff8"/><text x="594" y="194" font-size="14">장애 전파 위험: 작음</text>
+      </svg>
+    </section>
 
-    <div class="card">
-      <h2 class="lang-ko">운영 체크리스트 (Gemini 전용)</h2>
-      <h2 class="lang-en">Operational checklist (Gemini-only)</h2>
-      <ul class="lang-ko">
-        <li><b>경로 표준화:</b> 배치/자동화/서버 호출은 API Key로만 실행</li>
-        <li><b>진단 분리:</b> Login 경로는 주기 진단 1회/일로 제한, 운영 경로와 분리</li>
-        <li><b>모니터링:</b> 401/403/429/timeout 비율을 시간대별로 기록</li>
-        <li><b>복구 절차:</b> 429 급증 시 쿨다운 후 재시도, 401/403은 즉시 자격증명 재검증</li>
-        <li><b>리포트 표준:</b> 결론 1줄 + 원인 2줄 + 조치 2줄 포맷 고정</li>
-      </ul>
-      <ul class="lang-en">
-        <li><b>Standardize path:</b> use API key for all production/server automation.</li>
-        <li><b>Isolate diagnostics:</b> run Login-path checks separately from production calls.</li>
-        <li><b>Monitor:</b> track 401/403/429/timeout rates by time window.</li>
-        <li><b>Recovery:</b> cooldown on 429, immediate credential validation on 401/403.</li>
-        <li><b>Reporting:</b> fixed format—1-line conclusion, 2-line cause, 2-line action.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2 class="lang-ko">FAQ (검색 확장 블록)</h2>
-      <h2 class="lang-en">FAQ (SEO Expansion Block)</h2>
-      <p class="lang-ko"><strong>Q.</strong> Google 로그인만 막히면 Gemini를 완전히 중단해야 하나요?<br/><strong>A.</strong> 아닙니다. API Key 경로가 정상이라면 경로를 분리해 제한 운영하는 것이 실무적으로 효율적입니다.</p>
-      <p class="lang-ko"><strong>Q.</strong> 429가 반복될 때 가장 안전한 운영 방식은?<br/><strong>A.</strong> 해당 경로만 30~60분 쿨다운하고, Kimi/OpenCode 보조 경로로 트래픽을 분산하는 것이 안정적입니다.</p>
-      <p class="lang-en"><strong>Q.</strong> Should Gemini be fully disabled if only Google Login fails?<br/><strong>A.</strong> No. If API-key path is healthy, keep Gemini in restricted path-specific operation.</p>
-      <p class="lang-en"><strong>Q.</strong> What is the safest strategy under repeated 429?<br/><strong>A.</strong> Cool down the affected route for 30–60 minutes and shift load to Kimi/OpenCode fallback tracks.</p>
-    </div>
-  </div>
-
-  <script>
-    function setLang(lang){
-      const ko = document.querySelectorAll('.lang-ko');
-      const en = document.querySelectorAll('.lang-en');
-      const btnKo = document.getElementById('btn-ko');
-      const btnEn = document.getElementById('btn-en');
-      if(lang==='ko'){
-        ko.forEach(el=>el.style.display=''); en.forEach(el=>el.style.display='none');
-        btnKo.classList.add('active'); btnEn.classList.remove('active');
-        document.documentElement.lang='ko';
-      }else{
-        ko.forEach(el=>el.style.display='none'); en.forEach(el=>el.style.display='');
-        btnEn.classList.add('active'); btnKo.classList.remove('active');
-        document.documentElement.lang='en';
-      }
-      localStorage.setItem('blogLang',lang);
-    }
-    setLang(localStorage.getItem('blogLang') || 'ko');
-  </script>
+    <section class="card">
+      <h2>FAQ</h2>
+      <p><b>Q.</b> Login이 막히면 Gemini를 중단해야 하나요?<br/><b>A.</b> 아닙니다. API Key 경로가 정상이라면 운영은 지속 가능합니다.</p>
+      <p><b>Q.</b> 왜 모델 변경보다 경로 분리가 우선인가요?<br/><b>A.</b> 이번 이슈는 모델 품질 문제가 아니라 인증 경로 안정성 문제이기 때문입니다.</p>
+      <p><b>Q.</b> 가장 먼저 바꿀 1가지는 무엇인가요?<br/><b>A.</b> 배치/크론/서버 호출 경로를 API Key로 고정하는 것입니다.</p>
+    </section>
+  </main>
 </body>
 </html>
