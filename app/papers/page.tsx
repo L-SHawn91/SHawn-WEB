@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Activity,
   BookOpen,
@@ -28,6 +28,7 @@ interface Paper {
   techniques?: string[];
   influenceScore?: number;
   rankScore?: number;
+  matchType?: 'author-exact' | 'author-weak' | 'topic';
 }
 
 interface TrackStatus {
@@ -39,6 +40,8 @@ interface TrackStatus {
 
 interface SearchMeta {
   totalTime?: number;
+  intent?: 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'TOPIC';
+  authorCandidates?: string[];
   trackResults?: {
     t1?: number;
     t2?: number;
@@ -50,6 +53,41 @@ interface SearchMeta {
 type SortMode = 'score' | 'recent' | 'citations' | 'source';
 
 type RelatedItem = { id: string; title: string; year?: number; source: string; url: string };
+
+type MergeSuggestion = { left: string; right: string; merged: string };
+
+const T_MERGE = 350;
+
+function tokenizeInput(input: string): string[] {
+  const out: string[] = [];
+  const regex = /"([^"]+)"|[^\s,;\/]+/g;
+  let m: RegExpExecArray | null;
+  while ((m = regex.exec(input)) !== null) {
+    const token = (m[1] || m[0] || '').trim();
+    if (token) out.push(token);
+  }
+  return out;
+}
+
+function looksLikeNameToken(token: string): boolean {
+  return /^[A-Z][a-z'\-]+$/.test(token);
+}
+
+function canSuggestMerge(left: string, right: string): boolean {
+  if (!left || !right) return false;
+  if (looksLikeNameToken(left) && looksLikeNameToken(right)) return true;
+  return left.length <= 12 && right.length <= 12;
+}
+
+function buildQueryFromChips(chips: string[], buffer: string): string {
+  const tokens = [...chips];
+  const parsed = tokenizeInput(buffer);
+  tokens.push(...parsed);
+  return tokens
+    .map((t) => (t.includes(' ') ? `"${t}"` : t))
+    .join(' ')
+    .trim();
+}
 
 const trackNames: Record<keyof TrackStatus, string> = {
   t1: 'PubMed Track',
@@ -108,6 +146,9 @@ function trackStatusText(status: TrackStatus[keyof TrackStatus]): string {
 
 export default function PapersPage() {
   const [query, setQuery] = useState('');
+  const [chips, setChips] = useState<string[]>([]);
+  const [mergeSuggestion, setMergeSuggestion] = useState<MergeSuggestion | null>(null);
+  const lastChipCommitAtRef = useRef<number | null>(null);
   const [papers, setPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(false);
   const [trackStatus, setTrackStatus] = useState<TrackStatus>({
@@ -236,8 +277,18 @@ export default function PapersPage() {
     }
   };
 
+  const effectiveInputQuery = useMemo(() => buildQueryFromChips(chips, query), [chips, query]);
+
+  const commitBufferToChip = (text: string) => {
+    const tokens = tokenizeInput(text);
+    if (!tokens.length) return;
+    setChips((prev) => [...prev, ...tokens]);
+    lastChipCommitAtRef.current = Date.now();
+  };
+
   const searchPapers = async () => {
-    if (!query.trim()) return;
+    const userQuery = effectiveInputQuery;
+    if (!userQuery.trim()) return;
 
     setLoading(true);
     setTrackStatus({ t1: 'loading', t2: 'loading', t3: 'loading', t4: 'idle' });
@@ -249,8 +300,8 @@ export default function PapersPage() {
       setTimeout(() => setTrackStatus((s) => ({ ...s, t3: 'done' })), 1400);
 
       const effectiveQuery = bioFocus
-        ? `${query} AND (endometrium OR uterus OR ovarian OR embryo OR organoid OR autophagy OR transcriptomics)`
-        : query;
+        ? `${userQuery} AND (endometrium OR uterus OR ovarian OR embryo OR organoid OR autophagy OR transcriptomics)`
+        : userQuery;
 
       const response = await fetch('/api/papers/search-parallel', {
         method: 'POST',
@@ -304,6 +355,7 @@ export default function PapersPage() {
             <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
               <span title="검색 전체 소요시간(밀리초)"><Activity className="h-4 w-4" /></span>
               Last Query Time: {meta?.totalTime ? `${meta.totalTime}ms` : 'N/A'}
+              {meta?.intent ? <span className="ml-2 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] dark:bg-slate-700">Intent {meta.intent}</span> : null}
             </div>
           </div>
         </div>
@@ -314,15 +366,74 @@ export default function PapersPage() {
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-3 md:flex-row">
                   <div className="relative flex-1">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-                    <input
-                      type="text"
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
-                      placeholder="질환, 기술, 저자, 키워드 입력"
-                      className="w-full rounded-xl border border-slate-300 bg-slate-50 px-10 py-3 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-                    />
+                    <Search className="pointer-events-none absolute left-3 top-3.5 h-5 w-5 text-slate-400" />
+                    <div className="min-h-[46px] w-full rounded-xl border border-slate-300 bg-slate-50 px-10 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus-within:ring-2 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {chips.map((chip, idx) => (
+                          <span key={`${chip}-${idx}`} className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-100 px-2 py-0.5 text-xs text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
+                            {chip}
+                            <button
+                              type="button"
+                              onClick={() => setChips((prev) => prev.filter((_, i) => i !== idx))}
+                              className="text-blue-700 hover:text-blue-900 dark:text-blue-300"
+                              title="블록 제거"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                        <input
+                          type="text"
+                          value={query}
+                          onChange={(e) => {
+                            setQuery(e.target.value);
+                            setMergeSuggestion(null);
+                          }}
+                          onKeyDown={(e) => {
+                            const now = Date.now();
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              if (query.trim()) {
+                                commitBufferToChip(query);
+                                setQuery('');
+                              }
+                              void searchPapers();
+                              return;
+                            }
+                            if (e.key === 'Backspace' && !query && chips.length > 0) {
+                              e.preventDefault();
+                              setChips((prev) => prev.slice(0, -1));
+                              setMergeSuggestion(null);
+                              return;
+                            }
+                            if (e.key === ' ' || e.key === 'Tab' || e.key === ',' || e.key === ';' || e.key === '/') {
+                              if (!query.trim()) return;
+                              e.preventDefault();
+                              const newToken = tokenizeInput(query).join(' ').trim();
+                              if (!newToken) {
+                                setQuery('');
+                                return;
+                              }
+                              setChips((prev) => {
+                                const next = [...prev, newToken];
+                                const prevToken = prev[prev.length - 1];
+                                const last = lastChipCommitAtRef.current;
+                                if (prevToken && last && now - last <= T_MERGE && canSuggestMerge(prevToken, newToken)) {
+                                  setMergeSuggestion({ left: prevToken, right: newToken, merged: `${prevToken} ${newToken}` });
+                                } else {
+                                  setMergeSuggestion(null);
+                                }
+                                return next;
+                              });
+                              lastChipCommitAtRef.current = now;
+                              setQuery('');
+                            }
+                          }}
+                          placeholder={chips.length ? '다음 블록 입력...' : '질환, 기술, 저자, 키워드 입력'}
+                          className="min-w-[180px] flex-1 bg-transparent py-1 text-sm outline-none"
+                        />
+                      </div>
+                    </div>
                   </div>
                   <button
                     onClick={searchPapers}
@@ -332,6 +443,32 @@ export default function PapersPage() {
                     {loading ? '검색 중...' : '검색 실행'}
                   </button>
                 </div>
+                {mergeSuggestion && (
+                  <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                    <span>병합 제안: [{mergeSuggestion.left}] + [{mergeSuggestion.right}]</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setChips((prev) => {
+                          if (prev.length < 2) return prev;
+                          const next = [...prev.slice(0, -2), mergeSuggestion.merged];
+                          return next;
+                        });
+                        setMergeSuggestion(null);
+                      }}
+                      className="rounded-md border border-emerald-400 px-2 py-0.5 text-emerald-700"
+                    >
+                      Merge
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMergeSuggestion(null)}
+                      className="rounded-md border border-slate-300 px-2 py-0.5"
+                    >
+                      Keep split
+                    </button>
+                  </div>
+                )}
                 <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
                   <button
                     onClick={() => setBioFocus((v) => !v)}
@@ -456,7 +593,7 @@ export default function PapersPage() {
 
               {displayedPapers.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                  {query ? '검색 결과가 없습니다. 필터를 조정해보세요.' : '검색어를 입력하면 결과가 대시보드에 표시됩니다.'}
+                  {effectiveInputQuery ? '검색 결과가 없습니다. 필터를 조정해보세요.' : '검색어를 입력하면 결과가 대시보드에 표시됩니다.'}
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -472,6 +609,11 @@ export default function PapersPage() {
                         >
                           {sourceLabel[paper.source]}
                         </span>
+                        {paper.matchType && (
+                          <span className="rounded-full bg-violet-100 px-2 py-1 text-violet-800 dark:bg-violet-900/40 dark:text-violet-200">
+                            {paper.matchType}
+                          </span>
+                        )}
                         <span
                           className="rounded-full bg-slate-200 px-2 py-1 text-slate-700 dark:bg-slate-700 dark:text-slate-200"
                           title={yearTooltip}
