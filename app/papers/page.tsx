@@ -148,6 +148,7 @@ export default function PapersPage() {
   const [query, setQuery] = useState('');
   const [chips, setChips] = useState<string[]>([]);
   const [mergeSuggestion, setMergeSuggestion] = useState<MergeSuggestion | null>(null);
+  const [isComposing, setIsComposing] = useState(false);
   const lastChipCommitAtRef = useRef<number | null>(null);
   const [papers, setPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(false);
@@ -389,7 +390,10 @@ export default function PapersPage() {
                             setQuery(e.target.value);
                             setMergeSuggestion(null);
                           }}
+                          onCompositionStart={() => setIsComposing(true)}
+                          onCompositionEnd={() => setIsComposing(false)}
                           onKeyDown={(e) => {
+                            if (isComposing || (e.nativeEvent as any)?.isComposing) return;
                             const now = Date.now();
                             if (e.key === 'Enter') {
                               e.preventDefault();
@@ -442,6 +446,31 @@ export default function PapersPage() {
                   >
                     {loading ? '검색 중...' : '검색 실행'}
                   </button>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!query.trim()) return;
+                      commitBufferToChip(query);
+                      setQuery('');
+                    }}
+                    className="rounded-md border border-slate-300 px-2 py-0.5"
+                  >
+                    Add chip
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setChips([]);
+                      setQuery('');
+                      setMergeSuggestion(null);
+                    }}
+                    className="rounded-md border border-slate-300 px-2 py-0.5"
+                  >
+                    Clear chips
+                  </button>
+                  <span className="text-[11px]">IME 입력 중(한글 조합)에는 자동 분할을 보류합니다.</span>
                 </div>
                 {mergeSuggestion && (
                   <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">

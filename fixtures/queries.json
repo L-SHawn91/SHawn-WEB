@@ -1,7 +1,25 @@
 [
-  { "name": "strong_author_autophagy", "query": "\"Yoshinori Ohsumi\" autophagy" },
-  { "name": "weak_author_with_topic", "query": "John Smith autophagy endometrium" },
-  { "name": "weak_author_only", "query": "John Smith" },
-  { "name": "topic_only_endometrium", "query": "uterine endometrium fibrosis" },
-  { "name": "mixed_author_topic", "query": "Ohsumi lysosome Nobel" }
+  { "name": "strong_author_autophagy_1", "query": "\"Yoshinori Ohsumi\" autophagy", "group": "strong_author" },
+  { "name": "strong_author_autophagy_2", "query": "\"Shinya Yamanaka\" pluripotency", "group": "strong_author" },
+  { "name": "strong_author_endometrium", "query": "\"Garry S. Evans\" endometrium", "group": "strong_author" },
+  { "name": "strong_author_organoid", "query": "\"Hans Clevers\" organoid", "group": "strong_author" },
+  { "name": "strong_author_singlecell", "query": "\"Aviv Regev\" single-cell", "group": "strong_author" },
+
+  { "name": "weak_author_with_topic_1", "query": "John Smith autophagy endometrium", "group": "weak_author" },
+  { "name": "weak_author_with_topic_2", "query": "David Lee uterine fibrosis", "group": "weak_author" },
+  { "name": "weak_author_with_topic_3", "query": "Michael Kim organoid transcriptomics", "group": "weak_author" },
+  { "name": "weak_author_only_1", "query": "John Smith", "group": "weak_author" },
+  { "name": "weak_author_only_2", "query": "David Lee", "group": "weak_author" },
+
+  { "name": "topic_only_endometrium", "query": "uterine endometrium fibrosis", "group": "topic" },
+  { "name": "topic_only_autophagy", "query": "autophagy LC3 lysosome", "group": "topic" },
+  { "name": "topic_only_organoid", "query": "endometrial organoid hormone signaling", "group": "topic" },
+  { "name": "topic_only_scRNA", "query": "single-cell RNA-seq endometrium", "group": "topic" },
+  { "name": "topic_only_repair", "query": "tissue regeneration uterus", "group": "topic" },
+
+  { "name": "mixed_author_topic_1", "query": "Ohsumi lysosome Nobel", "group": "mixed" },
+  { "name": "mixed_author_topic_2", "query": "Yamanaka fibroblast reprogramming", "group": "mixed" },
+  { "name": "mixed_author_topic_3", "query": "Regev endometrium single cell atlas", "group": "mixed" },
+  { "name": "mixed_author_topic_4", "query": "Clevers uterine organoid", "group": "mixed" },
+  { "name": "mixed_author_topic_5", "query": "Kim autophagy LC3", "group": "mixed" }
 ]
