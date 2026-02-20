@@ -1,0 +1,7 @@
+[
+  { "name": "strong_author_autophagy", "query": "\"Yoshinori Ohsumi\" autophagy" },
+  { "name": "weak_author_with_topic", "query": "John Smith autophagy endometrium" },
+  { "name": "weak_author_only", "query": "John Smith" },
+  { "name": "topic_only_endometrium", "query": "uterine endometrium fibrosis" },
+  { "name": "mixed_author_topic", "query": "Ohsumi lysosome Nobel" }
+]
