@@ -13,7 +13,10 @@ type DatasetSource =
   | "dataverse"
   | "figshare"
   | "github"
-  | "openml";
+  | "openml"
+  | "crossref"
+  | "openalex"
+  | "cngb";
 
 type SortBy = "rank" | "recent" | "popular" | "title";
 
@@ -54,6 +57,9 @@ const ALL_SOURCES: DatasetSource[] = [
   "figshare",
   "github",
   "openml",
+  "crossref",
+  "openalex",
+  "cngb",
 ];
 
 function isDatasetSource(source: string): source is DatasetSource {
@@ -538,6 +544,122 @@ async function searchOpenMl(query: string, yearFrom?: string, yearTo?: string): 
   }
 }
 
+async function searchCrossref(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  try {
+    const params = new URLSearchParams({
+      query,
+      rows: "20",
+      sort: "relevance",
+      order: "desc",
+      select: "DOI,title,published-print,published-online,issued,abstract,type,publisher,URL,subject,container-title",
+    });
+    const res = await fetch(`https://api.crossref.org/works?${params.toString()}`, {
+      signal: AbortSignal.timeout(15000),
+      headers: { Accept: "application/json" },
+    });
+    const data = await res.json();
+    const rows = data?.message?.items;
+    if (!Array.isArray(rows)) return [];
+
+    return rows
+      .map((row: any) => {
+        const dateParts = row?.issued?.["date-parts"]?.[0] || row?.["published-online"]?.["date-parts"]?.[0] || row?.["published-print"]?.["date-parts"]?.[0];
+        const year = Array.isArray(dateParts) && dateParts.length > 0 ? String(dateParts[0]) : undefined;
+        const updatedAt = year ? `${year}-01-01` : undefined;
+        return {
+          id: `crossref-${row.DOI || Math.random().toString(36).slice(2)}`,
+          title: Array.isArray(row.title) ? row.title[0] || "Untitled work" : "Untitled work",
+          description: cleanText(Array.isArray(row["container-title"]) ? row["container-title"][0] : row.publisher || row.type || "Crossref record"),
+          source: "crossref" as const,
+          url: row.URL || (row.DOI ? `https://doi.org/${row.DOI}` : "https://api.crossref.org"),
+          updatedAt,
+          tags: Array.isArray(row.subject) ? row.subject.slice(0, 6) : [],
+        } as DatasetItem;
+      })
+      .filter((item) => inYearRange(item.updatedAt, yearFrom, yearTo));
+  } catch (error) {
+    console.error("[datasets] Crossref search failed:", error);
+    return [];
+  }
+}
+
+async function searchOpenAlex(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  try {
+    const params = new URLSearchParams({
+      search: query,
+      per_page: "20",
+      select: "id,display_name,publication_year,primary_location,open_access,concepts,cited_by_count",
+    });
+    const res = await fetch(`https://api.openalex.org/works?${params.toString()}`, {
+      signal: AbortSignal.timeout(15000),
+      headers: { Accept: "application/json" },
+    });
+    const data = await res.json();
+    const rows = data?.results;
+    if (!Array.isArray(rows)) return [];
+
+    return rows
+      .map((row: any) => {
+        const year = row.publication_year ? String(row.publication_year) : undefined;
+        const updatedAt = year ? `${year}-01-01` : undefined;
+        const doi = typeof row?.doi === "string" ? row.doi.replace(/^https?:\/\/doi.org\//, "") : undefined;
+        return {
+          id: `openalex-${row.id || Math.random().toString(36).slice(2)}`,
+          title: row.display_name || "Untitled work",
+          description: cleanText(`OpenAlex work. Citations: ${row.cited_by_count || 0}`),
+          source: "openalex" as const,
+          url: row?.primary_location?.landing_page_url || (doi ? `https://doi.org/${doi}` : "https://openalex.org"),
+          updatedAt,
+          likes: typeof row.cited_by_count === "number" ? row.cited_by_count : undefined,
+          tags: Array.isArray(row.concepts)
+            ? row.concepts.slice(0, 6).map((c: any) => c?.display_name).filter((x: unknown): x is string => typeof x === "string")
+            : [],
+        } as DatasetItem;
+      })
+      .filter((item) => inYearRange(item.updatedAt, yearFrom, yearTo));
+  } catch (error) {
+    console.error("[datasets] OpenAlex search failed:", error);
+    return [];
+  }
+}
+
+async function searchCngb(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  try {
+    const url = `https://db.cngb.org/data_resources/?query=${encodeURIComponent(query)}`;
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(15000),
+      headers: {
+        "user-agent": "Mozilla/5.0",
+        accept: "text/html,application/xhtml+xml",
+      },
+    });
+    const html = await res.text();
+
+    const titleMatches = [...html.matchAll(/<a[^>]*href="([^"]*\/data_resources\/[^"#]*)"[^>]*>([\s\S]*?)<\/a>/gi)].slice(0, 20);
+    if (titleMatches.length === 0) return [];
+
+    const items: DatasetItem[] = titleMatches.map((m, idx) => {
+      const rawTitle = m[2]?.replace(/<[^>]*>/g, " ") || "CNGB record";
+      const cleanTitle = rawTitle.replace(/\s+/g, " ").trim();
+      const href = m[1].startsWith("http") ? m[1] : `https://db.cngb.org${m[1]}`;
+      return {
+        id: `cngb-${idx}-${cleanTitle.slice(0, 20).replace(/\W/g, "")}`,
+        title: cleanTitle || "CNGB dataset",
+        description: cleanText("CNGBdb data resource search result"),
+        source: "cngb",
+        url: href,
+        updatedAt: undefined,
+        tags: ["CNGBdb", "China"],
+      };
+    });
+
+    return items.filter((item) => inYearRange(item.updatedAt, yearFrom, yearTo));
+  } catch (error) {
+    console.error("[datasets] CNGB search failed:", error);
+    return [];
+  }
+}
+
 function integrateAndRank(items: DatasetItem[]): DatasetItem[] {
   const seen = new Set<string>();
   const deduped = items.filter((item) => {
@@ -643,6 +765,9 @@ export async function POST(request: NextRequest) {
       figshare: searchFigshare,
       github: searchGithubDatasets,
       openml: searchOpenMl,
+      crossref: searchCrossref,
+      openalex: searchOpenAlex,
+      cngb: searchCngb,
     };
 
     const jobs = sources.map((source) => ({ source, promise: sourceJobs[source](query, yearFrom, yearTo) }));
@@ -662,6 +787,9 @@ export async function POST(request: NextRequest) {
       figshare: [],
       github: [],
       openml: [],
+      crossref: [],
+      openalex: [],
+      cngb: [],
     };
 
     settled.forEach((result, index) => {

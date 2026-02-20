@@ -16,7 +16,10 @@ type DatasetSource =
   | "dataverse"
   | "figshare"
   | "github"
-  | "openml";
+  | "openml"
+  | "crossref"
+  | "openalex"
+  | "cngb";
 
 interface DatasetItem {
   id: string;
@@ -83,9 +86,12 @@ const SOURCE_OPTIONS: DatasetSource[] = [
   "figshare",
   "github",
   "openml",
+  "crossref",
+  "openalex",
+  "cngb",
 ];
 
-const BIO_CORE_SOURCES: DatasetSource[] = ["ncbi", "ena", "europepmc", "dryad", "zenodo", "dataverse"];
+const BIO_CORE_SOURCES: DatasetSource[] = ["ncbi", "ena", "europepmc", "dryad", "zenodo", "dataverse", "openalex", "crossref", "cngb"];
 
 const BIO_PRESETS: BioPreset[] = [
   {
@@ -152,6 +158,9 @@ const SOURCE_LABELS: Record<DatasetSource, string> = {
   figshare: "Figshare",
   github: "GitHub",
   openml: "OpenML",
+  crossref: "Crossref",
+  openalex: "OpenAlex",
+  cngb: "CNGBdb (China)",
 };
 
 export default function DatasetsPage() {
