@@ -2,178 +2,156 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>소놀봇(mybot_ver2) 정적 분석 보고서 | 실행 리스크, 재사용 전략, OpenClaw 이식 가이드</title>
-  <meta name="description" content="소놀봇(mybot_ver2) 패키지의 정적 분석 결과를 전문가 관점으로 정리했습니다. 실행 리스크, 재사용 가능한 아키텍처 패턴, OpenClaw 맥북 이식 전략을 시각화와 함께 제공합니다." />
-  <meta name="keywords" content="소놀봇, mybot_ver2, OpenClaw, 정적분석, Telegram bot, 보안리스크, 운영자동화, AdSense" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>소놀봇(mybot_ver2) 분석기: 왜 실행이 아니라 해부를 택했는가</title>
+  <meta name="description" content="소놀봇(mybot_ver2) 패키지를 실행하지 않고 정적 분석한 이유와 결과를 스토리형으로 정리했습니다. 무엇을 재사용하고 무엇을 버려야 하는지 실무 관점에서 설명합니다." />
+  <meta name="keywords" content="소놀봇, mybot_ver2, 정적 분석, OpenClaw, 보안 리스크, 텔레그램 자동화, 상태머신" />
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="소놀봇(mybot_ver2) 정적 분석 보고서" />
-  <meta property="og:description" content="실행 리스크와 재사용 전략을 분리해 제시하는 운영형 분석 보고서" />
+  <meta property="og:title" content="소놀봇 분석기: 왜 실행이 아니라 해부를 택했는가" />
+  <meta property="og:description" content="코드는 돌리지 않고 구조만 가져오는 안전한 재사용 전략" />
   <meta property="og:url" content="/reports/2026-02-18_10-00_SONOLBOT_ANALYSIS.html" />
   <meta property="og:locale" content="ko_KR" />
   <meta name="twitter:card" content="summary_large_image" />
-  <!-- Google AdSense (replace ca-pub-XXXXXXXXXXXXXXXX and slot ids before production) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <style>
-    :root { --bg:#f5f8ff; --card:#fff; --text:#101a34; --muted:#4e5d83; --line:#cfd8f0; --ok:#157347; --bad:#b4233c; --warn:#9a5a00; --primary:#2f58d8; }
+    :root{
+      --bg:#f6f8ff; --card:#fff; --text:#101936; --muted:#5b678a; --line:#dde4f5;
+      --blue:#2f58d8; --ok:#157347; --bad:#b4233c;
+    }
     *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#edf3ff,#f9fbff);color:var(--text);font-family:"Pretendard Variable","Noto Sans KR",Inter,system-ui,-apple-system,"Apple SD Gothic Neo",Segoe UI,Roboto,sans-serif;line-height:1.92;font-size:20px;letter-spacing:-0.01em}
-    .wrap{max-width:880px;margin:34px auto;padding:0 18px}
-    .card{background:var(--card);border:1px solid #e8ecf6;border-radius:14px;padding:30px 32px;margin-bottom:20px;box-shadow:0 3px 10px rgba(15,30,72,.05)}
-    h1{font-size:42px;line-height:1.24;margin:0 0 14px}
-    h2{font-size:30px;margin:0 0 14px;line-height:1.35}
-    .meta{font-size:15px;color:#5a678b}
-    .badge{display:inline-block;padding:6px 10px;border:1px solid;border-radius:999px;font-size:12px;font-weight:700;margin-right:6px}
-    .ok{color:var(--ok);border-color:#74d8ac;background:#ebfff4}
-    .bad{color:var(--bad);border-color:#f3a6b5;background:#fff1f5}
-    .warn{color:var(--warn);border-color:#ffd089;background:#fff8eb}
-    ul{margin:12px 0 0 24px}
-    li{margin:10px 0}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    @media(max-width:920px){.grid{grid-template-columns:1fr} body{font-size:18px} .card{padding:22px 20px} h1{font-size:34px} h2{font-size:25px}}
-    table{width:100%;border-collapse:collapse;font-size:16px}
-    th,td{border:1px solid var(--line);padding:12px;vertical-align:top}
-    th{background:#eef3ff;text-align:left}
-    code{background:#edf2ff;color:#17348f;padding:2px 6px;border-radius:6px}
-    .conclusion{font-size:21px;font-weight:800;color:#132765}
-    .adbox{border:1.5px dashed #8aa4ea;background:#f1f6ff;padding:18px;border-radius:14px}
-    .ad-title{font-size:14px;color:#3753a8;font-weight:800;letter-spacing:.02em}
-    .ad-head{font-size:22px;font-weight:800;margin:6px 0 8px}
-    .ad-copy{color:#2a3c6f}
-    .ad-cta{display:inline-block;margin-top:12px;background:#2f58d8;color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
-    .ad-cta:hover{opacity:.92}
-    .kicker{display:inline-block;background:#e9efff;border:1px solid #bfd0ff;color:#1b3c96;border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px;letter-spacing:.02em}
-    .sublead{font-size:19px;color:#22386d;margin-top:10px}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:"Pretendard Variable","Noto Sans KR",Inter,system-ui,-apple-system,"Apple SD Gothic Neo",Segoe UI,Roboto,sans-serif;
+      line-height:1.92; font-size:19px; letter-spacing:-0.01em;
+    }
+    .wrap{max-width:880px; margin:24px auto; padding:0 12px}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:14px;
+      padding:22px 18px; margin:0 0 14px; box-shadow:0 2px 8px rgba(18,30,80,.05);
+    }
+    h1{font-size:34px; line-height:1.28; margin:0 0 10px}
+    h2{font-size:26px; line-height:1.35; margin:0 0 10px}
+    p{margin:10px 0}
+    ul{margin:8px 0 0 20px; padding:0}
+    li{margin:8px 0}
+    .kicker{display:inline-block; padding:5px 10px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid #bfd0ff; background:#eaf0ff; color:#20419d}
+    .meta{font-size:14px; color:var(--muted)}
+    .lead{font-size:21px; font-weight:700; color:#1a2f68}
+    .quote{border-left:4px solid #c8d6ff; padding:8px 12px; background:#f7f9ff; border-radius:8px}
+    .adbox{border:1.5px dashed #9fb2ea; background:#f2f6ff; border-radius:12px; padding:14px}
+    code{background:#edf2ff; color:#1b3c94; padding:1px 6px; border-radius:6px}
+    table{width:100%; border-collapse:collapse; font-size:16px}
+    th,td{border:1px solid var(--line); padding:10px; vertical-align:top}
+    th{background:#f1f5ff; text-align:left}
+    .note{font-size:14px; color:var(--muted)}
+    @media(max-width:720px){
+      body{font-size:18px}
+      .card{padding:16px 13px}
+      h1{font-size:30px}
+      h2{font-size:24px}
+      table{font-size:15px}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <span class="kicker">SECURITY & OPS ANALYSIS</span>
-      <h1>소놀봇(mybot_ver2) 정적 분석 보고서: 실행 리스크와 재사용 전략 분리</h1>
-      <p class="sublead">핵심은 간단합니다. 코드 실행은 막고, 운영 패턴만 이식하면 성과는 유지하고 리스크는 크게 줄일 수 있습니다.</p>
-      <div class="meta">2026-02-18 10:00 KST · SHawn Ops Blog · Technical Editorial</div>
-      <div style="margin-top:12px">
-        <span class="badge warn">정적 분석 전용</span>
-        <span class="badge bad">설치/실행 비권장</span>
-        <span class="badge ok">패턴 재사용 권장</span>
-      </div>
-    </div>
+  <main class="wrap">
+    <section class="card">
+      <span class="kicker">SECURITY & REUSE STRATEGY</span>
+      <h1>소놀봇(mybot_ver2), 왜 실행하지 않고 해부했나</h1>
+      <p class="lead">핵심은 간단합니다. 위험한 실행 루프는 버리고, 쓸모 있는 운영 구조만 가져오면 됩니다. 이번 글은 그 판단 과정을 그대로 공유합니다.</p>
+      <div class="meta">2026-02-18 10:00 KST · SHawn Ops Blog</div>
+    </section>
 
-    <div class="card">
-      <h2>한줄 결론</h2>
-      <p class="conclusion">소놀봇은 “실행 대상”이 아니라 “아키텍처 참고서”로 쓰는 게 최적입니다.</p>
+    <section class="card">
+      <h2>문제는 기능이 아니라 ‘운영 방식’이었다</h2>
+      <p>처음 파일을 받았을 때 가장 먼저 든 생각은 “이걸 바로 실행해도 되나?”였습니다. 겉으로는 텔레그램 자동화 도구처럼 보였지만, 내부를 열어보니 자동 실행 루프, 스케줄러 등록, 권한 우회 성격 옵션이 함께 묶여 있었습니다.</p>
+      <p>여기서 기준은 명확했습니다.</p>
+      <div class="quote">기능이 좋아 보여도, 통제 가능한 구조가 아니면 운영에 넣지 않는다.</div>
+    </section>
+
+    <section class="card">
+      <h2>무엇을 확인했는가</h2>
       <ul>
-        <li>패키지 자체 실행은 보안/지속성 리스크가 큽니다.</li>
-        <li>대신 상태머신(체크→예약→실행→보고→완료)과 보고 포맷은 매우 유용합니다.</li>
-        <li>OpenClaw 맥북 운영에 패턴만 이식하는 방식이 가장 안전하고 효과적입니다.</li>
+        <li>대상 파일: <code>mybot_ver2.zip</code> (약 56MB)</li>
+        <li>검증 방식: 설치/실행 없이 정적 분석</li>
+        <li>SHA256: <code>ada776c6c51b6a03846a9f9ac6a8d780d9797d84ce8966454fe3ec2d91561d5d</code></li>
       </ul>
-    </div>
+      <p class="note">실행하지 않은 이유는 단순합니다. 자동실행/영속성/권한 경로를 먼저 분리하지 않으면, 분석보다 복구가 더 어려워지기 때문입니다.</p>
+    </section>
 
-    <div class="card">
-      <h2>리스크-가치 시각화</h2>
-      <svg viewBox="0 0 980 320" width="100%" role="img" aria-label="risk value matrix">
-        <rect x="40" y="40" width="420" height="220" fill="#f7f9ff" stroke="#cfd8f0" />
-        <line x1="250" y1="40" x2="250" y2="260" stroke="#cfd8f0"/>
-        <line x1="40" y1="150" x2="460" y2="150" stroke="#cfd8f0"/>
-        <text x="48" y="30" fill="#26428f" font-size="14" font-weight="700">Risk (↑) vs Reuse Value (→)</text>
-        <text x="52" y="274" fill="#5a6e9f" font-size="12">Low Risk</text>
-        <text x="388" y="274" fill="#5a6e9f" font-size="12">High Value</text>
+    <section class="card">
+      <h2>시각화 1) 리스크-가치 맵</h2>
+      <svg viewBox="0 0 940 320" width="100%" role="img" aria-label="Risk Value Matrix">
+        <rect x="30" y="38" width="430" height="230" fill="#f8faff" stroke="#d5dff7"/>
+        <line x1="245" y1="38" x2="245" y2="268" stroke="#d5dff7"/>
+        <line x1="30" y1="153" x2="460" y2="153" stroke="#d5dff7"/>
+        <text x="42" y="30" fill="#26428f" font-size="14" font-weight="700">Risk(↑) vs Reuse Value(→)</text>
 
-        <circle cx="360" cy="85" r="10" fill="#b4233c"/>
-        <text x="376" y="90" fill="#233b73" font-size="13">권한 우회 옵션/자동실행 루프 (폐기)</text>
+        <circle cx="355" cy="86" r="10" fill="#b4233c"/>
+        <text x="372" y="91" fill="#23407a" font-size="13">권한 우회 옵션 / 자동실행 루프 (폐기)</text>
 
-        <circle cx="370" cy="120" r="10" fill="#b4233c"/>
-        <text x="386" y="125" fill="#233b73" font-size="13">스케줄러 영속화 로직 (폐기)</text>
+        <circle cx="360" cy="124" r="10" fill="#b4233c"/>
+        <text x="377" y="129" fill="#23407a" font-size="13">스케줄러 영속화 스크립트 (폐기)</text>
 
-        <circle cx="365" cy="210" r="10" fill="#157347"/>
-        <text x="381" y="215" fill="#233b73" font-size="13">상태머신/보고 템플릿 (재사용)</text>
+        <circle cx="360" cy="212" r="10" fill="#157347"/>
+        <text x="377" y="217" fill="#23407a" font-size="13">상태머신 / 보고 구조 (재사용)</text>
 
-        <rect x="520" y="50" width="400" height="200" rx="12" fill="#eef4ff" stroke="#c5d5ff"/>
-        <text x="540" y="86" fill="#1f3f9d" font-size="18" font-weight="800">운영 판단</text>
-        <text x="540" y="122" fill="#213a72" font-size="15">1) 실행 코드는 격리/배제</text>
-        <text x="540" y="148" fill="#213a72" font-size="15">2) 상태 전이 패턴만 OpenClaw로 이식</text>
-        <text x="540" y="174" fill="#213a72" font-size="15">3) done/failed 지표를 리포트에 자동 반영</text>
-        <text x="540" y="210" fill="#1a2f5f" font-size="14" font-weight="700">= 보안 리스크 최소화 + 운영 생산성 최대화</text>
+        <rect x="510" y="54" width="390" height="190" rx="12" fill="#eef4ff" stroke="#c4d3ff"/>
+        <text x="530" y="86" fill="#1f3f9d" font-size="18" font-weight="800">운영 판단</text>
+        <text x="530" y="122" fill="#213a72" font-size="15">1) 실행 코드는 격리/배제</text>
+        <text x="530" y="148" fill="#213a72" font-size="15">2) 상태 전이 패턴만 OpenClaw로 이식</text>
+        <text x="530" y="174" fill="#213a72" font-size="15">3) done/failed 지표로 운영 가시성 강화</text>
+        <text x="530" y="209" fill="#1a2f5f" font-size="14" font-weight="700">= 위험은 줄이고, 생산성은 유지</text>
       </svg>
-    </div>
+    </section>
 
-    <div class="card adbox">
-      <div class="ad-title">ADVERTISEMENT</div>
-      <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-        data-ad-slot="1111111111"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
+    <section class="card adbox">
+      <strong>ADVERTISEMENT</strong>
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      <div class="ad-copy" style="margin-top:8px">※ 실제 노출/수익 집계는 AdSense 승인 + 실 Publisher/Slot ID 적용 후 시작됩니다.</div>
-    </div>
+    </section>
 
-    <div class="card grid">
-      <div>
-        <h2>확인된 사실</h2>
-        <ul>
-          <li>분석 대상: <code>mybot_ver2.zip</code> (약 56MB)</li>
-          <li>SHA256: <code>ada776c6c51b6a03846a9f9ac6a8d780d9797d84ce8966454fe3ec2d91561d5d</code></li>
-          <li>분석 방식: 설치/실행 없이 정적 분석</li>
-          <li>중심 구성: Python Telegram 처리 + BAT 자동실행/스케줄링 + 대형 번들</li>
-        </ul>
-      </div>
-      <div>
-        <h2>리스크 포인트</h2>
-        <ul>
-          <li>권한 우회 성격 옵션 사용 흔적</li>
-          <li>스케줄러/루프 기반 강한 지속성</li>
-          <li>원격 명령 실행 성향</li>
-          <li>번들 크기/구성 복잡도로 검증 표면 증가</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>무엇을 가져오고 무엇을 버릴지</h2>
+    <section class="card">
+      <h2>가져올 것 vs 버릴 것</h2>
       <table>
-        <thead>
-          <tr><th>구분</th><th>판정</th><th>이유</th></tr>
-        </thead>
+        <thead><tr><th>요소</th><th>판정</th><th>이유</th></tr></thead>
         <tbody>
-          <tr><td>작업 상태머신(check→reserve→execute→report→done)</td><td>가져오기</td><td>운영 가시성과 장애 추적성 개선에 직접 기여</td></tr>
-          <tr><td>중간/완료 보고 템플릿</td><td>가져오기</td><td>실무 보고 품질 표준화 가능</td></tr>
-          <tr><td>BAT 자동실행/스케줄러 등록</td><td>버리기</td><td>OS 종속 + 지속성 리스크</td></tr>
-          <tr><td>권한 우회성 실행 옵션</td><td>버리기</td><td>보안 통제 우회 가능성</td></tr>
-          <tr><td>대형 번들 전체 이식</td><td>버리기</td><td>공급망/업데이트 리스크 증가</td></tr>
+          <tr><td>check→reserve→execute→report→done 상태머신</td><td>가져오기</td><td>운영 추적성과 장애 회고 품질이 좋아짐</td></tr>
+          <tr><td>중간/완료 보고 템플릿</td><td>가져오기</td><td>사용자 커뮤니케이션 일관성 확보</td></tr>
+          <tr><td>BAT 자동실행/스케줄 등록</td><td>버리기</td><td>OS 종속 + 영속성 리스크 큼</td></tr>
+          <tr><td>권한 우회 성격 옵션</td><td>버리기</td><td>보안 통제 우회 가능성</td></tr>
+          <tr><td>대형 번들 전체 이식</td><td>버리기</td><td>공급망 검증 비용 증가</td></tr>
         </tbody>
       </table>
-    </div>
+    </section>
 
-    <div class="card adbox">
-      <div class="ad-title">ADVERTISEMENT</div>
-      <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-        data-ad-slot="2222222222"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-
-    <div class="card">
-      <h2>적용 결과 (OpenClaw 맥북)</h2>
+    <section class="card">
+      <h2>실제 적용: OpenClaw 쪽에서 바뀐 점</h2>
       <ul>
-        <li><code>tools/ask</code>, <code>tools/askp</code>에 상태 추적 계측 적용</li>
-        <li>상태 저장: <code>_logs/task_state.json</code></li>
-        <li>스키마: <code>_logs/task_state.schema.json</code></li>
-        <li>평가 문서: <code>_logs/SONOLBOT_OPTIMIZATION_BEFORE_AFTER.md</code></li>
+        <li><code>tools/ask</code>, <code>tools/askp</code>에 상태 추적 연결</li>
+        <li><code>_logs/task_state.json</code>으로 단일 상태 저장소 확보</li>
+        <li><code>DONE/FAILED</code> 기준으로 자동 집계 가능</li>
       </ul>
-      <p>결과적으로 “로그 기반 운영”에서 “상태 지표 기반 운영”으로 한 단계 올라갔습니다.</p>
-    </div>
+      <p>결과적으로 “작업을 했다” 수준에서 “어떤 상태로 끝났는지 추적 가능”한 운영으로 바뀌었습니다.</p>
+    </section>
 
-    <div class="card">
-      <h2>FAQ (검색 확장 블록)</h2>
-      <p><strong>Q.</strong> 소놀봇을 그대로 실행해도 되나요?<br/><strong>A.</strong> 권장하지 않습니다. 정적 분석 기반으로 아키텍처 패턴만 추출해 OpenClaw에 이식하는 방식이 안전합니다.</p>
-      <p><strong>Q.</strong> 가장 먼저 이식할 요소는 무엇인가요?<br/><strong>A.</strong> 상태머신(check→reserve→execute→report→done)과 중간/완료 보고 템플릿입니다.</p>
-    </div>
-  </div>
+    <section class="card">
+      <h2>시각화 2) 전/후 운영 차이</h2>
+      <svg viewBox="0 0 920 250" width="100%" role="img" aria-label="Before after">
+        <text x="20" y="28" font-size="18" fill="#1e3f9d" font-weight="800">Before vs After</text>
+        <rect x="40" y="60" width="260" height="28" fill="#d8e2ff"/><text x="310" y="79" font-size="14">작업 추적성: 낮음</text>
+        <rect x="40" y="95" width="520" height="28" fill="#6c8ff8"/><text x="570" y="114" font-size="14">작업 추적성: 높음</text>
+        <rect x="40" y="140" width="240" height="28" fill="#d8e2ff"/><text x="290" y="159" font-size="14">실패 원인 분리: 느림</text>
+        <rect x="40" y="175" width="540" height="28" fill="#6c8ff8"/><text x="590" y="194" font-size="14">실패 원인 분리: 빠름</text>
+      </svg>
+    </section>
+
+    <section class="card">
+      <h2>FAQ</h2>
+      <p><b>Q.</b> 왜 그냥 실행해서 테스트하지 않았나요?<br/><b>A.</b> 자동실행/영속성 리스크가 확인된 패키지는 먼저 정적 분석으로 구조를 분해하는 것이 안전합니다.</p>
+      <p><b>Q.</b> 그럼 아무것도 못 쓰는 건가요?<br/><b>A.</b> 아닙니다. 실행코드는 버리고, 상태머신·보고 패턴 같은 운영 구조는 충분히 재사용할 수 있습니다.</p>
+      <p><b>Q.</b> 가장 먼저 적용할 항목은 무엇인가요?<br/><b>A.</b> 작업 상태 추적(RESERVED→RUNNING→DONE/FAILED)과 완료/실패 지표 자동 집계를 먼저 넣는 것이 효과가 큽니다.</p>
+    </section>
+  </main>
 </body>
 </html>
