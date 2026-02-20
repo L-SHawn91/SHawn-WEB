@@ -18,9 +18,13 @@ interface Paper {
   influenceScore?: number;
 }
 
-// T1: OpenCode - PubMed with clinical metadata
+function isPaper(paper: Paper | null): paper is Paper {
+  return paper !== null;
+}
+
+// T1: PubMed track - clinical metadata
 async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
-  console.log('[T1:OpenCode] PubMed enhanced search starting...');
+  console.log('[T1:PubMed] Search starting...');
   const startTime = Date.now();
   
   try {
@@ -48,7 +52,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
     
     const ids = searchData.esearchresult?.idlist || [];
     if (ids.length === 0) {
-      console.log('[T1:OpenCode] No PubMed results');
+      console.log('[T1:PubMed] No results');
       return [];
     }
 
@@ -89,19 +93,19 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
         meshTerms,
         techniques: studyType ? [studyType] : [],
       };
-    }).filter(Boolean);
+    }).filter(isPaper);
 
-    console.log(`[T1:OpenCode] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
+    console.log(`[T1:PubMed] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
     return papers;
   } catch (error) {
-    console.error('[T1:OpenCode] PubMed error:', error);
+    console.error('[T1:PubMed] Error:', error);
     return [];
   }
 }
 
-// T2: Kimi - arXiv with ML technique extraction
+// T2: arXiv track - ML technique extraction
 async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
-  console.log('[T2:Kimi] arXiv ML analysis starting...');
+  console.log('[T2:arXiv] Search starting...');
   const startTime = Date.now();
   
   try {
@@ -122,7 +126,7 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
     const xml = await res.text();
     
     const entries = xml.match(/<entry[>\s][\s\S]*?<\/entry>/g) || [];
-    
+
     const papers: Paper[] = [];
     for (const [idx, entry] of entries.entries()) {
       const title = entry.match(/<title>([\s\S]*?)<\/title>/)?.[1]?.trim() || 'No title';
@@ -150,7 +154,7 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
       );
 
       const arxivId = id.split('/').pop()?.replace('abs/', '') || '';
-      papers.push({
+      const paper: Paper = {
         id: `arxiv-${arxivId}`,
         title,
         authors,
@@ -159,21 +163,24 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
         source: 'arxiv',
         url: `https://arxiv.org/abs/${arxivId}`,
         pdfUrl: `https://arxiv.org/pdf/${arxivId}.pdf`,
-        techniques: techniques.length > 0 ? techniques : undefined,
-      });
+      };
+      if (techniques.length > 0) {
+        paper.techniques = techniques;
+      }
+      papers.push(paper);
     }
 
-    console.log(`[T2:Kimi] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
+    console.log(`[T2:arXiv] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
     return papers;
   } catch (error) {
-    console.error('[T2:Kimi] arXiv error:', error);
+    console.error('[T2:arXiv] Error:', error);
     return [];
   }
 }
 
-// T3: Gemini - Semantic Scholar with influence analysis
+// T3: Semantic Scholar track - influence analysis
 async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
-  console.log('[T3:Gemini] Semantic Scholar influence analysis starting...');
+  console.log('[T3:Semantic] Search starting...');
   const startTime = Date.now();
   
   try {
@@ -217,21 +224,21 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
         };
       });
 
-    console.log(`[T3:Gemini] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
+    console.log(`[T3:Semantic] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
     return papers;
   } catch (error) {
-    console.error('[T3:Gemini] Semantic Scholar error:', error);
+    console.error('[T3:Semantic] Error:', error);
     return [];
   }
 }
 
-// T4: Codex - Integration & Ranking
+// T4: Ranker - Integration & ranking
 function t4_integrateAndRank(
   t1Results: Paper[],
   t2Results: Paper[],
   t3Results: Paper[]
 ): Paper[] {
-  console.log('[T4:Codex] Integration and ranking starting...');
+  console.log('[T4:Ranker] Integration and ranking starting...');
   const startTime = Date.now();
   
   // Merge all results
@@ -272,7 +279,7 @@ function t4_integrateAndRank(
     return { ...paper, rankScore: Math.round(score) };
   }).sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
   
-  console.log(`[T4:Codex] Completed in ${Date.now() - startTime}ms, ${uniquePapers.length} unique papers ranked`);
+  console.log(`[T4:Ranker] Completed in ${Date.now() - startTime}ms, ${uniquePapers.length} unique papers ranked`);
   return rankedPapers;
 }
 
@@ -286,26 +293,38 @@ export async function POST(request: NextRequest) {
     const yearFrom = filters?.yearFrom;
     const yearTo = filters?.yearTo;
 
-    // Execute all tracks in parallel
-    const trackPromises: Promise<Paper[]>[] = [];
+    // Execute selected tracks in parallel and preserve source mapping.
+    const trackJobs: Array<{
+      source: 'pubmed' | 'arxiv' | 'semantic';
+      promise: Promise<Paper[]>;
+    }> = [];
     
     if (sources.includes('pubmed')) {
-      trackPromises.push(t1_pubmedEnhanced(query, yearFrom, yearTo));
+      trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(query, yearFrom, yearTo) });
     }
     if (sources.includes('arxiv')) {
-      trackPromises.push(t2_arxivEnhanced(query, yearFrom, yearTo));
+      trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(query, yearFrom, yearTo) });
     }
     if (sources.includes('semantic')) {
-      trackPromises.push(t3_semanticEnhanced(query, yearFrom, yearTo));
+      trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(query, yearFrom, yearTo) });
     }
 
-    // Wait for all tracks to complete
-    const [t1Results, t2Results, t3Results] = await Promise.allSettled(trackPromises);
+    const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
+    const bySource: Record<'pubmed' | 'arxiv' | 'semantic', Paper[]> = {
+      pubmed: [],
+      arxiv: [],
+      semantic: [],
+    };
     
-    // Extract results (handle failures gracefully)
-    const papers1 = t1Results.status === 'fulfilled' ? t1Results.value : [];
-    const papers2 = t2Results.status === 'fulfilled' ? t2Results.value : [];
-    const papers3 = t3Results.status === 'fulfilled' ? t3Results.value : [];
+    settled.forEach((result, index) => {
+      const source = trackJobs[index]?.source;
+      if (!source) return;
+      bySource[source] = result.status === 'fulfilled' ? result.value : [];
+    });
+    
+    const papers1 = bySource.pubmed;
+    const papers2 = bySource.arxiv;
+    const papers3 = bySource.semantic;
     
     // T4: Integration and ranking
     const finalPapers = t4_integrateAndRank(papers1, papers2, papers3);
