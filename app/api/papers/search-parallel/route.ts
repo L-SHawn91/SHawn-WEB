@@ -123,45 +123,45 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
     
     const entries = xml.match(/<entry[>\s][\s\S]*?<\/entry>/g) || [];
     
-    const papers = entries.map((entry, idx) => {
+    const papers: Paper[] = [];
+    for (const [idx, entry] of entries.entries()) {
       const title = entry.match(/<title>([\s\S]*?)<\/title>/)?.[1]?.trim() || 'No title';
       const summary = entry.match(/<summary>([\s\S]*?)<\/summary>/)?.[1]?.trim() || 'No abstract';
       const id = entry.match(/<id>([\s\S]*?)<\/id>/)?.[1]?.trim() || `arxiv-${idx}`;
       const published = entry.match(/<published>([\s\S]*?)<\/published>/)?.[1]?.trim();
       const year = published ? parseInt(published.substring(0, 4)) : new Date().getFullYear();
-      
+
       // Year filter
-      if (yearFrom && year < parseInt(yearFrom)) return null;
-      if (yearTo && year > parseInt(yearTo)) return null;
-      
+      if (yearFrom && year < parseInt(yearFrom)) continue;
+      if (yearTo && year > parseInt(yearTo)) continue;
+
       const authors = (entry.match(/<author>[\s\S]*?<name>([\s\S]*?)<\/name>/g) || [])
         .map((a) => a.match(/<name>([\s\S]*?)<\/name>/)?.[1])
-        .filter(Boolean);
-      
+        .filter((name): name is string => Boolean(name));
+
       // Extract ML techniques from abstract
       const techniqueKeywords = [
         'transformer', 'BERT', 'GPT', 'LLM', 'neural network', 'deep learning',
         'CNN', 'RNN', 'LSTM', 'GRU', 'attention', 'self-attention',
         'reinforcement learning', 'GAN', 'diffusion', 'contrastive learning'
       ];
-      const techniques = techniqueKeywords.filter(kw => 
+      const techniques = techniqueKeywords.filter((kw) =>
         summary.toLowerCase().includes(kw.toLowerCase())
       );
-      
+
       const arxivId = id.split('/').pop()?.replace('abs/', '') || '';
-      
-      return {
+      papers.push({
         id: `arxiv-${arxivId}`,
         title,
         authors,
         abstract: summary,
         year,
-        source: 'arxiv' as const,
+        source: 'arxiv',
         url: `https://arxiv.org/abs/${arxivId}`,
         pdfUrl: `https://arxiv.org/pdf/${arxivId}.pdf`,
         techniques: techniques.length > 0 ? techniques : undefined,
-      };
-    }).filter(Boolean);
+      });
+    }
 
     console.log(`[T2:Kimi] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
     return papers;

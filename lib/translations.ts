@@ -3,6 +3,7 @@ export const translations = {
         nav: {
             about: "소개",
             blog: "블로그",
+            papers: "논문 검색",
             market_intelligence: "주식 시장 분석",
             reports: "리포트 아카이브",
         },
@@ -50,6 +51,7 @@ export const translations = {
         nav: {
             about: "About",
             blog: "Blog",
+            papers: "Papers",
             market_intelligence: "Market Intelligence",
             reports: "Report Archive",
         },

@@ -278,7 +278,7 @@ export default function PapersPage() {
                       {paper.authors.join(', ')}
                     </p>
                     
-                    <{/* Tags */}>
+                    {/* Tags */}
                     {(paper.meshTerms?.length || paper.techniques?.length) && (
                       <div className="flex flex-wrap gap-2 mb-3">
                         {paper.meshTerms?.map((term) => (

@@ -51,20 +51,22 @@ async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): 
     const summaryRes = await fetch(`${summaryUrl}?${summaryParams.toString()}`);
     const summaryData = await summaryRes.json();
 
-    return ids.map((id: string) => {
+    const papers: Paper[] = [];
+    for (const id of ids as string[]) {
       const doc = summaryData.result?.[id];
-      if (!doc) return null;
-      
-      return {
+      if (!doc) continue;
+
+      papers.push({
         id: `pmid-${id}`,
         title: doc.title || 'No title',
         authors: doc.authors?.map((a: any) => `${a.name}`) || [],
         abstract: doc.abstract || 'No abstract available',
         year: parseInt(doc.pubdate?.substring(0, 4)) || new Date().getFullYear(),
-        source: 'pubmed' as const,
+        source: 'pubmed',
         url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`,
-      };
-    }).filter(Boolean);
+      });
+    }
+    return papers;
   } catch (error) {
     console.error('PubMed search error:', error);
     return [];
@@ -88,34 +90,35 @@ async function searchArXiv(query: string, yearFrom?: string, yearTo?: string): P
     // Parse XML
     const entries = xml.match(/<entry[>\s][\s\S]*?<\/entry>/g) || [];
     
-    return entries.map((entry, idx) => {
+    const papers: Paper[] = [];
+    for (const [idx, entry] of entries.entries()) {
       const title = entry.match(/<title>([\s\S]*?)<\/title>/)?.[1]?.trim() || 'No title';
       const summary = entry.match(/<summary>([\s\S]*?)<\/summary>/)?.[1]?.trim() || 'No abstract';
       const id = entry.match(/<id>([\s\S]*?)<\/id>/)?.[1]?.trim() || `arxiv-${idx}`;
       const published = entry.match(/<published>([\s\S]*?)<\/published>/)?.[1]?.trim();
       const year = published ? parseInt(published.substring(0, 4)) : new Date().getFullYear();
-      
+
       // Check year filter
-      if (yearFrom && year < parseInt(yearFrom)) return null;
-      if (yearTo && year > parseInt(yearTo)) return null;
-      
+      if (yearFrom && year < parseInt(yearFrom)) continue;
+      if (yearTo && year > parseInt(yearTo)) continue;
+
       const authors = (entry.match(/<author>[\s\S]*?<name>([\s\S]*?)<\/name>/g) || [])
         .map((a) => a.match(/<name>([\s\S]*?)<\/name>/)?.[1])
-        .filter(Boolean);
-      
+        .filter((name): name is string => Boolean(name));
+
       const arxivId = id.split('/').pop()?.replace('abs/', '') || '';
-      
-      return {
+      papers.push({
         id: `arxiv-${arxivId}`,
         title,
         authors,
         abstract: summary,
         year,
-        source: 'arxiv' as const,
+        source: 'arxiv',
         url: `https://arxiv.org/abs/${arxivId}`,
         pdfUrl: `https://arxiv.org/pdf/${arxivId}.pdf`,
-      };
-    }).filter(Boolean);
+      });
+    }
+    return papers;
   } catch (error) {
     console.error('arXiv search error:', error);
     return [];
