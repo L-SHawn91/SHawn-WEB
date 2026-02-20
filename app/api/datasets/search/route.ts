@@ -26,6 +26,7 @@ interface DatasetItem {
   description: string;
   source: DatasetSource;
   url: string;
+  accessionIds?: string[];
   license?: string;
   downloads?: number;
   likes?: number;
@@ -92,7 +93,7 @@ function normalizeQueryForGithub(query: string): string {
 }
 
 function extractAccessions(text: string): string[] {
-  const regex = /\b(GSE\d+|GSM\d+|SRP\d+|SRS\d+|SRX\d+|SRR\d+|PRJNA\d+|PRJEB\d+|E-MTAB-\d+)\b/gi;
+  const regex = /\b(GSE\d+|GSM\d+|SRP\d+|SRS\d+|SRX\d+|SRR\d+|PRJNA\d+|PRJEB\d+|PRJCA\d+|E-MTAB-\d+|CNP\d+)\b/gi;
   const matches = text.match(regex) || [];
   return [...new Set(matches.map((m) => m.toUpperCase()))];
 }
@@ -686,7 +687,14 @@ function integrateAndRank(items: DatasetItem[]): DatasetItem[] {
     if (item.license) score += 5;
     if (item.tags?.length) score += Math.min(10, item.tags.length);
     if (item.description && item.description.length > 80) score += 10;
-    return { ...item, rankScore: Math.round(score) };
+
+    const accessionIds = extractAccessions(`${item.title} ${item.description} ${item.url}`);
+
+    return {
+      ...item,
+      accessionIds,
+      rankScore: Math.round(score),
+    };
   });
 }
 

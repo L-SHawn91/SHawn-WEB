@@ -27,6 +27,7 @@ interface DatasetItem {
   description: string;
   source: DatasetSource;
   url: string;
+  accessionIds?: string[];
   license?: string;
   downloads?: number;
   likes?: number;
@@ -453,6 +454,15 @@ export default function DatasetsPage() {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{dataset.title}</h3>
                     {dataset.license && (
                       <p className="text-xs text-gray-500 mb-2">License: {dataset.license}</p>
+                    )}
+                    {dataset.accessionIds && dataset.accessionIds.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-3" title="Dataset accession identifiers (e.g., GEO GSE, SRA SRP/SRR, PRJNA, CNP)">
+                        {dataset.accessionIds.slice(0, 6).map((acc) => (
+                          <span key={`${dataset.id}-${acc}`} className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded border border-emerald-200">
+                            {acc}
+                          </span>
+                        ))}
+                      </div>
                     )}
                     {dataset.tags && dataset.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
