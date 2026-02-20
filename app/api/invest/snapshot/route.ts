@@ -65,6 +65,25 @@ type RebalanceSuggestion = {
   reason: string;
 };
 
+
+type SimulationChange = {
+  symbol: string;
+  prevAllocation: number;
+  nextAllocation: number;
+  direction: "up" | "down";
+  deltaPct: number;
+};
+
+type RebalanceSimulation = {
+  projectedHoldings: Holding[];
+  changes: SimulationChange[];
+  risk: {
+    concentration: number;
+    highRiskShare: number;
+    weightedPnl: number;
+  };
+};
+
 const BASE_SIGNAL_MODULES: SignalModule[] = [
   {
     key: "expert",
@@ -286,6 +305,57 @@ function computeRebalanceSuggestions(holdings: Holding[], signalScore: number): 
   return suggestions.slice(0, 4);
 }
 
+
+
+function simulateRebalance(holdings: Holding[], suggestions: RebalanceSuggestion[]): RebalanceSimulation {
+  const next = holdings.map((h) => ({ ...h }));
+  const bySymbol = new Map<string, Holding>(next.map((h) => [h.symbol, h]));
+  const changes: SimulationChange[] = [];
+
+  for (const sugg of suggestions) {
+    if (sugg.action === "hold" || sugg.deltaPct <= 0) continue;
+    const target = bySymbol.get(sugg.symbol);
+    if (!target) continue;
+
+    const delta = Math.abs(sugg.deltaPct);
+    const prevAllocation = target.allocation;
+
+    if (sugg.action === "down") {
+      target.allocation = Math.max(0, Number((target.allocation - delta).toFixed(2)));
+    } else {
+      target.allocation = Number((target.allocation + delta).toFixed(2));
+    }
+
+    if (target.allocation !== prevAllocation) {
+      changes.push({
+        symbol: target.symbol,
+        prevAllocation,
+        nextAllocation: target.allocation,
+        direction: sugg.action,
+        deltaPct: Number((Math.abs(target.allocation - prevAllocation)).toFixed(2)),
+      });
+    }
+  }
+
+  const total = next.reduce((acc, h) => acc + h.allocation, 0);
+  const normalized = total > 0 ? next.map((h) => ({
+    ...h,
+    allocation: Number((h.allocation * (100 / total)).toFixed(2)),
+  })) : next;
+
+  const { highRiskShare, concentration, weightedPnl } = computeHoldingsRisk(normalized);
+  return {
+    projectedHoldings: normalized,
+    changes,
+    risk: {
+      concentration,
+      highRiskShare,
+      weightedPnl,
+    },
+  };
+}
+
+
 function injectSignals(modules: SignalModule[], mode: StrategyMode) {
   const byMode = applyModeWeight(modules, mode);
   const confidence = computeSignalConfidence(byMode);
@@ -300,9 +370,11 @@ export async function GET(request: NextRequest) {
   const mode = (new URL(request.url).searchParams.get("mode") || "balanced") as StrategyMode;
   const fallbackMode: StrategyMode = ["balanced", "alpha", "defensive"].includes(mode) ? mode : "balanced";
 
+  const shouldSimulate = new URL(request.url).searchParams.get("simulate") === "1";
   const { modules, signalConfidence } = injectSignals(BASE_SIGNAL_MODULES, fallbackMode);
   const { highRiskShare, concentration, weightedPnl } = computeHoldingsRisk(BASE_HOLDINGS);
   const rebalanceSuggestions = computeRebalanceSuggestions(BASE_HOLDINGS, signalConfidence);
+  const simulation = shouldSimulate ? simulateRebalance(BASE_HOLDINGS, rebalanceSuggestions) : null;
 
   const payload = {
     updatedAt: new Date().toISOString(),
@@ -319,6 +391,7 @@ export async function GET(request: NextRequest) {
       rebalanceNeed: highRiskShare >= 20,
     },
     rebalanceSuggestions,
+    simulation,
     kpis: {
       portfolio: "$5.2M",
       annualReturn: "+15.3%",

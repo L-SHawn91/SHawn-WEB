@@ -70,6 +70,24 @@ type RebalanceSuggestion = {
   reason: string;
 };
 
+type SimulationChange = {
+  symbol: string;
+  prevAllocation: number;
+  nextAllocation: number;
+  direction: "up" | "down";
+  deltaPct: number;
+};
+
+type RebalanceSimulation = {
+  projectedHoldings: Holding[];
+  changes: SimulationChange[];
+  risk: {
+    concentration: number;
+    highRiskShare: number;
+    weightedPnl: number;
+  };
+};
+
 type SnapshotPayload = {
   updatedAt: string;
   mode: StrategyMode;
@@ -85,6 +103,7 @@ type SnapshotPayload = {
     rebalanceNeed: boolean;
   };
   rebalanceSuggestions: RebalanceSuggestion[];
+  simulation: RebalanceSimulation | null;
   kpis: {
     portfolio: string;
     annualReturn: string;
@@ -150,6 +169,8 @@ export default function InvestmentWorld() {
   const [snapshot, setSnapshot] = useState<SnapshotPayload | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [simulation, setSimulation] = useState<RebalanceSimulation | null>(null);
+  const [simulateLoading, setSimulateLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const abort = new AbortController();
@@ -169,6 +190,7 @@ export default function InvestmentWorld() {
 
         const data = (await res.json()) as SnapshotPayload;
         setSnapshot(data);
+        setSimulation(data.simulation ?? null);
       } catch (e) {
         if ((e as Error).name !== "AbortError") {
           setError((e as Error).message || "데이터 로드 실패");
@@ -194,6 +216,37 @@ export default function InvestmentWorld() {
         state: snapshot.risk.rebalanceNeed ? "경고" : "양호",
       }
     : null;
+
+  const runRebalanceSimulation = async () => {
+    if (!snapshot) return;
+    setSimulateLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch(`/api/invest/snapshot?mode=${strategy}&simulate=1`, {
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        throw new Error(`시뮬레이션 요청 실패: ${res.status}`);
+      }
+      const data = (await res.json()) as SnapshotPayload;
+      setSimulation(data.simulation || null);
+      setNotice(`시뮬레이션 완료: 제안 반영 ${data.simulation?.changes.length || 0}건`);
+    } catch (e) {
+      setError((e as Error).message || "시뮬레이션 실패");
+    } finally {
+      setSimulateLoading(false);
+    }
+  };
+
+  const getSimulatedHoldings = simulation?.projectedHoldings || null;
+
+  const riskSummarySim = simulation ? {
+    concentration: simulation.risk.concentration,
+    highRiskShare: simulation.risk.highRiskShare,
+    weightedPnl: simulation.risk.weightedPnl,
+    state: simulation.risk.highRiskShare >= 20 ? "경고" : "양호",
+  } : null;
 
   const kpiCards = snapshot
     ? [
@@ -366,7 +419,7 @@ export default function InvestmentWorld() {
                 <span className="text-xs text-gray-400">실시간 비중 샘플</span>
               </div>
               <div className="space-y-3">
-                {(snapshot?.holdings || []).map((h) => (
+                {(getSimulatedHoldings || snapshot?.holdings || []).map((h) => (
                   <div key={h.symbol} className="space-y-1">
                     <div className="flex justify-between text-sm text-gray-200">
                       <div className="flex items-center gap-2">
@@ -412,6 +465,46 @@ export default function InvestmentWorld() {
                 ))}
               </div>
             </div>
+
+            {simulation ? (
+              <div className="mt-6 rounded-xl border border-gray-700 p-4 bg-black/40">
+                <p className="text-sm font-semibold text-gray-100 mb-3">시뮬레이션 반영 결과</p>
+                <div className="space-y-2">
+                  {(simulation.changes.length > 0 ? simulation.changes : []).map((change) => (
+                    <div key={`${change.symbol}-${change.direction}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
+                      <div className="flex justify-between items-center gap-2">
+                        <span className="font-semibold text-white">{change.symbol}</span>
+                        <span
+                          className={`text-[11px] px-2 py-0.5 rounded border ${
+                            change.direction === "up"
+                              ? "text-emerald-200 bg-emerald-500/10 border-emerald-400/30"
+                              : "text-rose-200 bg-rose-500/10 border-rose-400/30"
+                          }`}
+                        >
+                          {change.direction === "up" ? "+" : "-"}{change.deltaPct.toFixed(2)}%
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1">{change.prevAllocation.toFixed(2)}% → {change.nextAllocation.toFixed(2)}%</p>
+                    </div>
+                  ))}
+                  {simulation.changes.length === 0 ? <p className="text-xs text-gray-400">변경 대상이 없어 초기 비중 유지</p> : null}
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-300">
+                  <p>
+                    시뮬레이션 최대 집중도: <span className="text-rose-300 font-semibold">{riskSummarySim?.concentration ?? 0}%</span>
+                  </p>
+                  <p>
+                    시뮬레이션 고위험 비중: <span className="text-rose-300 font-semibold">{riskSummarySim?.highRiskShare ?? 0}%</span>
+                  </p>
+                  <p>
+                    시뮬레이션 가중 PnL: <span className="text-emerald-300 font-semibold">{riskSummarySim?.weightedPnl.toFixed(2) ?? 0}%</span>
+                  </p>
+                  <p>
+                    시뮬레이션 규칙 위반: <span className="text-rose-300 font-semibold">{riskSummarySim && riskSummarySim.state === "경고" ? "감지" : "없음"}</span>
+                  </p>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <aside className="rounded-2xl border border-gray-700 bg-gray-900/50 p-6 space-y-4">
@@ -453,10 +546,9 @@ export default function InvestmentWorld() {
 
             {notice ? <p className="text-xs text-amber-300 border border-amber-500/40 rounded p-2">{notice}</p> : null}
             <button
-              onClick={() => setNotice(`리밸런싱 제안: ${strategy} 모드 기준으로 즉시 적용 시뮬레이션 실행`)}
+              onClick={runRebalanceSimulation}
               className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold text-sm"
-            >
-              전략 리밸런싱 제안 받기
+            >{simulateLoading ? "시뮬레이션 실행 중..." : "전략 리밸런싱 시뮬레이션"}
             </button>
             <Link href="/research" className="block">
               <button className="w-full mt-1 py-3 rounded-xl border border-gray-700 hover:bg-gray-800/70 text-sm">
