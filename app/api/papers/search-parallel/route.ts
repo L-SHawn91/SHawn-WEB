@@ -284,7 +284,7 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
   
   try {
     const chosenAuthor = explicitAuthor || authorCandidates[0] || '';
-    const baseTopic = query ? `(${query})` : '(cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)';
+    const baseTopic = query ? `(${query})` : '';
     const planned = buildArxivQuery(intent, chosenAuthor, baseTopic);
 
     if (planned === null) {
@@ -576,8 +576,9 @@ export async function POST(request: NextRequest) {
     const split = splitAuthorAndTopic(rawQuery);
     const extracted = extractAuthorCandidates(rawQuery);
     const authorCandidates = uniqueList([split.author, ...extracted.authorCandidates].filter(Boolean));
-    const query = (split.topic || extracted.cleanQuery || rawQuery).trim();
-    const effectiveQuery = (query || authorCandidates[0] || '').trim();
+    const detectedTopic = (split.topic || extracted.cleanQuery || '').trim();
+    const topicQuery = intent === 'AUTHOR_WEAK' && !split.topic ? '' : detectedTopic;
+    const effectiveQuery = (topicQuery || authorCandidates[0] || rawQuery).trim();
     const filters = payload?.filters || {};
 
     const sources = filters?.sources || ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'];
@@ -594,16 +595,18 @@ export async function POST(request: NextRequest) {
       trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
     }
     if (sources.includes('arxiv')) {
-      trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
+      trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(topicQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
     }
     if (sources.includes('semantic')) {
       trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
     }
+    const nonAuthorQuery = topicQuery || rawQuery;
+
     if (sources.includes('crossref')) {
-      trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(query, yearFrom, yearTo) });
+      trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(nonAuthorQuery, yearFrom, yearTo) });
     }
     if (sources.includes('openalex')) {
-      trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(query, yearFrom, yearTo) });
+      trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo) });
     }
 
     const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
