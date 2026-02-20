@@ -2,6 +2,12 @@
 // 4-Track Parallel Search Implementation
 
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  buildArxivQuery,
+  classifyIntent,
+  splitAuthorAndTopic,
+  type QueryIntent,
+} from '../../../../lib/search/queryPlanner';
 
 interface Paper {
   id: string;
@@ -16,6 +22,7 @@ interface Paper {
   meshTerms?: string[];
   techniques?: string[];
   influenceScore?: number;
+  matchType?: 'author-exact' | 'author-weak' | 'topic';
 }
 
 function isPaper(paper: Paper | null): paper is Paper {
@@ -144,28 +151,60 @@ function normalizeAuthorToken(raw: string): string {
   return normalizeName(raw).replace(/\s+/g, "");
 }
 
-function matchByAuthor(authors: string[] = [], candidates: string[]): boolean {
+function tokenOverlapRatio(a: string, b: string): number {
+  const ta = new Set(a.split(/\s+/).filter(Boolean));
+  const tb = new Set(b.split(/\s+/).filter(Boolean));
+  if (ta.size === 0 || tb.size === 0) return 0;
+  let overlap = 0;
+  for (const t of ta) {
+    if (tb.has(t)) overlap += 1;
+  }
+  return overlap / Math.max(ta.size, tb.size);
+}
+
+function matchByAuthor(authors: string[] = [], candidates: string[], minOverlap = 0.8): boolean {
   if (!candidates.length) return true;
   const normalizedCandidates = candidates.map((c) => normalizeName(c));
   const normalizedTokens = candidates.map((c) => normalizeAuthorToken(c));
   return authors.some((author) => {
     const target = normalizeName(author);
     const targetToken = normalizeAuthorToken(author);
-    return normalizedCandidates.some((candidate) => candidate === target || target.includes(candidate) || candidate.includes(target))
+
+    const exactOrContained = normalizedCandidates.some((candidate) => candidate === target || target.includes(candidate) || candidate.includes(target))
       || normalizedTokens.some((token) => token === targetToken || targetToken.includes(token) || token.includes(targetToken));
+
+    if (exactOrContained) return true;
+
+    return normalizedCandidates.some((candidate) => tokenOverlapRatio(candidate, target) >= minOverlap);
   });
 }
 
 // T1: PubMed track - clinical metadata
-async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = []): Promise<Paper[]> {
+async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC'): Promise<Paper[]> {
   console.log('[T1:PubMed] Search starting...');
   const startTime = Date.now();
   
   try {
     const baseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
+    const authorTerm = buildAuthorTermForPubMed(authorCandidates);
+    const publicationTerm = '(Clinical Trial[pt] OR Meta-Analysis[pt] OR Randomized Controlled Trial[pt] OR Review[pt])';
+    const topicTerm = query ? `(${query})` : '';
+    const termParts: string[] = [];
+
+    if (authorTerm) {
+      termParts.push(`(${authorTerm})`);
+      if (intent === 'AUTHOR_WEAK' && topicTerm) {
+        termParts.push(topicTerm);
+      }
+    } else if (topicTerm) {
+      termParts.push(topicTerm);
+    }
+
+    termParts.push(publicationTerm);
+
     const params = new URLSearchParams({
       db: 'pubmed',
-      term: `${query ? `${query} ` : ''}${buildAuthorTermForPubMed(authorCandidates) ? `${buildAuthorTermForPubMed(authorCandidates)} AND ` : ''}(Clinical Trial[pt] OR Meta-Analysis[pt] OR Randomized Controlled Trial[pt] OR Review[pt])`,
+      term: termParts.join(' AND '),
       retmode: 'json',
       retmax: '15',
       sort: 'relevance',
@@ -226,6 +265,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
         url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`,
         meshTerms,
         techniques: studyType ? [studyType] : [],
+        matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
       };
     }).filter(isPaper);
 
@@ -238,15 +278,21 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
 }
 
 // T2: arXiv track - ML technique extraction
-async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = []): Promise<Paper[]> {
+async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC', explicitAuthor = ''): Promise<Paper[]> {
   console.log('[T2:arXiv] Search starting...');
   const startTime = Date.now();
   
   try {
-    // Enhance query for AI/ML papers
-    const authorQuery = buildAuthorTermForArxiv(authorCandidates);
-    const titleQuery = query ? `${query} AND ` : '';
-    const mlQuery = `${titleQuery}(cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)${authorQuery ? ` AND (${authorQuery})` : ''}`;
+    const chosenAuthor = explicitAuthor || authorCandidates[0] || '';
+    const baseTopic = query ? `(${query})` : '(cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)';
+    const planned = buildArxivQuery(intent, chosenAuthor, baseTopic);
+
+    if (planned === null) {
+      console.log('[T2:arXiv] Skipped by planner (AUTHOR_WEAK without topic)');
+      return [];
+    }
+
+    const mlQuery = `${planned} AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)`;
     const baseUrl = 'http://export.arxiv.org/api/query';
     const params = new URLSearchParams({
       search_query: mlQuery,
@@ -299,6 +345,7 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
         source: 'arxiv',
         url: `https://arxiv.org/abs/${arxivId}`,
         pdfUrl: `https://arxiv.org/pdf/${arxivId}.pdf`,
+        matchType: chosenAuthor ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
       };
       if (techniques.length > 0) {
         paper.techniques = techniques;
@@ -315,7 +362,7 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
 }
 
 // T3: Semantic Scholar track - influence analysis
-async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = []): Promise<Paper[]> {
+async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC'): Promise<Paper[]> {
   console.log('[T3:Semantic] Search starting...');
   const startTime = Date.now();
   
@@ -338,7 +385,10 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
         if (yearTo && paper.year > parseInt(yearTo)) return false;
         return true;
       })
-      .filter((paper: any) => matchByAuthor((paper.authors || []).map((a: any) => a?.name || ''), authorCandidates))
+      .filter((paper: any) => {
+        const minOverlap = intent === 'AUTHOR_WEAK' ? 0.9 : 0.8;
+        return matchByAuthor((paper.authors || []).map((a: any) => a?.name || ''), authorCandidates, minOverlap);
+      })
       .map((paper: any) => {
         // Calculate influence score
         const totalCitations = paper.citationCount || 0;
@@ -358,6 +408,7 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
           pdfUrl: paper.openAccessPdf?.url,
           citations: paper.citationCount,
           influenceScore,
+          matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
         };
       });
 
@@ -520,13 +571,15 @@ export async function POST(request: NextRequest) {
   
   try {
     const payload = await request.json();
-    const extracted = extractAuthorCandidates(payload?.query || '');
-    const query = extracted.cleanQuery || (typeof payload?.query === 'string' ? String(payload.query) : '');
-    const effectiveQuery = (query || extracted.authorCandidates[0] || '').trim();
+    const rawQuery = typeof payload?.query === 'string' ? String(payload.query).trim() : '';
+    const intent = classifyIntent(rawQuery);
+    const split = splitAuthorAndTopic(rawQuery);
+    const extracted = extractAuthorCandidates(rawQuery);
+    const authorCandidates = uniqueList([split.author, ...extracted.authorCandidates].filter(Boolean));
+    const query = (split.topic || extracted.cleanQuery || rawQuery).trim();
+    const effectiveQuery = (query || authorCandidates[0] || '').trim();
     const filters = payload?.filters || {};
 
-
-    
     const sources = filters?.sources || ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'];
     const yearFrom = filters?.yearFrom;
     const yearTo = filters?.yearTo;
@@ -538,13 +591,13 @@ export async function POST(request: NextRequest) {
     }> = [];
     
     if (sources.includes('pubmed')) {
-      trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(effectiveQuery, yearFrom, yearTo, extracted.authorCandidates) });
+      trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
     }
     if (sources.includes('arxiv')) {
-      trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(effectiveQuery, yearFrom, yearTo, extracted.authorCandidates) });
+      trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
     }
     if (sources.includes('semantic')) {
-      trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, extracted.authorCandidates) });
+      trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
     }
     if (sources.includes('crossref')) {
       trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(query, yearFrom, yearTo) });
@@ -584,6 +637,8 @@ export async function POST(request: NextRequest) {
       papers: finalPapers,
       meta: {
         totalTime,
+        intent,
+        authorCandidates,
         trackResults: {
           t1: papers1.length,
           t2: papers2.length,
