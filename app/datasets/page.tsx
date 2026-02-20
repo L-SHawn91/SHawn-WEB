@@ -54,6 +54,8 @@ interface FiltersState {
   sources: string[];
   yearFrom: string;
   yearTo: string;
+  modality: string;
+  context: string;
 }
 
 interface SearchOptions {
@@ -97,7 +99,7 @@ const BIO_PRESETS: BioPreset[] = [
   {
     id: "single-cell",
     label: "Single-cell RNA-seq",
-    query: "single-cell RNA-seq endometrium OR uterus",
+    query: "single-cell RNA-seq",
     yearFrom: "2018",
     sortBy: "recent",
     sources: BIO_CORE_SOURCES,
@@ -105,7 +107,7 @@ const BIO_PRESETS: BioPreset[] = [
   {
     id: "differential-expression",
     label: "Differential Expression",
-    query: "bulk RNA-seq differential expression endometrium",
+    query: "bulk RNA-seq differential expression",
     yearFrom: "2015",
     sortBy: "recent",
     sources: BIO_CORE_SOURCES,
@@ -113,7 +115,7 @@ const BIO_PRESETS: BioPreset[] = [
   {
     id: "spatial-transcriptomics",
     label: "Spatial Transcriptomics",
-    query: "spatial transcriptomics endometrium",
+    query: "spatial transcriptomics",
     yearFrom: "2019",
     sortBy: "recent",
     sources: BIO_CORE_SOURCES,
@@ -121,7 +123,7 @@ const BIO_PRESETS: BioPreset[] = [
   {
     id: "atac-seq",
     label: "ATAC-seq",
-    query: "ATAC-seq endometrium chromatin accessibility",
+    query: "ATAC-seq chromatin accessibility",
     yearFrom: "2016",
     sortBy: "recent",
     sources: BIO_CORE_SOURCES,
@@ -129,7 +131,7 @@ const BIO_PRESETS: BioPreset[] = [
   {
     id: "chip-seq",
     label: "ChIP-seq",
-    query: "ChIP-seq endometrium transcription factor",
+    query: "ChIP-seq transcription factor",
     yearFrom: "2012",
     sortBy: "recent",
     sources: BIO_CORE_SOURCES,
@@ -137,11 +139,23 @@ const BIO_PRESETS: BioPreset[] = [
   {
     id: "alternative-splicing",
     label: "Alternative Splicing",
-    query: "alternative splicing RNA-seq endometrium",
+    query: "alternative splicing RNA-seq",
     yearFrom: "2014",
     sortBy: "recent",
     sources: BIO_CORE_SOURCES,
   },
+];
+
+const MODALITY_OPTIONS = [
+  "single-cell RNA-seq",
+  "bulk RNA-seq",
+  "spatial transcriptomics",
+  "ATAC-seq",
+  "ChIP-seq",
+  "proteomics",
+  "metabolomics",
+  "multi-omics",
+  "epigenomics",
 ];
 
 const SOURCE_LABELS: Record<DatasetSource, string> = {
@@ -172,14 +186,15 @@ export default function DatasetsPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [filters, setFilters] = useState({
-    sources: [...SOURCE_OPTIONS] as string[],
+    sources: [...BIO_CORE_SOURCES] as string[],
     yearFrom: "",
     yearTo: "",
+    modality: "single-cell RNA-seq",
+    context: "",
   });
   const pagination = meta?.pagination;
 
   const executeSearch = async (queryText: string, activeFilters: FiltersState, options?: SearchOptions) => {
-    if (!queryText.trim()) return;
     const nextPage = options?.page ?? page;
     const nextSortBy = options?.sortBy ?? sortBy;
     const nextPageSize = options?.pageSize ?? pageSize;
@@ -187,11 +202,19 @@ export default function DatasetsPage() {
     setLoading(true);
     setMeta(null);
     try {
+      const parts = [queryText?.trim(), activeFilters.modality?.trim(), activeFilters.context?.trim()].filter(Boolean);
+      const combinedQuery = parts.join(" ").trim();
+      if (!combinedQuery) {
+        setDatasets([]);
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch("/api/datasets/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: queryText,
+          query: combinedQuery,
           filters: {
             ...activeFilters,
             sortBy: nextSortBy,
@@ -217,13 +240,15 @@ export default function DatasetsPage() {
 
   const applyBioPreset = async (preset: BioPreset) => {
     const nextFilters: FiltersState = {
-      sources: preset.sources ? [...preset.sources] : [...SOURCE_OPTIONS],
+      sources: preset.sources ? [...preset.sources] : [...BIO_CORE_SOURCES],
       yearFrom: preset.yearFrom || "",
       yearTo: preset.yearTo || "",
+      modality: preset.query,
+      context: "",
     };
     const nextSort = preset.sortBy || "recent";
 
-    setQuery(preset.query);
+    setQuery("");
     setFilters(nextFilters);
     setSortBy(nextSort);
     setPage(1);
@@ -304,6 +329,28 @@ export default function DatasetsPage() {
                   <span className="text-sm text-gray-700 dark:text-gray-300">{SOURCE_LABELS[source]}</span>
                 </label>
               ))}
+              <div className="flex items-center gap-2 ml-4">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Modality:</span>
+                <select
+                  value={filters.modality}
+                  onChange={(e) => setFilters({ ...filters, modality: e.target.value })}
+                  className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300"
+                >
+                  {MODALITY_OPTIONS.map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center gap-2 ml-4">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Context:</span>
+                <input
+                  type="text"
+                  placeholder="optional tissue/disease (e.g. endometrium)"
+                  value={filters.context}
+                  onChange={(e) => setFilters({ ...filters, context: e.target.value })}
+                  className="w-64 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm"
+                />
+              </div>
               <div className="flex items-center gap-2 ml-4">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Year:</span>
                 <input

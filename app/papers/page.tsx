@@ -19,7 +19,7 @@ interface Paper {
   authors: string[];
   abstract: string;
   year: number;
-  source: 'pubmed' | 'arxiv' | 'semantic';
+  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex';
   url: string;
   pdfUrl?: string;
   citations?: number;
@@ -59,12 +59,16 @@ const sourceLabel: Record<Paper['source'], string> = {
   pubmed: 'PubMed',
   arxiv: 'arXiv',
   semantic: 'Semantic',
+  crossref: 'Crossref',
+  openalex: 'OpenAlex',
 };
 
 const sourceBadge: Record<Paper['source'], string> = {
   pubmed: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200',
   arxiv: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200',
   semantic: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-200',
+  crossref: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200',
+  openalex: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-200',
 };
 
 const scoreTooltip =
@@ -75,6 +79,8 @@ const sourceTooltip: Record<Paper['source'], string> = {
   pubmed: 'PubMed: 의생명/임상 중심의 NCBI 논문 데이터베이스',
   arxiv: 'arXiv: 프리프린트 중심의 공개 연구 저장소',
   semantic: 'Semantic Scholar: 인용/영향도 메타데이터 제공',
+  crossref: 'Crossref: DOI/서지 메타데이터 중심 학술 인덱스',
+  openalex: 'OpenAlex: 글로벌 오픈 학술 그래프 메타데이터',
 };
 
 function trackCardClass(status: TrackStatus[keyof TrackStatus]): string {
@@ -113,8 +119,9 @@ export default function PapersPage() {
   const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [saveLoadingId, setSaveLoadingId] = useState<string | null>(null);
+  const [bioFocus, setBioFocus] = useState(true);
   const [filters, setFilters] = useState({
-    sources: ['pubmed', 'arxiv', 'semantic'] as string[],
+    sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv'] as string[],
     yearFrom: '',
     yearTo: '',
   });
@@ -125,7 +132,7 @@ export default function PapersPage() {
         acc[paper.source] += 1;
         return acc;
       },
-      { pubmed: 0, arxiv: 0, semantic: 0 },
+      { pubmed: 0, arxiv: 0, semantic: 0, crossref: 0, openalex: 0 },
     );
   }, [papers]);
 
@@ -221,10 +228,14 @@ export default function PapersPage() {
       setTimeout(() => setTrackStatus((s) => ({ ...s, t2: 'done' })), 1100);
       setTimeout(() => setTrackStatus((s) => ({ ...s, t3: 'done' })), 1400);
 
+      const effectiveQuery = bioFocus
+        ? `${query} AND (endometrium OR uterus OR ovarian OR embryo OR organoid OR autophagy OR transcriptomics)`
+        : query;
+
       const response = await fetch('/api/papers/search-parallel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, filters }),
+        body: JSON.stringify({ query: effectiveQuery, filters }),
       });
       const data = await response.json();
 
@@ -301,6 +312,16 @@ export default function PapersPage() {
                     {loading ? '검색 중...' : '검색 실행'}
                   </button>
                 </div>
+                <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                  <button
+                    onClick={() => setBioFocus((v) => !v)}
+                    className={`rounded-md border px-2 py-1 ${bioFocus ? 'border-emerald-500 text-emerald-600' : 'border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300'}`}
+                    title="Bio Focus를 켜면 생물학/의생명 키워드를 자동 확장합니다"
+                  >
+                    {bioFocus ? 'Bio Focus ON' : 'Bio Focus OFF'}
+                  </button>
+                  <span>바이오 논문 우선 검색</span>
+                </div>
 
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
                   {(Object.keys(trackStatus) as Array<keyof TrackStatus>).map((track) => (
@@ -343,7 +364,7 @@ export default function PapersPage() {
                       <span title="검색할 데이터 소스 선택"><Filter className="h-3.5 w-3.5" /></span> Source Filters
                     </div>
                     <div className="flex flex-wrap gap-2 text-xs">
-                      {(['pubmed', 'arxiv', 'semantic'] as const).map((source) => {
+                      {(['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'] as const).map((source) => {
                         const active = filters.sources.includes(source);
                         return (
                           <button
@@ -554,7 +575,7 @@ export default function PapersPage() {
                 </div>
               </div>
               <div className="mt-3 rounded-xl bg-slate-100 p-3 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                Semantic: <span className="font-semibold">{sourceCounts.semantic}</span>
+                Semantic: <span className="font-semibold">{sourceCounts.semantic}</span> · Crossref: <span className="font-semibold">{sourceCounts.crossref}</span> · OpenAlex: <span className="font-semibold">{sourceCounts.openalex}</span>
                 <br />
                 Final integrated: <span className="font-semibold">{meta?.trackResults?.final ?? papers.length}</span>
               </div>

@@ -9,7 +9,7 @@ interface Paper {
   authors: string[];
   abstract: string;
   year: number;
-  source: 'pubmed' | 'arxiv' | 'semantic';
+  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex';
   url: string;
   pdfUrl?: string;
   citations?: number;
@@ -232,17 +232,112 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
   }
 }
 
-// T4: Ranker - Integration & ranking
-function t4_integrateAndRank(
+// T4: Crossref track
+async function t4_crossrefEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+  console.log('[T4:Crossref] Search starting...');
+  const startTime = Date.now();
+  try {
+    const params = new URLSearchParams({
+      query,
+      rows: '15',
+      sort: 'relevance',
+      order: 'desc',
+      select: 'DOI,title,author,issued,URL,is-referenced-by-count,abstract',
+    });
+    const res = await fetch(`https://api.crossref.org/works?${params.toString()}`, {
+      signal: AbortSignal.timeout(15000),
+      headers: { Accept: 'application/json' },
+    });
+    const data = await res.json();
+    const rows = data?.message?.items;
+    if (!Array.isArray(rows)) return [];
+
+    const papers = rows
+      .map((row: any) => {
+        const year = row?.issued?.['date-parts']?.[0]?.[0] || new Date().getFullYear();
+        if (yearFrom && year < parseInt(yearFrom)) return null;
+        if (yearTo && year > parseInt(yearTo)) return null;
+        const doi = row?.DOI;
+        return {
+          id: `crossref-${doi || Math.random().toString(36).slice(2)}`,
+          title: Array.isArray(row.title) ? row.title[0] || 'No title' : 'No title',
+          authors: Array.isArray(row.author) ? row.author.map((a: any) => [a.given, a.family].filter(Boolean).join(' ')).filter(Boolean) : [],
+          abstract: row.abstract ? String(row.abstract).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : 'No abstract available',
+          year,
+          source: 'crossref' as const,
+          url: row.URL || (doi ? `https://doi.org/${doi}` : 'https://api.crossref.org'),
+          citations: typeof row['is-referenced-by-count'] === 'number' ? row['is-referenced-by-count'] : undefined,
+        } as Paper;
+      })
+      .filter((p: Paper | null): p is Paper => p !== null);
+
+    console.log(`[T4:Crossref] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
+    return papers;
+  } catch (error) {
+    console.error('[T4:Crossref] Error:', error);
+    return [];
+  }
+}
+
+// T5: OpenAlex track
+async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+  console.log('[T5:OpenAlex] Search starting...');
+  const startTime = Date.now();
+  try {
+    const params = new URLSearchParams({
+      search: query,
+      per_page: '15',
+      select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count',
+    });
+    const res = await fetch(`https://api.openalex.org/works?${params.toString()}`, {
+      signal: AbortSignal.timeout(15000),
+      headers: { Accept: 'application/json' },
+    });
+    const data = await res.json();
+    const rows = data?.results;
+    if (!Array.isArray(rows)) return [];
+
+    const papers = rows
+      .map((row: any) => {
+        const year = row?.publication_year || new Date().getFullYear();
+        if (yearFrom && year < parseInt(yearFrom)) return null;
+        if (yearTo && year > parseInt(yearTo)) return null;
+        return {
+          id: `openalex-${row.id || Math.random().toString(36).slice(2)}`,
+          title: row.display_name || 'No title',
+          authors: Array.isArray(row.authorships)
+            ? row.authorships.map((a: any) => a?.author?.display_name).filter((x: unknown): x is string => typeof x === 'string')
+            : [],
+          abstract: 'No abstract available',
+          year,
+          source: 'openalex' as const,
+          url: row?.primary_location?.landing_page_url || row?.id || 'https://openalex.org',
+          citations: typeof row?.cited_by_count === 'number' ? row.cited_by_count : undefined,
+        } as Paper;
+      })
+      .filter((p: Paper | null): p is Paper => p !== null);
+
+    console.log(`[T5:OpenAlex] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
+    return papers;
+  } catch (error) {
+    console.error('[T5:OpenAlex] Error:', error);
+    return [];
+  }
+}
+
+// T6: Ranker - Integration & ranking
+function t6_integrateAndRank(
   t1Results: Paper[],
   t2Results: Paper[],
-  t3Results: Paper[]
+  t3Results: Paper[],
+  t4Results: Paper[],
+  t5Results: Paper[]
 ): Paper[] {
-  console.log('[T4:Ranker] Integration and ranking starting...');
+  console.log('[T6:Ranker] Integration and ranking starting...');
   const startTime = Date.now();
   
   // Merge all results
-  const allPapers = [...t1Results, ...t2Results, ...t3Results];
+  const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results];
   
   // Deduplication by DOI-like ID or title similarity
   const seen = new Set<string>();
@@ -279,7 +374,7 @@ function t4_integrateAndRank(
     return { ...paper, rankScore: Math.round(score) };
   }).sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
   
-  console.log(`[T4:Ranker] Completed in ${Date.now() - startTime}ms, ${uniquePapers.length} unique papers ranked`);
+  console.log(`[T6:Ranker] Completed in ${Date.now() - startTime}ms, ${uniquePapers.length} unique papers ranked`);
   return rankedPapers;
 }
 
@@ -289,13 +384,13 @@ export async function POST(request: NextRequest) {
   try {
     const { query, filters } = await request.json();
     
-    const sources = filters?.sources || ['pubmed', 'arxiv', 'semantic'];
+    const sources = filters?.sources || ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'];
     const yearFrom = filters?.yearFrom;
     const yearTo = filters?.yearTo;
 
     // Execute selected tracks in parallel and preserve source mapping.
     const trackJobs: Array<{
-      source: 'pubmed' | 'arxiv' | 'semantic';
+      source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex';
       promise: Promise<Paper[]>;
     }> = [];
     
@@ -308,12 +403,20 @@ export async function POST(request: NextRequest) {
     if (sources.includes('semantic')) {
       trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(query, yearFrom, yearTo) });
     }
+    if (sources.includes('crossref')) {
+      trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(query, yearFrom, yearTo) });
+    }
+    if (sources.includes('openalex')) {
+      trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(query, yearFrom, yearTo) });
+    }
 
     const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
-    const bySource: Record<'pubmed' | 'arxiv' | 'semantic', Paper[]> = {
+    const bySource: Record<'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex', Paper[]> = {
       pubmed: [],
       arxiv: [],
       semantic: [],
+      crossref: [],
+      openalex: [],
     };
     
     settled.forEach((result, index) => {
@@ -325,9 +428,11 @@ export async function POST(request: NextRequest) {
     const papers1 = bySource.pubmed;
     const papers2 = bySource.arxiv;
     const papers3 = bySource.semantic;
-    
-    // T4: Integration and ranking
-    const finalPapers = t4_integrateAndRank(papers1, papers2, papers3);
+    const papers4 = bySource.crossref;
+    const papers5 = bySource.openalex;
+
+    // T6: Integration and ranking
+    const finalPapers = t6_integrateAndRank(papers1, papers2, papers3, papers4, papers5);
     
     const totalTime = Date.now() - overallStart;
     console.log(`[Parallel Search] Total time: ${totalTime}ms`);
@@ -340,6 +445,8 @@ export async function POST(request: NextRequest) {
           t1: papers1.length,
           t2: papers2.length,
           t3: papers3.length,
+          t4: papers4.length,
+          t5: papers5.length,
           final: finalPapers.length,
         }
       }
