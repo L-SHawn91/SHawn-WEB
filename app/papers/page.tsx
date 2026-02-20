@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Filter,
   Search,
+  Sparkles,
 } from 'lucide-react';
 
 interface Paper {
@@ -47,6 +48,8 @@ interface SearchMeta {
 }
 
 type SortMode = 'score' | 'recent' | 'citations' | 'source';
+
+type RelatedItem = { id: string; title: string; year?: number; source: string; url: string };
 
 const trackNames: Record<keyof TrackStatus, string> = {
   t1: 'PubMed Track',
@@ -119,6 +122,8 @@ export default function PapersPage() {
   const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [saveLoadingId, setSaveLoadingId] = useState<string | null>(null);
+  const [hoverPaperId, setHoverPaperId] = useState<string | null>(null);
+  const [relatedByPaper, setRelatedByPaper] = useState<Record<string, RelatedItem[]>>({});
   const [bioFocus, setBioFocus] = useState(true);
   const [filters, setFilters] = useState({
     sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv'] as string[],
@@ -213,6 +218,21 @@ export default function PapersPage() {
       }
     } finally {
       setSaveLoadingId(null);
+    }
+  };
+
+  const loadRelatedPapers = async (paper: Paper) => {
+    if (relatedByPaper[paper.id]) return;
+    try {
+      const res = await fetch('/api/related', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind: 'paper', title: paper.title }),
+      });
+      const data = await res.json();
+      setRelatedByPaper((prev) => ({ ...prev, [paper.id]: data.items || [] }));
+    } catch {
+      setRelatedByPaper((prev) => ({ ...prev, [paper.id]: [] }));
     }
   };
 
@@ -443,7 +463,7 @@ export default function PapersPage() {
                   {displayedPapers.map((paper) => (
                     <article
                       key={paper.id}
-                      className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60"
+                      className="relative rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60"
                     >
                       <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
                         <span
@@ -473,6 +493,39 @@ export default function PapersPage() {
                           >
                             Citations {paper.citations}
                           </span>
+                        )}
+                      </div>
+
+                      <div className="absolute right-3 top-3">
+                        <button
+                          onMouseEnter={() => {
+                            setHoverPaperId(paper.id);
+                            void loadRelatedPapers(paper);
+                          }}
+                          onMouseLeave={() => setHoverPaperId((id) => (id === paper.id ? null : id))}
+                          className="rounded-full border border-violet-300 px-2 py-1 text-[11px] text-violet-700 dark:border-violet-700 dark:text-violet-300"
+                          title="연관 논문 미리보기"
+                        >
+                          <span className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3" /> Related</span>
+                        </button>
+                        {hoverPaperId === paper.id && (
+                          <div className="absolute right-0 z-20 mt-2 w-80 rounded-lg border border-slate-200 bg-white p-3 text-xs shadow-xl dark:border-slate-700 dark:bg-slate-900">
+                            <p className="mb-2 font-semibold text-slate-700 dark:text-slate-200">연관 논문</p>
+                            {(relatedByPaper[paper.id] || []).length === 0 ? (
+                              <p className="text-slate-500">불러오는 중이거나 결과가 없습니다.</p>
+                            ) : (
+                              <ul className="space-y-2">
+                                {(relatedByPaper[paper.id] || []).slice(0, 5).map((r) => (
+                                  <li key={r.id}>
+                                    <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-blue-600 hover:underline dark:text-blue-300">
+                                      {r.title}
+                                    </a>
+                                    <p className="text-[11px] text-slate-500">{r.source}{r.year ? ` · ${r.year}` : ''}</p>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
                         )}
                       </div>
 

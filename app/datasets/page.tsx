@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Database, ExternalLink, Filter, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Database, ExternalLink, Filter, Search, Sparkles } from "lucide-react";
 
 type DatasetSource =
   | "huggingface"
@@ -50,6 +50,8 @@ interface DatasetMeta {
     by: SortBy;
   };
 }
+
+type RelatedItem = { id: string; title: string; year?: number; source: string; url: string };
 
 interface FiltersState {
   sources: string[];
@@ -186,6 +188,8 @@ export default function DatasetsPage() {
   const [sortBy, setSortBy] = useState<SortBy>("rank");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [hoverDatasetId, setHoverDatasetId] = useState<string | null>(null);
+  const [relatedByDataset, setRelatedByDataset] = useState<Record<string, RelatedItem[]>>({});
   const [filters, setFilters] = useState({
     sources: [...BIO_CORE_SOURCES] as string[],
     yearFrom: "",
@@ -255,6 +259,21 @@ export default function DatasetsPage() {
     setPage(1);
 
     await executeSearch(preset.query, nextFilters, { page: 1, sortBy: nextSort });
+  };
+
+  const loadRelatedForDataset = async (dataset: DatasetItem) => {
+    if (relatedByDataset[dataset.id]) return;
+    try {
+      const res = await fetch('/api/related', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind: 'dataset', title: dataset.title, accessionIds: dataset.accessionIds || [] }),
+      });
+      const data = await res.json();
+      setRelatedByDataset((prev) => ({ ...prev, [dataset.id]: data.items || [] }));
+    } catch {
+      setRelatedByDataset((prev) => ({ ...prev, [dataset.id]: [] }));
+    }
   };
 
   return (
@@ -429,9 +448,42 @@ export default function DatasetsPage() {
               )}
             </div>
             {datasets.map((dataset) => (
-              <div key={dataset.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+              <div key={dataset.id} className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
+                    <div className="absolute right-4 top-4">
+                      <button
+                        onMouseEnter={() => {
+                          setHoverDatasetId(dataset.id);
+                          void loadRelatedForDataset(dataset);
+                        }}
+                        onMouseLeave={() => setHoverDatasetId((id) => (id === dataset.id ? null : id))}
+                        className="rounded-full border border-violet-300 px-2 py-1 text-[11px] text-violet-700"
+                        title="연관 논문 미리보기"
+                      >
+                        <span className="inline-flex items-center gap-1"><Sparkles className="w-3 h-3" /> Related</span>
+                      </button>
+                      {hoverDatasetId === dataset.id && (
+                        <div className="absolute right-0 z-20 mt-2 w-80 rounded-lg border border-gray-200 bg-white p-3 text-xs shadow-xl dark:border-gray-700 dark:bg-gray-900">
+                          <p className="mb-2 font-semibold text-gray-700 dark:text-gray-200">연관 논문</p>
+                          {(relatedByDataset[dataset.id] || []).length === 0 ? (
+                            <p className="text-gray-500">불러오는 중이거나 결과가 없습니다.</p>
+                          ) : (
+                            <ul className="space-y-2">
+                              {(relatedByDataset[dataset.id] || []).slice(0, 5).map((r) => (
+                                <li key={r.id}>
+                                  <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-blue-600 hover:underline dark:text-blue-300">
+                                    {r.title}
+                                  </a>
+                                  <p className="text-[11px] text-gray-500">{r.source}{r.year ? ` · ${r.year}` : ''}</p>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex flex-wrap items-center gap-2 mb-2">
                       <span className="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800">
                         {dataset.source}
