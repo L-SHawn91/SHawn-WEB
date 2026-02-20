@@ -13,6 +13,10 @@ interface Paper {
   citations?: number;
 }
 
+function isPaper(paper: Paper | null): paper is Paper {
+  return paper !== null;
+}
+
 // Parallel search across multiple sources
 async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
   try {
@@ -37,7 +41,7 @@ async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): 
     const searchRes = await fetch(`${baseUrl}?${params.toString()}`);
     const searchData = await searchRes.json();
     
-    const ids = searchData.esearchresult?.idlist || [];
+    const ids: string[] = searchData.esearchresult?.idlist || [];
     if (ids.length === 0) return [];
 
     // Fetch details
@@ -51,7 +55,7 @@ async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): 
     const summaryRes = await fetch(`${summaryUrl}?${summaryParams.toString()}`);
     const summaryData = await summaryRes.json();
 
-    return ids.map((id: string) => {
+    return ids.map<Paper | null>((id: string) => {
       const doc = summaryData.result?.[id];
       if (!doc) return null;
       
@@ -64,7 +68,7 @@ async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): 
         source: 'pubmed' as const,
         url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`,
       };
-    }).filter(Boolean);
+    }).filter(isPaper);
   } catch (error) {
     console.error('PubMed search error:', error);
     return [];
@@ -88,7 +92,7 @@ async function searchArXiv(query: string, yearFrom?: string, yearTo?: string): P
     // Parse XML
     const entries = xml.match(/<entry[>\s][\s\S]*?<\/entry>/g) || [];
     
-    return entries.map((entry, idx) => {
+    return entries.map<Paper | null>((entry, idx) => {
       const title = entry.match(/<title>([\s\S]*?)<\/title>/)?.[1]?.trim() || 'No title';
       const summary = entry.match(/<summary>([\s\S]*?)<\/summary>/)?.[1]?.trim() || 'No abstract';
       const id = entry.match(/<id>([\s\S]*?)<\/id>/)?.[1]?.trim() || `arxiv-${idx}`;
@@ -101,7 +105,7 @@ async function searchArXiv(query: string, yearFrom?: string, yearTo?: string): P
       
       const authors = (entry.match(/<author>[\s\S]*?<name>([\s\S]*?)<\/name>/g) || [])
         .map((a) => a.match(/<name>([\s\S]*?)<\/name>/)?.[1])
-        .filter(Boolean);
+        .filter((author): author is string => Boolean(author));
       
       const arxivId = id.split('/').pop()?.replace('abs/', '') || '';
       
@@ -115,7 +119,7 @@ async function searchArXiv(query: string, yearFrom?: string, yearTo?: string): P
         url: `https://arxiv.org/abs/${arxivId}`,
         pdfUrl: `https://arxiv.org/pdf/${arxivId}.pdf`,
       };
-    }).filter(Boolean);
+    }).filter(isPaper);
   } catch (error) {
     console.error('arXiv search error:', error);
     return [];
