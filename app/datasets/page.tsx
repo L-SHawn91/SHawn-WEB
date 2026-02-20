@@ -196,8 +196,10 @@ export default function DatasetsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [hoverDatasetId, setHoverDatasetId] = useState<string | null>(null);
   const [relatedByDataset, setRelatedByDataset] = useState<Record<string, RelatedItem[]>>({});
+  const [relatedLoadingByDataset, setRelatedLoadingByDataset] = useState<Record<string, boolean>>({});
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [presetRestore, setPresetRestore] = useState<SavedPresetState | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
   const [filters, setFilters] = useState({
     sources: [...BIO_CORE_SOURCES] as string[],
     yearFrom: "",
@@ -219,6 +221,7 @@ export default function DatasetsPage() {
       const combinedQuery = parts.join(" ").trim();
       if (!combinedQuery) {
         setDatasets([]);
+        setHasSearched(true);
         setLoading(false);
         return;
       }
@@ -239,11 +242,13 @@ export default function DatasetsPage() {
       const data = await response.json();
       setDatasets(data.datasets || []);
       setMeta(data.meta || null);
+      setHasSearched(true);
       const serverPage = data?.meta?.pagination?.page;
       if (typeof serverPage === "number") setPage(serverPage);
     } catch (error) {
       console.error("Dataset search failed:", error);
       setDatasets([]);
+      setHasSearched(true);
     } finally {
       setLoading(false);
     }
@@ -305,7 +310,8 @@ export default function DatasetsPage() {
   };
 
   const loadRelatedForDataset = async (dataset: DatasetItem) => {
-    if (relatedByDataset[dataset.id]) return;
+    if (relatedByDataset[dataset.id] || relatedLoadingByDataset[dataset.id]) return;
+    setRelatedLoadingByDataset((prev) => ({ ...prev, [dataset.id]: true }));
     try {
       const res = await fetch('/api/related', {
         method: 'POST',
@@ -316,6 +322,8 @@ export default function DatasetsPage() {
       setRelatedByDataset((prev) => ({ ...prev, [dataset.id]: data.items || [] }));
     } catch {
       setRelatedByDataset((prev) => ({ ...prev, [dataset.id]: [] }));
+    } finally {
+      setRelatedLoadingByDataset((prev) => ({ ...prev, [dataset.id]: false }));
     }
   };
 
@@ -513,8 +521,10 @@ export default function DatasetsPage() {
                       {hoverDatasetId === dataset.id && (
                         <div className="absolute right-0 z-20 mt-2 w-80 rounded-lg border border-gray-200 bg-white p-3 text-xs shadow-xl dark:border-gray-700 dark:bg-gray-900">
                           <p className="mb-2 font-semibold text-gray-700 dark:text-gray-200">연관 논문</p>
-                          {(relatedByDataset[dataset.id] || []).length === 0 ? (
-                            <p className="text-gray-500">불러오는 중이거나 결과가 없습니다.</p>
+                          {relatedLoadingByDataset[dataset.id] ? (
+                            <p className="text-gray-500">불러오는 중...</p>
+                          ) : (relatedByDataset[dataset.id] || []).length === 0 ? (
+                            <p className="text-gray-500">연관 논문이 없습니다.</p>
                           ) : (
                             <ul className="space-y-2">
                               {(relatedByDataset[dataset.id] || []).slice(0, 5).map((r) => (
@@ -619,7 +629,7 @@ export default function DatasetsPage() {
           </div>
         )}
 
-        {datasets.length === 0 && !loading && query && (
+        {datasets.length === 0 && !loading && hasSearched && (
           <div className="text-center py-12 text-gray-500">No datasets found. Try different keywords or adjust filters.</div>
         )}
       </div>
