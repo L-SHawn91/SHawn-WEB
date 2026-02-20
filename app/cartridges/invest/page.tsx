@@ -3,7 +3,7 @@
 import { Footer } from "@/components/ui/footer";
 import { Header } from "@/components/ui/header";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type SignalTrend = "up" | "down" | "flat";
 type RiskLevel = "Low" | "Medium" | "High";
@@ -60,6 +60,37 @@ type WatchItem = {
   score: number;
   reason: string;
   catalyst: string;
+  region: "k" | "us";
+};
+
+type RebalanceSuggestion = {
+  symbol: string;
+  action: "up" | "down" | "hold";
+  deltaPct: number;
+  reason: string;
+};
+
+type SnapshotPayload = {
+  updatedAt: string;
+  mode: StrategyMode;
+  signalConfidence: number;
+  modules: SignalModule[];
+  markets: MarketCard[];
+  holdings: Holding[];
+  watchlist: WatchItem[];
+  risk: {
+    concentration: number;
+    highRiskShare: number;
+    weightedPnl: number;
+    rebalanceNeed: boolean;
+  };
+  rebalanceSuggestions: RebalanceSuggestion[];
+  kpis: {
+    portfolio: string;
+    annualReturn: string;
+    positionCount: number;
+    volatility: string;
+  };
 };
 
 const strategyModes: { id: StrategyMode; label: string; note: string }[] = [
@@ -68,145 +99,11 @@ const strategyModes: { id: StrategyMode; label: string; note: string }[] = [
   { id: "defensive", label: "Defensive", note: "변동성 축소 우선" },
 ];
 
-const signalModules: SignalModule[] = [
-  {
-    key: "expert",
-    title: "Expert Score",
-    icon: "📊",
-    subtitle: "기술 분석",
-    weight: 40,
-    trend: "up",
-    checks: ["Moving Average", "RSI", "MACD", "지지/저항선"],
-    confidence: 76,
-    action: "관심종목 우선순위 조정",
-    palette: {
-      from: "from-orange-900/35",
-      to: "to-amber-900/35",
-      border: "border-orange-500/45",
-      text: "text-orange-400",
-      bar: "bg-orange-500",
-    },
-  },
-  {
-    key: "whale",
-    title: "Whale Activity",
-    icon: "🐋",
-    subtitle: "기관/외국인 수급",
-    weight: 30,
-    trend: "flat",
-    checks: ["기관 순매수", "대량 거래", "진입/청산 시그널", "외국인 유입"],
-    confidence: 69,
-    action: "외국인 유입 구간에서 비중 상향 검토",
-    palette: {
-      from: "from-blue-900/35",
-      to: "to-cyan-900/35",
-      border: "border-blue-500/45",
-      text: "text-blue-400",
-      bar: "bg-blue-500",
-    },
-  },
-  {
-    key: "macro",
-    title: "Macro Matrix",
-    icon: "🌍",
-    subtitle: "거시 지표",
-    weight: 20,
-    trend: "down",
-    checks: ["GDP", "금리 정책", "인플레이션", "환율"],
-    confidence: 58,
-    action: "금리 민감 산업 비중 축소 권고",
-    palette: {
-      from: "from-green-900/35",
-      to: "to-emerald-900/35",
-      border: "border-emerald-500/45",
-      text: "text-emerald-400",
-      bar: "bg-emerald-500",
-    },
-  },
-  {
-    key: "news",
-    title: "News Sentiment",
-    icon: "📰",
-    subtitle: "이벤트 반응",
-    weight: 10,
-    trend: "down",
-    checks: ["긍정 뉴스", "부정 뉴스", "중립 판정", "이벤트 임팩트"],
-    confidence: 45,
-    action: "단기 악재 반응 심할 때 헤지 유지",
-    palette: {
-      from: "from-rose-900/35",
-      to: "to-pink-900/35",
-      border: "border-rose-500/45",
-      text: "text-rose-400",
-      bar: "bg-rose-500",
-    },
-  },
-];
-
-const markets: MarketCard[] = [
-  {
-    region: "Korea Market",
-    flag: "🇰🇷",
-    indexA: { label: "KOSPI", value: "2,500", change: "+0.8%" },
-    indexB: { label: "KOSDAQ", value: "680", change: "-0.2%" },
-    traits: ["반도체·자동차 편중", "기관 수급 증가", "내수 변동성", "고배당 제한"],
-    allocation: 40,
-    risk: "High",
-    liquidity: "Normal",
-    palette: {
-      from: "from-red-900/35",
-      to: "to-pink-900/35",
-      border: "border-red-500/45",
-      text: "text-red-400",
-    },
-  },
-  {
-    region: "US Market",
-    flag: "🇺🇸",
-    indexA: { label: "S&P 500", value: "5,000", change: "+0.4%" },
-    indexB: { label: "NASDAQ 100", value: "18,000", change: "+0.9%" },
-    traits: ["AI 테크 강세", "AI 인프라 투자", "금리 민감", "옵션 변동성 상승"],
-    allocation: 60,
-    risk: "Medium",
-    liquidity: "High",
-    palette: {
-      from: "from-blue-900/35",
-      to: "to-indigo-900/35",
-      border: "border-blue-500/45",
-      text: "text-blue-400",
-    },
-  },
-];
-
-const holdings: Holding[] = [
-  { symbol: "AAPL", allocation: 12, pnl: 4.8, beta: 1.15, risk: "Medium" },
-  { symbol: "NVDA", allocation: 8, pnl: 11.2, beta: 1.52, risk: "High" },
-  { symbol: "MSFT", allocation: 7.5, pnl: 7.1, beta: 0.98, risk: "Medium" },
-  { symbol: "TSMC", allocation: 7, pnl: 3.2, beta: 1.12, risk: "Medium" },
-  { symbol: "005930.KS", allocation: 10, pnl: 2.6, beta: 1.38, risk: "High" },
-  { symbol: "GOOGL", allocation: 6.5, pnl: -0.9, beta: 1.08, risk: "Medium" },
-];
-
-type WatchItemEx = WatchItem & { region: "k" | "us"; };
-
-const watchItems: WatchItemEx[] = [
-  { symbol: "SMCI", signal: "Buy", score: 88, reason: "AI 데이터센터 실적 개선 기대", catalyst: "분기 실적 가이던스 상향", region: "us" },
-  { symbol: "AMZN", signal: "Hold", score: 61, reason: "가격대비 모멘텀 완만", catalyst: "AWS 성장 둔화 완화 징후", region: "us" },
-  { symbol: "TSLA", signal: "Trim", score: 46, reason: "고위험 구간 확대", catalyst: "마진 압박 + 자본지출 부담", region: "us" },
-];
-
-const kpis = [
-  { label: "총 포트폴리오", value: "$5.2M", note: "USD", color: "text-amber-400" },
-  { label: "연간 수익률", value: "+15.3%", note: "Sovereign Alpha", color: "text-emerald-400" },
-  { label: "변동성(월)", value: "10.6%", note: "중간 위기 구간", color: "text-rose-300" },
-  { label: "위험 한도 사용률", value: "72%", note: "24h 기준", color: "text-sky-300" },
-];
-
-const trendBadge = {
+const trendBadge: Record<SignalTrend, string> = {
   up: "text-emerald-300 bg-emerald-400/10 border-emerald-400/30",
   down: "text-rose-300 bg-rose-400/10 border-rose-400/30",
   flat: "text-amber-300 bg-amber-400/10 border-amber-400/30",
-} as const;
+};
 
 const riskText: Record<RiskLevel, string> = {
   Low: "text-emerald-300",
@@ -218,6 +115,12 @@ const signalBadge: Record<SignalAction, string> = {
   Buy: "bg-emerald-500/10 text-emerald-200 border-emerald-500/30",
   Hold: "bg-sky-500/10 text-sky-200 border-sky-500/30",
   Trim: "bg-rose-500/10 text-rose-200 border-rose-500/30",
+};
+
+const suggestionBadge: Record<RebalanceSuggestion["action"], string> = {
+  up: "text-emerald-200 bg-emerald-500/10 border-emerald-400/30",
+  down: "text-rose-200 bg-rose-500/10 border-rose-400/30",
+  hold: "text-sky-200 bg-sky-500/10 border-sky-400/30",
 };
 
 function ProgressBar({ value, label, accentColor }: { value: number; label: string; accentColor: string }) {
@@ -244,24 +147,68 @@ export default function InvestmentWorld() {
   const [strategy, setStrategy] = useState<StrategyMode>("balanced");
   const [marketFocus, setMarketFocus] = useState<string>("all");
   const [notice, setNotice] = useState<string>("");
+  const [snapshot, setSnapshot] = useState<SnapshotPayload | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
-  const riskScore = useMemo(() => {
-    const totalHighRisk = holdings.filter((h) => h.risk === "High").reduce((acc, h) => acc + h.allocation, 0);
-    const weightedPnl = holdings.reduce((acc, h) => acc + h.allocation * Math.max(-5, Math.min(15, h.pnl)), 0) / 100;
-    return {
-      concentration: Math.max(...holdings.map((h) => h.allocation)),
-      highRiskShare: totalHighRisk,
-      pnl: weightedPnl,
-      rebalanceDelta: totalHighRisk > 35 ? 1 : 0,
-    };
-  }, []);
+  useEffect(() => {
+    const abort = new AbortController();
+    setLoading(true);
+    setError("");
 
-  const filteredWatch = marketFocus === "all" ? watchItems : watchItems.filter((item) => item.region === marketFocus);
+    (async () => {
+      try {
+        const res = await fetch(`/api/invest/snapshot?mode=${strategy}`, {
+          signal: abort.signal,
+          cache: "no-store",
+        });
 
-  const signalConfidence = useMemo(
-    () => Math.round(signalModules.reduce((acc, m) => acc + m.confidence * (m.weight / 100), 0)),
-    []
-  );
+        if (!res.ok) {
+          throw new Error(`요청 실패: ${res.status}`);
+        }
+
+        const data = (await res.json()) as SnapshotPayload;
+        setSnapshot(data);
+      } catch (e) {
+        if ((e as Error).name !== "AbortError") {
+          setError((e as Error).message || "데이터 로드 실패");
+        }
+      } finally {
+        setLoading(false);
+      }
+    })();
+
+    return () => abort.abort();
+  }, [strategy]);
+
+  const watchItems =
+    marketFocus === "all"
+      ? snapshot?.watchlist || []
+      : (snapshot?.watchlist || []).filter((item) => item.region === marketFocus);
+
+  const riskSummary = snapshot?.risk
+    ? {
+        concentration: snapshot.risk.concentration,
+        highRiskShare: snapshot.risk.highRiskShare,
+        weightedPnl: snapshot.risk.weightedPnl,
+        state: snapshot.risk.rebalanceNeed ? "경고" : "양호",
+      }
+    : null;
+
+  const kpiCards = snapshot
+    ? [
+        { label: "총 포트폴리오", value: snapshot.kpis.portfolio, note: "USD", color: "text-amber-400" },
+        { label: "연간 수익률", value: snapshot.kpis.annualReturn, note: "Sovereign Alpha", color: "text-emerald-400" },
+        { label: "포지션 수", value: `${snapshot.kpis.positionCount}`, note: "분산 투자", color: "text-sky-400" },
+        { label: "변동성(월)", value: snapshot.kpis.volatility, note: "중간 위기 구간", color: "text-rose-300" },
+      ]
+    : [];
+
+  const getMarketFocusLabel = (value: string) => {
+    if (value === "k") return "코어(국내)";
+    if (value === "us") return "미국";
+    return "전체";
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
@@ -280,15 +227,15 @@ export default function InvestmentWorld() {
             </div>
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
               <p className="text-sm text-gray-400">신호 합의 점수</p>
-              <p className="text-xl font-bold text-white mt-1">{signalConfidence}%</p>
+              <p className="text-xl font-bold text-white mt-1">{snapshot?.signalConfidence ?? 0}%</p>
             </div>
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
               <p className="text-sm text-gray-400">리밸런싱 위험도</p>
-              <p className="text-xl font-bold text-white mt-1">{riskScore.rebalanceDelta === 1 ? "경고" : "양호"}</p>
+              <p className="text-xl font-bold text-white mt-1">{riskSummary ? riskSummary.state : "로딩"}</p>
             </div>
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
-              <p className="text-sm text-gray-400">업데이트</p>
-              <p className="text-xl font-bold text-white mt-1">실시간 프리셋 뷰</p>
+              <p className="text-sm text-gray-400">갱신시각</p>
+              <p className="text-xl font-bold text-white mt-1">{snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "-"}</p>
             </div>
           </div>
         </section>
@@ -319,7 +266,7 @@ export default function InvestmentWorld() {
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-yellow-400 mb-4">⚙️ Dual Quant Signal Mix</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {signalModules.map((m) => (
+            {(snapshot?.modules || []).map((m) => (
               <div
                 key={m.key}
                 className={`rounded-2xl border ${m.palette.border} bg-gradient-to-br ${m.palette.from} ${m.palette.to} p-6`}
@@ -351,7 +298,7 @@ export default function InvestmentWorld() {
         </section>
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {markets.map((market) => (
+          {(snapshot?.markets || []).map((market) => (
             <article
               key={market.region}
               className={`rounded-2xl border ${market.palette.border} bg-gradient-to-br ${market.palette.from} ${market.palette.to} p-6`}
@@ -404,7 +351,7 @@ export default function InvestmentWorld() {
           <div className="lg:col-span-2 rounded-2xl border border-gray-700 bg-gray-900/50 p-6">
             <h2 className="text-2xl font-bold text-yellow-400 mb-4">💼 포트폴리오</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {kpis.map((card) => (
+              {kpiCards.map((card) => (
                 <div key={card.label} className="rounded-xl bg-black/45 border border-gray-700 p-4">
                   <p className="text-sm text-gray-400">{card.label}</p>
                   <p className={`text-2xl font-bold mt-2 ${card.color}`}>{card.value}</p>
@@ -419,7 +366,7 @@ export default function InvestmentWorld() {
                 <span className="text-xs text-gray-400">실시간 비중 샘플</span>
               </div>
               <div className="space-y-3">
-                {holdings.map((h) => (
+                {(snapshot?.holdings || []).map((h) => (
                   <div key={h.symbol} className="space-y-1">
                     <div className="flex justify-between text-sm text-gray-200">
                       <div className="flex items-center gap-2">
@@ -433,10 +380,36 @@ export default function InvestmentWorld() {
                 ))}
               </div>
               <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-300">
-                <p>최대 집중도: <span className="text-rose-300 font-semibold">{riskScore.concentration}%</span></p>
-                <p>고위험 비중: <span className="text-rose-300 font-semibold">{riskScore.highRiskShare}%</span></p>
-                <p>가중 PnL(누적): <span className="text-emerald-300 font-semibold">{riskScore.pnl.toFixed(2)}%</span></p>
-                <p>리스크 규칙 위반: <span className="text-rose-300 font-semibold">{riskScore.rebalanceDelta ? "감지" : "없음"}</span></p>
+                <p>
+                  최대 집중도: <span className="text-rose-300 font-semibold">{riskSummary?.concentration ?? 0}%</span>
+                </p>
+                <p>
+                  고위험 비중: <span className="text-rose-300 font-semibold">{riskSummary?.highRiskShare ?? 0}%</span>
+                </p>
+                <p>
+                  가중 PnL(누적): <span className="text-emerald-300 font-semibold">{riskSummary?.weightedPnl?.toFixed(2) ?? 0}%</span>
+                </p>
+                <p>
+                  리스크 규칙 위반: <span className="text-rose-300 font-semibold">{riskSummary && riskSummary.state === "경고" ? "감지" : "없음"}</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-xl border border-gray-700 p-4">
+              <p className="text-sm font-semibold text-gray-100 mb-3">리밸런싱 제안</p>
+              <div className="space-y-2">
+                {(snapshot?.rebalanceSuggestions || []).map((sugg) => (
+                  <div key={`${sugg.symbol}-${sugg.action}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
+                    <div className="flex justify-between items-center gap-2">
+                      <p className="font-semibold text-white">{sugg.symbol}</p>
+                      <span className={`text-[11px] px-2 py-0.5 rounded border ${suggestionBadge[sugg.action]}`}>
+                        {sugg.action === "up" ? "증가" : sugg.action === "down" ? "감소" : "보유"}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">변경 폭: {sugg.deltaPct}%</p>
+                    <p className="text-sm text-gray-300 mt-1">{sugg.reason}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -450,13 +423,23 @@ export default function InvestmentWorld() {
                 onChange={(e) => setMarketFocus(e.target.value)}
               >
                 <option value="all">전체</option>
-                <option value="k">코어(국내)</option>
-                <option value="us">미국</option>
+                <option value="k">국내({getMarketFocusLabel("k")})</option>
+                <option value="us">미국({getMarketFocusLabel("us")})</option>
               </select>
+              <button
+                onClick={() => setNotice(`필터 적용: ${getMarketFocusLabel(marketFocus)}`)}
+                className="px-3 rounded border border-gray-700 hover:bg-gray-800/70"
+              >
+                적용
+              </button>
             </div>
+
+            {error ? <p className="text-xs text-rose-300">{error}</p> : null}
+            {loading ? <p className="text-xs text-gray-400">실시간 데이터를 불러오는 중...</p> : null}
+
             <div className="space-y-3">
-              {filteredWatch.map((item) => (
-                <div key={item.symbol} className="rounded-lg border border-gray-700 bg-black/35 p-3">
+              {watchItems.map((item) => (
+                <div key={`${item.symbol}-${item.region}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                   <div className="flex items-start justify-between gap-2">
                     <span className="font-semibold text-white">{item.symbol}</span>
                     <span className={`text-[11px] px-2 py-0.5 rounded border ${signalBadge[item.signal]}`}>{item.signal}</span>
@@ -467,9 +450,10 @@ export default function InvestmentWorld() {
                 </div>
               ))}
             </div>
+
             {notice ? <p className="text-xs text-amber-300 border border-amber-500/40 rounded p-2">{notice}</p> : null}
             <button
-              onClick={() => setNotice(`리밸런싱 제안: ${strategy} 모드 기준으로 위험 구간 종목 2개 재배치 권고`) }
+              onClick={() => setNotice(`리밸런싱 제안: ${strategy} 모드 기준으로 즉시 적용 시뮬레이션 실행`)}
               className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold text-sm"
             >
               전략 리밸런싱 제안 받기
