@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { promises as fs } from "fs";
+import path from "path";
 
 type SignalTrend = "up" | "down" | "flat";
 type RiskLevel = "Low" | "Medium" | "High";
@@ -47,6 +49,47 @@ type Holding = {
   pnl: number;
   beta: number;
   risk: RiskLevel;
+};
+
+
+type QuantReportMeta = {
+  market?: string;
+  date?: string;
+  time?: string;
+  timestamp?: string;
+  avg_score?: number;
+  strong_buy_count?: number;
+  buy_count?: number;
+  sell_count?: number;
+  watch_count?: number;
+  top_alpha_ticker?: string;
+};
+
+type QuantReportItem = {
+  ticker?: string;
+  name?: string;
+  score?: number;
+  rank?: number;
+  synthesis_verdict?: string;
+  scores?: {
+    expert?: number;
+    whale?: number;
+    macro?: number;
+    news?: number;
+  };
+  details?: {
+    news?: string[];
+  };
+  price_info?: {
+    change_pct?: number;
+  };
+  external_consensus?: string;
+  whale_activity?: string;
+};
+
+type QuantReportPayload = {
+  meta?: QuantReportMeta;
+  reports?: QuantReportItem[];
 };
 
 type WatchItem = {
@@ -203,6 +246,18 @@ const BASE_HOLDINGS: Holding[] = [
   { symbol: "GOOGL", allocation: 6.5, pnl: -0.9, beta: 1.08, risk: "Medium" },
 ];
 
+
+
+const REPORT_CACHE_TTL_MS = 60_000;
+type ReportIndexItem = {
+  path?: string;
+  json_path?: string;
+  type?: string;
+  timestamp?: string;
+};
+
+let cachedIndex: { at: number; items: ReportIndexItem[] } | null = null;
+let cachedMarketReport: { [key: string]: { at: number; data: QuantReportPayload } } = {};
 const BASE_WATCH: WatchItem[] = [
   {
     symbol: "SMCI",
@@ -243,6 +298,105 @@ function applyModeWeight(modules: SignalModule[], mode: StrategyMode): SignalMod
     weight: Math.round((m.weight * (0.6 + weights[idx] * 2)) / 1.8),
   }));
 }
+
+
+
+function parseSignalFromVerdict(verdict = ""): SignalAction {
+  const lower = String(verdict || "").toLowerCase();
+  if (lower.includes("buy")) return "Buy";
+  if (lower.includes("sell") || lower.includes("trim")) return "Trim";
+  return "Hold";
+}
+
+function inferRiskLevel(item: QuantReportItem): RiskLevel {
+  const text = `${item.synthesis_verdict || ""} ${item.whale_activity || ""} ${item.external_consensus || ""}`.toLowerCase();
+  if (text.includes("sell") || text.includes("trim") || text.includes("high")) return "High";
+  if (text.includes("neutral/watch") || text.includes("watch") || text.includes("neutral")) return "Medium";
+  return "Low";
+}
+
+function riskToDecimal(score?: number): number {
+  if (typeof score !== "number" || Number.isNaN(score)) return 0.5;
+  return Math.max(0.2, Math.min(1.8, 1 + (score - 50) / 100));
+}
+
+function normalizeAllocations(items: Holding[]): Holding[] {
+  const total = items.reduce((acc, item) => acc + item.allocation, 0);
+  if (total <= 0) return items;
+  return items.map((item) => ({
+    ...item,
+    allocation: Number((item.allocation * (100 / total)).toFixed(2)),
+  }));
+}
+
+async function loadReportIndex(): Promise<ReportIndexItem[]> {
+  const now = Date.now();
+  if (cachedIndex && now - cachedIndex.at < REPORT_CACHE_TTL_MS) return cachedIndex.items;
+
+  const filePath = path.join(process.cwd(), "public", "reports", "index.json");
+  const raw = await fs.readFile(filePath, "utf-8");
+  const parsed = JSON.parse(raw) as ReportIndexItem[];
+  const items = Array.isArray(parsed) ? parsed : [];
+
+  cachedIndex = {
+    at: now,
+    items: items.slice().sort((a, b) => String(b.timestamp || "").localeCompare(String(a.timestamp || ""))),
+  };
+  return cachedIndex.items;
+}
+
+async function readLatestReportByMarket(type: "KR" | "US"): Promise<QuantReportPayload | null> {
+  const now = Date.now();
+  if (cachedMarketReport[type] && now - Number(cachedMarketReport[type].at) < REPORT_CACHE_TTL_MS) {
+    return cachedMarketReport[type]?.data || null;
+  }
+
+  const items = await loadReportIndex();
+  const latest = items.find((item) => String(item.type || "").toUpperCase() === type && item.json_path);
+  if (!latest?.json_path) return null;
+
+  try {
+    const reportPath = path.join(process.cwd(), "public", latest.json_path.startsWith("/") ? latest.json_path.slice(1) : latest.json_path);
+    const raw = await fs.readFile(reportPath, "utf-8");
+    const parsed = JSON.parse(raw) as QuantReportPayload;
+    cachedMarketReport[type] = { at: now, data: parsed };
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function toQuantHoldings(reports: QuantReportPayload | null): Holding[] {
+  if (!reports?.reports?.length) return BASE_HOLDINGS;
+
+  const rows = reports.reports
+    .filter((item) => item && item.ticker)
+    .slice(0, 8)
+    .map((item) => ({
+      symbol: String(item.ticker || "").trim(),
+      allocation: Number((((Number(item.score) || 45) - 40) * 4).toFixed(2)),
+      pnl: Number(((Number(item.price_info?.change_pct) || 0)).toFixed(2)),
+      beta: riskToDecimal(item.score),
+      risk: inferRiskLevel(item),
+    }));
+
+  const normalized = normalizeAllocations(rows);
+  return normalized.length ? normalized : BASE_HOLDINGS;
+}
+
+function toQuantWatchlist(item: QuantReportPayload | null, region: "k" | "us"): WatchItem[] {
+  if (!item?.reports?.length) return BASE_WATCH;
+
+  return item.reports.slice(0, 5).map((entry) => ({
+    symbol: String(entry.ticker || ""),
+    signal: parseSignalFromVerdict(entry.synthesis_verdict),
+    score: Math.round(entry.score || 0),
+    reason: entry.synthesis_verdict || "중립/Watch",
+    catalyst: (entry.details?.news || [])[0] || `${region.toUpperCase()} 시장 모멘텀 기반 자동 점수`,
+    region,
+  }));
+}
+
 
 function computeSignalConfidence(modules: SignalModule[]): number {
   const totalWeight = modules.reduce((acc, item) => acc + item.weight, 0);
@@ -372,9 +526,26 @@ export async function GET(request: NextRequest) {
 
   const shouldSimulate = new URL(request.url).searchParams.get("simulate") === "1";
   const { modules, signalConfidence } = injectSignals(BASE_SIGNAL_MODULES, fallbackMode);
-  const { highRiskShare, concentration, weightedPnl } = computeHoldingsRisk(BASE_HOLDINGS);
-  const rebalanceSuggestions = computeRebalanceSuggestions(BASE_HOLDINGS, signalConfidence);
-  const simulation = shouldSimulate ? simulateRebalance(BASE_HOLDINGS, rebalanceSuggestions) : null;
+  const krReport = await readLatestReportByMarket("KR");
+  const usReport = await readLatestReportByMarket("US");
+
+  const mergedHoldings = normalizeAllocations(
+    toQuantHoldings(fallbackMode === "alpha" || fallbackMode === "balanced" ? usReport : krReport)
+      .concat(toQuantHoldings(fallbackMode === "defensive" ? krReport : usReport))
+      .slice(0, 12)
+      .map((item, idx) => ({ ...item, allocation: Math.max(1, Number(item.allocation.toFixed(2))) }))
+  );
+  const mergedWatchlist = Array.from(
+    new Map<string, WatchItem>(
+      [...toQuantWatchlist(usReport, "us"), ...toQuantWatchlist(krReport, "k")].map((w) => [w.symbol, w])
+    ).values()
+  );
+
+  const holdings = mergedHoldings.length ? mergedHoldings : BASE_HOLDINGS;
+  const watchlist = mergedWatchlist.length ? mergedWatchlist : BASE_WATCH;
+  const { highRiskShare, concentration, weightedPnl } = computeHoldingsRisk(holdings);
+  const rebalanceSuggestions = computeRebalanceSuggestions(holdings, signalConfidence);
+  const simulation = shouldSimulate ? simulateRebalance(holdings, rebalanceSuggestions) : null;
 
   const payload = {
     updatedAt: new Date().toISOString(),
@@ -382,8 +553,8 @@ export async function GET(request: NextRequest) {
     signalConfidence,
     modules,
     markets: BASE_MARKETS,
-    holdings: BASE_HOLDINGS,
-    watchlist: BASE_WATCH,
+    holdings,
+    watchlist,
     risk: {
       concentration,
       highRiskShare,
@@ -395,7 +566,7 @@ export async function GET(request: NextRequest) {
     kpis: {
       portfolio: "$5.2M",
       annualReturn: "+15.3%",
-      positionCount: BASE_HOLDINGS.length,
+      positionCount: holdings.length,
       volatility: "10.6%",
     },
   };
