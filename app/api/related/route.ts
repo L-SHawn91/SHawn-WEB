@@ -9,6 +9,7 @@ type RelatedItem = {
 };
 
 async function searchPubMed(query: string): Promise<RelatedItem[]> {
+  console.log("[PubMed] Searching for:", query);
   try {
     const params = new URLSearchParams({ db: "pubmed", term: query, retmode: "json", retmax: "3", sort: "relevance" });
     const s = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?${params.toString()}`, { signal: AbortSignal.timeout(8000) });
@@ -32,12 +33,14 @@ async function searchPubMed(query: string): Promise<RelatedItem[]> {
       };
     });
     return mapped.filter((x): x is RelatedItem => x !== null);
-  } catch {
+  } catch (e: any) {
+    console.error("[PubMed] API error", e);
     return [];
   }
 }
 
 async function searchOpenAlex(query: string): Promise<RelatedItem[]> {
+  console.log("[OpenAlex] Searching for:", query);
   try {
     const p = new URLSearchParams({ search: query, per_page: "3", select: "id,display_name,publication_year,primary_location" });
     const r = await fetch(`https://api.openalex.org/works?${p.toString()}`, { signal: AbortSignal.timeout(8000) });
@@ -51,12 +54,14 @@ async function searchOpenAlex(query: string): Promise<RelatedItem[]> {
       source: "openalex" as const,
       url: x?.primary_location?.landing_page_url || x?.id || "https://openalex.org",
     }));
-  } catch {
+  } catch (e: any) {
+    console.error("[OpenAlex] API error", e);
     return [];
   }
 }
 
 async function searchEuropePmc(query: string): Promise<RelatedItem[]> {
+  console.log("[EuropePMC] Searching for:", query);
   try {
     const p = new URLSearchParams({ query, pageSize: "3", format: "json", resultType: "core" });
     const r = await fetch(`https://www.ebi.ac.uk/europepmc/webservices/rest/search?${p.toString()}`, { signal: AbortSignal.timeout(8000) });
@@ -70,7 +75,8 @@ async function searchEuropePmc(query: string): Promise<RelatedItem[]> {
       source: "europepmc" as const,
       url: x.id ? `https://europepmc.org/article/${x.source || "MED"}/${x.id}` : "https://europepmc.org",
     }));
-  } catch {
+  } catch (e: any) {
+     console.error("[EuropePMC] API error", e)
     return [];
   }
 }
@@ -97,7 +103,7 @@ export async function POST(req: NextRequest) {
       seen.add(k);
       return true;
     });
-
+    console.log("[Related] Returning:", deduped)
     return NextResponse.json({ items: deduped.slice(0, 5) });
   } catch {
     return NextResponse.json({ items: [] });
