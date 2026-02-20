@@ -6,6 +6,7 @@ type RelatedItem = {
   year?: number;
   source: "pubmed" | "openalex" | "europepmc";
   url: string;
+  reason?: string;
 };
 
 async function searchPubMed(query: string): Promise<RelatedItem[]> {
@@ -30,6 +31,7 @@ async function searchPubMed(query: string): Promise<RelatedItem[]> {
         year: parseInt(String(row.pubdate || "").slice(0, 4)) || undefined,
         source: "pubmed" as const,
         url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`,
+        reason: `Matched by PubMed query: ${query || "relevant dataset/seed"}` ,
       };
     });
     return mapped.filter((x): x is RelatedItem => x !== null);
@@ -53,6 +55,7 @@ async function searchOpenAlex(query: string): Promise<RelatedItem[]> {
       year: x.publication_year || undefined,
       source: "openalex" as const,
       url: x?.primary_location?.landing_page_url || x?.id || "https://openalex.org",
+      reason: `OpenAlex relevance match for query: ${query || "seed"}`,
     }));
   } catch (e: any) {
     console.error("[OpenAlex] API error", e);
@@ -74,6 +77,7 @@ async function searchEuropePmc(query: string): Promise<RelatedItem[]> {
       year: x.pubYear ? parseInt(String(x.pubYear)) : undefined,
       source: "europepmc" as const,
       url: x.id ? `https://europepmc.org/article/${x.source || "MED"}/${x.id}` : "https://europepmc.org",
+      reason: `Europe PMC match for query: ${query || "seed"}`,
     }));
   } catch (e: any) {
      console.error("[EuropePMC] API error", e)

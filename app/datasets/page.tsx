@@ -51,7 +51,7 @@ interface DatasetMeta {
   };
 }
 
-type RelatedItem = { id: string; title: string; year?: number; source: string; url: string };
+type RelatedItem = { id: string; title: string; year?: number; source: string; url: string; reason?: string; };
 
 interface FiltersState {
   sources: string[];
@@ -66,6 +66,12 @@ interface SearchOptions {
   sortBy?: SortBy;
   pageSize?: number;
 }
+
+type SavedPresetState = {
+  query: string;
+  filters: FiltersState;
+  sortBy: SortBy;
+};
 
 interface BioPreset {
   id: string;
@@ -190,6 +196,8 @@ export default function DatasetsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [hoverDatasetId, setHoverDatasetId] = useState<string | null>(null);
   const [relatedByDataset, setRelatedByDataset] = useState<Record<string, RelatedItem[]>>({});
+  const [activePresetId, setActivePresetId] = useState<string | null>(null);
+  const [presetRestore, setPresetRestore] = useState<SavedPresetState | null>(null);
   const [filters, setFilters] = useState({
     sources: [...BIO_CORE_SOURCES] as string[],
     yearFrom: "",
@@ -244,6 +252,40 @@ export default function DatasetsPage() {
   const searchDatasets = async (options?: SearchOptions) => executeSearch(query, filters, options);
 
   const applyBioPreset = async (preset: BioPreset) => {
+    const isActive = activePresetId === preset.id;
+
+    if (isActive) {
+      if (presetRestore) {
+        setActivePresetId(null);
+        setQuery(presetRestore.query);
+        setFilters(presetRestore.filters);
+        setSortBy(presetRestore.sortBy);
+        setPage(1);
+        await executeSearch(presetRestore.query, presetRestore.filters, { page: 1, sortBy: presetRestore.sortBy });
+        setPresetRestore(null);
+        return;
+      }
+
+      setActivePresetId(null);
+      setQuery("");
+      setFilters({
+        sources: [...BIO_CORE_SOURCES] as string[],
+        yearFrom: "",
+        yearTo: "",
+        modality: "single-cell RNA-seq",
+        context: "",
+      });
+      setSortBy("rank");
+      setPage(1);
+      return;
+    }
+
+    setPresetRestore({
+      query,
+      filters,
+      sortBy,
+    });
+
     const nextFilters: FiltersState = {
       sources: preset.sources ? [...preset.sources] : [...BIO_CORE_SOURCES],
       yearFrom: preset.yearFrom || "",
@@ -257,6 +299,7 @@ export default function DatasetsPage() {
     setFilters(nextFilters);
     setSortBy(nextSort);
     setPage(1);
+    setActivePresetId(preset.id);
 
     await executeSearch(preset.query, nextFilters, { page: 1, sortBy: nextSort });
   };
@@ -319,7 +362,11 @@ export default function DatasetsPage() {
                   type="button"
                   onClick={() => applyBioPreset(preset)}
                   disabled={loading}
-                  className="px-3 py-1.5 text-xs rounded-full border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-50"
+                  className={`px-3 py-1.5 text-xs rounded-full border ${
+                    activePresetId === preset.id
+                      ? "border-indigo-500 bg-indigo-200 text-indigo-900"
+                      : "border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
+                  } disabled:opacity-50`}
                 >
                   {preset.label}
                 </button>
@@ -475,7 +522,7 @@ export default function DatasetsPage() {
                                   <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-blue-600 hover:underline dark:text-blue-300">
                                     {r.title}
                                   </a>
-                                  <p className="text-[11px] text-gray-500">{r.source}{r.year ? ` · ${r.year}` : ''}</p>
+                                  <p className="text-[11px] text-gray-500">{r.source}{r.year ? ` · ${r.year}` : ""}{r.reason ? ` · ${r.reason}` : ""}</p>
                                 </li>
                               ))}
                             </ul>
@@ -488,9 +535,7 @@ export default function DatasetsPage() {
                       <span className="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800">
                         {dataset.source}
                       </span>
-                      {dataset.updatedAt && (
-                        <span className="text-sm text-gray-500">{dataset.updatedAt.slice(0, 10)}</span>
-                      )}
+                      <span className="text-sm text-gray-500">{dataset.updatedAt ? dataset.updatedAt.slice(0, 10) : "No Date"}</span>
                       {dataset.rankScore !== undefined && (
                         <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
                           Score: {dataset.rankScore}

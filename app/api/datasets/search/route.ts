@@ -80,7 +80,7 @@ function yearFromDateString(value?: string): number | null {
 
 function inYearRange(value: string | undefined, yearFrom?: string, yearTo?: string): boolean {
   const y = yearFromDateString(value);
-  if (y === null) return true;
+  if (y === null) return !(yearFrom || yearTo);
   const from = yearFrom ? Number.parseInt(yearFrom, 10) : null;
   const to = yearTo ? Number.parseInt(yearTo, 10) : null;
   if (from !== null && y < from) return false;

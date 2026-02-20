@@ -22,8 +22,142 @@ function isPaper(paper: Paper | null): paper is Paper {
   return paper !== null;
 }
 
+
+type AuthorExtraction = {
+  cleanQuery: string;
+  authorCandidates: string[];
+};
+
+function normalizeName(raw: string): string {
+  return raw
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function uniqueList(values: string[]): string[] {
+  return Array.from(new Set(values.filter(Boolean).map((value) => value.trim())));
+}
+
+function extractAuthorCandidates(query: string): AuthorExtraction {
+  const original = (query || "").trim();
+  if (!original) return { cleanQuery: "", authorCandidates: [] };
+
+  let remaining = original;
+  const quotedMatches = Array.from(remaining.matchAll(/"([^"]+)"/g));
+  const candidates = new Set<string>();
+
+  for (const match of quotedMatches) {
+    const token = (match[1] || "").trim();
+    if (token) candidates.add(token);
+    remaining = remaining.replace(match[0], " ");
+  }
+
+  const commaMatches = Array.from(remaining.matchAll(/\b([A-Za-z][A-Za-z'\-\.]+\s*,\s*[A-Za-z][A-Za-z'\-\.]+(?:\s+[A-Za-z][A-Za-z'\-\.]*)?)\b/g));
+  for (const match of commaMatches) {
+    const token = (match[1] || "").trim();
+    if (!token) continue;
+    if (token.length <= 3) continue;
+    candidates.add(token);
+    remaining = remaining.replace(token, " ");
+  }
+
+  const explicitPatterns = [
+    /\b([A-Z][A-Za-z'\-]+\s+[A-Z][a-z](?:\.|)\b)/g,
+    /\b([A-Za-z]{1,}\s+[A-Za-z]{1,}\s*[A-Za-z]{0,})\b/g,
+  ];
+
+  for (const regex of explicitPatterns) {
+    for (const match of remaining.matchAll(regex)) {
+      const token = (match[1] || match[0]).trim();
+      const words = token.split(/\s+/);
+      if (words.length < 2 || words.length > 3) continue;
+      if (!/^[A-Za-z]/.test(token)) continue;
+      if (token.length < 4) continue;
+      candidates.add(token);
+    }
+  }
+
+  const cleanQuery = remaining.replace(/\bby\b/gi, " ").replace(/\s+/g, " ").trim();
+
+  const authorCandidates = uniqueList(Array.from(candidates).flatMap((candidate) => {
+    const parts = candidate.split(",").map((p) => p.trim()).filter(Boolean);
+    const flatName = normalizeName(candidate).replace(/\s+/g, " ");
+
+    if (parts.length === 2) {
+      const family = parts[0] || "";
+      const given = parts[1] || "";
+      const givenInitial = given[0] ? `${given[0]}` : "";
+      return uniqueList([
+        `${family},${given}`,
+        `${given} ${family}`,
+        `${givenInitial}. ${family}`,
+        `${family} ${given}`,
+        candidate,
+        flatName,
+      ]);
+    }
+
+    const words = flatName.split(" ");
+    if (words.length >= 2) {
+      const first = words[0] || "";
+      const last = words[words.length - 1] || "";
+      const lastInitial = last ? `${last[0]}.` : "";
+      const firstInitial = first ? `${first[0]}.` : "";
+      return uniqueList([
+        candidate,
+        flatName,
+        `${last} ${first}`,
+        `${firstInitial} ${last}`,
+        `${lastInitial} ${first}`,
+      ]);
+    }
+
+    return [candidate];
+  }));
+
+  return {
+    cleanQuery,
+    authorCandidates,
+  };
+}
+
+function buildAuthorTermForPubMed(authors: string[]): string {
+  const tokens = authors.filter((name) => name.includes(",") || name.includes(" "));
+  if (tokens.length === 0) return "";
+
+  const quoted = tokens.map((name) => {
+    const q = name.replace(/["']/g, "");
+    return `"${q}"[au]`;
+  });
+  return quoted.map((token) => `(${token})`).join(" OR ");
+}
+
+function buildAuthorTermForArxiv(authors: string[]): string {
+  const tokens = uniqueList(authors.map((author) => author.replace(/["']/g, "").trim())).filter(Boolean);
+  if (tokens.length === 0) return "";
+  return tokens.map((name) => `au:"${name}"`).join(" OR ");
+}
+
+function normalizeAuthorToken(raw: string): string {
+  return normalizeName(raw).replace(/\s+/g, "");
+}
+
+function matchByAuthor(authors: string[] = [], candidates: string[]): boolean {
+  if (!candidates.length) return true;
+  const normalizedCandidates = candidates.map((c) => normalizeName(c));
+  const normalizedTokens = candidates.map((c) => normalizeAuthorToken(c));
+  return authors.some((author) => {
+    const target = normalizeName(author);
+    const targetToken = normalizeAuthorToken(author);
+    return normalizedCandidates.some((candidate) => candidate === target || target.includes(candidate) || candidate.includes(target))
+      || normalizedTokens.some((token) => token === targetToken || targetToken.includes(token) || token.includes(targetToken));
+  });
+}
+
 // T1: PubMed track - clinical metadata
-async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = []): Promise<Paper[]> {
   console.log('[T1:PubMed] Search starting...');
   const startTime = Date.now();
   
@@ -31,7 +165,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
     const baseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
     const params = new URLSearchParams({
       db: 'pubmed',
-      term: `${query} AND (Clinical Trial[pt] OR Meta-Analysis[pt] OR Randomized Controlled Trial[pt] OR Review[pt])`,
+      term: `${query ? `${query} ` : ''}${buildAuthorTermForPubMed(authorCandidates) ? `${buildAuthorTermForPubMed(authorCandidates)} AND ` : ''}(Clinical Trial[pt] OR Meta-Analysis[pt] OR Randomized Controlled Trial[pt] OR Review[pt])`,
       retmode: 'json',
       retmax: '15',
       sort: 'relevance',
@@ -104,13 +238,15 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
 }
 
 // T2: arXiv track - ML technique extraction
-async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = []): Promise<Paper[]> {
   console.log('[T2:arXiv] Search starting...');
   const startTime = Date.now();
   
   try {
     // Enhance query for AI/ML papers
-    const mlQuery = `${query} AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)`;
+    const authorQuery = buildAuthorTermForArxiv(authorCandidates);
+    const titleQuery = query ? `${query} AND ` : '';
+    const mlQuery = `${titleQuery}(cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)${authorQuery ? ` AND (${authorQuery})` : ''}`;
     const baseUrl = 'http://export.arxiv.org/api/query';
     const params = new URLSearchParams({
       search_query: mlQuery,
@@ -179,7 +315,7 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
 }
 
 // T3: Semantic Scholar track - influence analysis
-async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = []): Promise<Paper[]> {
   console.log('[T3:Semantic] Search starting...');
   const startTime = Date.now();
   
@@ -202,6 +338,7 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
         if (yearTo && paper.year > parseInt(yearTo)) return false;
         return true;
       })
+      .filter((paper: any) => matchByAuthor((paper.authors || []).map((a: any) => a?.name || ''), authorCandidates))
       .map((paper: any) => {
         // Calculate influence score
         const totalCitations = paper.citationCount || 0;
@@ -382,7 +519,13 @@ export async function POST(request: NextRequest) {
   const overallStart = Date.now();
   
   try {
-    const { query, filters } = await request.json();
+    const payload = await request.json();
+    const extracted = extractAuthorCandidates(payload?.query || '');
+    const query = extracted.cleanQuery || (typeof payload?.query === 'string' ? String(payload.query) : '');
+    const effectiveQuery = (query || extracted.authorCandidates[0] || '').trim();
+    const filters = payload?.filters || {};
+
+
     
     const sources = filters?.sources || ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'];
     const yearFrom = filters?.yearFrom;
@@ -395,13 +538,13 @@ export async function POST(request: NextRequest) {
     }> = [];
     
     if (sources.includes('pubmed')) {
-      trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(query, yearFrom, yearTo) });
+      trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(effectiveQuery, yearFrom, yearTo, extracted.authorCandidates) });
     }
     if (sources.includes('arxiv')) {
-      trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(query, yearFrom, yearTo) });
+      trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(effectiveQuery, yearFrom, yearTo, extracted.authorCandidates) });
     }
     if (sources.includes('semantic')) {
-      trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(query, yearFrom, yearTo) });
+      trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, extracted.authorCandidates) });
     }
     if (sources.includes('crossref')) {
       trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(query, yearFrom, yearTo) });
