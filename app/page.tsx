@@ -2,84 +2,117 @@ import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import Link from "next/link";
 
+const quickLinks = [
+  {
+    href: "/papers",
+    title: "Papers Search",
+    desc: "PubMed · arXiv · Semantic 통합 검색",
+    emoji: "📚",
+    color: "from-blue-500/20 to-cyan-500/20 border-blue-400/40",
+  },
+  {
+    href: "/datasets",
+    title: "Datasets Search",
+    desc: "NCBI · ENA · Europe PMC 외 다중 소스",
+    emoji: "🧪",
+    color: "from-emerald-500/20 to-teal-500/20 border-emerald-400/40",
+  },
+  {
+    href: "/market-intelligence",
+    title: "Market Intelligence",
+    desc: "KR/US 리포트 및 시장 인사이트",
+    emoji: "📈",
+    color: "from-amber-500/20 to-orange-500/20 border-amber-400/40",
+  },
+  {
+    href: "/blog",
+    title: "Blog",
+    desc: "연구/운영/자동화 기록 아카이브",
+    emoji: "📝",
+    color: "from-violet-500/20 to-fuchsia-500/20 border-violet-400/40",
+  },
+];
+
+const laneLinks = [
+  {
+    href: "/cartridges/bio",
+    title: "Biology Lane",
+    desc: "오가노이드/세포 연구 및 바이오 분석",
+    emoji: "🧬",
+    color: "text-emerald-300",
+  },
+  {
+    href: "/cartridges/invest",
+    title: "Investment Lane",
+    desc: "데이터 기반 투자 리서치 워크플로",
+    emoji: "💹",
+    color: "text-amber-300",
+  },
+];
+
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-black text-white overflow-x-hidden">
       <Header />
-      <main className="flex-1 relative">
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <svg className="w-full h-full" viewBox="0 0 1200 800">
-            <defs>
-              <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#00ff88" stopOpacity="0.25" />
-                <stop offset="50%" stopColor="#00b8ff" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="#ff9f1a" stopOpacity="0.25" />
-              </linearGradient>
-            </defs>
-            <path d="M 120,140 Q 320,90 520,140 T 920,140" stroke="url(#flowGradient)" strokeWidth="2" fill="none" />
-            <path d="M 180,300 Q 420,250 660,300 T 1060,300" stroke="url(#flowGradient)" strokeWidth="2" fill="none" />
-            <path d="M 240,460 Q 480,410 720,460 T 1120,460" stroke="url(#flowGradient)" strokeWidth="2" fill="none" />
-          </svg>
-        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
-          <div className="text-center mb-16">
-            <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 via-cyan-400 to-orange-400 bg-clip-text text-transparent">
-              SHawn Lab
-            </h1>
-            <p className="text-2xl text-gray-300 mb-4 font-light">
-              Bio + Investment + Monetization
-            </p>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-              실험 인사이트, 시장 리포트, 수익화 콘텐츠를 하나의 운영 흐름으로 관리합니다.
-            </p>
+      <main className="flex-1">
+        <section className="relative">
+          <div className="absolute inset-0 pointer-events-none opacity-30">
+            <svg className="h-full w-full" viewBox="0 0 1200 800" aria-hidden>
+              <defs>
+                <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#00ff88" stopOpacity="0.2" />
+                  <stop offset="50%" stopColor="#00b8ff" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="#ff9f1a" stopOpacity="0.2" />
+                </linearGradient>
+              </defs>
+              <path d="M 80,160 Q 340,90 620,150 T 1160,180" stroke="url(#flowGradient)" strokeWidth="2" fill="none" />
+              <path d="M 120,340 Q 380,280 700,340 T 1180,380" stroke="url(#flowGradient)" strokeWidth="2" fill="none" />
+              <path d="M 180,520 Q 480,450 760,520 T 1180,560" stroke="url(#flowGradient)" strokeWidth="2" fill="none" />
+            </svg>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            <Link href="/cartridges/bio">
-              <div className="relative group cursor-pointer">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl blur-xl opacity-40 group-hover:opacity-80 transition duration-500" />
-                <div className="relative bg-gradient-to-br from-gray-900 to-black p-8 rounded-xl border border-green-500/30 hover:border-green-400 transition">
-                  <div className="text-5xl mb-4">🧬</div>
-                  <h2 className="text-3xl font-bold text-green-400 mb-3">Biology</h2>
-                  <p className="text-gray-400">오가노이드/세포 연구와 바이오 인사이트 아카이브.</p>
-                </div>
-              </div>
-            </Link>
+          <div className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6 lg:px-8 lg:pt-20">
+            <div className="text-center">
+              <h1 className="bg-gradient-to-r from-green-400 via-cyan-400 to-orange-400 bg-clip-text text-4xl font-bold text-transparent sm:text-6xl">
+                SHawn Lab
+              </h1>
+              <p className="mt-4 text-lg text-gray-300 sm:text-2xl">Bio + Investment + Monetization</p>
+              <p className="mx-auto mt-4 max-w-3xl text-sm text-gray-400 sm:text-base">
+                연구 검색, 데이터셋 탐색, 시장 리포트를 하나의 화면에서 연결하는 운영 허브입니다.
+              </p>
+            </div>
 
-            <Link href="/cartridges/invest">
-              <div className="relative group cursor-pointer">
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl blur-xl opacity-40 group-hover:opacity-80 transition duration-500" />
-                <div className="relative bg-gradient-to-br from-gray-900 to-black p-8 rounded-xl border border-yellow-500/30 hover:border-yellow-400 transition">
-                  <div className="text-5xl mb-4">📈</div>
-                  <h2 className="text-3xl font-bold text-yellow-400 mb-3">Investment</h2>
-                  <p className="text-gray-400">KR/US 자동 리포트와 시장 인텔리전스 허브.</p>
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          <div className="text-center">
-            <div className="flex gap-4 justify-center flex-wrap">
-              <Link href="/market-intelligence">
-                <button className="px-6 py-3 bg-yellow-500/20 text-yellow-400 rounded-lg border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/30 transition">
-                  📊 Market Intelligence
-                </button>
-              </Link>
-              <Link href="/blog">
-                <button className="px-6 py-3 bg-blue-500/20 text-blue-400 rounded-lg border border-blue-500/50 hover:border-blue-400 hover:bg-blue-500/30 transition">
-                  📝 Blog
-                </button>
-              </Link>
-              <Link href="/market-intelligence">
-                <button className="px-6 py-3 bg-green-500/20 text-green-400 rounded-lg border border-green-500/50 hover:border-green-400 hover:bg-green-500/30 transition">
-                  ⚙️ Operations Dashboard
-                </button>
-              </Link>
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {quickLinks.map((item) => (
+                <Link key={item.href} href={item.href}>
+                  <article
+                    className={`group h-full rounded-2xl border bg-gradient-to-br p-5 transition hover:scale-[1.02] hover:shadow-lg ${item.color}`}
+                    title={`${item.title}: ${item.desc}`}
+                  >
+                    <div className="text-3xl">{item.emoji}</div>
+                    <h2 className="mt-3 text-lg font-semibold">{item.title}</h2>
+                    <p className="mt-2 text-sm text-gray-300">{item.desc}</p>
+                  </article>
+                </Link>
+              ))}
             </div>
           </div>
-        </div>
+        </section>
+
+        <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 pb-16 sm:px-6 lg:grid-cols-2 lg:px-8">
+          {laneLinks.map((lane) => (
+            <Link key={lane.href} href={lane.href}>
+              <article className="rounded-2xl border border-white/15 bg-zinc-900/70 p-6 transition hover:border-white/30" title={`${lane.title}: ${lane.desc}`}>
+                <div className="text-4xl">{lane.emoji}</div>
+                <h3 className={`mt-3 text-2xl font-bold ${lane.color}`}>{lane.title}</h3>
+                <p className="mt-2 text-sm text-gray-300">{lane.desc}</p>
+              </article>
+            </Link>
+          ))}
+        </section>
       </main>
+
       <Footer />
     </div>
   );
