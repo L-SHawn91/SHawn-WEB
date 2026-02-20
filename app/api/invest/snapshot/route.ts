@@ -7,6 +7,36 @@ type RiskLevel = "Low" | "Medium" | "High";
 type StrategyMode = "balanced" | "alpha" | "defensive";
 type SignalAction = "Buy" | "Hold" | "Trim";
 
+type Provenance = {
+  sources: string[];
+  generatedAt: string;
+  refreshRule: string;
+};
+
+type WeightProfile = {
+  technical: number;
+  flow: number;
+  macro: number;
+  news: number;
+};
+
+type SnapshotReason = {
+  module: string;
+  metric: string;
+  value: number | string;
+  impact: "up" | "down" | "neutral";
+  rationale: string;
+};
+
+type RelativeMetric = {
+  symbol: string;
+  alphaVsBenchmark: number;
+  beta: number;
+  drawdown60d: number;
+  momentumScore: number;
+};
+
+
 type SignalModule = {
   key: string;
   title: string;
@@ -99,6 +129,7 @@ type WatchItem = {
   reason: string;
   catalyst: string;
   region: "k" | "us";
+  rationale?: string;
 };
 
 type RebalanceSuggestion = {
@@ -285,6 +316,12 @@ const BASE_WATCH: WatchItem[] = [
   },
 ];
 
+const MODE_WEIGHTS_PROFILES: Record<StrategyMode, WeightProfile> = {
+  balanced: { technical: 0.40, flow: 0.25, macro: 0.20, news: 0.15 },
+  alpha: { technical: 0.50, flow: 0.20, macro: 0.10, news: 0.20 },
+  defensive: { technical: 0.25, flow: 0.20, macro: 0.35, news: 0.20 },
+};
+
 const MODE_WEIGHTS: Record<StrategyMode, number[]> = {
   balanced: [0.45, 0.3, 0.15, 0.1],
   alpha: [0.55, 0.25, 0.1, 0.1],
@@ -384,17 +421,75 @@ function toQuantHoldings(reports: QuantReportPayload | null): Holding[] {
   return normalized.length ? normalized : BASE_HOLDINGS;
 }
 
+
+
+function buildEvidenceFromItem(item: QuantReportItem): SnapshotReason[] {
+  const reasons: SnapshotReason[] = [];
+  const expert = Number(item.scores?.expert || 0);
+  const whale = Number(item.scores?.whale || 0);
+  const macro = Number(item.scores?.macro || 0);
+  const news = Number(item.scores?.news || 0);
+  const total = Math.round((expert + whale + macro + news) / 4);
+
+  reasons.push({
+    module: "technical",
+    metric: "expert_score",
+    value: expert,
+    impact: expert >= 55 ? "up" : expert <= 35 ? "down" : "neutral",
+    rationale: `기술점수 ${expert}/100 기반`,
+  });
+  reasons.push({
+    module: "flow",
+    metric: "flow_score",
+    value: whale,
+    impact: whale >= 55 ? "up" : whale <= 35 ? "down" : "neutral",
+    rationale: item.whale_activity || "기관/거래량 지표 기반 분석",
+  });
+  reasons.push({
+    module: "macro",
+    metric: "macro_score",
+    value: macro,
+    impact: macro >= 55 ? "up" : macro <= 35 ? "down" : "neutral",
+    rationale: item.external_consensus || "거시 요인 반영",
+  });
+  reasons.push({
+    module: "news",
+    metric: "news_score",
+    value: news,
+    impact: news >= 55 ? "up" : news <= 35 ? "down" : "neutral",
+    rationale: `${(item.details?.news?.[0] || "뉴스 임팩트 분석")}`,
+  });
+
+  if (item.price_info?.change_pct !== undefined) {
+    reasons.push({
+      module: "momentum",
+      metric: "price_change_1d",
+      value: Number(item.price_info?.change_pct || 0),
+      impact: Number(item.price_info?.change_pct || 0) >= 0 ? "up" : "down",
+      rationale: "단기 수익률 모멘텀",
+    });
+  }
+
+  return reasons.filter((r) => r.value !== null && r.value !== undefined);
+}
+
+function deriveRelativeScore(item: QuantReportItem): RelativeMetric {
+  const score = Number(item.score || 50);
+  const change = Number(item.price_info?.change_pct || 0);
+  return {
+    symbol: String(item.ticker || ""),
+    alphaVsBenchmark: Number((score - 50 + Math.min(20, Math.max(-20, change))).toFixed(2)),
+    beta: riskToDecimal(score),
+    drawdown60d: Number((Math.abs(Math.min(0, change)) * 1.8).toFixed(2)),
+    momentumScore: Number((Math.max(0, Math.min(100, score + change)).toFixed(2))),
+  };
+}
+
+
 function toQuantWatchlist(item: QuantReportPayload | null, region: "k" | "us"): WatchItem[] {
   if (!item?.reports?.length) return BASE_WATCH;
 
-  return item.reports.slice(0, 5).map((entry) => ({
-    symbol: String(entry.ticker || ""),
-    signal: parseSignalFromVerdict(entry.synthesis_verdict),
-    score: Math.round(entry.score || 0),
-    reason: entry.synthesis_verdict || "중립/Watch",
-    catalyst: (entry.details?.news || [])[0] || `${region.toUpperCase()} 시장 모멘텀 기반 자동 점수`,
-    region,
-  }));
+  return item.reports.slice(0, 5).map((entry) => collectWatchReason(entry, region));
 }
 
 
@@ -547,11 +642,35 @@ export async function GET(request: NextRequest) {
   const rebalanceSuggestions = computeRebalanceSuggestions(holdings, signalConfidence);
   const simulation = shouldSimulate ? simulateRebalance(holdings, rebalanceSuggestions) : null;
 
+  const relative = [
+    ...buildBenchmarkRelative(usReport),
+    ...buildBenchmarkRelative(krReport),
+  ];
+
+  const reasons = [
+    ...(usReport?.reports || []).slice(0, 8).map((item) => ({ symbol: String(item.ticker || ""), reasons: buildEvidenceFromItem(item) })),
+    ...(krReport?.reports || []).slice(0, 8).map((item) => ({ symbol: String(item.ticker || ""), reasons: buildEvidenceFromItem(item) })),
+  ].filter((item) => item.symbol);
+
   const payload = {
     updatedAt: new Date().toISOString(),
     mode: fallbackMode,
+    weights: MODE_WEIGHTS_PROFILES[fallbackMode],
+    provenance: {
+      sources: ["public/reports/index.json", "public/reports/*.json"],
+      generatedAt: new Date().toISOString(),
+      refreshRule: "latest timestamp from report index by type",
+    },
+    benchmark: {
+      KR: "KOSPI",
+      US: "S&P 500",
+      lastUpdated: [krReport?.meta?.timestamp, usReport?.meta?.timestamp].filter(Boolean).join(" | "),
+    },
     signalConfidence,
     modules,
+    reasoning: reasons,
+    relatives: relative,
+
     markets: BASE_MARKETS,
     holdings,
     watchlist,
@@ -572,4 +691,28 @@ export async function GET(request: NextRequest) {
   };
 
   return NextResponse.json(payload, { headers: { "Cache-Control": "no-store" } });
+}
+
+
+function collectWatchReason(entry: QuantReportItem, region: "k" | "us"): WatchItem {
+  const reasons = buildEvidenceFromItem(entry);
+  const top = reasons.find((r) => r.impact === "up") || reasons[0];
+  return {
+    symbol: String(entry.ticker || ""),
+    signal: parseSignalFromVerdict(entry.synthesis_verdict),
+    score: Math.round(entry.score || 0),
+    reason: entry.synthesis_verdict || "중립/Watch",
+    catalyst: (entry.details?.news || [])[0] || `${region.toUpperCase()} 시장 모멘텀 기반 자동 점수`,
+    region,
+    rationale: top ? `${top.module}: ${top.rationale}` : undefined,
+  };
+}
+
+
+function buildBenchmarkRelative(reports: QuantReportPayload | null): RelativeMetric[] {
+  if (!reports?.reports?.length) return [];
+  return reports.reports
+    .filter((item) => item?.ticker)
+    .slice(0, 8)
+    .map((item) => deriveRelativeScore(item));
 }

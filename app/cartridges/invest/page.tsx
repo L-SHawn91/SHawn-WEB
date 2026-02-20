@@ -10,6 +10,13 @@ type RiskLevel = "Low" | "Medium" | "High";
 type StrategyMode = "balanced" | "alpha" | "defensive";
 type SignalAction = "Buy" | "Hold" | "Trim";
 
+type WeightProfile = {
+  technical: number;
+  flow: number;
+  macro: number;
+  news: number;
+};
+
 type SignalModule = {
   key: string;
   title: string;
@@ -61,6 +68,7 @@ type WatchItem = {
   reason: string;
   catalyst: string;
   region: "k" | "us";
+  rationale?: string;
 };
 
 type RebalanceSuggestion = {
@@ -78,6 +86,14 @@ type SimulationChange = {
   deltaPct: number;
 };
 
+type RelativeMetric = {
+  symbol: string;
+  alphaVsBenchmark: number;
+  beta: number;
+  drawdown60d: number;
+  momentumScore: number;
+};
+
 type RebalanceSimulation = {
   projectedHoldings: Holding[];
   changes: SimulationChange[];
@@ -92,6 +108,13 @@ type SnapshotPayload = {
   updatedAt: string;
   mode: StrategyMode;
   signalConfidence: number;
+  weights?: WeightProfile;
+  provenance?: {
+    sources: string[];
+    generatedAt: string;
+    refreshRule: string;
+  };
+  benchmark?: { KR: string; US: string; lastUpdated?: string };
   modules: SignalModule[];
   markets: MarketCard[];
   holdings: Holding[];
@@ -104,6 +127,8 @@ type SnapshotPayload = {
   };
   rebalanceSuggestions: RebalanceSuggestion[];
   simulation: RebalanceSimulation | null;
+  reasoning?: { symbol: string; reasons: Array<{module: string; metric: string; value: number | string; impact: "up" | "down" | "neutral"; rationale: string}> }[];
+  relatives?: RelativeMetric[];
   kpis: {
     portfolio: string;
     annualReturn: string;
@@ -285,6 +310,14 @@ export default function InvestmentWorld() {
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
               <p className="text-sm text-gray-400">리밸런싱 위험도</p>
               <p className="text-xl font-bold text-white mt-1">{riskSummary ? riskSummary.state : "로딩"}</p>
+            </div>
+            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+              <p className="text-sm text-gray-400">신호 가중치</p>
+              <p className="text-xl font-bold text-white mt-1">{snapshot?.weights ? `T:${Math.round((snapshot.weights.technical||0)*100)} / F:${Math.round((snapshot.weights.flow||0)*100)} / M:${Math.round((snapshot.weights.macro||0)*100)} / N:${Math.round((snapshot.weights.news||0)*100)}` : "-"}</p>
+            </div>
+            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+              <p className="text-sm text-gray-400">벤치마크</p>
+              <p className="text-xl font-bold text-white mt-1">{snapshot?.benchmark ? `${snapshot.benchmark.KR} / ${snapshot.benchmark.US}` : "-"}</p>
             </div>
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
               <p className="text-sm text-gray-400">갱신시각</p>
@@ -529,6 +562,7 @@ export default function InvestmentWorld() {
 
             {error ? <p className="text-xs text-rose-300">{error}</p> : null}
             {loading ? <p className="text-xs text-gray-400">실시간 데이터를 불러오는 중...</p> : null}
+            {snapshot?.provenance ? <p className="text-xs text-gray-500">근거 출처: {snapshot.provenance.sources.join(", ")}</p> : null}
 
             <div className="space-y-3">
               {watchItems.map((item) => (
@@ -540,6 +574,7 @@ export default function InvestmentWorld() {
                   <p className="text-sm text-gray-300 mt-1">{item.reason}</p>
                   <p className="text-xs text-gray-400 mt-1">{item.catalyst}</p>
                   <p className={`text-sm mt-2 ${formatScore(item.score)}`}>점수 {item.score}</p>
+                  {item.rationale ? <p className="text-xs text-gray-500 mt-1">근거: {item.rationale}</p> : null}
                 </div>
               ))}
             </div>
