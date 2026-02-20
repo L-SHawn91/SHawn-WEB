@@ -20,6 +20,12 @@ type WeightProfile = {
   news: number;
 };
 
+type DecisionThresholds = {
+  buy: number;
+  hold: { min: number; max: number };
+  trim: number;
+};
+
 type SnapshotReason = {
   module: string;
   metric: string;
@@ -668,6 +674,11 @@ export async function GET(request: NextRequest) {
     },
     signalConfidence,
     modules,
+    decisionThresholds: {
+      buy: 75,
+      hold: { min: 40, max: 75 },
+      trim: 40,
+    },
     reasoning: reasons,
     relatives: relative,
 

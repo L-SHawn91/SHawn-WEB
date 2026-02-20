@@ -17,6 +17,12 @@ type WeightProfile = {
   news: number;
 };
 
+type DecisionThresholds = {
+  buy: number;
+  hold: { min: number; max: number };
+  trim: number;
+};
+
 type SignalModule = {
   key: string;
   title: string;
@@ -109,6 +115,7 @@ type SnapshotPayload = {
   mode: StrategyMode;
   signalConfidence: number;
   weights?: WeightProfile;
+  decisionThresholds?: DecisionThresholds;
   provenance?: {
     sources: string[];
     generatedAt: string;
@@ -310,6 +317,10 @@ export default function InvestmentWorld() {
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
               <p className="text-sm text-gray-400">리밸런싱 위험도</p>
               <p className="text-xl font-bold text-white mt-1">{riskSummary ? riskSummary.state : "로딩"}</p>
+            </div>
+            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+              <p className="text-sm text-gray-400">시그널 임계값</p>
+              <p className="text-xs text-gray-200 mt-1">Buy: {snapshot?.decisionThresholds?.buy ?? 75} / Hold: {snapshot?.decisionThresholds?.hold?.min ?? 40}-{snapshot?.decisionThresholds?.hold?.max ?? 75} / Trim: {snapshot?.decisionThresholds?.trim ?? 40}</p>
             </div>
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
               <p className="text-sm text-gray-400">신호 가중치</p>
@@ -574,7 +585,12 @@ export default function InvestmentWorld() {
                   <p className="text-sm text-gray-300 mt-1">{item.reason}</p>
                   <p className="text-xs text-gray-400 mt-1">{item.catalyst}</p>
                   <p className={`text-sm mt-2 ${formatScore(item.score)}`}>점수 {item.score}</p>
-                  {item.rationale ? <p className="text-xs text-gray-500 mt-1">근거: {item.rationale}</p> : null}
+                  {item.rationale ? (
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          <span className="text-[10px] px-2 py-0.5 rounded border border-blue-400/30 text-blue-300">{item.signal}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded border border-gray-500/30 text-gray-300">{item.rationale}</span>
+                        </div>
+                      ) : null}
                 </div>
               ))}
             </div>
