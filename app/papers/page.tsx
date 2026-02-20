@@ -1,9 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Activity,
   BookOpen,
+  Bookmark,
+  BookmarkCheck,
   Database,
   Download,
   ExternalLink,
@@ -43,6 +45,8 @@ interface SearchMeta {
     final?: number;
   };
 }
+
+type SortMode = 'score' | 'recent' | 'citations' | 'source';
 
 const trackNames: Record<keyof TrackStatus, string> = {
   t1: 'PubMed Track',
@@ -104,6 +108,11 @@ export default function PapersPage() {
     t4: 'idle',
   });
   const [meta, setMeta] = useState<SearchMeta | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>('score');
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
+  const [saveLoadingId, setSaveLoadingId] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     sources: ['pubmed', 'arxiv', 'semantic'] as string[],
     yearFrom: '',
@@ -120,15 +129,85 @@ export default function PapersPage() {
     );
   }, [papers]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const authRes = await fetch('/api/auth/me');
+        if (!authRes.ok) return;
+        const authData = await authRes.json();
+        setAuthUserId(authData.userId || null);
+
+        const savedRes = await fetch('/api/saved-items?type=paper');
+        if (!savedRes.ok) return;
+        const savedData = await savedRes.json();
+        const ids = new Set<string>((savedData.items || []).map((x: any) => x.itemId));
+        setSavedIds(ids);
+      } catch {
+        // no-op
+      }
+    })();
+  }, []);
+
+  const displayedPapers = useMemo(() => {
+    const filtered = showSavedOnly ? papers.filter((p) => savedIds.has(p.id)) : papers;
+    const sorted = [...filtered];
+    if (sortMode === 'recent') {
+      sorted.sort((a, b) => b.year - a.year);
+    } else if (sortMode === 'citations') {
+      sorted.sort((a, b) => (b.citations || 0) - (a.citations || 0));
+    } else if (sortMode === 'source') {
+      sorted.sort((a, b) => a.source.localeCompare(b.source));
+    } else {
+      sorted.sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
+    }
+    return sorted;
+  }, [papers, savedIds, showSavedOnly, sortMode]);
+
   const topSignals = useMemo(() => {
-    return [...papers]
+    return [...displayedPapers]
       .sort((a, b) => {
         const aScore = a.rankScore ?? a.citations ?? 0;
         const bScore = b.rankScore ?? b.citations ?? 0;
         return bScore - aScore;
       })
       .slice(0, 5);
-  }, [papers]);
+  }, [displayedPapers]);
+
+  const toggleSave = async (paper: Paper) => {
+    if (!authUserId) return;
+    const isSaved = savedIds.has(paper.id);
+    setSaveLoadingId(paper.id);
+    try {
+      if (isSaved) {
+        await fetch('/api/saved-items', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'paper', itemId: paper.id }),
+        });
+        setSavedIds((prev) => {
+          const next = new Set(prev);
+          next.delete(paper.id);
+          return next;
+        });
+      } else {
+        await fetch('/api/saved-items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'paper',
+            itemId: paper.id,
+            title: paper.title,
+            url: paper.url,
+            source: paper.source,
+            year: paper.year,
+          }),
+        });
+        setSavedIds((prev) => new Set(prev).add(paper.id));
+      }
+    } finally {
+      setSaveLoadingId(null);
+    }
+  };
 
   const searchPapers = async () => {
     if (!query.trim()) return;
@@ -302,8 +381,26 @@ export default function PapersPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
+                  <select
+                    value={sortMode}
+                    onChange={(e) => setSortMode(e.target.value as SortMode)}
+                    className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                    title="결과 정렬"
+                  >
+                    <option value="score">Sort: Score</option>
+                    <option value="recent">Sort: Recent</option>
+                    <option value="citations">Sort: Citations</option>
+                    <option value="source">Sort: Source</option>
+                  </select>
+                  <button
+                    onClick={() => setShowSavedOnly((v) => !v)}
+                    className={`rounded-md border px-2 py-1 text-xs ${showSavedOnly ? 'border-amber-500 text-amber-600' : 'border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300'}`}
+                    title="저장한 논문만 보기"
+                  >
+                    {showSavedOnly ? 'Saved only' : 'All results'}
+                  </button>
                   <span className="text-sm text-slate-500 dark:text-slate-400">
-                    {papers.length} papers
+                    {displayedPapers.length} papers
                   </span>
                   {papers.length > 0 && (
                     <button
@@ -316,13 +413,13 @@ export default function PapersPage() {
                 </div>
               </div>
 
-              {papers.length === 0 ? (
+              {displayedPapers.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
                   {query ? '검색 결과가 없습니다. 필터를 조정해보세요.' : '검색어를 입력하면 결과가 대시보드에 표시됩니다.'}
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {papers.map((paper) => (
+                  {displayedPapers.map((paper) => (
                     <article
                       key={paper.id}
                       className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60"
@@ -409,6 +506,19 @@ export default function PapersPage() {
                           >
                             PDF <span title="PDF 다운로드/열기"><Download className="h-3.5 w-3.5" /></span>
                           </a>
+                        )}
+                        {authUserId ? (
+                          <button
+                            onClick={() => toggleSave(paper)}
+                            disabled={saveLoadingId === paper.id}
+                            className="inline-flex items-center gap-1 rounded border border-amber-400 px-2 py-1 text-amber-600 disabled:opacity-50"
+                            title="로그인 사용자 보관함에 저장/해제"
+                          >
+                            {savedIds.has(paper.id) ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
+                            {savedIds.has(paper.id) ? 'Saved' : 'Save'}
+                          </button>
+                        ) : (
+                          <span className="text-slate-400" title="저장 기능은 로그인 후 사용 가능합니다">Login to save</span>
                         )}
                       </div>
                     </article>
