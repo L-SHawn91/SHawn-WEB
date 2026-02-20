@@ -13,6 +13,10 @@ interface Paper {
   citations?: number;
 }
 
+function isPaper(paper: Paper | null): paper is Paper {
+  return paper !== null;
+}
+
 // Parallel search across multiple sources
 async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
   try {
@@ -37,7 +41,7 @@ async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): 
     const searchRes = await fetch(`${baseUrl}?${params.toString()}`);
     const searchData = await searchRes.json();
     
-    const ids = searchData.esearchresult?.idlist || [];
+    const ids: string[] = searchData.esearchresult?.idlist || [];
     if (ids.length === 0) return [];
 
     // Fetch details

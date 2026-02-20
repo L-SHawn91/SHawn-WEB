@@ -36,6 +36,7 @@ export function MobileNav() {
         { href: "/about", label: t.nav.about },
         { href: "/blog", label: t.nav.blog },
         { href: "/papers", label: t.nav.papers || 'Papers' },
+        { href: "/datasets", label: t.nav.datasets || 'Datasets' },
         { href: "/market-intelligence", label: t.nav.market_intelligence },
     ]
 
