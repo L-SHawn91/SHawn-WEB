@@ -2,6 +2,7 @@
 
 import { Footer } from "@/components/ui/footer";
 import { Header } from "@/components/ui/header";
+import { InvestShell } from "@/components/invest/invest-shell";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -298,7 +299,8 @@ export default function InvestmentWorld() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white">
+    <InvestShell currentTab="dashboard">
+      <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
         <section className="mb-8">
@@ -621,5 +623,6 @@ export default function InvestmentWorld() {
       </main>
       <Footer />
     </div>
+    </InvestShell>
   );
 }
