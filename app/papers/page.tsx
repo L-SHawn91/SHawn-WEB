@@ -1,7 +1,8 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { apiFetch } from '@/lib/data-source/client';
 import {
@@ -192,7 +193,6 @@ function trackStatusText(status: TrackStatus[keyof TrackStatus]): string {
 }
 
 export default function PapersPage() {
-  const searchParams = useSearchParams();
   const [query, setQuery] = useState('');
   const [chips, setChips] = useState<string[]>([]);
   const [mergeSuggestion, setMergeSuggestion] = useState<MergeSuggestion | null>(null);
@@ -417,11 +417,12 @@ export default function PapersPage() {
   };
 
   useEffect(() => {
-    const q = searchParams.get('query');
+    if (typeof window === 'undefined') return;
+    const q = new URLSearchParams(window.location.search).get('query');
     if (!q) return;
     setChips([]);
     setQuery(q);
-  }, [searchParams]);
+  }, []);
 
   const exportBibTeX = () => {
     const bibtex = papers

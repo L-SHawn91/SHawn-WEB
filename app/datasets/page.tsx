@@ -1,7 +1,8 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Database, ExternalLink, Filter, Search, Sparkles } from "lucide-react";
 import { apiFetch } from "@/lib/data-source/client";
@@ -211,7 +212,6 @@ const SOURCE_TOOLTIPS: Record<DatasetSource, string> = {
 const DATASET_SCORE_TOOLTIP = "Dataset score는 최신성, 활용도(download/like), 메타데이터 품질로 계산됩니다.\nDataset는 저널 논문이 아니므로 IF/Q 지표가 직접 적용되지 않습니다.";
 
 export default function DatasetsPage() {
-  const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [datasets, setDatasets] = useState<DatasetItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -282,10 +282,11 @@ export default function DatasetsPage() {
   const searchDatasets = async (options?: SearchOptions) => executeSearch(query, filters, options);
 
   useEffect(() => {
-    const q = searchParams.get("query");
+    if (typeof window === 'undefined') return;
+    const q = new URLSearchParams(window.location.search).get("query");
     if (!q) return;
     setQuery(q);
-  }, [searchParams]);
+  }, []);
 
   const applyBioPreset = async (preset: BioPreset) => {
     const isActive = activePresetId === preset.id;

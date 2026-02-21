@@ -862,6 +862,7 @@ export async function GET(request: NextRequest) {
   const fallbackMode: StrategyMode = ["balanced", "alpha", "defensive"].includes(mode) ? mode : "balanced";
 
   const upstream = process.env.SHAWN_INV_SNAPSHOT_URL?.trim();
+  let upstreamFailure: string | null = null;
   if (upstream) {
     try {
       const u = new URL(upstream);
@@ -884,7 +885,9 @@ export async function GET(request: NextRequest) {
           { headers: { 'Cache-Control': 'no-store' } }
         );
       }
-    } catch {
+      upstreamFailure = `upstream_status_${r.status}`;
+    } catch (error) {
+      upstreamFailure = `upstream_error:${error instanceof Error ? error.message : 'unknown'}`;
       // fallback to local snapshot builder
     }
   }
@@ -911,6 +914,8 @@ export async function GET(request: NextRequest) {
   const { highRiskShare, concentration, weightedPnl } = computeHoldingsRisk(holdings);
   const rebalanceSuggestions = computeRebalanceSuggestions(holdings, signalConfidence);
   const simulation = shouldSimulate ? simulateRebalance(holdings, rebalanceSuggestions) : null;
+
+  const liveMarkets = await fetchLiveMarkets();
   const driftDetector = buildDriftDetector(liveMarkets.markets, modules, signalConfidence);
 
   const relative = [
@@ -922,8 +927,6 @@ export async function GET(request: NextRequest) {
     ...(usReport?.reports || []).slice(0, 8).map((item) => ({ symbol: String(item.ticker || ""), reasons: buildEvidenceFromItem(item) })),
     ...(krReport?.reports || []).slice(0, 8).map((item) => ({ symbol: String(item.ticker || ""), reasons: buildEvidenceFromItem(item) })),
   ].filter((item) => item.symbol);
-
-  const liveMarkets = await fetchLiveMarkets();
 
   const payload = {
     updatedAt: new Date().toISOString(),
@@ -942,6 +945,7 @@ export async function GET(request: NextRequest) {
       sources: ["public/reports/index.json", "public/reports/*.json", liveMarkets.sourceName],
       generatedAt: new Date().toISOString(),
       refreshRule: "latest timestamp from report index by type + live quote refresh on request",
+      ...(upstreamFailure ? { upstreamFailure } : {}),
     },
     benchmark: {
       KR: "KOSPI",
