@@ -861,6 +861,34 @@ export async function GET(request: NextRequest) {
   const mode = (new URL(request.url).searchParams.get("mode") || "balanced") as StrategyMode;
   const fallbackMode: StrategyMode = ["balanced", "alpha", "defensive"].includes(mode) ? mode : "balanced";
 
+  const upstream = process.env.SHAWN_INV_SNAPSHOT_URL?.trim();
+  if (upstream) {
+    try {
+      const u = new URL(upstream);
+      u.searchParams.set('mode', fallbackMode);
+      if (new URL(request.url).searchParams.get('simulate') === '1') {
+        u.searchParams.set('simulate', '1');
+      }
+
+      const r = await fetch(u.toString(), { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+      if (r.ok) {
+        const data = await r.json();
+        return NextResponse.json(
+          {
+            ...data,
+            provenance: {
+              ...(data?.provenance || {}),
+              sources: [...(data?.provenance?.sources || []), `upstream:${u.origin}`],
+            },
+          },
+          { headers: { 'Cache-Control': 'no-store' } }
+        );
+      }
+    } catch {
+      // fallback to local snapshot builder
+    }
+  }
+
   const shouldSimulate = new URL(request.url).searchParams.get("simulate") === "1";
   const { modules, signalConfidence } = injectSignals(BASE_SIGNAL_MODULES, fallbackMode);
   const krReport = await readLatestReportByMarket("KR");
