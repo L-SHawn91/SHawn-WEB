@@ -221,6 +221,13 @@ export default function PapersPage() {
     yearFrom: '',
     yearTo: '',
   });
+  const quickQueries = [
+    'endometriosis single-cell',
+    'ovarian cancer organoid',
+    'autophagy transcriptomics',
+    'uterus microenvironment',
+    'embryo implantation',
+  ];
 
   const sourceCounts = useMemo(() => {
     return papers.reduce(
@@ -464,6 +471,46 @@ export default function PapersPage() {
               Last Query Time: {meta?.totalTime ? `${meta.totalTime}ms` : 'N/A'}
               {meta?.intent ? <span className="ml-2 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] dark:bg-slate-700">Intent {meta.intent}</span> : null}
             </div>
+          </div>
+        </div>
+        <div className="sticky top-3 z-30 mb-6 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-cyan-50 to-indigo-50 p-4 shadow-sm dark:border-blue-900/50 dark:from-slate-900 dark:via-blue-950/40 dark:to-slate-900">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold text-slate-900 dark:text-white">Search Control Center</p>
+            <p className="text-xs text-slate-600 dark:text-slate-300">키워드 입력 후 Enter 또는 검색 실행</p>
+          </div>
+          <div className="flex flex-col gap-3 lg:flex-row">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
+                placeholder="예: endometriosis single-cell atlas"
+                className="w-full rounded-xl border border-blue-300 bg-white px-10 py-3 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-blue-700 dark:bg-slate-900 dark:text-slate-100"
+              />
+            </div>
+            <button
+              onClick={searchPapers}
+              disabled={loading}
+              className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {loading ? '검색 중...' : '검색 실행'}
+            </button>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {quickQueries.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => {
+                  setQuery(item);
+                }}
+                className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-700 transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-600 dark:hover:text-blue-300"
+              >
+                {item}
+              </button>
+            ))}
           </div>
         </div>
 
