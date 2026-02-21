@@ -4,12 +4,8 @@ version = "0.1.0"
 description = "SHawn Desktop Tauri App"
 edition = "2021"
 
-[lib]
-name = "desktop_tauri"
-crate-type = ["staticlib", "cdylib", "rlib"]
-
 [dependencies]
-tauri = { version = "2.0.0-rc.4", features = [] }
+tauri = { version = "2.10.2", features = [] }
 
 [build-dependencies]
-tauri-build = "2.0.0-rc.4"
+tauri-build = { version = "2.5.5", features = [] }

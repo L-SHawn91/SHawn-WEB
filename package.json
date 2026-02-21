@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "pnpm --dir apps/desktop-tauri typecheck",
+    "build:web": "pnpm --dir apps/desktop-tauri build:web",
     "desktop:dev": "pnpm --dir apps/desktop-tauri dev",
     "desktop:build": "pnpm --dir apps/desktop-tauri build",
     "desktop:lint": "pnpm --dir apps/desktop-tauri lint",

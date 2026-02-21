@@ -50,6 +50,13 @@ pnpm run lint
 pnpm run typecheck
 ```
 
+(루트 `SHawn-WEB/`에서 실행할 때)
+```bash
+pnpm run typecheck
+pnpm run build:web
+pnpm run desktop:build
+```
+
 ---
 
 ## 문제해결 (빌드 실패 시)
@@ -79,7 +86,28 @@ xcode-select --install
 rustup update
 ```
 
-### C. 의존성/캐시 꼬임
+### C. `cargo metadata ... No such file or directory (os error 2)`
+증상:
+- `failed to run 'cargo metadata' command`
+- `No such file or directory (os error 2)`
+
+원인:
+- Rust/Cargo가 설치되지 않았거나 PATH에 없음
+
+조치:
+```bash
+# Cargo 설치 여부 확인
+cargo --version
+
+# 미설치 시
+rustup-init
+source "$HOME/.cargo/env"
+
+# 최신화
+rustup update
+```
+
+### D. 의존성/캐시 꼬임
 조치:
 ```bash
 pnpm install --force
@@ -87,7 +115,7 @@ pnpm run build:web
 pnpm run build
 ```
 
-### D. Tailwind `content` 경고
+### E. Tailwind `content` 경고
 증상:
 - `The 'content' option in your Tailwind CSS configuration is missing or empty.`
 
