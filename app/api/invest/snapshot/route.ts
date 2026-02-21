@@ -334,11 +334,16 @@ const MODE_WEIGHTS: Record<StrategyMode, number[]> = {
   defensive: [0.25, 0.2, 0.35, 0.2],
 };
 
-type YahooQuote = { regularMarketPrice?: number; regularMarketChangePercent?: number; symbol?: string };
+type QuoteHealth = "ok" | "degraded" | "fallback";
+
+type YahooQuote = { regularMarketPrice?: number; regularMarketChangePercent?: number; regularMarketTime?: number; symbol?: string };
 
 type MarketLiveSnapshot = {
   markets: MarketCard[];
-  source: string;
+  sourceName: string;
+  freshnessSec: number;
+  fallbackLevel: number;
+  quoteHealth: QuoteHealth;
   updatedAt: string;
 };
 
@@ -351,6 +356,15 @@ function formatChangePct(v?: number): string {
   if (typeof v !== 'number' || Number.isNaN(v)) return 'N/A';
   const sign = v >= 0 ? '+' : '';
   return `${sign}${v.toFixed(2)}%`;
+}
+
+function parseFreshnessSec(value?: string | number | null, fallback = 3600): number {
+  if (value === undefined || value === null || value === "") return fallback;
+  const asNumber = typeof value === "number" ? value : Date.parse(value);
+  if (!Number.isFinite(asNumber)) return fallback;
+  const sec = Math.floor((Date.now() - asNumber) / 1000);
+  if (!Number.isFinite(sec)) return fallback;
+  return Math.max(0, sec);
 }
 
 async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
@@ -378,6 +392,8 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
     }
   };
 
+  const now = Date.now();
+
   try {
     const symbols = ['^KS11', '^KQ11', '^GSPC', '^NDX'];
     const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbols.join(','))}`;
@@ -394,6 +410,16 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
     const data = await res.json();
     const rows = (data?.quoteResponse?.result || []) as YahooQuote[];
     const bySymbol = new Map<string, YahooQuote>(rows.map((r) => [String(r.symbol || ''), r]));
+    const lastUpdateTimestamps = [
+      bySymbol.get('^KS11')?.regularMarketTime,
+      bySymbol.get('^KQ11')?.regularMarketTime,
+      bySymbol.get('^GSPC')?.regularMarketTime,
+      bySymbol.get('^NDX')?.regularMarketTime,
+    ].filter((it): it is number => typeof it === 'number' && Number.isFinite(it));
+    const freshnessSec = parseFreshnessSec(
+      lastUpdateTimestamps.length ? Math.max(...lastUpdateTimestamps) * 1000 : null,
+      120,
+    );
 
     apply({
       ks11: { price: bySymbol.get('^KS11')?.regularMarketPrice, chg: bySymbol.get('^KS11')?.regularMarketChangePercent },
@@ -402,7 +428,14 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
       ndx: { price: bySymbol.get('^NDX')?.regularMarketPrice, chg: bySymbol.get('^NDX')?.regularMarketChangePercent },
     });
 
-    return { markets, source: 'Yahoo Finance quote API', updatedAt: new Date().toISOString() };
+    return {
+      markets,
+      sourceName: 'Yahoo Finance quote API',
+      freshnessSec,
+      fallbackLevel: 0,
+      quoteHealth: 'ok',
+      updatedAt: new Date(now).toISOString(),
+    };
   } catch {
     try {
       const stooq = await fetch('https://stooq.com/q/l/?s=spx,ndq,ks11,kq11&i=d', {
@@ -413,13 +446,23 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
       const lines = csv.trim().split(/\r?\n/);
       // stooq format: SYMBOL,DATE,TIME,OPEN,HIGH,LOW,CLOSE,VOLUME
       const closeBy = new Map<string, number>();
+      const latestBy = new Map<string, string>();
       for (let i = 0; i < lines.length; i++) {
         const cols = lines[i].split(',');
         if (!cols[0] || cols.length < 7) continue;
         const symbol = cols[0].trim().toUpperCase();
         const close = Number.parseFloat(cols[6]);
-        if (Number.isFinite(close)) closeBy.set(symbol, close);
+        const date = cols[1]?.trim();
+        const time = cols[2]?.trim();
+        const timestamp = [date, time].filter(Boolean).join('T');
+
+        if (Number.isFinite(close)) {
+          closeBy.set(symbol, close);
+          if (timestamp) latestBy.set(symbol, timestamp);
+        }
       }
+
+      const stooqTimestamp = latestBy.values().next().value;
 
       apply({
         ks11: { price: closeBy.get('KS11') },
@@ -427,12 +470,22 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
         gspc: { price: closeBy.get('SPX') },
         ndx: { price: closeBy.get('NDQ') },
       });
-      return { markets, source: 'Stooq EOD fallback', updatedAt: new Date().toISOString() };
+      return {
+        markets,
+        sourceName: 'Stooq EOD fallback',
+        freshnessSec: parseFreshnessSec(stooqTimestamp, 86_400),
+        fallbackLevel: 1,
+        quoteHealth: 'degraded',
+        updatedAt: new Date(now).toISOString(),
+      };
     } catch {
       return {
         markets: BASE_MARKETS,
-        source: 'fallback/static',
-        updatedAt: new Date().toISOString(),
+        sourceName: 'fallback/static',
+        freshnessSec: 604_800,
+        fallbackLevel: 2,
+        quoteHealth: 'fallback',
+        updatedAt: new Date(now).toISOString(),
       };
     }
   }
@@ -767,9 +820,15 @@ export async function GET(request: NextRequest) {
   const payload = {
     updatedAt: new Date().toISOString(),
     mode: fallbackMode,
+    quoteSource: {
+      sourceName: liveMarkets.sourceName,
+      freshnessSec: liveMarkets.freshnessSec,
+      fallbackLevel: liveMarkets.fallbackLevel,
+    },
+    quoteHealth: liveMarkets.quoteHealth,
     weights: MODE_WEIGHTS_PROFILES[fallbackMode],
     provenance: {
-      sources: ["public/reports/index.json", "public/reports/*.json", liveMarkets.source],
+      sources: ["public/reports/index.json", "public/reports/*.json", liveMarkets.sourceName],
       generatedAt: new Date().toISOString(),
       refreshRule: "latest timestamp from report index by type + live quote refresh on request",
     },
