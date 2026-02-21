@@ -341,10 +341,27 @@ type YahooQuote = { regularMarketPrice?: number; regularMarketChangePercent?: nu
 type MarketLiveSnapshot = {
   markets: MarketCard[];
   sourceName: string;
+  providerPriority: number;
   freshnessSec: number;
+  fetchedAt: string;
   fallbackLevel: number;
   quoteHealth: QuoteHealth;
   updatedAt: string;
+};
+
+type DriftDetector = {
+  benchmark: {
+    ks: number;
+    us: number;
+    score: number;
+  };
+  signals: {
+    signalConfidence: number;
+    signalVariance: number;
+    driftScore: number;
+  };
+  driftScore: number;
+  status: "stable" | "unstable";
 };
 
 function formatIndexValue(v?: number): string {
@@ -358,6 +375,9 @@ function formatChangePct(v?: number): string {
   return `${sign}${v.toFixed(2)}%`;
 }
 
+const QUOTE_HEALTH_OK_SEC = 3_600;
+const QUOTE_HEALTH_DEGRADED_SEC = 14_400;
+
 function parseFreshnessSec(value?: string | number | null, fallback = 3600): number {
   if (value === undefined || value === null || value === "") return fallback;
   const asNumber = typeof value === "number" ? value : Date.parse(value);
@@ -365,6 +385,12 @@ function parseFreshnessSec(value?: string | number | null, fallback = 3600): num
   const sec = Math.floor((Date.now() - asNumber) / 1000);
   if (!Number.isFinite(sec)) return fallback;
   return Math.max(0, sec);
+}
+
+function classifyQuoteHealth(freshnessSec: number): QuoteHealth {
+  if (freshnessSec <= QUOTE_HEALTH_OK_SEC) return "ok";
+  if (freshnessSec <= QUOTE_HEALTH_DEGRADED_SEC) return "degraded";
+  return "fallback";
 }
 
 async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
@@ -431,9 +457,11 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
     return {
       markets,
       sourceName: 'Yahoo Finance quote API',
+      providerPriority: 0,
       freshnessSec,
+      fetchedAt: new Date(now).toISOString(),
       fallbackLevel: 0,
-      quoteHealth: 'ok',
+      quoteHealth: classifyQuoteHealth(freshnessSec),
       updatedAt: new Date(now).toISOString(),
     };
   } catch {
@@ -470,21 +498,27 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
         gspc: { price: closeBy.get('SPX') },
         ndx: { price: closeBy.get('NDQ') },
       });
+      const stooqFreshnessSec = parseFreshnessSec(stooqTimestamp, 86_400);
       return {
         markets,
         sourceName: 'Stooq EOD fallback',
-        freshnessSec: parseFreshnessSec(stooqTimestamp, 86_400),
+        providerPriority: 1,
+        freshnessSec: stooqFreshnessSec,
+        fetchedAt: new Date(now).toISOString(),
         fallbackLevel: 1,
-        quoteHealth: 'degraded',
+        quoteHealth: classifyQuoteHealth(stooqFreshnessSec),
         updatedAt: new Date(now).toISOString(),
       };
     } catch {
+      const fallbackFreshnessSec = 604_800;
       return {
         markets: BASE_MARKETS,
         sourceName: 'fallback/static',
-        freshnessSec: 604_800,
+        providerPriority: 2,
+        freshnessSec: fallbackFreshnessSec,
+        fetchedAt: new Date(now).toISOString(),
         fallbackLevel: 2,
-        quoteHealth: 'fallback',
+        quoteHealth: classifyQuoteHealth(fallbackFreshnessSec),
         updatedAt: new Date(now).toISOString(),
       };
     }
@@ -648,6 +682,51 @@ function deriveRelativeScore(item: QuantReportItem): RelativeMetric {
   };
 }
 
+function parsePctValue(input?: string): number {
+  if (typeof input !== "string") return NaN;
+  const cleaned = input.trim().replace(/,/g, "").replace(/%/g, "").replace(/\+/g, "");
+  const parsed = Number.parseFloat(cleaned);
+  return Number.isFinite(parsed) ? parsed : NaN;
+}
+
+function buildDriftDetector(markets: MarketCard[], modules: SignalModule[], signalConfidence: number): DriftDetector {
+  const firstMarket = markets[0];
+  const secondMarket = markets[1];
+
+  const krChanges = [parsePctValue(firstMarket?.indexA?.change), parsePctValue(firstMarket?.indexB?.change)]
+    .filter((value): value is number => Number.isFinite(value));
+  const usChanges = [parsePctValue(secondMarket?.indexA?.change), parsePctValue(secondMarket?.indexB?.change)]
+    .filter((value): value is number => Number.isFinite(value));
+
+  const benchmarkKs = krChanges.length
+    ? krChanges.reduce((acc, value) => acc + Math.abs(value), 0) / krChanges.length
+    : 0;
+  const benchmarkUs = usChanges.length
+    ? usChanges.reduce((acc, value) => acc + Math.abs(value), 0) / usChanges.length
+    : 0;
+
+  const benchmarkScore = Math.min(100, Number(((benchmarkKs + benchmarkUs) / 2) * 1.8));
+  const signalVariance = modules.length
+    ? Math.round(modules.reduce((acc, m) => acc + Math.abs(m.confidence - signalConfidence), 0) / modules.length)
+    : 0;
+  const signalsScore = Math.min(100, signalVariance * 2);
+  const driftScore = Number(((benchmarkScore + signalsScore) / 2).toFixed(2));
+
+  return {
+    benchmark: {
+      ks: benchmarkKs,
+      us: benchmarkUs,
+      score: benchmarkScore,
+    },
+    signals: {
+      signalConfidence,
+      signalVariance,
+      driftScore: signalsScore,
+    },
+    driftScore,
+    status: driftScore >= 40 ? "unstable" : "stable",
+  };
+}
 
 function toQuantWatchlist(item: QuantReportPayload | null, region: "k" | "us"): WatchItem[] {
   if (!item?.reports?.length) return BASE_WATCH;
@@ -804,6 +883,7 @@ export async function GET(request: NextRequest) {
   const { highRiskShare, concentration, weightedPnl } = computeHoldingsRisk(holdings);
   const rebalanceSuggestions = computeRebalanceSuggestions(holdings, signalConfidence);
   const simulation = shouldSimulate ? simulateRebalance(holdings, rebalanceSuggestions) : null;
+  const driftDetector = buildDriftDetector(liveMarkets.markets, modules, signalConfidence);
 
   const relative = [
     ...buildBenchmarkRelative(usReport),
@@ -822,10 +902,13 @@ export async function GET(request: NextRequest) {
     mode: fallbackMode,
     quoteSource: {
       sourceName: liveMarkets.sourceName,
+      providerPriority: liveMarkets.providerPriority,
+      fetchedAt: liveMarkets.fetchedAt,
       freshnessSec: liveMarkets.freshnessSec,
       fallbackLevel: liveMarkets.fallbackLevel,
     },
     quoteHealth: liveMarkets.quoteHealth,
+    driftDetector,
     weights: MODE_WEIGHTS_PROFILES[fallbackMode],
     provenance: {
       sources: ["public/reports/index.json", "public/reports/*.json", liveMarkets.sourceName],

@@ -117,10 +117,18 @@ type SnapshotPayload = {
   signalConfidence: number;
   quoteSource?: {
     sourceName: string;
+    providerPriority: number;
+    fetchedAt: string;
     freshnessSec: number;
     fallbackLevel: number;
   };
   quoteHealth?: "ok" | "degraded" | "fallback";
+  driftDetector?: {
+    benchmark: { ks: number; us: number; score: number };
+    signals: { signalConfidence: number; signalVariance: number; driftScore: number };
+    driftScore: number;
+    status: "stable" | "unstable";
+  };
   weights?: WeightProfile;
   decisionThresholds?: DecisionThresholds;
   provenance?: {
@@ -207,6 +215,8 @@ function formatScore(score: number) {
   return "text-rose-300";
 }
 
+const STALE_FRESHNESS_SEC = 3_600;
+
 function formatFreshness(sec?: number) {
   if (typeof sec !== "number" || !Number.isFinite(sec) || sec < 0) return "-";
   const minutes = Math.floor(sec / 60);
@@ -267,6 +277,7 @@ export default function InvestmentWorld() {
   const isFallbackQuote =
     snapshot?.quoteHealth === "fallback" ||
     (snapshot?.provenance?.sources || []).some((s) => s.includes("fallback/static"));
+  const isStaleQuote = typeof snapshot?.quoteSource?.freshnessSec === "number" && snapshot.quoteSource.freshnessSec > STALE_FRESHNESS_SEC;
 
   const quoteSource = snapshot?.quoteSource;
   const quoteHealth = snapshot?.quoteHealth ?? (isFallbackQuote ? "fallback" : "ok");
@@ -378,6 +389,11 @@ export default function InvestmentWorld() {
                 <span className="text-[10px] px-2 py-0.5 rounded border border-violet-400/30 text-violet-200">
                   Fallback: {quoteSource?.fallbackLevel ?? 0}
                 </span>
+                {isStaleQuote ? (
+                  <span className="text-[10px] px-2 py-0.5 rounded border border-rose-400/30 text-rose-200">
+                    stale
+                  </span>
+                ) : null}
               </div>
             </div>
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
@@ -388,6 +404,10 @@ export default function InvestmentWorld() {
           {isFallbackQuote ? (
             <p className="mt-3 text-xs text-amber-300 border border-amber-500/40 rounded p-2">
               실시간 지수 공급자가 실패하여 fallback 값이 표시되고 있습니다. (원본 소스 복구 또는 대체 공급자 연결 필요)
+            </p>
+          ) : isStaleQuote ? (
+            <p className="mt-3 text-xs text-rose-300 border border-rose-500/40 rounded p-2">
+              최근 지수 업데이트 지연으로 신선도가 낮습니다. (freshness 초과)
             </p>
           ) : null}
         </section>
