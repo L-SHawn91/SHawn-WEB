@@ -15,6 +15,7 @@ export function ShawnChatUI() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [authMessage, setAuthMessage] = useState<string>("");
+    const [callbackTemplate, setCallbackTemplate] = useState<string>("");
 
     const authenticateWithToken = async (token: string, source: "manual" | "callback" = "manual") => {
         if (!token.trim()) return false;
@@ -47,6 +48,7 @@ export function ShawnChatUI() {
     useEffect(() => {
         const authStatus = document.cookie.includes("shawn_auth");
         setIsAuthorized(authStatus);
+        setCallbackTemplate(`${window.location.origin}${window.location.pathname}?shawn_token={JWT_TOKEN}`);
 
         const params = new URLSearchParams(window.location.search);
         const callbackToken = params.get("shawn_token") || params.get("token");
@@ -173,6 +175,21 @@ export function ShawnChatUI() {
                                 </a>
 
                                 <div className="text-[10px] text-neutral-500">승인 후 받은 JWT 토큰 붙여넣기 (또는 ?shawn_token=... 자동 콜백)</div>
+                                <div className="w-full rounded-md border border-neutral-700 bg-[#2a2a2a] p-2 text-[10px] text-neutral-300">
+                                    <p className="mb-1 text-neutral-400">콜백 URL 템플릿</p>
+                                    <p className="break-all">{callbackTemplate || "(loading...)"}</p>
+                                    <Button
+                                        variant="ghost"
+                                        className="mt-1 h-6 px-2 text-[10px] text-neutral-300 hover:bg-neutral-700"
+                                        onClick={async () => {
+                                            if (!callbackTemplate) return;
+                                            await navigator.clipboard.writeText(callbackTemplate);
+                                            setAuthMessage("📋 콜백 URL 템플릿 복사됨");
+                                        }}
+                                    >
+                                        템플릿 복사
+                                    </Button>
+                                </div>
                                 <div className="flex w-full gap-2">
                                     <Input
                                         placeholder="Telegram 승인 토큰"
