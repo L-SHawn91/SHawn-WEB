@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { InvestShell } from "@/components/invest/invest-shell";
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -109,7 +110,7 @@ export default function ReportsPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-background">
+    <InvestShell currentTab="archive">
             <Header />
             <main className="flex-1 container mx-auto px-4 py-12">
                 <div className="mb-12 text-center">
@@ -205,6 +206,6 @@ export default function ReportsPage() {
                 )}
             </main>
             <Footer />
-        </div>
+        </InvestShell>
     );
 }

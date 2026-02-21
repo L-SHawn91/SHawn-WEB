@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { InvestShell } from "@/components/invest/invest-shell";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, FileText, ExternalLink, RefreshCw, TrendingUp, Globe, AlertTriangle } from "lucide-react";
 import Link from "next/link";
@@ -111,7 +112,7 @@ export default function MarketIntelligencePage() {
     }, [activeTab, cursor]);
 
     return (
-        <div className="min-h-screen bg-[#1e1e1e] text-white p-4 md:p-8 font-sans">
+    <InvestShell currentTab="reports">
             <div className="max-w-[1600px] mx-auto space-y-6">
 
                 {/* Header */}
@@ -274,6 +275,6 @@ export default function MarketIntelligencePage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </InvestShell>
     );
 }
