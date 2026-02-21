@@ -56,6 +56,7 @@ export type QuoteKpiState = {
   upstreamStatusLabel: string;
   upstreamStatusClass: string;
   upstreamMessage: string;
+  upstreamFailureHint?: string;
   provenanceSummary: string;
 };
 
@@ -100,6 +101,25 @@ export function formatFreshness(sec?: number | null) {
   return `${days}일`;
 }
 
+function mapUpstreamFailureHint(raw?: string): string | undefined {
+  if (!raw) return undefined;
+  if (raw.startsWith("upstream_status_")) {
+    const status = raw.replace("upstream_status_", "");
+    return `업스트림 서버가 정상 응답을 주지 않았습니다. (HTTP ${status})`;
+  }
+  if (raw.startsWith("upstream_error:")) {
+    const detail = raw.replace("upstream_error:", "");
+    if (detail.toLowerCase().includes("timeout")) {
+      return "업스트림 응답 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.";
+    }
+    if (detail.toLowerCase().includes("fetch failed")) {
+      return "업스트림 네트워크 연결에 실패했습니다. URL/네트워크 상태를 확인해 주세요.";
+    }
+    return `업스트림 연결 중 오류가 발생했습니다. (${detail})`;
+  }
+  return "업스트림 연동에 실패했습니다. 설정 및 네트워크를 확인해 주세요.";
+}
+
 function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number): QuoteKpiState {
   const isFallbackQuote =
     input.quoteHealth === "fallback" ||
@@ -129,6 +149,7 @@ function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number): 
   const upstreamState = input.upstreamSync?.status ?? "disabled";
   const upstreamMeta = upstreamStatusMap[upstreamState];
   const provenanceSources = input.provenance?.sources || [];
+  const upstreamFailureHint = mapUpstreamFailureHint(input.provenance?.upstreamFailure);
 
   return {
     quoteHealth: fallbackState,
@@ -152,6 +173,7 @@ function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number): 
     upstreamMessage:
       input.upstreamSync?.message ||
       (input.upstreamSync?.configured ? "업스트림 상태 정보 없음" : "로컬 스냅샷 모드"),
+    upstreamFailureHint,
     provenanceSummary: provenanceSources.length ? provenanceSources.slice(0, 2).join(", ") : "근거 출처 없음",
   };
 }
@@ -172,15 +194,15 @@ export function InvestQuoteKpiCards({
         <p className={`text-2xl font-bold ${state.quoteHealth === "ok" ? "text-emerald-300" : state.quoteHealth === "degraded" ? "text-amber-300" : "text-rose-300"}`}>
           {state.quoteHealthLabel}
         </p>
-        <p className={`mt-2 text-[10px] inline-flex items-center rounded border ${state.quoteHealthClass}`}>상태 코드: {state.quoteHealth}</p>
+        <p className={`mt-2 w-fit max-w-full px-2 py-1 text-[10px] inline-flex items-center rounded border break-all ${state.quoteHealthClass}`}>상태 코드: {state.quoteHealth}</p>
       </article>
 
       <article className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
         <p className="text-xs text-gray-400 mb-1">최신성</p>
         <p className="text-2xl font-bold text-blue-300">{state.freshnessText}</p>
-        <div className="mt-2 flex flex-wrap gap-2 text-[10px]">
-          <span className={`inline-flex items-center rounded border ${state.freshnessClass}`}>소스: {state.sourceName}</span>
-          <span className={`inline-flex items-center rounded border ${state.freshnessClass}`}>폴백 단계: {state.fallbackLevel}</span>
+        <div className="mt-2 flex flex-wrap items-start gap-2 text-[10px]">
+          <span className={`inline-flex items-center rounded border px-2 py-1 break-all ${state.freshnessClass}`}>소스: {state.sourceName}</span>
+          <span className={`inline-flex items-center rounded border px-2 py-1 ${state.freshnessClass}`}>폴백 단계: {state.fallbackLevel}</span>
         </div>
       </article>
 
@@ -189,17 +211,18 @@ export function InvestQuoteKpiCards({
         <p className={`text-2xl font-bold ${state.driftState === "stable" ? "text-emerald-300" : "text-rose-300"}`}>
           {state.driftScore === null ? "-" : `${state.driftScore.toFixed(2)} / 100`}
         </p>
-        <p className={`mt-2 text-[10px] inline-flex items-center rounded border ${state.driftStateClass}`}>
+        <p className={`mt-2 w-fit px-2 py-1 text-[10px] inline-flex items-center rounded border ${state.driftStateClass}`}>
           시장 상태: {state.driftStateLabel}
         </p>
       </article>
 
       <article className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
         <p className="text-xs text-gray-400 mb-1">연동/근거</p>
-        <p className="text-sm font-semibold text-white truncate">{state.provenanceSummary}</p>
-        <div className="mt-2 space-y-2 text-[10px]">
+        <p className="text-sm font-semibold text-white break-words">{state.provenanceSummary}</p>
+        <div className="mt-2 flex flex-col items-start gap-2 text-[10px]">
           <p className={`inline-flex items-center rounded border px-2 py-1 ${state.upstreamStatusClass}`}>SHawn-INV: {state.upstreamStatusLabel}</p>
-          <p className="text-gray-300 break-words">{state.upstreamMessage}</p>
+          <p className="text-gray-300 break-words leading-relaxed">{state.upstreamMessage}</p>
+          {state.upstreamFailureHint ? <p className="text-amber-200 break-words leading-relaxed">원인 안내: {state.upstreamFailureHint}</p> : null}
         </div>
       </article>
     </div>
@@ -220,8 +243,9 @@ export function InvestQuoteKpiNotice({
   return (
     <div className="mt-3 space-y-2">
       {snapshot?.upstreamSync?.status === "failed" ? (
-        <p className="text-xs text-rose-200 border border-rose-500/40 rounded p-2">
+        <p className="text-xs text-rose-200 border border-rose-500/40 rounded p-2 leading-relaxed break-words">
           연동 경고: SHawn-INV 업스트림 연동에 실패하여 로컬 스냅샷으로 대체했습니다.
+          {state.upstreamFailureHint ? ` ${state.upstreamFailureHint}` : ""}
         </p>
       ) : null}
       {state.isFallbackQuote ? (
