@@ -197,8 +197,7 @@ export default function PapersPage() {
   const [chips, setChips] = useState<string[]>([]);
   const [mergeSuggestion, setMergeSuggestion] = useState<MergeSuggestion | null>(null);
   const [isComposing, setIsComposing] = useState(false);
-  const [showSearchGuide, setShowSearchGuide] = useState(false);
-  const [pinSearchGuide, setPinSearchGuide] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const lastChipCommitAtRef = useRef<number | null>(null);
   const [papers, setPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(false);
@@ -493,10 +492,6 @@ export default function PapersPage() {
                         <input
                           type="text"
                           value={query}
-                          onFocus={() => setShowSearchGuide(true)}
-                          onBlur={() => {
-                            if (!pinSearchGuide) setShowSearchGuide(false);
-                          }}
                           onChange={(e) => {
                             setQuery(e.target.value);
                             setMergeSuggestion(null);
@@ -575,7 +570,6 @@ export default function PapersPage() {
                           onClick={() => {
                             setChips([]);
                             setQuery(s.value);
-                            setShowSearchGuide(true);
                           }}
                           className="rounded-xl border border-indigo-200 bg-indigo-50/60 px-3 py-2 text-left text-[11px] text-indigo-900 hover:bg-indigo-100 dark:border-indigo-900 dark:bg-indigo-900/20 dark:text-indigo-200"
                         >
@@ -591,19 +585,18 @@ export default function PapersPage() {
                     </div>
                   </div>
                 )}
-                {(showSearchGuide || pinSearchGuide) && (
+                {isGuideOpen && (
                   <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs text-slate-700 shadow-sm dark:border-blue-900/60 dark:bg-slate-800/80 dark:text-slate-200">
                     <div className="mb-2 flex items-center justify-between gap-2">
                       <p className="font-semibold text-blue-700 dark:text-blue-300">검색 가이드 (입력/호버 도움말)</p>
                       <button
                         type="button"
                         onClick={() => {
-                          setPinSearchGuide((v) => !v);
-                          setShowSearchGuide(true);
+                          setIsGuideOpen((v) => !v);
                         }}
                         className="rounded-md border border-blue-300 px-2 py-0.5 text-[11px] text-blue-700 dark:border-blue-700 dark:text-blue-300"
                       >
-                        {pinSearchGuide ? '고정 해제' : '고정'}
+                        {isGuideOpen ? '닫기' : '열기'}
                       </button>
                     </div>
                     <p className="mb-2 rounded-md bg-white/80 px-2 py-1 text-[11px] dark:bg-slate-900/60">실시간 힌트: {liveHint}</p>
@@ -697,16 +690,11 @@ export default function PapersPage() {
                   <span>바이오 논문 우선 검색</span>
                   <button
                     type="button"
-                    onMouseEnter={() => setShowSearchGuide(true)}
-                    onMouseLeave={() => { if (!pinSearchGuide) setShowSearchGuide(false); }}
-                    onClick={() => {
-                      setPinSearchGuide((v) => !v);
-                      setShowSearchGuide(true);
-                    }}
+                    onClick={() => setIsGuideOpen((v) => !v)}
                     className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-2 py-0.5 text-[11px] dark:border-slate-700"
                     title="검색 사용법 보기"
                   >
-                    <Info className="h-3.5 w-3.5" /> Guide
+                    <Info className="h-3.5 w-3.5" /> {isGuideOpen ? 'Guide 닫기' : 'Guide 열기'}
                   </button>
                 </div>
 

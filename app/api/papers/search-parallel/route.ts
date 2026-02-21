@@ -179,6 +179,17 @@ function matchByAuthor(authors: string[] = [], candidates: string[], minOverlap 
   });
 }
 
+
+function getAuthorPriorityBoost(paper: Paper, authorCandidates: string[], intent: QueryIntent): number {
+  if (!authorCandidates.length) return 0;
+  const isMatched = matchByAuthor(paper.authors || [], authorCandidates, intent === 'AUTHOR_WEAK' ? 0.9 : 0.8);
+  if (!isMatched) return intent === 'AUTHOR_STRONG' ? -25 : -10;
+
+  if (paper.matchType === 'author-exact') return 35;
+  if (paper.matchType === 'author-weak') return 22;
+  return 15;
+}
+
 // T1: PubMed track - clinical metadata
 async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC'): Promise<Paper[]> {
   console.log('[T1:PubMed] Search starting...');
@@ -444,7 +455,7 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
 }
 
 // T4: Crossref track
-async function t4_crossrefEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+async function t4_crossrefEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC'): Promise<Paper[]> {
   console.log('[T4:Crossref] Search starting...');
   const startTime = Date.now();
   try {
@@ -469,7 +480,7 @@ async function t4_crossrefEnhanced(query: string, yearFrom?: string, yearTo?: st
         if (yearFrom && year < parseInt(yearFrom)) return null;
         if (yearTo && year > parseInt(yearTo)) return null;
         const doi = row?.DOI;
-        return {
+        const paper = {
           id: `crossref-${doi || Math.random().toString(36).slice(2)}`,
           title: Array.isArray(row.title) ? row.title[0] || 'No title' : 'No title',
           authors: Array.isArray(row.author) ? row.author.map((a: any) => [a.given, a.family].filter(Boolean).join(' ')).filter(Boolean) : [],
@@ -478,9 +489,16 @@ async function t4_crossrefEnhanced(query: string, yearFrom?: string, yearTo?: st
           source: 'crossref' as const,
           url: row.URL || (doi ? `https://doi.org/${doi}` : 'https://api.crossref.org'),
           citations: typeof row['is-referenced-by-count'] === 'number' ? row['is-referenced-by-count'] : undefined,
+          matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
         } as Paper;
+        return paper;
       })
-      .filter((p: Paper | null): p is Paper => p !== null);
+      .filter((p: Paper | null): p is Paper => p !== null)
+      .filter((paper) => {
+        if (!authorCandidates.length || intent === 'TOPIC') return true;
+        const minOverlap = intent === 'AUTHOR_WEAK' ? 0.92 : 0.8;
+        return matchByAuthor(paper.authors || [], authorCandidates, minOverlap);
+      });
 
     console.log(`[T4:Crossref] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
     return papers;
@@ -491,7 +509,7 @@ async function t4_crossrefEnhanced(query: string, yearFrom?: string, yearTo?: st
 }
 
 // T5: OpenAlex track
-async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC'): Promise<Paper[]> {
   console.log('[T5:OpenAlex] Search starting...');
   const startTime = Date.now();
   try {
@@ -524,9 +542,15 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
           source: 'openalex' as const,
           url: row?.primary_location?.landing_page_url || row?.id || 'https://openalex.org',
           citations: typeof row?.cited_by_count === 'number' ? row.cited_by_count : undefined,
+          matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
         } as Paper;
       })
-      .filter((p: Paper | null): p is Paper => p !== null);
+      .filter((p: Paper | null): p is Paper => p !== null)
+      .filter((paper) => {
+        if (!authorCandidates.length || intent === 'TOPIC') return true;
+        const minOverlap = intent === 'AUTHOR_WEAK' ? 0.92 : 0.8;
+        return matchByAuthor(paper.authors || [], authorCandidates, minOverlap);
+      });
 
     console.log(`[T5:OpenAlex] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
     return papers;
@@ -542,7 +566,9 @@ function t6_integrateAndRank(
   t2Results: Paper[],
   t3Results: Paper[],
   t4Results: Paper[],
-  t5Results: Paper[]
+  t5Results: Paper[],
+  intent: QueryIntent,
+  authorCandidates: string[] = []
 ): Paper[] {
   console.log('[T6:Ranker] Integration and ranking starting...');
   const startTime = Date.now();
@@ -581,9 +607,26 @@ function t6_integrateAndRank(
     // Source diversity bonus (max 10 points)
     if (paper.meshTerms?.length) score += 5;
     if (paper.techniques?.length) score += 5;
+
+    // Author-first priority boost
+    const authorBoost = getAuthorPriorityBoost(paper, authorCandidates, intent);
+    score += authorBoost;
+    const authorMatched = authorCandidates.length
+      ? matchByAuthor(paper.authors || [], authorCandidates, intent === 'AUTHOR_WEAK' ? 0.9 : 0.8)
+      : false;
     
-    return { ...paper, rankScore: Math.round(score) };
-  }).sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
+    return { ...paper, rankScore: Math.round(score), _authorMatched: authorMatched };
+  }).sort((a, b) => {
+    if (intent !== 'TOPIC' && authorCandidates.length) {
+      if ((a as any)._authorMatched !== (b as any)._authorMatched) {
+        return (b as any)._authorMatched ? 1 : -1;
+      }
+    }
+    return (b.rankScore || 0) - (a.rankScore || 0);
+  }).map((paper: any) => {
+    const { _authorMatched, ...rest } = paper;
+    return rest as Paper;
+  });
   
   console.log(`[T6:Ranker] Completed in ${Date.now() - startTime}ms, ${uniquePapers.length} unique papers ranked`);
   return rankedPapers;
@@ -598,7 +641,16 @@ export async function POST(request: NextRequest) {
     const intent = classifyIntent(rawQuery);
     const split = splitAuthorAndTopic(rawQuery);
     const extracted = extractAuthorCandidates(rawQuery);
-    const authorCandidates = uniqueList([split.author, ...extracted.authorCandidates].filter(Boolean));
+    const bioTerms = ['autophagy','lysosome','endometrium','fibrosis','organoid','transcriptomics','rna-seq','single-cell','hormone','uterus','lc3'];
+    const baseCandidates = split.author ? [split.author] : [split.author, ...extracted.authorCandidates];
+    const authorCandidates = uniqueList(baseCandidates.filter(Boolean))
+      .filter((name) => {
+        const n = String(name || '').toLowerCase();
+        const hasBio = bioTerms.some((term) => n.includes(term));
+        const tokenCount = String(name || '').trim().split(/\s+/).filter(Boolean).length;
+        if (hasBio && tokenCount > 2) return false;
+        return true;
+      });
     const detectedTopic = (split.topic || extracted.cleanQuery || '').trim();
     const topicQuery = intent === 'AUTHOR_WEAK' && !split.topic ? '' : detectedTopic;
     const effectiveQuery = (topicQuery || authorCandidates[0] || rawQuery).trim();
@@ -626,10 +678,10 @@ export async function POST(request: NextRequest) {
     const nonAuthorQuery = topicQuery || rawQuery;
 
     if (sources.includes('crossref')) {
-      trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(nonAuthorQuery, yearFrom, yearTo) });
+      trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
     }
     if (sources.includes('openalex')) {
-      trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo) });
+      trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
     }
 
     const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
@@ -654,7 +706,7 @@ export async function POST(request: NextRequest) {
     const papers5 = bySource.openalex;
 
     // T6: Integration and ranking
-    const finalPapers = t6_integrateAndRank(papers1, papers2, papers3, papers4, papers5);
+    const finalPapers = t6_integrateAndRank(papers1, papers2, papers3, papers4, papers5, intent, authorCandidates);
     
     const totalTime = Date.now() - overallStart;
     console.log(`[Parallel Search] Total time: ${totalTime}ms`);
