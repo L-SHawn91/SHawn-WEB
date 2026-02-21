@@ -14,11 +14,53 @@ export function ShawnChatUI() {
     const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
+    const [authMessage, setAuthMessage] = useState<string>("");
+
+    const authenticateWithToken = async (token: string, source: "manual" | "callback" = "manual") => {
+        if (!token.trim()) return false;
+        setLoading(true);
+        try {
+            const res = await fetch("/api/auth/telegram", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: token.trim() }),
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                setAuthMessage(`❌ 인증 실패: ${data.error || "unknown"}`);
+                setMessages((prev) => [...prev, { role: "system", content: `❌ 인증 실패: ${data.error || "unknown"}` }]);
+                return false;
+            }
+            setIsAuthorized(true);
+            setAuthMessage(source === "callback" ? "✅ Telegram 콜백 인증 성공" : "✅ Telegram 인증 성공");
+            setMessages((prev) => [...prev, { role: "system", content: "✅ Telegram 인증 성공. 전체 기능 사용 가능" }]);
+            return true;
+        } catch {
+            setAuthMessage("❌ 인증 요청 중 네트워크 오류");
+            setMessages((prev) => [...prev, { role: "system", content: "❌ 인증 요청 중 네트워크 오류" }]);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        // Check for existing token in cookies or localStorage
         const authStatus = document.cookie.includes("shawn_auth");
         setIsAuthorized(authStatus);
+
+        const params = new URLSearchParams(window.location.search);
+        const callbackToken = params.get("shawn_token") || params.get("token");
+        if (!callbackToken) return;
+
+        void authenticateWithToken(callbackToken, "callback").then((ok) => {
+            if (!ok) return;
+            params.delete("shawn_token");
+            params.delete("token");
+            const nextQuery = params.toString();
+            const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}`;
+            window.history.replaceState({}, "", nextUrl);
+            setIsOpen(true);
+        });
     }, []);
 
     const [manualToken, setManualToken] = useState("");
@@ -30,26 +72,8 @@ export function ShawnChatUI() {
 
     const handleTokenAuth = async () => {
         if (!manualToken.trim()) return;
-        setLoading(true);
-        try {
-            const res = await fetch("/api/auth/telegram", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: manualToken.trim() }),
-            });
-            const data = await res.json();
-            if (!res.ok || !data.success) {
-                setMessages((prev) => [...prev, { role: "system", content: `❌ 인증 실패: ${data.error || "unknown"}` }]);
-                return;
-            }
-            setIsAuthorized(true);
-            setManualToken("");
-            setMessages((prev) => [...prev, { role: "system", content: "✅ Telegram 인증 성공. 전체 기능 사용 가능" }]);
-        } catch {
-            setMessages((prev) => [...prev, { role: "system", content: "❌ 인증 요청 중 네트워크 오류" }]);
-        } finally {
-            setLoading(false);
-        }
+        const ok = await authenticateWithToken(manualToken, "manual");
+        if (ok) setManualToken("");
     };
 
     const handleSend = async () => {
@@ -148,7 +172,7 @@ export function ShawnChatUI() {
                                     봇 링크 열기 <ExternalLink className="w-3 h-3" />
                                 </a>
 
-                                <div className="text-[10px] text-neutral-500">승인 후 받은 JWT 토큰 붙여넣기</div>
+                                <div className="text-[10px] text-neutral-500">승인 후 받은 JWT 토큰 붙여넣기 (또는 ?shawn_token=... 자동 콜백)</div>
                                 <div className="flex w-full gap-2">
                                     <Input
                                         placeholder="Telegram 승인 토큰"
@@ -158,6 +182,7 @@ export function ShawnChatUI() {
                                     />
                                     <Button onClick={handleTokenAuth} className="h-8 px-3 text-[10px] bg-[#d500f9]">인증</Button>
                                 </div>
+                                {authMessage ? <p className="text-[10px] text-neutral-300">{authMessage}</p> : null}
                             </div>
                         )}
                     </div>
