@@ -8,6 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "desktop:dev": "pnpm --dir apps/desktop-tauri dev",
+    "desktop:build": "pnpm --dir apps/desktop-tauri build",
+    "desktop:lint": "pnpm --dir apps/desktop-tauri lint",
     "sync": "python3 ../sync_to_web.py",
     "reports:sync-index": "node scripts/sync-reports-index.mjs",
     "test:search": "node scripts/test-search.mjs"

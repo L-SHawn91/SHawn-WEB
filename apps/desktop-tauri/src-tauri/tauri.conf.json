@@ -1,0 +1,24 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "build": {
+    "beforeBuildCommand": "npm run build:web",
+    "beforeDevCommand": "npm run dev:web",
+    "devUrl": "http://localhost:5173",
+    "distDir": "../dist"
+  },
+  "package": {
+    "productName": "SHawnDesktopTauri",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "windows": [
+      {
+        "fullscreen": false,
+        "height": 760,
+        "resizable": true,
+        "title": "SHawn Desktop",
+        "width": 1280
+      }
+    ]
+  }
+}
