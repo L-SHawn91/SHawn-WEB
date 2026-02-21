@@ -65,6 +65,14 @@ const SEARCH_GUIDE = {
   tips: ['따옴표(" ")를 쓰면 저자/구문 exact 매칭이 강화됩니다.', '이름 1단어만 입력하면 TOPIC으로 분류되어 노이즈가 늘 수 있습니다.', 'Bio Focus ON은 생물학 키워드를 자동 확장합니다.'],
 };
 
+const SMART_SUGGESTIONS: Array<{ trigger: string; expansions: string[] }> = [
+  { trigger: 'soohyung', expansions: ['"Soohyung Lee" autophagy endometrium', '"Soohyung Lee" single-cell RNA-seq endometrium'] },
+  { trigger: 'autophagy', expansions: ['autophagy LC3 lysosome endometrium', 'autophagy flux organoid hormone signaling'] },
+  { trigger: 'endometrium', expansions: ['endometrium fibrosis single-cell RNA-seq', 'endometrium organoid hormone signaling'] },
+  { trigger: 'single-cell', expansions: ['single-cell RNA-seq endometrium atlas', 'single-cell transcriptomics uterus regeneration'] },
+  { trigger: 'organoid', expansions: ['endometrial organoid hormone signaling', 'organoid autophagy transcriptomics'] },
+];
+
 function tokenizeInput(input: string): string[] {
   const out: string[] = [];
   const regex = /"([^"]+)"|[^\s,;\/]+/g;
@@ -296,6 +304,34 @@ export default function PapersPage() {
     return '현재 입력은 다중 토큰 검색으로 실행됩니다.';
   }, [effectiveInputQuery]);
 
+  const contextualSuggestions = useMemo(() => {
+    const q = effectiveInputQuery.toLowerCase();
+    if (!q.trim()) return SEARCH_GUIDE.quick.map((x) => x.replace(/\s*\(.+\)$/, ''));
+
+    const matched = SMART_SUGGESTIONS
+      .filter((item) => q.includes(item.trigger))
+      .flatMap((item) => item.expansions);
+
+    if (matched.length > 0) return Array.from(new Set(matched)).slice(0, 4);
+
+    return [
+      `${effectiveInputQuery} endometrium`,
+      `${effectiveInputQuery} autophagy`,
+      `${effectiveInputQuery} single-cell RNA-seq`,
+    ].slice(0, 3);
+  }, [effectiveInputQuery]);
+
+  const ghostTail = useMemo(() => {
+    const top = contextualSuggestions[0] || '';
+    if (!top || !effectiveInputQuery) return '';
+    const lowerTop = top.toLowerCase();
+    const lowerCurrent = effectiveInputQuery.toLowerCase();
+    if (lowerTop.startsWith(lowerCurrent)) {
+      return top.slice(effectiveInputQuery.length);
+    }
+    return ` → ${top}`;
+  }, [contextualSuggestions, effectiveInputQuery]);
+
   const commitBufferToChip = (text: string) => {
     const tokens = tokenizeInput(text);
     if (!tokens.length) return;
@@ -467,6 +503,31 @@ export default function PapersPage() {
                     {loading ? '검색 중...' : '검색 실행'}
                   </button>
                 </div>
+                {effectiveInputQuery && ghostTail && (
+                  <p className="-mt-1 text-xs text-slate-400 dark:text-slate-500">
+                    <span className="opacity-70">{effectiveInputQuery}</span>
+                    <span className="opacity-40">{ghostTail}</span>
+                  </p>
+                )}
+                {contextualSuggestions.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="text-slate-500 dark:text-slate-400">추천 확장:</span>
+                    {contextualSuggestions.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => {
+                          setChips([]);
+                          setQuery(s);
+                          setShowSearchGuide(true);
+                        }}
+                        className="rounded-full border border-indigo-200 bg-indigo-50/70 px-2 py-1 text-[11px] text-indigo-700 hover:bg-indigo-100 dark:border-indigo-900 dark:bg-indigo-900/20 dark:text-indigo-300"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 {(showSearchGuide || pinSearchGuide) && (
                   <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs text-slate-700 shadow-sm dark:border-blue-900/60 dark:bg-slate-800/80 dark:text-slate-200">
                     <div className="mb-2 flex items-center justify-between gap-2">
