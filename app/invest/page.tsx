@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { InvestCard, InvestLayout, investUiClass } from "@/components/invest/invest-layout";
+import { InvestHubQuoteKpiPanel } from "@/components/invest/invest-hub-quote-kpi";
 
 const cards = [
   {
@@ -26,6 +27,7 @@ export default function InvestHubPage() {
       title="SHawnbrain · Investment Hub"
       description="투자 관련 페이지를 이 허브에서 통합 탐색합니다. (리포트 허브 + 대시보드 + 아카이브)"
     >
+      <InvestHubQuoteKpiPanel />
       <div className={`${investUiClass.grid} md:grid-cols-3`}>
         {cards.map((c) => (
           <Link key={c.href} href={c.href}>

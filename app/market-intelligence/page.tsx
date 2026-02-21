@@ -6,6 +6,7 @@ import { Calendar, FileText, ExternalLink, RefreshCw, TrendingUp, Globe, AlertTr
 import Link from "next/link";
 import { ReportDetailView, FullJsonReport } from "@/components/market/ReportDetailView";
 import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
+import { InvestQuoteKpiCards, InvestQuoteKpiNotice, type QuoteKpiSnapshot } from "@/components/invest/invest-kpi-components";
 
 type ReportRequest = {
   date: string;
@@ -29,6 +30,7 @@ export default function MarketIntelligencePage() {
   const [reportJsonData, setReportJsonData] = useState<FullJsonReport | null>(null);
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState(true);
+  const [quoteKpi, setQuoteKpi] = useState<QuoteKpiSnapshot | null>(null);
 
   const handleSelectReport = useCallback(async (report: ReportRequest) => {
     setSelectedReportPath(report.path);
@@ -81,9 +83,21 @@ export default function MarketIntelligencePage() {
     }
   }, [activeTab, handleSelectReport, selectedReportPath]);
 
+  const fetchQuoteKpi = useCallback(async () => {
+    try {
+      const res = await fetch("/api/invest/snapshot?mode=balanced", { cache: "no-store" });
+      if (!res.ok) return;
+      const payload = (await res.json()) as QuoteKpiSnapshot;
+      setQuoteKpi(payload);
+    } catch (error) {
+      console.error("Failed to load quote KPI", error);
+    }
+  }, []);
+
   useEffect(() => {
     void fetchIndex();
-  }, [fetchIndex]);
+    void fetchQuoteKpi();
+  }, [fetchIndex, fetchQuoteKpi]);
 
   const currentList = indexData[activeTab];
   const canLoadMore = hasMore[activeTab];
@@ -132,6 +146,10 @@ export default function MarketIntelligencePage() {
         </>
       }
     >
+      <section className="mb-6">
+        <InvestQuoteKpiCards snapshot={quoteKpi || undefined} />
+        <InvestQuoteKpiNotice snapshot={quoteKpi || undefined} />
+      </section>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-220px)] min-h-[560px]">
         <div className="lg:col-span-3 flex flex-col gap-4 h-full">
           <div className="flex p-1 bg-[#2c2c2c] rounded-xl border border-gray-800 shrink-0">

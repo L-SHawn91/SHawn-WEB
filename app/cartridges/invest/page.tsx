@@ -3,6 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
+import {
+  InvestQuoteKpiCards,
+  InvestQuoteKpiNotice,
+  type QuoteHealth,
+  type QuoteKpiSnapshot,
+} from "@/components/invest/invest-kpi-components";
 
 type SignalTrend = "up" | "down" | "flat";
 type RiskLevel = "Low" | "Medium" | "High";
@@ -120,7 +126,7 @@ type SnapshotPayload = {
     freshnessSec: number;
     fallbackLevel: number;
   };
-  quoteHealth?: "ok" | "degraded" | "fallback";
+  quoteHealth?: QuoteHealth;
   driftDetector?: {
     benchmark: { ks: number; us: number; score: number };
     signals: { signalConfidence: number; signalVariance: number; driftScore: number };
@@ -181,12 +187,6 @@ const signalBadge: Record<SignalAction, string> = {
   Trim: "bg-rose-500/10 text-rose-200 border-rose-500/30",
 };
 
-const quoteHealthBadge: Record<NonNullable<SnapshotPayload['quoteHealth']>, string> = {
-  ok: "text-emerald-200 bg-emerald-500/10 border-emerald-400/30",
-  degraded: "text-amber-200 bg-amber-500/10 border-amber-400/30",
-  fallback: "text-rose-200 bg-rose-500/10 border-rose-400/30",
-};
-
 const suggestionBadge: Record<RebalanceSuggestion["action"], string> = {
   up: "text-emerald-200 bg-emerald-500/10 border-emerald-400/30",
   down: "text-rose-200 bg-rose-500/10 border-rose-400/30",
@@ -211,19 +211,6 @@ function formatScore(score: number) {
   if (score >= 80) return "text-emerald-300";
   if (score >= 60) return "text-amber-300";
   return "text-rose-300";
-}
-
-const STALE_FRESHNESS_SEC = 3_600;
-
-function formatFreshness(sec?: number) {
-  if (typeof sec !== "number" || !Number.isFinite(sec) || sec < 0) return "-";
-  const minutes = Math.floor(sec / 60);
-  if (sec < 60) return `${sec}s`;
-  if (minutes < 60) return `${minutes}m`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h`;
-  const days = Math.floor(hours / 24);
-  return `${days}d`;
 }
 
 export default function InvestmentWorld() {
@@ -272,14 +259,19 @@ export default function InvestmentWorld() {
       ? snapshot?.watchlist || []
       : (snapshot?.watchlist || []).filter((item) => item.region === marketFocus);
 
-  const isFallbackQuote =
-    snapshot?.quoteHealth === "fallback" ||
-    (snapshot?.provenance?.sources || []).some((s) => s.includes("fallback/static"));
-  const isStaleQuote = typeof snapshot?.quoteSource?.freshnessSec === "number" && snapshot.quoteSource.freshnessSec > STALE_FRESHNESS_SEC;
-
-  const quoteSource = snapshot?.quoteSource;
-  const quoteHealth = snapshot?.quoteHealth ?? (isFallbackQuote ? "fallback" : "ok");
-  const quoteHealthText = quoteHealth === "ok" ? "정상" : quoteHealth === "degraded" ? "열화" : "폴백";
+  const quoteKpiData: QuoteKpiSnapshot | undefined = snapshot
+    ? {
+        quoteHealth: snapshot.quoteHealth,
+        quoteSource: snapshot.quoteSource,
+        driftDetector: snapshot.driftDetector
+          ? {
+              driftScore: snapshot.driftDetector.driftScore,
+              status: snapshot.driftDetector.status,
+            }
+          : undefined,
+        provenance: snapshot.provenance,
+      }
+    : undefined;
 
   const riskSummary = snapshot?.risk
     ? {
@@ -371,40 +363,11 @@ export default function InvestmentWorld() {
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">벤치마크</p>
               <p className="text-xl font-bold text-white mt-1">{snapshot?.benchmark ? `${snapshot.benchmark.KR} / ${snapshot.benchmark.US}` : "-"}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <span className={`text-[10px] px-2 py-0.5 rounded border ${quoteHealthBadge[quoteHealth]}`}>
-                  헬스: {quoteHealthText}
-                </span>
-                <span className="text-[10px] px-2 py-0.5 rounded border border-indigo-400/30 text-indigo-200">
-                  소스: {quoteSource?.sourceName ?? "-"}
-                </span>
-                <span className="text-[10px] px-2 py-0.5 rounded border border-cyan-400/30 text-cyan-200">
-                  최신성: {formatFreshness(quoteSource?.freshnessSec)}
-                </span>
-                <span className="text-[10px] px-2 py-0.5 rounded border border-violet-400/30 text-violet-200">
-                  Fallback: {quoteSource?.fallbackLevel ?? 0}
-                </span>
-                {isStaleQuote ? (
-                  <span className="text-[10px] px-2 py-0.5 rounded border border-rose-400/30 text-rose-200">
-                    stale
-                  </span>
-                ) : null}
-              </div>
-            </div>
-            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-              <p className="text-sm text-gray-400">갱신시각</p>
-              <p className="text-xl font-bold text-white mt-1">{snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "-"}</p>
+              <p className="text-xs text-gray-500 mt-2">갱신시각: {snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "-"}</p>
             </div>
           </div>
-          {isFallbackQuote ? (
-            <p className="mt-3 text-xs text-amber-300 border border-amber-500/40 rounded p-2">
-              실시간 지수 공급자가 실패하여 fallback 값이 표시되고 있습니다. (원본 소스 복구 또는 대체 공급자 연결 필요)
-            </p>
-          ) : isStaleQuote ? (
-            <p className="mt-3 text-xs text-rose-300 border border-rose-500/40 rounded p-2">
-              최근 지수 업데이트 지연으로 신선도가 낮습니다. (freshness 초과)
-            </p>
-          ) : null}
+          <InvestQuoteKpiCards snapshot={quoteKpiData} />
+          <InvestQuoteKpiNotice snapshot={quoteKpiData} />
         </section>
 
         <section className="mb-8">
