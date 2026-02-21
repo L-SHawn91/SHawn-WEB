@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Activity,
@@ -153,6 +155,13 @@ const scoreTooltip =
   'Score는 통합 랭킹 점수입니다. 최신성(최대 30) + 인용수(최대 40) + 영향도(최대 20) + 메타정보 보너스(최대 10)로 계산됩니다.';
 const citationTooltip = 'Citations는 원본 소스가 제공한 누적 인용 횟수입니다.';
 const yearTooltip = '발행 연도입니다. 최신 논문일수록 랭킹 점수에서 유리합니다.';
+const journalMetricHint: Record<Paper['source'], { if: string; q: string; note: string }> = {
+  pubmed: { if: 'N/A (journal별 상이)', q: 'Q1~Q4', note: 'PubMed는 저널 인덱스이며 개별 논문의 저널 메타데이터 추가 연동이 필요합니다.' },
+  arxiv: { if: 'N/A', q: 'N/A', note: 'arXiv는 프리프린트 서버로 IF/Q 지표가 직접 적용되지 않습니다.' },
+  semantic: { if: 'N/A (source-dependent)', q: 'N/A', note: 'Semantic Scholar는 통합 메타데이터이며 저널 지표는 별도 소스 필요.' },
+  crossref: { if: 'N/A (publisher metadata)', q: 'N/A', note: 'Crossref는 DOI 메타데이터 중심으로 IF/Q는 직접 제공하지 않습니다.' },
+  openalex: { if: 'N/A (venue-dependent)', q: 'N/A', note: 'OpenAlex는 venue 정보 기반으로 추정 가능하나 별도 매핑이 필요합니다.' },
+};
 const sourceTooltip: Record<Paper['source'], string> = {
   pubmed: 'PubMed: 의생명/임상 중심의 NCBI 논문 데이터베이스',
   arxiv: 'arXiv: 프리프린트 중심의 공개 연구 저장소',
@@ -182,6 +191,7 @@ function trackStatusText(status: TrackStatus[keyof TrackStatus]): string {
 }
 
 export default function PapersPage() {
+  const searchParams = useSearchParams();
   const [query, setQuery] = useState('');
   const [chips, setChips] = useState<string[]>([]);
   const [mergeSuggestion, setMergeSuggestion] = useState<MergeSuggestion | null>(null);
@@ -405,6 +415,13 @@ export default function PapersPage() {
     setLoading(false);
   };
 
+  useEffect(() => {
+    const q = searchParams.get('query');
+    if (!q) return;
+    setChips([]);
+    setQuery(q);
+  }, [searchParams]);
+
   const exportBibTeX = () => {
     const bibtex = papers
       .map(
@@ -425,6 +442,11 @@ export default function PapersPage() {
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950 py-8">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-4 flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-800 dark:bg-slate-900">
+          <Link href="/" className="rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800">Home</Link>
+          <Link href="/papers" className="rounded-md bg-blue-100 px-2 py-1 font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">Papers</Link>
+          <Link href="/datasets" className="rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800">Datasets</Link>
+        </div>
         <div className="mb-6 rounded-2xl border border-slate-200 bg-white px-6 py-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -732,6 +754,7 @@ export default function PapersPage() {
                         return (
                           <button
                             key={source}
+                            title={sourceTooltip[source]}
                             onClick={() => {
                               const next = active
                                 ? filters.sources.filter((s) => s !== source)
@@ -829,7 +852,7 @@ export default function PapersPage() {
                         {paper.rankScore !== undefined && (
                           <span
                             className="rounded-full bg-amber-100 px-2 py-1 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
-                            title={scoreTooltip}
+                            title={`${scoreTooltip}\nIF: ${journalMetricHint[paper.source].if}\nQuartile: ${journalMetricHint[paper.source].q}\n${journalMetricHint[paper.source].note}`}
                           >
                             Score {paper.rankScore}
                           </span>
@@ -862,8 +885,8 @@ export default function PapersPage() {
                             {(relatedByPaper[paper.id] || []).length === 0 ? (
                               <p className="text-slate-500">불러오는 중이거나 결과가 없습니다.</p>
                             ) : (
-                              <ul className="space-y-2">
-                                {(relatedByPaper[paper.id] || []).slice(0, 5).map((r) => (
+                              <ul className="max-h-64 space-y-2 overflow-y-auto pr-1">
+                                {(relatedByPaper[paper.id] || []).map((r) => (
                                   <li key={r.id}>
                                     <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-blue-600 hover:underline dark:text-blue-300">
                                       {r.title}
@@ -929,6 +952,13 @@ export default function PapersPage() {
                             PDF <span title="PDF 다운로드/열기"><Download className="h-3.5 w-3.5" /></span>
                           </a>
                         )}
+                        <Link
+                          href={`/datasets?query=${encodeURIComponent(paper.title)}`}
+                          className="inline-flex items-center gap-1 rounded border border-indigo-300 px-2 py-1 text-indigo-700 hover:bg-indigo-50 dark:border-indigo-700 dark:text-indigo-300 dark:hover:bg-indigo-900/20"
+                          title="이 논문과 연관된 데이터셋 검색"
+                        >
+                          Related datasets
+                        </Link>
                         {authUserId ? (
                           <button
                             onClick={() => toggleSave(paper)}

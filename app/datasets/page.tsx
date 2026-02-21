@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Database, ExternalLink, Filter, Search, Sparkles } from "lucide-react";
 
 type DatasetSource =
@@ -186,7 +188,29 @@ const SOURCE_LABELS: Record<DatasetSource, string> = {
   cngb: "CNGBdb (China)",
 };
 
+const SOURCE_TOOLTIPS: Record<DatasetSource, string> = {
+  huggingface: "Hugging Face Datasets: ML/AI 중심 공개 데이터셋 허브",
+  kaggle: "Kaggle: 커뮤니티 기반 데이터셋 + 경쟁 플랫폼",
+  ncbi: "NCBI: GEO/SRA 등 생물학 데이터 인덱스",
+  ena: "ENA: 유럽 시퀀싱 아카이브",
+  europepmc: "Europe PMC: 문헌에서 accession 신호를 추출",
+  datagov: "미국 공공 데이터 카탈로그",
+  dataeu: "EU 공공 데이터 포털",
+  zenodo: "Zenodo 리서치 아카이브",
+  dryad: "Dryad 연구 데이터 저장소",
+  dataverse: "Dataverse 학술 데이터 저장소",
+  figshare: "Figshare 연구 산출물 저장소",
+  github: "GitHub 공개 저장소 기반 데이터셋",
+  openml: "OpenML 머신러닝 데이터셋",
+  crossref: "Crossref DOI/서지 메타데이터",
+  openalex: "OpenAlex 오픈 학술 그래프",
+  cngb: "CNGBdb 중국 유전체/바이오 데이터베이스",
+};
+
+const DATASET_SCORE_TOOLTIP = "Dataset score는 최신성, 활용도(download/like), 메타데이터 품질로 계산됩니다.\nDataset는 저널 논문이 아니므로 IF/Q 지표가 직접 적용되지 않습니다.";
+
 export default function DatasetsPage() {
+  const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [datasets, setDatasets] = useState<DatasetItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -255,6 +279,12 @@ export default function DatasetsPage() {
   };
 
   const searchDatasets = async (options?: SearchOptions) => executeSearch(query, filters, options);
+
+  useEffect(() => {
+    const q = searchParams.get("query");
+    if (!q) return;
+    setQuery(q);
+  }, [searchParams]);
 
   const applyBioPreset = async (preset: BioPreset) => {
     const isActive = activePresetId === preset.id;
@@ -330,6 +360,11 @@ export default function DatasetsPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-4 flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800">
+          <Link href="/" className="rounded-md px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700">Home</Link>
+          <Link href="/papers" className="rounded-md px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700">Papers</Link>
+          <Link href="/datasets" className="rounded-md bg-indigo-100 px-2 py-1 font-semibold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300">Datasets</Link>
+        </div>
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
             <Database className="w-10 h-10 text-indigo-600" />
@@ -401,7 +436,7 @@ export default function DatasetsPage() {
                     }}
                     className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">{SOURCE_LABELS[source]}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300" title={SOURCE_TOOLTIPS[source]}>{SOURCE_LABELS[source]}</span>
                 </label>
               ))}
               <div className="flex items-center gap-2 ml-4">
@@ -526,8 +561,8 @@ export default function DatasetsPage() {
                           ) : (relatedByDataset[dataset.id] || []).length === 0 ? (
                             <p className="text-gray-500">연관 논문이 없습니다.</p>
                           ) : (
-                            <ul className="space-y-2">
-                              {(relatedByDataset[dataset.id] || []).slice(0, 5).map((r) => (
+                            <ul className="max-h-64 space-y-2 overflow-y-auto pr-1">
+                              {(relatedByDataset[dataset.id] || []).map((r) => (
                                 <li key={r.id}>
                                   <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-blue-600 hover:underline dark:text-blue-300">
                                     {r.title}
@@ -542,12 +577,12 @@ export default function DatasetsPage() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800">
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800" title={SOURCE_TOOLTIPS[dataset.source]}>
                         {dataset.source}
                       </span>
                       <span className="text-sm text-gray-500">{dataset.updatedAt ? dataset.updatedAt.slice(0, 10) : "No Date"}</span>
                       {dataset.rankScore !== undefined && (
-                        <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                        <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full" title={DATASET_SCORE_TOOLTIP}>
                           Score: {dataset.rankScore}
                         </span>
                       )}
@@ -581,14 +616,23 @@ export default function DatasetsPage() {
                       </div>
                     )}
                     <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3 mb-4">{dataset.description}</p>
-                    <a
-                      href={dataset.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
-                    >
-                      Open dataset <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <a
+                        href={dataset.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                      >
+                        Open dataset <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <Link
+                        href={`/papers?query=${encodeURIComponent(dataset.title)}`}
+                        className="inline-flex items-center gap-1 text-sm text-violet-700 hover:text-violet-800 dark:text-violet-300"
+                        title="이 데이터셋과 연관된 논문 검색"
+                      >
+                        Related papers
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
