@@ -281,35 +281,11 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
 async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC', explicitAuthor = ''): Promise<Paper[]> {
   console.log('[T2:arXiv] Search starting...');
   const startTime = Date.now();
-  
-  try {
-    const chosenAuthor = explicitAuthor || authorCandidates[0] || '';
-    const baseTopic = query ? `(${query})` : '';
-    const planned = buildArxivQuery(intent, chosenAuthor, baseTopic);
 
-    if (planned === null) {
-      console.log('[T2:arXiv] Skipped by planner (AUTHOR_WEAK without topic)');
-      return [];
-    }
-
-    const mlQuery = `${planned} AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)`;
-    const baseUrl = 'http://export.arxiv.org/api/query';
-    const params = new URLSearchParams({
-      search_query: mlQuery,
-      start: '0',
-      max_results: '15',
-      sortBy: 'relevance',
-      sortOrder: 'descending',
-    });
-
-    const res = await fetch(`${baseUrl}?${params.toString()}`, {
-      signal: AbortSignal.timeout(15000)
-    });
-    const xml = await res.text();
-    
+  const parseArxivEntries = (xml: string, matchType: Paper['matchType']): Paper[] => {
     const entries = xml.match(/<entry[>\s][\s\S]*?<\/entry>/g) || [];
-
     const papers: Paper[] = [];
+
     for (const [idx, entry] of entries.entries()) {
       const title = entry.match(/<title>([\s\S]*?)<\/title>/)?.[1]?.trim() || 'No title';
       const summary = entry.match(/<summary>([\s\S]*?)<\/summary>/)?.[1]?.trim() || 'No abstract';
@@ -317,7 +293,6 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
       const published = entry.match(/<published>([\s\S]*?)<\/published>/)?.[1]?.trim();
       const year = published ? parseInt(published.substring(0, 4)) : new Date().getFullYear();
 
-      // Year filter
       if (yearFrom && year < parseInt(yearFrom)) continue;
       if (yearTo && year > parseInt(yearTo)) continue;
 
@@ -325,7 +300,6 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
         .map((a) => a.match(/<name>([\s\S]*?)<\/name>/)?.[1])
         .filter((name): name is string => Boolean(name));
 
-      // Extract ML techniques from abstract
       const techniqueKeywords = [
         'transformer', 'BERT', 'GPT', 'LLM', 'neural network', 'deep learning',
         'CNN', 'RNN', 'LSTM', 'GRU', 'attention', 'self-attention',
@@ -345,13 +319,62 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
         source: 'arxiv',
         url: `https://arxiv.org/abs/${arxivId}`,
         pdfUrl: `https://arxiv.org/pdf/${arxivId}.pdf`,
-        matchType: chosenAuthor ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
+        matchType,
       };
       if (techniques.length > 0) {
         paper.techniques = techniques;
       }
       papers.push(paper);
     }
+
+    return papers;
+  };
+  
+  try {
+    const chosenAuthor = explicitAuthor || authorCandidates[0] || '';
+    const baseTopic = query ? `(${query})` : '';
+    const planned = buildArxivQuery(intent, chosenAuthor, baseTopic);
+
+    if (planned === null) {
+      console.log('[T2:arXiv] Skipped by planner (AUTHOR_WEAK without topic)');
+      return [];
+    }
+
+    const baseUrl = 'http://export.arxiv.org/api/query';
+
+    const primaryQuery = `${planned} AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)`;
+    const params = new URLSearchParams({
+      search_query: primaryQuery,
+      start: '0',
+      max_results: '15',
+      sortBy: 'relevance',
+      sortOrder: 'descending',
+    });
+
+    const res = await fetch(`${baseUrl}?${params.toString()}`, {
+      signal: AbortSignal.timeout(15000)
+    });
+    const xml = await res.text();
+
+    let papers = parseArxivEntries(xml, chosenAuthor ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic');
+
+    if (papers.length === 0 && intent === 'AUTHOR_WEAK' && query) {
+      const fallbackQuery = `(${query}) AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)`;
+      const fallbackParams = new URLSearchParams({
+        search_query: fallbackQuery,
+        start: '0',
+        max_results: '8',
+        sortBy: 'relevance',
+        sortOrder: 'descending',
+      });
+      const fallbackRes = await fetch(`${baseUrl}?${fallbackParams.toString()}`, {
+        signal: AbortSignal.timeout(15000)
+      });
+      const fallbackXml = await fallbackRes.text();
+      papers = parseArxivEntries(fallbackXml, 'topic');
+      console.log(`[T2:arXiv] Fallback(topic-only) applied for weak author query, found ${papers.length}`);
+    }
+
 
     console.log(`[T2:arXiv] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
     return papers;
