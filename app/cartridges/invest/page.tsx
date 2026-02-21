@@ -9,6 +9,7 @@ import {
   type QuoteHealth,
   type QuoteKpiSnapshot,
 } from "@/components/invest/invest-kpi-components";
+import { InvestSignalConfidenceCard } from "@/components/invest/invest-confidence-card";
 
 type SignalTrend = "up" | "down" | "flat";
 type RiskLevel = "Low" | "Medium" | "High";
@@ -354,10 +355,7 @@ export default function InvestmentWorld() {
               <p className="text-sm text-gray-400">운영 모드</p>
               <p className="text-xl font-bold text-white mt-1">Dual Quant v2.2</p>
             </div>
-            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-              <p className="text-sm text-gray-400">신호 합의 점수</p>
-              <p className="text-xl font-bold text-white mt-1">{snapshot?.signalConfidence ?? 0}%</p>
-            </div>
+            <InvestSignalConfidenceCard confidence={snapshot?.signalConfidence} updatedAt={snapshot?.updatedAt} compact />
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">리밸런싱 위험도</p>
               <p className="text-xl font-bold text-white mt-1">{riskSummary ? riskSummary.state : "로딩"}</p>
@@ -411,18 +409,22 @@ export default function InvestmentWorld() {
                 key={m.key}
                 className={`rounded-2xl border ${m.palette.border} bg-gradient-to-br ${m.palette.from} ${m.palette.to} p-6`}
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="space-y-1">
                     <p className="text-3xl">{m.icon}</p>
                     <h3 className={`text-xl font-bold ${m.palette.text}`}>{m.title}</h3>
                     <p className="text-xs text-gray-300">{m.subtitle}</p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full border ${trendBadge[m.trend]}`}>
-                    {m.trend === "up" ? "상승" : m.trend === "down" ? "하향" : "보합"}
-                  </span>
+                  <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
+                    <span className={`text-xs px-2 py-1 rounded-full border ${trendBadge[m.trend]}`}>
+                      {m.trend === "up" ? "상승" : m.trend === "down" ? "하향" : "보합"}
+                    </span>
+                    <span className="text-xs px-2 py-1 rounded-full border border-white/20 bg-white/5 text-gray-200">
+                      신뢰도 {m.confidence}%
+                    </span>
+                  </div>
                 </div>
                 <ProgressBar value={m.weight} label="Signal Weight" accentColor={m.palette.bar} />
-                <p className="mt-3 text-xs text-gray-400">신뢰도 {m.confidence}%</p>
                 <p className="mt-2 text-sm text-gray-300">추천 액션: {m.action}</p>
                 <ul className="mt-3 space-y-1.5 text-sm text-gray-300">
                   {m.checks.map((c) => (

@@ -104,20 +104,54 @@ export function formatFreshness(sec?: number | null) {
 function mapUpstreamFailureHint(raw?: string): string | undefined {
   if (!raw) return undefined;
   if (raw.startsWith("upstream_status_")) {
-    const status = raw.replace("upstream_status_", "");
-    return `업스트림 서버가 정상 응답을 주지 않았습니다. (HTTP ${status})`;
+    const status = Number(raw.replace("upstream_status_", ""));
+    if (status === 401 || status === 403) {
+      return "업스트림 인증에 실패했습니다. API 키/권한 설정을 확인해 주세요.";
+    }
+    if (status === 404) {
+      return "업스트림 경로를 찾지 못했습니다. 연동 URL 설정을 확인해 주세요.";
+    }
+    if (status === 429) {
+      return "요청이 많아 업스트림이 일시적으로 제한되었습니다. 잠시 후 다시 시도해 주세요.";
+    }
+    if (status >= 500) {
+      return "업스트림 서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.";
+    }
+    return `업스트림 서버가 정상 응답을 주지 않았습니다. (HTTP ${status || "-"})`;
   }
   if (raw.startsWith("upstream_error:")) {
     const detail = raw.replace("upstream_error:", "");
-    if (detail.toLowerCase().includes("timeout")) {
+    const normalized = detail.toLowerCase();
+    if (normalized.includes("timeout") || normalized.includes("aborted")) {
       return "업스트림 응답 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.";
     }
-    if (detail.toLowerCase().includes("fetch failed")) {
-      return "업스트림 네트워크 연결에 실패했습니다. URL/네트워크 상태를 확인해 주세요.";
+    if (normalized.includes("fetch failed") || normalized.includes("network") || normalized.includes("econn")) {
+      return "업스트림 네트워크 연결에 실패했습니다. 네트워크 상태를 확인해 주세요.";
     }
-    return `업스트림 연결 중 오류가 발생했습니다. (${detail})`;
+    if (normalized.includes("invalid url")) {
+      return "업스트림 URL 형식이 올바르지 않습니다. 연동 설정을 확인해 주세요.";
+    }
+    return "업스트림 연결 중 오류가 발생했습니다. 설정 및 네트워크를 확인해 주세요.";
   }
   return "업스트림 연동에 실패했습니다. 설정 및 네트워크를 확인해 주세요.";
+}
+
+function mapUpstreamUserMessage(message?: string, failureHint?: string): string {
+  if (failureHint) return failureHint;
+  if (!message) return "업스트림 상태 정보 없음";
+
+  const normalized = message.toLowerCase();
+  if (normalized.includes("disabled") || normalized.includes("not configured")) {
+    return "로컬 스냅샷 모드로 동작 중입니다.";
+  }
+  if (normalized.includes("success") || normalized.includes("ok")) {
+    return "업스트림 연동이 정상 동작 중입니다.";
+  }
+  if (normalized.includes("failed") || normalized.includes("error")) {
+    return "업스트림 연동 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.";
+  }
+
+  return message;
 }
 
 function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number): QuoteKpiState {
@@ -170,9 +204,10 @@ function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number): 
     isStaleQuote,
     upstreamStatusLabel: upstreamMeta.label,
     upstreamStatusClass: upstreamMeta.badgeClass,
-    upstreamMessage:
-      input.upstreamSync?.message ||
-      (input.upstreamSync?.configured ? "업스트림 상태 정보 없음" : "로컬 스냅샷 모드"),
+    upstreamMessage: mapUpstreamUserMessage(
+      input.upstreamSync?.message || (input.upstreamSync?.configured ? "upstream status unknown" : "disabled"),
+      upstreamFailureHint,
+    ),
     upstreamFailureHint,
     provenanceSummary: provenanceSources.length ? provenanceSources.slice(0, 2).join(", ") : "근거 출처 없음",
   };

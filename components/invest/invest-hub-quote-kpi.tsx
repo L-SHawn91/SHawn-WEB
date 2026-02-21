@@ -2,9 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { InvestQuoteKpiCards, InvestQuoteKpiNotice, QuoteKpiSnapshot } from "@/components/invest/invest-kpi-components";
+import { InvestSignalConfidenceCard } from "@/components/invest/invest-confidence-card";
+
+type HubSnapshot = QuoteKpiSnapshot & {
+  signalConfidence?: number;
+  updatedAt?: string;
+};
 
 export function InvestHubQuoteKpiPanel() {
-  const [quoteKpi, setQuoteKpi] = useState<QuoteKpiSnapshot | null>(null);
+  const [quoteKpi, setQuoteKpi] = useState<HubSnapshot | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -13,7 +19,7 @@ export function InvestHubQuoteKpiPanel() {
       try {
         const res = await fetch("/api/invest/snapshot?mode=balanced", { cache: "no-store" });
         if (!res.ok) return;
-        const payload = (await res.json()) as QuoteKpiSnapshot;
+        const payload = (await res.json()) as HubSnapshot;
         if (!cancelled) {
           setQuoteKpi(payload);
         }
@@ -29,7 +35,14 @@ export function InvestHubQuoteKpiPanel() {
 
   return (
     <section className="mb-6 space-y-2">
-      <InvestQuoteKpiCards snapshot={quoteKpi || undefined} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="xl:col-span-1">
+          <InvestSignalConfidenceCard confidence={quoteKpi?.signalConfidence} updatedAt={quoteKpi?.updatedAt} />
+        </div>
+        <div className="xl:col-span-4">
+          <InvestQuoteKpiCards snapshot={quoteKpi || undefined} />
+        </div>
+      </div>
       <InvestQuoteKpiNotice snapshot={quoteKpi || undefined} />
     </section>
   );
