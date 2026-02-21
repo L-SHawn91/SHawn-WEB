@@ -240,6 +240,8 @@ export default function InvestmentWorld() {
       ? snapshot?.watchlist || []
       : (snapshot?.watchlist || []).filter((item) => item.region === marketFocus);
 
+  const isFallbackQuote = (snapshot?.provenance?.sources || []).some((s) => s.includes("fallback/static"));
+
   const riskSummary = snapshot?.risk
     ? {
         concentration: snapshot.risk.concentration,
@@ -305,6 +307,9 @@ export default function InvestmentWorld() {
             <h1 className="text-4xl md:text-5xl font-bold">Investment World</h1>
           </div>
           <p className="text-gray-400 text-lg">Dual Quant System × Sovereign Alpha 강화 대시보드</p>
+          <div className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+            투자 페이지를 단계적으로 통합 중입니다. 리포트 탐색은 <Link href="/market-intelligence" className="underline font-semibold">Market Intelligence</Link>를 기본 허브로 사용하세요.
+          </div>
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
               <p className="text-sm text-gray-400">운영 모드</p>
@@ -335,6 +340,11 @@ export default function InvestmentWorld() {
               <p className="text-xl font-bold text-white mt-1">{snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "-"}</p>
             </div>
           </div>
+          {isFallbackQuote ? (
+            <p className="mt-3 text-xs text-amber-300 border border-amber-500/40 rounded p-2">
+              실시간 지수 공급자가 실패하여 fallback 값이 표시되고 있습니다. (원본 소스 복구 또는 대체 공급자 연결 필요)
+            </p>
+          ) : null}
         </section>
 
         <section className="mb-8">

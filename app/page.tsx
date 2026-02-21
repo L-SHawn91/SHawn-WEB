@@ -18,9 +18,9 @@ const quickLinks = [
     color: "from-emerald-500/20 to-teal-500/20 border-emerald-400/40",
   },
   {
-    href: "/market-intelligence",
-    title: "Market Intelligence",
-    desc: "KR/US 리포트 및 시장 인사이트",
+    href: "/invest",
+    title: "Investment Hub",
+    desc: "리포트 허브 + 대시보드 + 아카이브",
     emoji: "📈",
     color: "from-amber-500/20 to-orange-500/20 border-amber-400/40",
   },

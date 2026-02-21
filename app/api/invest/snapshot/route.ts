@@ -243,8 +243,8 @@ const BASE_MARKETS: MarketCard[] = [
   {
     region: "Korea Market",
     flag: "🇰🇷",
-    indexA: { label: "KOSPI", value: "2500", change: "+0.8%" },
-    indexB: { label: "KOSDAQ", value: "680", change: "-0.2%" },
+    indexA: { label: "KOSPI", value: "N/A", change: "N/A" },
+    indexB: { label: "KOSDAQ", value: "N/A", change: "N/A" },
     traits: ["반도체·자동차 편중", "기관 수급 증가", "내수 변동성", "고배당 제한"],
     allocation: 40,
     risk: "High",
@@ -259,8 +259,8 @@ const BASE_MARKETS: MarketCard[] = [
   {
     region: "US Market",
     flag: "🇺🇸",
-    indexA: { label: "S&P 500", value: "5000", change: "+0.4%" },
-    indexB: { label: "NASDAQ 100", value: "18000", change: "+0.9%" },
+    indexA: { label: "S&P 500", value: "N/A", change: "N/A" },
+    indexB: { label: "NASDAQ 100", value: "N/A", change: "N/A" },
     traits: ["AI 테크 강세", "AI 인프라 투자", "금리 민감", "옵션 변동성 상승"],
     allocation: 60,
     risk: "Medium",
@@ -333,6 +333,81 @@ const MODE_WEIGHTS: Record<StrategyMode, number[]> = {
   alpha: [0.55, 0.25, 0.1, 0.1],
   defensive: [0.25, 0.2, 0.35, 0.2],
 };
+
+type YahooQuote = { regularMarketPrice?: number; regularMarketChangePercent?: number; symbol?: string };
+
+type MarketLiveSnapshot = {
+  markets: MarketCard[];
+  source: string;
+  updatedAt: string;
+};
+
+function formatIndexValue(v?: number): string {
+  if (typeof v !== 'number' || Number.isNaN(v)) return 'N/A';
+  return v.toLocaleString('en-US', { maximumFractionDigits: 2 });
+}
+
+function formatChangePct(v?: number): string {
+  if (typeof v !== 'number' || Number.isNaN(v)) return 'N/A';
+  const sign = v >= 0 ? '+' : '';
+  return `${sign}${v.toFixed(2)}%`;
+}
+
+async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
+  const symbols = ['^KS11', '^KQ11', '^GSPC', '^NDX'];
+  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbols.join(','))}`;
+
+  try {
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(8000),
+      headers: {
+        'User-Agent': 'Mozilla/5.0 SHawnbrain/1.0',
+        Accept: 'application/json',
+      },
+      cache: 'no-store',
+    });
+
+    if (!res.ok) throw new Error(`Yahoo quote failed: ${res.status}`);
+    const data = await res.json();
+    const rows = (data?.quoteResponse?.result || []) as YahooQuote[];
+    const bySymbol = new Map<string, YahooQuote>(rows.map((r) => [String(r.symbol || ''), r]));
+
+    const markets = BASE_MARKETS.map((m) => ({ ...m, indexA: { ...m.indexA }, indexB: { ...m.indexB } }));
+    const kr = markets[0];
+    const us = markets[1];
+
+    const ks11 = bySymbol.get('^KS11');
+    const kq11 = bySymbol.get('^KQ11');
+    const gspc = bySymbol.get('^GSPC');
+    const ndx = bySymbol.get('^NDX');
+
+    if (kr) {
+      kr.indexA.value = formatIndexValue(ks11?.regularMarketPrice);
+      kr.indexA.change = formatChangePct(ks11?.regularMarketChangePercent);
+      kr.indexB.value = formatIndexValue(kq11?.regularMarketPrice);
+      kr.indexB.change = formatChangePct(kq11?.regularMarketChangePercent);
+    }
+
+    if (us) {
+      us.indexA.value = formatIndexValue(gspc?.regularMarketPrice);
+      us.indexA.change = formatChangePct(gspc?.regularMarketChangePercent);
+      us.indexB.value = formatIndexValue(ndx?.regularMarketPrice);
+      us.indexB.change = formatChangePct(ndx?.regularMarketChangePercent);
+    }
+
+    return {
+      markets,
+      source: 'Yahoo Finance quote API',
+      updatedAt: new Date().toISOString(),
+    };
+  } catch {
+    return {
+      markets: BASE_MARKETS,
+      source: 'fallback/static',
+      updatedAt: new Date().toISOString(),
+    };
+  }
+}
 
 function applyModeWeight(modules: SignalModule[], mode: StrategyMode): SignalModule[] {
   const weights = MODE_WEIGHTS[mode];
@@ -658,19 +733,21 @@ export async function GET(request: NextRequest) {
     ...(krReport?.reports || []).slice(0, 8).map((item) => ({ symbol: String(item.ticker || ""), reasons: buildEvidenceFromItem(item) })),
   ].filter((item) => item.symbol);
 
+  const liveMarkets = await fetchLiveMarkets();
+
   const payload = {
     updatedAt: new Date().toISOString(),
     mode: fallbackMode,
     weights: MODE_WEIGHTS_PROFILES[fallbackMode],
     provenance: {
-      sources: ["public/reports/index.json", "public/reports/*.json"],
+      sources: ["public/reports/index.json", "public/reports/*.json", liveMarkets.source],
       generatedAt: new Date().toISOString(),
-      refreshRule: "latest timestamp from report index by type",
+      refreshRule: "latest timestamp from report index by type + live quote refresh on request",
     },
     benchmark: {
       KR: "KOSPI",
       US: "S&P 500",
-      lastUpdated: [krReport?.meta?.timestamp, usReport?.meta?.timestamp].filter(Boolean).join(" | "),
+      lastUpdated: [krReport?.meta?.timestamp, usReport?.meta?.timestamp, liveMarkets.updatedAt].filter(Boolean).join(" | "),
     },
     signalConfidence,
     modules,
@@ -682,7 +759,7 @@ export async function GET(request: NextRequest) {
     reasoning: reasons,
     relatives: relative,
 
-    markets: BASE_MARKETS,
+    markets: liveMarkets.markets,
     holdings,
     watchlist,
     risk: {

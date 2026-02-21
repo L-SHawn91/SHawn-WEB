@@ -125,6 +125,13 @@ export default function MarketIntelligencePage() {
                         </p>
                     </div>
                     <div className="mt-4 md:mt-0 flex gap-3">
+                        <Link
+                            href="/cartridges/invest"
+                            className="flex items-center gap-2 px-3 py-1.5 bg-[#2c2c2c] hover:bg-[#3c3c3c] rounded-lg transition-colors text-xs text-gray-300 border border-gray-700"
+                        >
+                            <TrendingUp size={14} />
+                            Investment Dashboard
+                        </Link>
                         <button
                             onClick={fetchIndex}
                             className="flex items-center gap-2 px-3 py-1.5 bg-[#2c2c2c] hover:bg-[#3c3c3c] rounded-lg transition-colors text-xs text-gray-300 border border-gray-700"
