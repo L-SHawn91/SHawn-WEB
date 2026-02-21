@@ -354,10 +354,33 @@ function formatChangePct(v?: number): string {
 }
 
 async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
-  const symbols = ['^KS11', '^KQ11', '^GSPC', '^NDX'];
-  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbols.join(','))}`;
+  const markets = BASE_MARKETS.map((m) => ({ ...m, indexA: { ...m.indexA }, indexB: { ...m.indexB } }));
+  const kr = markets[0];
+  const us = markets[1];
+
+  const apply = (payload: {
+    ks11?: { price?: number; chg?: number };
+    kq11?: { price?: number; chg?: number };
+    gspc?: { price?: number; chg?: number };
+    ndx?: { price?: number; chg?: number };
+  }) => {
+    if (kr) {
+      kr.indexA.value = formatIndexValue(payload.ks11?.price);
+      kr.indexA.change = formatChangePct(payload.ks11?.chg);
+      kr.indexB.value = formatIndexValue(payload.kq11?.price);
+      kr.indexB.change = formatChangePct(payload.kq11?.chg);
+    }
+    if (us) {
+      us.indexA.value = formatIndexValue(payload.gspc?.price);
+      us.indexA.change = formatChangePct(payload.gspc?.chg);
+      us.indexB.value = formatIndexValue(payload.ndx?.price);
+      us.indexB.change = formatChangePct(payload.ndx?.chg);
+    }
+  };
 
   try {
+    const symbols = ['^KS11', '^KQ11', '^GSPC', '^NDX'];
+    const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbols.join(','))}`;
     const res = await fetch(url, {
       signal: AbortSignal.timeout(8000),
       headers: {
@@ -372,40 +395,46 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
     const rows = (data?.quoteResponse?.result || []) as YahooQuote[];
     const bySymbol = new Map<string, YahooQuote>(rows.map((r) => [String(r.symbol || ''), r]));
 
-    const markets = BASE_MARKETS.map((m) => ({ ...m, indexA: { ...m.indexA }, indexB: { ...m.indexB } }));
-    const kr = markets[0];
-    const us = markets[1];
+    apply({
+      ks11: { price: bySymbol.get('^KS11')?.regularMarketPrice, chg: bySymbol.get('^KS11')?.regularMarketChangePercent },
+      kq11: { price: bySymbol.get('^KQ11')?.regularMarketPrice, chg: bySymbol.get('^KQ11')?.regularMarketChangePercent },
+      gspc: { price: bySymbol.get('^GSPC')?.regularMarketPrice, chg: bySymbol.get('^GSPC')?.regularMarketChangePercent },
+      ndx: { price: bySymbol.get('^NDX')?.regularMarketPrice, chg: bySymbol.get('^NDX')?.regularMarketChangePercent },
+    });
 
-    const ks11 = bySymbol.get('^KS11');
-    const kq11 = bySymbol.get('^KQ11');
-    const gspc = bySymbol.get('^GSPC');
-    const ndx = bySymbol.get('^NDX');
-
-    if (kr) {
-      kr.indexA.value = formatIndexValue(ks11?.regularMarketPrice);
-      kr.indexA.change = formatChangePct(ks11?.regularMarketChangePercent);
-      kr.indexB.value = formatIndexValue(kq11?.regularMarketPrice);
-      kr.indexB.change = formatChangePct(kq11?.regularMarketChangePercent);
-    }
-
-    if (us) {
-      us.indexA.value = formatIndexValue(gspc?.regularMarketPrice);
-      us.indexA.change = formatChangePct(gspc?.regularMarketChangePercent);
-      us.indexB.value = formatIndexValue(ndx?.regularMarketPrice);
-      us.indexB.change = formatChangePct(ndx?.regularMarketChangePercent);
-    }
-
-    return {
-      markets,
-      source: 'Yahoo Finance quote API',
-      updatedAt: new Date().toISOString(),
-    };
+    return { markets, source: 'Yahoo Finance quote API', updatedAt: new Date().toISOString() };
   } catch {
-    return {
-      markets: BASE_MARKETS,
-      source: 'fallback/static',
-      updatedAt: new Date().toISOString(),
-    };
+    try {
+      const stooq = await fetch('https://stooq.com/q/l/?s=spx,ndq,ks11,kq11&i=d', {
+        signal: AbortSignal.timeout(8000),
+        cache: 'no-store',
+      });
+      const csv = await stooq.text();
+      const lines = csv.trim().split(/\r?\n/);
+      // stooq format: SYMBOL,DATE,TIME,OPEN,HIGH,LOW,CLOSE,VOLUME
+      const closeBy = new Map<string, number>();
+      for (let i = 0; i < lines.length; i++) {
+        const cols = lines[i].split(',');
+        if (!cols[0] || cols.length < 7) continue;
+        const symbol = cols[0].trim().toUpperCase();
+        const close = Number.parseFloat(cols[6]);
+        if (Number.isFinite(close)) closeBy.set(symbol, close);
+      }
+
+      apply({
+        ks11: { price: closeBy.get('KS11') },
+        kq11: { price: closeBy.get('KQ11') },
+        gspc: { price: closeBy.get('SPX') },
+        ndx: { price: closeBy.get('NDQ') },
+      });
+      return { markets, source: 'Stooq EOD fallback', updatedAt: new Date().toISOString() };
+    } catch {
+      return {
+        markets: BASE_MARKETS,
+        source: 'fallback/static',
+        updatedAt: new Date().toISOString(),
+      };
+    }
   }
 }
 
