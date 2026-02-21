@@ -198,6 +198,7 @@ export default function PapersPage() {
   const [mergeSuggestion, setMergeSuggestion] = useState<MergeSuggestion | null>(null);
   const [isComposing, setIsComposing] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(true);
   const lastChipCommitAtRef = useRef<number | null>(null);
   const [papers, setPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(false);
@@ -256,6 +257,12 @@ export default function PapersPage() {
         // no-op
       }
     })();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const shouldOpen = !window.matchMedia('(max-width: 1023px)').matches;
+    setIsAdvancedOpen(shouldOpen);
   }, []);
 
   const displayedPapers = useMemo(() => {
@@ -453,14 +460,14 @@ export default function PapersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 py-8">
+    <div className="min-h-screen bg-slate-100 py-6 dark:bg-slate-950 sm:py-8">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-4 flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-800 dark:bg-slate-900">
           <Link href="/" className="rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800">Home</Link>
           <Link href="/papers" className="rounded-md bg-blue-100 px-2 py-1 font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">Papers</Link>
           <Link href="/datasets" className="rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800">Datasets</Link>
         </div>
-        <div className="mb-6 rounded-2xl border border-slate-200 bg-white px-6 py-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="mb-5 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:mb-6 sm:px-6 sm:py-5">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h1 className="flex items-center gap-3 text-2xl font-bold text-slate-900 dark:text-white">
@@ -478,7 +485,7 @@ export default function PapersPage() {
             </div>
           </div>
         </div>
-        <div className="sticky top-3 z-30 mb-6 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-cyan-50 to-indigo-50 p-4 shadow-sm dark:border-blue-900/50 dark:from-slate-900 dark:via-blue-950/40 dark:to-slate-900">
+        <div className="sticky top-3 z-30 mb-5 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-cyan-50 to-indigo-50 p-3 shadow-sm dark:border-blue-900/50 dark:from-slate-900 dark:via-blue-950/40 dark:to-slate-900 sm:mb-6 sm:p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <p className="text-sm font-semibold text-slate-900 dark:text-white">Search Control Center</p>
             <p className="text-xs text-slate-600 dark:text-slate-300">키워드 입력 후 Enter 또는 검색 실행</p>
@@ -492,7 +499,7 @@ export default function PapersPage() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
                 placeholder="예: endometriosis single-cell atlas"
-                className="w-full rounded-xl border border-blue-300 bg-white px-10 py-3 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-blue-700 dark:bg-slate-900 dark:text-slate-100"
+                className="w-full rounded-xl border border-blue-300 bg-white px-10 py-2.5 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-blue-700 dark:bg-slate-900 dark:text-slate-100 sm:py-3"
               />
             </div>
             <button
@@ -500,7 +507,7 @@ export default function PapersPage() {
                 void searchPapers();
               }}
               disabled={loading}
-              className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+              className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 sm:px-6 sm:py-3"
             >
               {loading ? '검색 중...' : '검색 실행'}
             </button>
@@ -513,7 +520,7 @@ export default function PapersPage() {
                 onClick={() => {
                   void runQuickQuery(item);
                 }}
-                className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-700 transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-600 dark:hover:text-blue-300"
+                className="rounded-full border border-slate-300 bg-white px-2.5 py-1 text-[11px] text-slate-700 transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-600 dark:hover:text-blue-300 sm:px-3 sm:py-1.5 sm:text-xs"
               >
                 {item}
               </button>
@@ -521,95 +528,108 @@ export default function PapersPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
           <section className="space-y-6 lg:col-span-8">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
               <div className="flex flex-col gap-4">
                 <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">Advanced Query Builder</p>
-                  <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                    상단 Control Center로 즉시 검색하고, 여기서는 chip 기반 쿼리 조합만 수행합니다.
-                  </p>
-                  <div className="relative mt-2">
-                    <div className="min-h-[46px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus-within:ring-2 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        {chips.map((chip, idx) => (
-                          <span key={`${chip}-${idx}`} className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-100 px-2 py-0.5 text-xs text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
-                            {chip}
-                            <button
-                              type="button"
-                              onClick={() => setChips((prev) => prev.filter((_, i) => i !== idx))}
-                              className="text-blue-700 hover:text-blue-900 dark:text-blue-300"
-                              title="블록 제거"
-                            >
-                              ×
-                            </button>
-                          </span>
-                        ))}
-                        <input
-                          type="text"
-                          value={query}
-                          onChange={(e) => {
-                            setQuery(e.target.value);
-                            setMergeSuggestion(null);
-                          }}
-                          onCompositionStart={() => setIsComposing(true)}
-                          onCompositionEnd={() => setIsComposing(false)}
-                          onKeyDown={(e) => {
-                            if (isComposing || (e.nativeEvent as any)?.isComposing) return;
-                            const now = Date.now();
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              if (query.trim()) {
-                                commitBufferToChip(query);
-                                setQuery('');
-                              }
-                              void searchPapers();
-                              return;
-                            }
-                            if (e.key === 'Backspace' && !query && chips.length > 0) {
-                              e.preventDefault();
-                              setChips((prev) => prev.slice(0, -1));
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">Advanced Query Builder</p>
+                      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                        상단 Control Center로 즉시 검색하고, 여기서는 chip 기반 쿼리 조합만 수행합니다.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsAdvancedOpen((v) => !v)}
+                      className="rounded-md border border-slate-300 px-2 py-1 text-[11px] text-slate-600 dark:border-slate-600 dark:text-slate-300"
+                    >
+                      {isAdvancedOpen ? '접기' : '열기'}
+                    </button>
+                  </div>
+                  {isAdvancedOpen && (
+                    <div className="relative mt-2">
+                      <div className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus-within:ring-2 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {chips.map((chip, idx) => (
+                            <span key={`${chip}-${idx}`} className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-100 px-2 py-0.5 text-xs text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
+                              {chip}
+                              <button
+                                type="button"
+                                onClick={() => setChips((prev) => prev.filter((_, i) => i !== idx))}
+                                className="text-blue-700 hover:text-blue-900 dark:text-blue-300"
+                                title="블록 제거"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                          <input
+                            type="text"
+                            value={query}
+                            onChange={(e) => {
+                              setQuery(e.target.value);
                               setMergeSuggestion(null);
-                              return;
-                            }
-                            if (e.key === ' ' || e.key === 'Tab' || e.key === ',' || e.key === ';' || e.key === '/') {
-                              if (!query.trim()) return;
-                              e.preventDefault();
-                              const newToken = tokenizeInput(query).join(' ').trim();
-                              if (!newToken) {
-                                setQuery('');
+                            }}
+                            onCompositionStart={() => setIsComposing(true)}
+                            onCompositionEnd={() => setIsComposing(false)}
+                            onKeyDown={(e) => {
+                              if (isComposing || (e.nativeEvent as any)?.isComposing) return;
+                              const now = Date.now();
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                if (query.trim()) {
+                                  commitBufferToChip(query);
+                                  setQuery('');
+                                }
+                                void searchPapers();
                                 return;
                               }
-                              setChips((prev) => {
-                                const next = [...prev, newToken];
-                                const prevToken = prev[prev.length - 1];
-                                const last = lastChipCommitAtRef.current;
-                                if (prevToken && last && now - last <= T_MERGE && canSuggestMerge(prevToken, newToken)) {
-                                  setMergeSuggestion({ left: prevToken, right: newToken, merged: `${prevToken} ${newToken}` });
-                                } else {
-                                  setMergeSuggestion(null);
+                              if (e.key === 'Backspace' && !query && chips.length > 0) {
+                                e.preventDefault();
+                                setChips((prev) => prev.slice(0, -1));
+                                setMergeSuggestion(null);
+                                return;
+                              }
+                              if (e.key === ' ' || e.key === 'Tab' || e.key === ',' || e.key === ';' || e.key === '/') {
+                                if (!query.trim()) return;
+                                e.preventDefault();
+                                const newToken = tokenizeInput(query).join(' ').trim();
+                                if (!newToken) {
+                                  setQuery('');
+                                  return;
                                 }
-                                return next;
-                              });
-                              lastChipCommitAtRef.current = now;
-                              setQuery('');
-                            }
-                          }}
-                          placeholder={chips.length ? '다음 블록 입력...' : '질환, 기술, 저자, 키워드 입력'}
-                          className="min-w-[180px] flex-1 bg-transparent py-1 text-sm outline-none"
-                        />
+                                setChips((prev) => {
+                                  const next = [...prev, newToken];
+                                  const prevToken = prev[prev.length - 1];
+                                  const last = lastChipCommitAtRef.current;
+                                  if (prevToken && last && now - last <= T_MERGE && canSuggestMerge(prevToken, newToken)) {
+                                    setMergeSuggestion({ left: prevToken, right: newToken, merged: `${prevToken} ${newToken}` });
+                                  } else {
+                                    setMergeSuggestion(null);
+                                  }
+                                  return next;
+                                });
+                                lastChipCommitAtRef.current = now;
+                                setQuery('');
+                              }
+                            }}
+                            placeholder={chips.length ? '다음 블록 입력...' : '질환, 기술, 저자, 키워드 입력'}
+                            className="min-w-[140px] flex-1 bg-transparent py-1 text-sm outline-none sm:min-w-[180px]"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-                {effectiveInputQuery && ghostTail && (
+                {isAdvancedOpen && effectiveInputQuery && ghostTail && (
                   <p className="-mt-1 text-xs text-slate-400 dark:text-slate-500">
                     <span className="opacity-70">{effectiveInputQuery}</span>
                     <span className="opacity-40">{ghostTail}</span>
                   </p>
                 )}
-                {contextualSuggestions.length > 0 && (
+                {isAdvancedOpen && contextualSuggestions.length > 0 && (
                   <div className="space-y-2 text-xs">
                     <span className="text-slate-500 dark:text-slate-400">추천 확장:</span>
                     <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -635,7 +655,7 @@ export default function PapersPage() {
                     </div>
                   </div>
                 )}
-                {isGuideOpen && (
+                {isAdvancedOpen && isGuideOpen && (
                   <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs text-slate-700 shadow-sm dark:border-blue-900/60 dark:bg-slate-800/80 dark:text-slate-200">
                     <div className="mb-2 flex items-center justify-between gap-2">
                       <p className="font-semibold text-blue-700 dark:text-blue-300">검색 가이드 (입력/호버 도움말)</p>
@@ -678,7 +698,8 @@ export default function PapersPage() {
                     </div>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                {isAdvancedOpen && (
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                   <button
                     type="button"
                     onClick={() => {
@@ -703,7 +724,8 @@ export default function PapersPage() {
                   </button>
                   <span className="text-[11px]">IME 입력 중(한글 조합)에는 자동 분할을 보류합니다.</span>
                 </div>
-                {mergeSuggestion && (
+                )}
+                {isAdvancedOpen && mergeSuggestion && (
                   <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
                     <span>병합 제안: [{mergeSuggestion.left}] + [{mergeSuggestion.right}]</span>
                     <button
@@ -729,96 +751,40 @@ export default function PapersPage() {
                     </button>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-                  <button
-                    onClick={() => setBioFocus((v) => !v)}
-                    className={`rounded-md border px-2 py-1 ${bioFocus ? 'border-emerald-500 text-emerald-600' : 'border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300'}`}
-                    title="Bio Focus를 켜면 생물학/의생명 키워드를 자동 확장합니다"
-                  >
-                    {bioFocus ? 'Bio Focus ON' : 'Bio Focus OFF'}
-                  </button>
-                  <span>바이오 논문 우선 검색</span>
-                  <button
-                    type="button"
-                    onClick={() => setIsGuideOpen((v) => !v)}
-                    className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-2 py-0.5 text-[11px] dark:border-slate-700"
-                    title="검색 사용법 보기"
-                  >
-                    <Info className="h-3.5 w-3.5" /> {isGuideOpen ? 'Guide 닫기' : 'Guide 열기'}
-                  </button>
-                </div>
+                {isAdvancedOpen && (
+                  <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                    <button
+                      type="button"
+                      onClick={() => setIsGuideOpen((v) => !v)}
+                      className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-2 py-0.5 text-[11px] dark:border-slate-700"
+                      title="검색 사용법 보기"
+                    >
+                      <Info className="h-3.5 w-3.5" /> {isGuideOpen ? 'Guide 닫기' : 'Guide 열기'}
+                    </button>
+                  </div>
+                )}
 
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-2 xl:grid-cols-4">
                   {(Object.keys(trackStatus) as Array<keyof TrackStatus>).map((track) => (
                     <div
                       key={track}
                       title={`${trackNames[track]}: ${track === 't1' ? 'PubMed 검색' : track === 't2' ? 'arXiv 검색' : track === 't3' ? 'Semantic Scholar 검색' : '중복제거 + 점수통합 랭킹'}`}
-                      className={`rounded-xl border p-3 ${trackCardClass(trackStatus[track])}`}
+                      className={`rounded-xl border p-2.5 sm:p-3 ${trackCardClass(trackStatus[track])}`}
                     >
                       <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
                         {trackNames[track]}
                       </p>
-                      <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">
+                      <p className="mt-1 text-xs font-semibold text-slate-900 dark:text-white sm:text-sm">
                         {trackStatusText(trackStatus[track])}
                       </p>
                     </div>
                   ))}
                 </div>
-
-                <div className="grid grid-cols-1 gap-3 border-t border-slate-200 pt-4 md:grid-cols-3 dark:border-slate-700">
-                  <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
-                    <span className="mb-1 block text-xs text-slate-500 dark:text-slate-400">Year From</span>
-                    <input
-                      type="number"
-                      value={filters.yearFrom}
-                      onChange={(e) => setFilters({ ...filters, yearFrom: e.target.value })}
-                      className="w-full bg-transparent text-slate-900 outline-none dark:text-slate-100"
-                    />
-                  </label>
-                  <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
-                    <span className="mb-1 block text-xs text-slate-500 dark:text-slate-400">Year To</span>
-                    <input
-                      type="number"
-                      value={filters.yearTo}
-                      onChange={(e) => setFilters({ ...filters, yearTo: e.target.value })}
-                      className="w-full bg-transparent text-slate-900 outline-none dark:text-slate-100"
-                    />
-                  </label>
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
-                    <div className="mb-1 flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
-                      <span title="검색할 데이터 소스 선택"><Filter className="h-3.5 w-3.5" /></span> Source Filters
-                    </div>
-                    <div className="flex flex-wrap gap-2 text-xs">
-                      {(['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'] as const).map((source) => {
-                        const active = filters.sources.includes(source);
-                        return (
-                          <button
-                            key={source}
-                            title={sourceTooltip[source]}
-                            onClick={() => {
-                              const next = active
-                                ? filters.sources.filter((s) => s !== source)
-                                : [...filters.sources, source];
-                              setFilters({ ...filters, sources: next });
-                            }}
-                            className={`rounded-full border px-2 py-1 capitalize transition ${
-                              active
-                                ? 'border-blue-600 bg-blue-600 text-white'
-                                : 'border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200'
-                            }`}
-                          >
-                            {sourceLabel[source]}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+              <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
                     Search Results
@@ -827,11 +793,11 @@ export default function PapersPage() {
                     Score = 최신성 + 인용수 + 영향도 + 메타정보 보너스
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <select
                     value={sortMode}
                     onChange={(e) => setSortMode(e.target.value as SortMode)}
-                    className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                    className="rounded-md border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 sm:text-xs"
                     title="결과 정렬"
                   >
                     <option value="score">Sort: Score</option>
@@ -841,7 +807,7 @@ export default function PapersPage() {
                   </select>
                   <button
                     onClick={() => setShowSavedOnly((v) => !v)}
-                    className={`rounded-md border px-2 py-1 text-xs ${showSavedOnly ? 'border-amber-500 text-amber-600' : 'border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300'}`}
+                    className={`rounded-md border px-2 py-1 text-[11px] sm:text-xs ${showSavedOnly ? 'border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300'}`}
                     title="저장한 논문만 보기"
                   >
                     {showSavedOnly ? 'Saved only' : 'All results'}
@@ -865,11 +831,11 @@ export default function PapersPage() {
                   {effectiveInputQuery ? '검색 결과가 없습니다. 필터를 조정해보세요.' : '검색어를 입력하면 결과가 대시보드에 표시됩니다.'}
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2.5 sm:space-y-3">
                   {displayedPapers.map((paper) => (
                     <article
                       key={paper.id}
-                      className="relative rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60"
+                      className="relative rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60 sm:p-4"
                     >
                       <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
                         <span
@@ -920,7 +886,7 @@ export default function PapersPage() {
                           <span className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3" /> Related</span>
                         </button>
                         {hoverPaperId === paper.id && (
-                          <div className="absolute right-0 z-20 mt-2 w-80 rounded-lg border border-slate-200 bg-white p-3 text-xs shadow-xl dark:border-slate-700 dark:bg-slate-900">
+                          <div className="absolute right-0 z-20 mt-2 w-72 rounded-lg border border-slate-200 bg-white p-3 text-xs shadow-xl dark:border-slate-700 dark:bg-slate-900 sm:w-80">
                             <p className="mb-2 font-semibold text-slate-700 dark:text-slate-200">연관 논문</p>
                             {(relatedByPaper[paper.id] || []).length === 0 ? (
                               <p className="text-slate-500">불러오는 중이거나 결과가 없습니다.</p>
@@ -971,7 +937,7 @@ export default function PapersPage() {
                         </div>
                       )}
 
-                      <div className="mt-3 flex items-center gap-3 text-xs">
+                      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs sm:gap-3">
                         <a
                           href={paper.url}
                           target="_blank"
@@ -1020,8 +986,78 @@ export default function PapersPage() {
             </div>
           </section>
 
-          <aside className="space-y-6 lg:col-span-4">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <aside className="space-y-4 sm:space-y-6 lg:col-span-4">
+            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
+                <Filter className="h-4 w-4" /> Paper Filters
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+                  <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Year From</span>
+                  <input
+                    type="number"
+                    value={filters.yearFrom}
+                    onChange={(e) => setFilters({ ...filters, yearFrom: e.target.value })}
+                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
+                  />
+                </label>
+                <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+                  <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Year To</span>
+                  <input
+                    type="number"
+                    value={filters.yearTo}
+                    onChange={(e) => setFilters({ ...filters, yearTo: e.target.value })}
+                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
+                  />
+                </label>
+              </div>
+              <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
+                <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Source Filters</div>
+                <div className="flex flex-wrap gap-1.5 text-xs">
+                  {(['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'] as const).map((source) => {
+                    const active = filters.sources.includes(source);
+                    return (
+                      <button
+                        key={source}
+                        title={sourceTooltip[source]}
+                        onClick={() => {
+                          const next = active
+                            ? filters.sources.filter((s) => s !== source)
+                            : [...filters.sources, source];
+                          setFilters({ ...filters, sources: next });
+                        }}
+                        className={`rounded-full border px-2 py-1 text-[11px] capitalize transition ${
+                          active
+                            ? 'border-blue-600 bg-blue-600 text-white'
+                            : 'border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200'
+                        }`}
+                      >
+                        {sourceLabel[source]}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800">
+                <div>
+                  <p className="font-medium text-slate-700 dark:text-slate-200">Bio Focus</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">바이오 논문 키워드 자동 확장</p>
+                </div>
+                <button
+                  onClick={() => setBioFocus((v) => !v)}
+                  className={`rounded-md border px-2 py-1 text-[11px] ${
+                    bioFocus
+                      ? 'border-blue-600 bg-blue-600 text-white'
+                      : 'border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300'
+                  }`}
+                  title="Bio Focus를 켜면 생물학/의생명 키워드를 자동 확장합니다"
+                >
+                  {bioFocus ? 'ON' : 'OFF'}
+                </button>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
               <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
                 <Database className="h-4 w-4" /> Dashboard Metrics
               </h3>
@@ -1052,7 +1088,7 @@ export default function PapersPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
               <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">Top Signals</h3>
               {topSignals.length === 0 ? (
                 <p className="text-xs text-slate-500 dark:text-slate-400">
