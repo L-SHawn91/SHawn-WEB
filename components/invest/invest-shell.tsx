@@ -8,15 +8,15 @@ import { InvestTrackBoard } from "./invest-track-board";
 type InvestTab = "overview" | "reports" | "dashboard" | "archive";
 
 type InvestShellProps = {
-  currentTab: InvestTab;
+  currentTab?: InvestTab;
   children: ReactNode;
 };
 
 const investTabs: { key: InvestTab; label: string; href: string }[] = [
-  { key: "overview", label: "Overview", href: "/invest" },
-  { key: "reports", label: "Reports", href: "/market-intelligence" },
-  { key: "dashboard", label: "Dashboard", href: "/cartridges/invest" },
   { key: "archive", label: "Archive", href: "/market-intelligence/archive" },
+  { key: "dashboard", label: "Dashboard", href: "/cartridges/invest" },
+  { key: "reports", label: "Reports", href: "/market-intelligence" },
+  { key: "overview", label: "Overview", href: "/invest" },
 ];
 
 export function InvestShell({ currentTab, children }: InvestShellProps) {
@@ -36,7 +36,9 @@ export function InvestShell({ currentTab, children }: InvestShellProps) {
           <nav className="w-full overflow-x-auto" aria-label="Invest workspace tabs">
             <div className="inline-flex min-w-max gap-2 rounded-xl bg-zinc-900/60 p-1">
               {investTabs.map((tab) => {
-                const isActive = currentTab === tab.key;
+                const isMatchedByPath =
+                  pathname === tab.href || pathname?.startsWith(`${tab.href}/`);
+                const isActive = isMatchedByPath || currentTab === tab.key;
                 return (
                   <Link
                     key={tab.key}
@@ -57,7 +59,7 @@ export function InvestShell({ currentTab, children }: InvestShellProps) {
             </div>
           </nav>
 
-          <InvestTrackBoard />
+          <InvestTrackBoard compact />
         </header>
 
         <section className="mt-4 flex-1">{children}</section>

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import Link from 'next/link';
-import { ExternalLink, Calendar, Search, Clock } from "lucide-react";
+import { ExternalLink, Calendar, Search, Clock, ArrowLeft } from "lucide-react";
 
 interface Report {
     date: string;       // YYYY-MM-DD
@@ -113,11 +113,20 @@ export default function ReportsPage() {
     <InvestShell currentTab="archive">
             <Header />
             <main className="flex-1 container mx-auto px-4 py-12">
-                <div className="mb-12 text-center">
-                    <h1 className="text-4xl font-bold tracking-tight mb-4 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                <div className="mb-12">
+                    <div className="mb-4 flex items-center">
+                        <Link
+                            href="/invest"
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-blue-500/30 bg-blue-900/20 text-blue-200 hover:bg-blue-900/40 transition-colors text-xs"
+                        >
+                            <ArrowLeft size={14} />
+                            Invest Hub
+                        </Link>
+                    </div>
+                    <h1 className="text-4xl font-bold tracking-tight text-center mb-4 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                         시장 분석 리포트
                     </h1>
-                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
+                    <p className="text-muted-foreground text-lg text-center max-w-2xl mx-auto mb-8">
                         Dual Quant System 분석 리포트 아카이브 (날짜/시간별 추적)
                     </p>
 

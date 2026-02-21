@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { InvestShell } from "@/components/invest/invest-shell";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, FileText, ExternalLink, RefreshCw, TrendingUp, Globe, AlertTriangle } from "lucide-react";
+import { Calendar, FileText, ExternalLink, RefreshCw, TrendingUp, Globe, AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { ReportDetailView, FullJsonReport } from "@/components/market/ReportDetailView";
 
@@ -125,7 +125,14 @@ export default function MarketIntelligencePage() {
                             Real-time AI Market Analysis & Sovereign Alpha Signals
                         </p>
                     </div>
-                    <div className="mt-4 md:mt-0 flex gap-3">
+                    <div className="mt-4 md:mt-0 flex flex-wrap gap-3">
+                        <Link
+                            href="/invest"
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-blue-500/30 bg-blue-900/20 text-blue-200 hover:bg-blue-900/40 transition-colors text-xs"
+                        >
+                            <ArrowLeft size={14} />
+                            Invest Hub
+                        </Link>
                         <Link
                             href="/cartridges/invest"
                             className="flex items-center gap-2 px-3 py-1.5 bg-[#2c2c2c] hover:bg-[#3c3c3c] rounded-lg transition-colors text-xs text-gray-300 border border-gray-700"
