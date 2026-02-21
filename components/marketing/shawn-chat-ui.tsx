@@ -21,44 +21,32 @@ export function ShawnChatUI() {
         setIsAuthorized(authStatus);
     }, []);
 
-    const [authSessionId, setAuthSessionId] = useState<string | null>(null);
+    const [manualToken, setManualToken] = useState("");
 
-    // Polling Logic
-    useEffect(() => {
-        if (!authSessionId) return;
+    const handleTelegramLogin = () => {
+        const botName = process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || "shawn_lab_bot";
+        window.open(`https://t.me/${botName}`, "_blank");
+    };
 
-        const interval = setInterval(async () => {
-            try {
-                const res = await fetch(`/api/auth/poll?session_id=${authSessionId}`);
-                const data = await res.json();
-
-                if (data.status === "approved" && data.token) {
-                    document.cookie = `shawn_auth=${data.token}; path=/; max-age=86400; SameSite=Strict`;
-                    setIsAuthorized(true);
-                    setAuthSessionId(null);
-                    setMessages(prev => [...prev, { role: "system", content: "✅ 원격 승인 완료! 환영합니다." }]);
-                } else if (data.status === "denied") {
-                    setAuthSessionId(null);
-                    alert("인증이 거부되었습니다.");
-                }
-            } catch (e) { console.error(e); }
-        }, 2000);
-
-        return () => clearInterval(interval);
-    }, [authSessionId]);
-
-    const handlePushAuth = async () => {
+    const handleTokenAuth = async () => {
+        if (!manualToken.trim()) return;
         setLoading(true);
         try {
-            const res = await fetch("/api/auth/request", { method: "POST" });
+            const res = await fetch("/api/auth/telegram", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: manualToken.trim() }),
+            });
             const data = await res.json();
-            if (data.session_id) {
-                setAuthSessionId(data.session_id);
-            } else {
-                alert("요청 실패: " + JSON.stringify(data));
+            if (!res.ok || !data.success) {
+                setMessages((prev) => [...prev, { role: "system", content: `❌ 인증 실패: ${data.error || "unknown"}` }]);
+                return;
             }
-        } catch (e) {
-            alert("연결 오류");
+            setIsAuthorized(true);
+            setManualToken("");
+            setMessages((prev) => [...prev, { role: "system", content: "✅ Telegram 인증 성공. 전체 기능 사용 가능" }]);
+        } catch {
+            setMessages((prev) => [...prev, { role: "system", content: "❌ 인증 요청 중 네트워크 오류" }]);
         } finally {
             setLoading(false);
         }
@@ -87,8 +75,12 @@ export function ShawnChatUI() {
         }
     };
 
-    const handleLogout = () => {
-        document.cookie = "shawn_auth=; path=/; max-age=0; SameSite=Strict";
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/auth/telegram', { method: 'DELETE' });
+        } catch {
+            document.cookie = "shawn_auth=; path=/; max-age=0; SameSite=Strict";
+        }
         setIsAuthorized(false);
         setMessages(prev => [...prev, { role: "system", content: "🔒 로그아웃되었습니다." }]);
     };
@@ -140,33 +132,31 @@ export function ShawnChatUI() {
                         </p>
                         {!isAuthorized && (
                             <div className="flex flex-col items-center gap-2 w-full px-4">
-                                {authSessionId ? (
-                                    <Button disabled variant="outline" className="w-full text-[11px] h-8 border-[#d500f9] text-[#d500f9] animate-pulse">
-                                        📲 모바일에서 승인 대기중...
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        onClick={handlePushAuth}
-                                        variant="outline"
-                                        className="w-full text-[11px] h-8 border-[#d500f9] text-[#d500f9] hover:bg-[#d500f9] hover:text-white"
-                                    >
-                                        <LogIn className="w-3 h-3 mr-2" /> 🔒 SHawn에게 인증 요청
-                                    </Button>
-                                )}
+                                <Button
+                                    onClick={handleTelegramLogin}
+                                    variant="outline"
+                                    className="w-full text-[11px] h-8 border-[#d500f9] text-[#d500f9] hover:bg-[#d500f9] hover:text-white"
+                                >
+                                    <LogIn className="w-3 h-3 mr-2" /> Telegram 열기
+                                </Button>
+                                <a
+                                    href="https://t.me/shawn_lab_bot"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1 text-[10px] text-neutral-400 hover:text-neutral-200"
+                                >
+                                    봇 링크 열기 <ExternalLink className="w-3 h-3" />
+                                </a>
 
-                                <div className="text-[10px] text-neutral-500">OR (Manual)</div>
+                                <div className="text-[10px] text-neutral-500">승인 후 받은 JWT 토큰 붙여넣기</div>
                                 <div className="flex w-full gap-2">
                                     <Input
-                                        placeholder="토큰 직접 붙여넣기"
+                                        placeholder="Telegram 승인 토큰"
+                                        value={manualToken}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setManualToken(e.target.value)}
                                         className="h-8 text-[10px] bg-[#2c2c2c] border-neutral-600"
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                            if (e.target.value.length > 20) {
-                                                document.cookie = `shawn_auth=${e.target.value}; path=/; max-age=86400; SameSite=Strict`;
-                                                setIsAuthorized(true);
-                                                setMessages(prev => [...prev, { role: "system", content: "✅ 수동 인증되었습니다." }]);
-                                            }
-                                        }}
                                     />
+                                    <Button onClick={handleTokenAuth} className="h-8 px-3 text-[10px] bg-[#d500f9]">인증</Button>
                                 </div>
                             </div>
                         )}
