@@ -135,10 +135,19 @@ type SnapshotPayload = {
   };
   weights?: WeightProfile;
   decisionThresholds?: DecisionThresholds;
+  upstreamSync?: {
+    configured?: boolean;
+    attempted?: boolean;
+    status?: "success" | "failed" | "disabled";
+    origin?: string;
+    message?: string;
+    httpStatus?: number;
+  };
   provenance?: {
     sources: string[];
     generatedAt: string;
     refreshRule: string;
+    upstreamFailure?: string;
   };
   benchmark?: { KR: string; US: string; lastUpdated?: string };
   modules: SignalModule[];
@@ -269,6 +278,7 @@ export default function InvestmentWorld() {
               status: snapshot.driftDetector.status,
             }
           : undefined,
+        upstreamSync: snapshot.upstreamSync,
         provenance: snapshot.provenance,
       }
     : undefined;

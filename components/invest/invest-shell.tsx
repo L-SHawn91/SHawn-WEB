@@ -13,10 +13,10 @@ type InvestShellProps = {
 };
 
 const investTabs: { key: InvestTab; label: string; href: string }[] = [
-  { key: "archive", label: "Archive", href: "/market-intelligence/archive" },
-  { key: "dashboard", label: "Dashboard", href: "/cartridges/invest" },
-  { key: "reports", label: "Reports", href: "/market-intelligence" },
-  { key: "overview", label: "Overview", href: "/invest" },
+  { key: "archive", label: "아카이브", href: "/market-intelligence/archive" },
+  { key: "dashboard", label: "대시보드", href: "/cartridges/invest" },
+  { key: "reports", label: "리포트", href: "/market-intelligence" },
+  { key: "overview", label: "개요", href: "/invest" },
 ];
 
 export function InvestShell({ currentTab, children }: InvestShellProps) {
@@ -27,7 +27,7 @@ export function InvestShell({ currentTab, children }: InvestShellProps) {
       <div className="mx-auto flex w-full max-w-7xl flex-col px-4 py-4 sm:px-6 sm:py-6">
         <header className="rounded-2xl border border-white/10 bg-zinc-950/60 p-4">
           <div className="mb-3 flex flex-col gap-2">
-            <h1 className="text-2xl font-bold md:text-3xl">Invest Workspace</h1>
+            <h1 className="text-2xl font-bold md:text-3xl">투자 워크스페이스</h1>
             <p className="text-sm text-gray-300">
               SHawnbrain 투자 리서치 허브: 탭으로 기존 페이지(리포트/대시보드/아카이브)에 바로 이동
             </p>

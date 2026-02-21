@@ -11,6 +11,16 @@ type Provenance = {
   sources: string[];
   generatedAt: string;
   refreshRule: string;
+  upstreamFailure?: string;
+};
+
+type UpstreamSyncStatus = {
+  configured: boolean;
+  attempted: boolean;
+  status: "success" | "failed" | "disabled";
+  origin?: string;
+  message?: string;
+  httpStatus?: number;
 };
 
 type WeightProfile = {
@@ -863,9 +873,16 @@ export async function GET(request: NextRequest) {
 
   const upstream = process.env.SHAWN_INV_SNAPSHOT_URL?.trim();
   let upstreamFailure: string | null = null;
+  let upstreamSync: UpstreamSyncStatus = {
+    configured: Boolean(upstream),
+    attempted: false,
+    status: upstream ? "failed" : "disabled",
+  };
+
   if (upstream) {
     try {
       const u = new URL(upstream);
+      upstreamSync = { ...upstreamSync, attempted: true, origin: u.origin };
       u.searchParams.set('mode', fallbackMode);
       if (new URL(request.url).searchParams.get('simulate') === '1') {
         u.searchParams.set('simulate', '1');
@@ -877,6 +894,15 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
           {
             ...data,
+            upstreamSync: {
+              ...(data?.upstreamSync || {}),
+              configured: true,
+              attempted: true,
+              status: "success",
+              origin: u.origin,
+              message: "SHawn-INV 업스트림 연동 정상",
+              httpStatus: r.status,
+            },
             provenance: {
               ...(data?.provenance || {}),
               sources: [...(data?.provenance?.sources || []), `upstream:${u.origin}`],
@@ -886,8 +912,20 @@ export async function GET(request: NextRequest) {
         );
       }
       upstreamFailure = `upstream_status_${r.status}`;
+      upstreamSync = {
+        ...upstreamSync,
+        status: "failed",
+        message: `SHawn-INV 응답 실패 (${r.status})`,
+        httpStatus: r.status,
+      };
     } catch (error) {
-      upstreamFailure = `upstream_error:${error instanceof Error ? error.message : 'unknown'}`;
+      const message = error instanceof Error ? error.message : "unknown";
+      upstreamFailure = `upstream_error:${message}`;
+      upstreamSync = {
+        ...upstreamSync,
+        status: "failed",
+        message: `SHawn-INV 연결 실패 (${message})`,
+      };
       // fallback to local snapshot builder
     }
   }
@@ -940,6 +978,7 @@ export async function GET(request: NextRequest) {
     },
     quoteHealth: liveMarkets.quoteHealth,
     driftDetector,
+    upstreamSync,
     weights: MODE_WEIGHTS_PROFILES[fallbackMode],
     provenance: {
       sources: ["public/reports/index.json", "public/reports/*.json", liveMarkets.sourceName],
