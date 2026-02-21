@@ -73,6 +73,28 @@ const SMART_SUGGESTIONS: Array<{ trigger: string; expansions: string[] }> = [
   { trigger: 'organoid', expansions: ['endometrial organoid hormone signaling', 'organoid autophagy transcriptomics'] },
 ];
 
+type SuggestionIntent = 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'TOPIC';
+
+function detectSuggestionIntent(q: string): SuggestionIntent {
+  const query = q.trim();
+  if (/"[^"]+"/.test(query)) return 'AUTHOR_STRONG';
+  const tokens = query.split(/\s+/).filter(Boolean);
+  if (
+    tokens.length >= 2 &&
+    /^[A-Z][a-z'\-]+$/.test(tokens[0] || '') &&
+    /^[A-Z][a-z'\-]+$/.test(tokens[1] || '')
+  ) {
+    return 'AUTHOR_WEAK';
+  }
+  return 'TOPIC';
+}
+
+const intentBadgeClass: Record<SuggestionIntent, string> = {
+  AUTHOR_STRONG: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200',
+  AUTHOR_WEAK: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200',
+  TOPIC: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-200',
+};
+
 function tokenizeInput(input: string): string[] {
   const out: string[] = [];
   const regex = /"([^"]+)"|[^\s,;\/]+/g;
@@ -306,23 +328,32 @@ export default function PapersPage() {
 
   const contextualSuggestions = useMemo(() => {
     const q = effectiveInputQuery.toLowerCase();
-    if (!q.trim()) return SEARCH_GUIDE.quick.map((x) => x.replace(/\s*\(.+\)$/, ''));
+    let values: string[];
 
-    const matched = SMART_SUGGESTIONS
-      .filter((item) => q.includes(item.trigger))
-      .flatMap((item) => item.expansions);
+    if (!q.trim()) {
+      values = SEARCH_GUIDE.quick.map((x) => x.replace(/\s*\(.+\)$/, ''));
+    } else {
+      const matched = SMART_SUGGESTIONS
+        .filter((item) => q.includes(item.trigger))
+        .flatMap((item) => item.expansions);
 
-    if (matched.length > 0) return Array.from(new Set(matched)).slice(0, 4);
+      values = matched.length > 0
+        ? Array.from(new Set(matched)).slice(0, 4)
+        : [
+            `${effectiveInputQuery} endometrium`,
+            `${effectiveInputQuery} autophagy`,
+            `${effectiveInputQuery} single-cell RNA-seq`,
+          ].slice(0, 3);
+    }
 
-    return [
-      `${effectiveInputQuery} endometrium`,
-      `${effectiveInputQuery} autophagy`,
-      `${effectiveInputQuery} single-cell RNA-seq`,
-    ].slice(0, 3);
+    return values.map((value) => ({
+      value,
+      intent: detectSuggestionIntent(value),
+    }));
   }, [effectiveInputQuery]);
 
   const ghostTail = useMemo(() => {
-    const top = contextualSuggestions[0] || '';
+    const top = contextualSuggestions[0]?.value || '';
     if (!top || !effectiveInputQuery) return '';
     const lowerTop = top.toLowerCase();
     const lowerCurrent = effectiveInputQuery.toLowerCase();
@@ -510,22 +541,30 @@ export default function PapersPage() {
                   </p>
                 )}
                 {contextualSuggestions.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                  <div className="space-y-2 text-xs">
                     <span className="text-slate-500 dark:text-slate-400">추천 확장:</span>
-                    {contextualSuggestions.map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        onClick={() => {
-                          setChips([]);
-                          setQuery(s);
-                          setShowSearchGuide(true);
-                        }}
-                        className="rounded-full border border-indigo-200 bg-indigo-50/70 px-2 py-1 text-[11px] text-indigo-700 hover:bg-indigo-100 dark:border-indigo-900 dark:bg-indigo-900/20 dark:text-indigo-300"
-                      >
-                        {s}
-                      </button>
-                    ))}
+                    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                      {contextualSuggestions.map((s) => (
+                        <button
+                          key={s.value}
+                          type="button"
+                          onClick={() => {
+                            setChips([]);
+                            setQuery(s.value);
+                            setShowSearchGuide(true);
+                          }}
+                          className="rounded-xl border border-indigo-200 bg-indigo-50/60 px-3 py-2 text-left text-[11px] text-indigo-900 hover:bg-indigo-100 dark:border-indigo-900 dark:bg-indigo-900/20 dark:text-indigo-200"
+                        >
+                          <div className="mb-1 flex items-center justify-between gap-2">
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${intentBadgeClass[s.intent]}`}>
+                              {s.intent}
+                            </span>
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400">클릭해 반영</span>
+                          </div>
+                          <p className="line-clamp-2">{s.value}</p>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
                 {(showSearchGuide || pinSearchGuide) && (
