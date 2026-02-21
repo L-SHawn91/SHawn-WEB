@@ -1,10 +1,8 @@
 "use client";
 
-import { Footer } from "@/components/ui/footer";
-import { Header } from "@/components/ui/header";
-import { InvestShell } from "@/components/invest/invest-shell";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
 
 type SignalTrend = "up" | "down" | "flat";
 type RiskLevel = "Low" | "Medium" | "High";
@@ -339,41 +337,38 @@ export default function InvestmentWorld() {
   };
 
   return (
-    <InvestShell currentTab="dashboard">
-      <div className="min-h-screen flex flex-col bg-black text-white">
-      <Header />
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
+    <InvestLayout
+      currentTab="dashboard"
+      title="Investment World"
+      description="Dual Quant System × Sovereign Alpha 강화 대시보드"
+    >
+      <>
         <section className="mb-8">
-          <div className="inline-flex items-center gap-3 mb-3">
-            <span className="text-4xl">📈</span>
-            <h1 className="text-4xl md:text-5xl font-bold">Investment World</h1>
-          </div>
-          <p className="text-gray-400 text-lg">Dual Quant System × Sovereign Alpha 강화 대시보드</p>
           <div className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
             투자 페이지를 단계적으로 통합 중입니다. 리포트 탐색은 <Link href="/market-intelligence" className="underline font-semibold">Market Intelligence</Link>를 기본 허브로 사용하세요.
           </div>
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">운영 모드</p>
               <p className="text-xl font-bold text-white mt-1">Dual Quant v2.2</p>
             </div>
-            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">신호 합의 점수</p>
               <p className="text-xl font-bold text-white mt-1">{snapshot?.signalConfidence ?? 0}%</p>
             </div>
-            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">리밸런싱 위험도</p>
               <p className="text-xl font-bold text-white mt-1">{riskSummary ? riskSummary.state : "로딩"}</p>
             </div>
-            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">시그널 임계값</p>
               <p className="text-xs text-gray-200 mt-1">Buy: {snapshot?.decisionThresholds?.buy ?? 75} / Hold: {snapshot?.decisionThresholds?.hold?.min ?? 40}-{snapshot?.decisionThresholds?.hold?.max ?? 75} / Trim: {snapshot?.decisionThresholds?.trim ?? 40}</p>
             </div>
-            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">신호 가중치</p>
               <p className="text-xl font-bold text-white mt-1">{snapshot?.weights ? `T:${Math.round((snapshot.weights.technical||0)*100)} / F:${Math.round((snapshot.weights.flow||0)*100)} / M:${Math.round((snapshot.weights.macro||0)*100)} / N:${Math.round((snapshot.weights.news||0)*100)}` : "-"}</p>
             </div>
-            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">벤치마크</p>
               <p className="text-xl font-bold text-white mt-1">{snapshot?.benchmark ? `${snapshot.benchmark.KR} / ${snapshot.benchmark.US}` : "-"}</p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -396,7 +391,7 @@ export default function InvestmentWorld() {
                 ) : null}
               </div>
             </div>
-            <div className="rounded-xl bg-gray-900/70 border border-gray-700 p-4">
+            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">갱신시각</p>
               <p className="text-xl font-bold text-white mt-1">{snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "-"}</p>
             </div>
@@ -683,9 +678,7 @@ export default function InvestmentWorld() {
             </Link>
           </aside>
         </section>
-      </main>
-      <Footer />
-    </div>
-    </InvestShell>
+      </>
+    </InvestLayout>
   );
 }

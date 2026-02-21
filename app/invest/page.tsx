@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { InvestShell } from "@/components/invest/invest-shell";
+import { InvestCard, InvestLayout, investUiClass } from "@/components/invest/invest-layout";
 
 const cards = [
   {
@@ -21,26 +21,21 @@ const cards = [
 
 export default function InvestHubPage() {
   return (
-    <InvestShell currentTab="overview">
-      <div className="rounded-2xl border border-white/10 bg-zinc-900/70 px-4 py-6 sm:px-6 sm:py-8">
-        <h1 className="text-2xl font-bold md:text-3xl">SHawnbrain · Investment Hub</h1>
-        <p className="mt-2 text-sm text-gray-300">
-          투자 관련 페이지를 이 허브에서 통합 탐색합니다. (리포트 허브 + 대시보드 + 아카이브)
-        </p>
-
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {cards.map((c) => (
-            <Link
-              key={c.href}
-              href={c.href}
-              className="rounded-2xl border border-white/15 bg-zinc-900/70 p-4 hover:border-white/30 sm:p-5"
-            >
+    <InvestLayout
+      currentTab="overview"
+      title="SHawnbrain · Investment Hub"
+      description="투자 관련 페이지를 이 허브에서 통합 탐색합니다. (리포트 허브 + 대시보드 + 아카이브)"
+    >
+      <div className={`${investUiClass.grid} md:grid-cols-3`}>
+        {cards.map((c) => (
+          <Link key={c.href} href={c.href}>
+            <InvestCard className="h-full transition-colors hover:border-white/30 hover:bg-zinc-900/75">
               <h2 className="text-xl font-semibold">{c.title}</h2>
               <p className="mt-2 text-sm text-gray-300">{c.desc}</p>
-            </Link>
-          ))}
-        </div>
+            </InvestCard>
+          </Link>
+        ))}
       </div>
-    </InvestShell>
+    </InvestLayout>
   );
 }
