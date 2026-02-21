@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { apiFetch } from '@/lib/data-source/client';
 import {
   Activity,
   BookOpen,
@@ -235,12 +236,12 @@ export default function PapersPage() {
   useEffect(() => {
     (async () => {
       try {
-        const authRes = await fetch('/api/auth/me');
+        const authRes = await apiFetch('/api/auth/me');
         if (!authRes.ok) return;
         const authData = await authRes.json();
         setAuthUserId(authData.userId || null);
 
-        const savedRes = await fetch('/api/saved-items?type=paper');
+        const savedRes = await apiFetch('/api/saved-items?type=paper');
         if (!savedRes.ok) return;
         const savedData = await savedRes.json();
         const ids = new Set<string>((savedData.items || []).map((x: any) => x.itemId));
@@ -282,7 +283,7 @@ export default function PapersPage() {
     setSaveLoadingId(paper.id);
     try {
       if (isSaved) {
-        await fetch('/api/saved-items', {
+        await apiFetch('/api/saved-items', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 'paper', itemId: paper.id }),
@@ -293,7 +294,7 @@ export default function PapersPage() {
           return next;
         });
       } else {
-        await fetch('/api/saved-items', {
+        await apiFetch('/api/saved-items', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -315,7 +316,7 @@ export default function PapersPage() {
   const loadRelatedPapers = async (paper: Paper) => {
     if (relatedByPaper[paper.id]) return;
     try {
-      const res = await fetch('/api/related', {
+      const res = await apiFetch('/api/related', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind: 'paper', title: paper.title }),
@@ -397,7 +398,7 @@ export default function PapersPage() {
         ? `${userQuery} AND (endometrium OR uterus OR ovarian OR embryo OR organoid OR autophagy OR transcriptomics)`
         : userQuery;
 
-      const response = await fetch('/api/papers/search-parallel', {
+      const response = await apiFetch('/api/papers/search-parallel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: effectiveQuery, filters }),

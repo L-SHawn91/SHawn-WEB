@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Database, ExternalLink, Filter, Search, Sparkles } from "lucide-react";
+import { apiFetch } from "@/lib/data-source/client";
 
 type DatasetSource =
   | "huggingface"
@@ -250,7 +251,7 @@ export default function DatasetsPage() {
         return;
       }
 
-      const response = await fetch("/api/datasets/search", {
+      const response = await apiFetch("/api/datasets/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -343,7 +344,7 @@ export default function DatasetsPage() {
     if (relatedByDataset[dataset.id] || relatedLoadingByDataset[dataset.id]) return;
     setRelatedLoadingByDataset((prev) => ({ ...prev, [dataset.id]: true }));
     try {
-      const res = await fetch('/api/related', {
+      const res = await apiFetch('/api/related', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind: 'dataset', title: dataset.title, accessionIds: dataset.accessionIds || [] }),

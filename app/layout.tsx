@@ -12,6 +12,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata: Metadata = {
+  manifest: '/manifest.webmanifest',
   title: {
     default: "SHawn_LAB - 바이오 지식, 일상 & 수익",
     template: "%s | SHawn_LAB",
