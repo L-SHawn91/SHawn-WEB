@@ -1,24 +1,27 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "SHawnDesktopTauri",
+  "version": "0.1.0",
+  "identifier": "com.shawnlab.desktop",
   "build": {
-    "beforeBuildCommand": "npm run build:web",
-    "beforeDevCommand": "npm run dev:web",
+    "beforeBuildCommand": "pnpm run build:web",
+    "beforeDevCommand": "pnpm run dev:web",
     "devUrl": "http://localhost:5173",
-    "distDir": "../dist"
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "SHawnDesktopTauri",
-    "version": "0.1.0"
-  },
-  "tauri": {
+  "app": {
     "windows": [
       {
-        "fullscreen": false,
+        "title": "SHawn Desktop",
+        "width": 1280,
         "height": 760,
         "resizable": true,
-        "title": "SHawn Desktop",
-        "width": 1280
+        "fullscreen": false
       }
     ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all"
   }
 }

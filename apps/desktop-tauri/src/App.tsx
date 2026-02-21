@@ -13,7 +13,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { id: 'dashboard', label: '대시보드' },
   { id: 'project', label: '프로젝트보드' },
-  { id: 'chat', label: 'OpenClaw 채팅' },
+  { id: 'chat', label: 'OpenClaw 채팅패널' },
 ];
 
 export function App() {
@@ -34,9 +34,9 @@ export function App() {
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
+      <header className="top-nav">
         <div className="brand">OpenClaw Desktop</div>
-        <nav>
+        <nav className="top-nav__menu">
           {navItems.map((item) => (
             <button
               type="button"
@@ -48,7 +48,15 @@ export function App() {
             </button>
           ))}
         </nav>
-      </aside>
+      </header>
+
+      <section className="status-bar" aria-label="시스템 상태">
+        <span className="status-pill ok">Mac Main: 정상</span>
+        <span className="status-pill ok">Linux Worker: 정상</span>
+        <span className="status-pill warn">OpenClaw Queue: 2개 대기</span>
+        <span className="status-pill">마지막 동기화: 방금 전</span>
+      </section>
+
       <main className="content">{screen}</main>
     </div>
   );
