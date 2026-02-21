@@ -170,6 +170,13 @@ const MODALITY_OPTIONS = [
   "multi-omics",
   "epigenomics",
 ];
+const QUICK_DATASET_QUERIES = [
+  "endometrium single-cell atlas",
+  "ovarian cancer organoid",
+  "autophagy transcriptomics",
+  "uterus microenvironment",
+  "embryo implantation",
+];
 
 const SOURCE_LABELS: Record<DatasetSource, string> = {
   huggingface: "Hugging Face",
@@ -280,6 +287,11 @@ export default function DatasetsPage() {
   };
 
   const searchDatasets = async (options?: SearchOptions) => executeSearch(query, filters, options);
+  const runQuickQuery = async (presetQuery: string) => {
+    setQuery(presetQuery);
+    setPage(1);
+    await executeSearch(presetQuery, filters, { page: 1 });
+  };
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -376,28 +388,51 @@ export default function DatasetsPage() {
             Search across global dataset registries and repositories
           </p>
         </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex gap-4">
-            <div className="flex-1 relative">
+        <div className="sticky top-3 z-30 mb-6 rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50 via-sky-50 to-cyan-50 p-4 shadow-sm dark:border-indigo-900/50 dark:from-gray-900 dark:via-indigo-950/30 dark:to-gray-900">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">Dataset Search Control Center</p>
+            <p className="text-xs text-gray-600 dark:text-gray-300">키워드 입력 후 Enter 또는 Search</p>
+          </div>
+          <div className="flex gap-3 flex-col md:flex-row">
+            <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
-                type="text"
+                type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && searchDatasets({ page: 1 })}
-                placeholder="Enter topic, task, or domain..."
-                className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="예: endometrium single-cell atlas"
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-indigo-300 dark:border-indigo-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
             <button
               onClick={() => searchDatasets({ page: 1 })}
               disabled={loading}
-              className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-xl font-semibold flex items-center gap-2 transition-colors"
+              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-xl font-semibold transition-colors"
             >
               {loading ? "Searching..." : "Search"}
             </button>
           </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {QUICK_DATASET_QUERIES.map((q) => (
+              <button
+                key={q}
+                type="button"
+                onClick={() => {
+                  void runQuickQuery(q);
+                }}
+                className="rounded-full border border-indigo-200 bg-white px-3 py-1.5 text-xs text-indigo-800 transition hover:border-indigo-400 hover:bg-indigo-50 dark:border-indigo-800 dark:bg-gray-900 dark:text-indigo-200 dark:hover:bg-indigo-900/30"
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
+          <p className="rounded-lg border border-indigo-100 bg-indigo-50 px-3 py-2 text-xs text-indigo-800 dark:border-indigo-900/40 dark:bg-indigo-900/20 dark:text-indigo-200">
+            검색 입력은 상단 고정 패널에서 진행하고, 이 섹션에서는 프리셋과 상세 필터를 조정합니다.
+          </p>
           <div className="mt-4">
             <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Bio Presets</p>
             <div className="flex flex-wrap gap-2">

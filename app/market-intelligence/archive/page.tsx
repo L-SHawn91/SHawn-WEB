@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ExternalLink, Calendar, Search, Clock, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,83 +27,44 @@ export default function ReportsPage() {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const LIMIT = 60;
+  const quickQueries = ["KR", "US", "MORNING", "SONOLBOT", "GEMINI"];
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams();
-        params.set("limit", String(LIMIT));
-        params.set("offset", "0");
-        if (searchQuery.trim()) params.set("q", searchQuery.trim());
-        if (selectedDate) params.set("date", selectedDate);
-
-        const res = await fetch(`/api/reports?${params.toString()}`, { cache: "no-store" });
-        if (!res.ok) throw new Error("Failed to load index");
-        const data = await res.json();
-        const items = Array.isArray(data.items) ? data.items : [];
-        setReports(items);
-        setFilteredReports(items);
-        setOffset(items.length);
-        setHasMore(Boolean(data.hasMore));
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void load();
-  }, [searchQuery, selectedDate]);
-
-  // Filter Logic
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams();
-        params.set("limit", String(LIMIT));
-        params.set("offset", "0");
-        if (searchQuery.trim()) params.set("q", searchQuery.trim());
-        if (selectedDate) params.set("date", selectedDate);
-
-        const res = await fetch(`/api/reports?${params.toString()}`, { cache: "no-store" });
-        if (!res.ok) throw new Error("Failed to load index");
-        const data = await res.json();
-        const items = Array.isArray(data.items) ? data.items : [];
-        setReports(items);
-        setFilteredReports(items);
-        setOffset(items.length);
-        setHasMore(Boolean(data.hasMore));
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void load();
-  }, [searchQuery, selectedDate]);
-
-  const loadMore = async () => {
+  const fetchReports = useCallback(async (nextOffset: number, append: boolean) => {
+    setLoading(true);
     try {
       const params = new URLSearchParams();
       params.set("limit", String(LIMIT));
-      params.set("offset", String(offset));
+      params.set("offset", String(nextOffset));
       if (searchQuery.trim()) params.set("q", searchQuery.trim());
       if (selectedDate) params.set("date", selectedDate);
 
       const res = await fetch(`/api/reports?${params.toString()}`, { cache: "no-store" });
-      if (!res.ok) return;
+      if (!res.ok) throw new Error("Failed to load index");
       const data = await res.json();
       const items = Array.isArray(data.items) ? data.items : [];
-      setReports((prev) => [...prev, ...items]);
-      setFilteredReports((prev) => [...prev, ...items]);
-      setOffset(offset + items.length);
+
+      if (append) {
+        setReports((prev) => [...prev, ...items]);
+        setFilteredReports((prev) => [...prev, ...items]);
+      } else {
+        setReports(items);
+        setFilteredReports(items);
+      }
+      setOffset(nextOffset + items.length);
       setHasMore(Boolean(data.hasMore));
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
+  }, [LIMIT, searchQuery, selectedDate]);
+
+  useEffect(() => {
+    void fetchReports(0, false);
+  }, [fetchReports]);
+
+  const loadMore = async () => {
+    await fetchReports(offset, true);
   };
 
   return (
@@ -120,23 +81,55 @@ export default function ReportsPage() {
     >
       <div className={investUiClass.panel}>
         <div className={investUiClass.panelInner}>
-          <div className="max-w-2xl mx-auto flex gap-4 flex-col sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="리포트 검색 (제목, 타입 등)..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+          <div className="sticky top-3 z-20 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 via-sky-50 to-indigo-50 p-4 dark:border-blue-900/40 dark:from-slate-900 dark:via-blue-950/30 dark:to-slate-900">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Archive Search Dashboard</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">제목/타입 검색 + 날짜 필터</p>
             </div>
-            <Input
-              type="date"
-              className="w-full sm:w-auto"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-            />
+            <div className="max-w-4xl mx-auto flex gap-3 flex-col md:flex-row">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="리포트 검색 (제목, 타입 등)..."
+                  className="pl-9 bg-white dark:bg-slate-900"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Input
+                type="date"
+                className="w-full md:w-auto bg-white dark:bg-slate-900"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedDate("");
+                }}
+                className={`${investUiClass.actionButtonDefault} px-3 py-2`}
+              >
+                초기화
+              </button>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {quickQueries.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => setSearchQuery(q)}
+                  className="rounded-full border border-blue-300 bg-white px-3 py-1 text-xs text-blue-800 hover:bg-blue-50 dark:border-blue-800 dark:bg-slate-900 dark:text-blue-200 dark:hover:bg-blue-900/20"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 text-xs text-slate-600 dark:text-slate-300">
+              Total Loaded: <span className="font-semibold">{filteredReports.length}</span>
+              {" "}· Has More: <span className="font-semibold">{hasMore ? "Yes" : "No"}</span>
+            </div>
           </div>
         </div>
       </div>
