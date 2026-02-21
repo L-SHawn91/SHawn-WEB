@@ -48,7 +48,16 @@ export function ShawnChatUI() {
     useEffect(() => {
         const authStatus = document.cookie.includes("shawn_auth");
         setIsAuthorized(authStatus);
-        setCallbackTemplate(`${window.location.origin}${window.location.pathname}?shawn_token={JWT_TOKEN}`);
+        setCallbackTemplate(`${window.location.origin}/?shawn_token={JWT_TOKEN}`);
+
+        void fetch('/api/auth/callback-template')
+            .then((r) => r.json())
+            .then((d) => {
+                if (d?.callbackTemplate) setCallbackTemplate(d.callbackTemplate);
+            })
+            .catch(() => {
+                // keep client-side fallback template
+            });
 
         const params = new URLSearchParams(window.location.search);
         const callbackToken = params.get("shawn_token") || params.get("token");
