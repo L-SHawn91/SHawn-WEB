@@ -222,13 +222,6 @@ export default function PapersPage() {
     yearFrom: '',
     yearTo: '',
   });
-  const quickQueries = [
-    'endometriosis single-cell',
-    'ovarian cancer organoid',
-    'autophagy transcriptomics',
-    'uterus microenvironment',
-    'embryo implantation',
-  ];
 
   const sourceCounts = useMemo(() => {
     return papers.reduce(
@@ -394,8 +387,8 @@ export default function PapersPage() {
     lastChipCommitAtRef.current = Date.now();
   };
 
-  const searchPapers = async (queryOverride?: string) => {
-    const userQuery = queryOverride?.trim() ? queryOverride : effectiveInputQuery;
+  const searchPapers = async () => {
+    const userQuery = effectiveInputQuery;
     if (!userQuery.trim()) return;
 
     setLoading(true);
@@ -427,11 +420,6 @@ export default function PapersPage() {
     }
 
     setLoading(false);
-  };
-  const runQuickQuery = async (presetQuery: string) => {
-    setChips([]);
-    setQuery(presetQuery);
-    await searchPapers(presetQuery);
   };
 
   useEffect(() => {
