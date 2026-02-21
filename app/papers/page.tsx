@@ -387,8 +387,8 @@ export default function PapersPage() {
     lastChipCommitAtRef.current = Date.now();
   };
 
-  const searchPapers = async () => {
-    const userQuery = effectiveInputQuery;
+  const searchPapers = async (queryOverride?: string) => {
+    const userQuery = queryOverride?.trim() ? queryOverride : effectiveInputQuery;
     if (!userQuery.trim()) return;
 
     setLoading(true);
@@ -420,6 +420,11 @@ export default function PapersPage() {
     }
 
     setLoading(false);
+  };
+  const runQuickQuery = async (presetQuery: string) => {
+    setChips([]);
+    setQuery(presetQuery);
+    await searchPapers(presetQuery);
   };
 
   useEffect(() => {
@@ -491,7 +496,9 @@ export default function PapersPage() {
               />
             </div>
             <button
-              onClick={searchPapers}
+              onClick={() => {
+                void searchPapers();
+              }}
               disabled={loading}
               className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
             >
@@ -504,7 +511,7 @@ export default function PapersPage() {
                 key={item}
                 type="button"
                 onClick={() => {
-                  setQuery(item);
+                  void runQuickQuery(item);
                 }}
                 className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-700 transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-600 dark:hover:text-blue-300"
               >
@@ -518,10 +525,13 @@ export default function PapersPage() {
           <section className="space-y-6 lg:col-span-8">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
               <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-3 md:flex-row">
-                  <div className="relative flex-1">
-                    <Search className="pointer-events-none absolute left-3 top-3.5 h-5 w-5 text-slate-400" />
-                    <div className="min-h-[46px] w-full rounded-xl border border-slate-300 bg-slate-50 px-10 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus-within:ring-2 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
+                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">Advanced Query Builder</p>
+                  <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                    상단 Control Center로 즉시 검색하고, 여기서는 chip 기반 쿼리 조합만 수행합니다.
+                  </p>
+                  <div className="relative mt-2">
+                    <div className="min-h-[46px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus-within:ring-2 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
                       <div className="flex flex-wrap items-center gap-1.5">
                         {chips.map((chip, idx) => (
                           <span key={`${chip}-${idx}`} className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-100 px-2 py-0.5 text-xs text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
@@ -592,13 +602,6 @@ export default function PapersPage() {
                       </div>
                     </div>
                   </div>
-                  <button
-                    onClick={searchPapers}
-                    disabled={loading}
-                    className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {loading ? '검색 중...' : '검색 실행'}
-                  </button>
                 </div>
                 {effectiveInputQuery && ghostTail && (
                   <p className="-mt-1 text-xs text-slate-400 dark:text-slate-500">
