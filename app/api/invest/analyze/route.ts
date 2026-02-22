@@ -80,6 +80,13 @@ async function fetchJson(url: string) {
   return await response.json();
 }
 
+async function fetchText(url: string, encoding: string = "utf-8") {
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`fetch failed: ${response.status}`);
+  const bytes = await response.arrayBuffer();
+  return new TextDecoder(encoding).decode(bytes);
+}
+
 async function callRemoteAnalyzerData(endpoint: string, ticker: string): Promise<AnalyzePayload> {
   const url = new URL(endpoint);
   url.searchParams.set("ticker", ticker);
@@ -209,6 +216,150 @@ async function buildYahooFallback(ticker: string): Promise<AnalyzePayload | null
   };
 }
 
+function buildPayloadFromSeries(
+  ticker: string,
+  name: string,
+  currency: "USD" | "KRW",
+  points: number[],
+  dates: string[]
+): AnalyzePayload | null {
+  if (points.length < 2) return null;
+  const current = points[points.length - 1];
+  const prevClose = points[points.length - 2];
+  const changePct = ((current - prevClose) / prevClose) * 100;
+  const rsi = computeRsi(points.length >= 20 ? points : [prevClose, current]);
+  const ret20 =
+    points.length >= 21 ? ((points[points.length - 1] / points[points.length - 21]) - 1) * 100 : changePct;
+
+  let expert = 50;
+  if (ret20 >= 12) expert += 18;
+  else if (ret20 >= 5) expert += 10;
+  else if (ret20 <= -12) expert -= 18;
+  else if (ret20 <= -5) expert -= 10;
+  if (rsi >= 78) expert -= 6;
+  else if (rsi <= 28) expert += 4;
+  else if (rsi >= 45 && rsi <= 65) expert += 6;
+  expert = clamp(expert);
+
+  const whale = 50;
+  const macro = 50;
+  const news = 50;
+  const score = Number((expert * 0.4 + whale * 0.3 + macro * 0.2 + news * 0.1).toFixed(1));
+
+  const cleanName = name.trim();
+  const displayName = cleanName && cleanName.toUpperCase() !== ticker ? `${cleanName} (${ticker})` : ticker;
+
+  return {
+    ticker,
+    name: displayName,
+    score,
+    rank: 0,
+    synthesis_verdict: verdict(score),
+    scores: { expert, whale, macro, news },
+    details: {
+      expert: [
+        `Fallback momentum(20d): ${ret20.toFixed(2)}%`,
+        `Fallback RSI(14): ${rsi.toFixed(1)}`,
+      ],
+      whale: ["Fallback mode: no institutional flow feed"],
+      macro: ["Fallback mode: neutral macro baseline"],
+      news: ["Fallback mode: no external news pipeline"],
+    },
+    future_value: {
+      prediction: "N/A",
+      rationale: "Fallback analyzer active (market data only).",
+    },
+    external_consensus: "Fallback",
+    whale_activity: "Neutral",
+    badges: ["Fallback"],
+    price_info: {
+      current: Number(current.toFixed(4)),
+      change_pct: Number(changePct.toFixed(4)),
+      currency,
+    },
+    ...(points.length >= 3
+      ? {
+          price_trend: {
+            period: "6M",
+            points: points.slice(-60),
+            dates: dates.slice(-60),
+            start: points[Math.max(0, points.length - 60)],
+            end: points[points.length - 1],
+          },
+        }
+      : {}),
+  };
+}
+
+async function buildStooqFallback(ticker: string): Promise<AnalyzePayload | null> {
+  const isKr = ticker.endsWith(".KS") || ticker.endsWith(".KQ");
+  if (isKr) return null;
+
+  const symbol = `${ticker.toLowerCase()}.us`;
+  const quoteCsv = await fetchText(`https://stooq.com/q/l/?s=${encodeURIComponent(symbol)}&f=sd2t2ohlcvn&e=csv`);
+  const quoteLine = quoteCsv.trim().split("\n")[0] || "";
+  const quoteCols = quoteLine.split(",");
+  if (quoteCols.length < 9 || quoteCols[1] === "N/D") return null;
+  const companyName = quoteCols[8] || ticker;
+
+  const histCsv = await fetchText(`https://stooq.com/q/d/l/?s=${encodeURIComponent(symbol)}&i=d`);
+  const lines = histCsv
+    .trim()
+    .split("\n")
+    .slice(1)
+    .map((line) => line.split(","))
+    .filter((cols) => cols.length >= 6);
+
+  const points: number[] = [];
+  const dates: string[] = [];
+  for (const cols of lines) {
+    const date = cols[0];
+    const close = Number(cols[4]);
+    if (Number.isFinite(close) && close > 0) {
+      points.push(close);
+      dates.push(date);
+    }
+  }
+
+  return buildPayloadFromSeries(ticker, companyName, "USD", points.slice(-180), dates.slice(-180));
+}
+
+async function buildNaverKrFallback(ticker: string): Promise<AnalyzePayload | null> {
+  const isKr = ticker.endsWith(".KS") || ticker.endsWith(".KQ");
+  if (!isKr) return null;
+  const code = ticker.split(".")[0];
+
+  const xml = await fetchText(
+    `https://fchart.stock.naver.com/sise.nhn?symbol=${encodeURIComponent(code)}&timeframe=day&count=120&requestType=0`,
+    "euc-kr"
+  );
+  const items = [...xml.matchAll(/<item\s+data="(\d{8})\|([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)\|([^"]+)"\s*\/>/g)];
+  if (items.length < 2) return null;
+
+  const points: number[] = [];
+  const dates: string[] = [];
+  for (const item of items) {
+    const dateRaw = item[1];
+    const close = Number(item[5]);
+    if (!Number.isFinite(close) || close <= 0) continue;
+    points.push(close);
+    dates.push(`${dateRaw.slice(0, 4)}-${dateRaw.slice(4, 6)}-${dateRaw.slice(6, 8)}`);
+  }
+
+  const quoteJson = await fetchJson(
+    `https://polling.finance.naver.com/api/realtime?query=SERVICE_ITEM:${encodeURIComponent(code)}`
+  );
+  let naverName =
+    quoteJson?.result?.areas?.[0]?.datas?.[0]?.nm ||
+    quoteJson?.result?.areas?.[0]?.datas?.[0]?.cd ||
+    ticker;
+  if (typeof naverName === "string" && naverName.includes("�")) {
+    naverName = ticker;
+  }
+
+  return buildPayloadFromSeries(ticker, String(naverName), "KRW", points.slice(-120), dates.slice(-120));
+}
+
 export async function GET(request: NextRequest) {
   const ticker = request.nextUrl.searchParams.get("ticker");
   if (!ticker) {
@@ -239,7 +390,21 @@ export async function GET(request: NextRequest) {
     const fallback = await buildYahooFallback(safeTicker);
     if (fallback) return NextResponse.json(fallback);
   } catch (error: any) {
-    errors.push(`fallback: ${error?.message || "failed"}`);
+    errors.push(`yahoo: ${error?.message || "failed"}`);
+  }
+
+  try {
+    const stooq = await buildStooqFallback(safeTicker);
+    if (stooq) return NextResponse.json(stooq);
+  } catch (error: any) {
+    errors.push(`stooq: ${error?.message || "failed"}`);
+  }
+
+  try {
+    const naver = await buildNaverKrFallback(safeTicker);
+    if (naver) return NextResponse.json(naver);
+  } catch (error: any) {
+    errors.push(`naver: ${error?.message || "failed"}`);
   }
 
   return NextResponse.json(
