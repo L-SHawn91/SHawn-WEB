@@ -450,6 +450,14 @@ function DetailModalContent({ report }: { report: StockReport }) {
                 </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">{diagnosisPrimary}</p>
                 <p className="text-sm text-gray-400 leading-relaxed">{detailNarrative}</p>
+                <div className="rounded-lg border border-gray-700 bg-black/30 p-3">
+                    <p className="text-xs font-semibold text-gray-300">쉽게 해석하면</p>
+                    <ul className="mt-2 space-y-1 text-xs text-gray-400">
+                        <li>• Alpha Score가 높을수록 단기/중기 우호 신호가 많다는 뜻입니다.</li>
+                        <li>• Target/Stop은 기대수익과 손실 제한 기준을 함께 보라는 의미입니다.</li>
+                        <li>• 변동성이 큰 종목은 같은 점수여도 비중을 더 작게 가져가는 것이 일반적입니다.</li>
+                    </ul>
+                </div>
             </div>
 
             {/* Neural Diagnosis (Layers) */}

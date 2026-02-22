@@ -208,6 +208,37 @@ const suggestionBadge: Record<RebalanceSuggestion["action"], string> = {
   hold: "text-sky-200 bg-sky-500/10 border-sky-400/30",
 };
 
+const scoreBands = [
+  { min: 75, label: "Buy", note: "상승 신호 우위. 분할 매수 검토." },
+  { min: 40, label: "Hold", note: "방향성 혼조. 비중 유지/관망." },
+  { min: -1, label: "Trim", note: "리스크 우위. 비중 축소 검토." },
+];
+
+const moduleExplain: Record<string, string> = {
+  expert: "차트·지표·추세를 기반으로 기술적 강도를 평가합니다.",
+  whale: "기관/외국인 자금 흐름을 보고 수급 강도를 반영합니다.",
+  macro: "금리·환율·지수 환경이 종목에 주는 압력을 반영합니다.",
+  news: "최근 뉴스/이슈의 심리 효과를 단기 점수로 반영합니다.",
+};
+
+function explainSignal(signal: SignalAction, score: number) {
+  if (signal === "Buy") {
+    return score >= 75
+      ? "강한 매수 후보입니다. 진입은 분할(예: 2~3회)로 나누는 것이 안전합니다."
+      : "매수 우위 신호입니다. 단기 변동을 감안해 천천히 비중을 늘리세요.";
+  }
+  if (signal === "Trim") {
+    return "리스크 관리 구간입니다. 급한 전량 매도보다 단계적 축소가 일반적으로 유리합니다.";
+  }
+  return "관망 구간입니다. 신규 진입보다 기존 비중 유지와 뉴스 확인이 우선입니다.";
+}
+
+function explainSuggestion(action: RebalanceSuggestion["action"], deltaPct: number) {
+  if (action === "up") return `비중을 약 ${deltaPct}% 늘려 상승 시나리오를 추적하는 제안입니다.`;
+  if (action === "down") return `비중을 약 ${deltaPct}% 줄여 변동성/손실 위험을 낮추는 제안입니다.`;
+  return "현재 규칙 기준에서 즉시 조정 필요성이 낮다는 의미입니다.";
+}
+
 function ProgressBar({ value, label, accentColor }: { value: number; label: string; accentColor: string }) {
   return (
     <div>
@@ -376,6 +407,31 @@ export default function InvestmentWorld() {
           <div className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
             투자 페이지를 단계적으로 통합 중입니다. 리포트 탐색은 <Link href="/market-intelligence" className="underline font-semibold">Market Intelligence</Link>를 기본 허브로 사용하세요.
           </div>
+          <div className="mt-4 rounded-2xl border border-sky-500/30 bg-sky-500/10 p-5">
+            <p className="text-sm font-semibold text-sky-200">처음 보는 분을 위한 대시보드 읽는 순서</p>
+            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-white/15 bg-black/20 p-3">
+                <p className="text-xs text-gray-400">1단계</p>
+                <p className="text-sm font-semibold text-white mt-1">신호 점수 확인</p>
+                <p className="text-xs text-gray-300 mt-1">`Buy/Hold/Trim` 기준으로 현재 구간을 먼저 파악합니다.</p>
+              </div>
+              <div className="rounded-lg border border-white/15 bg-black/20 p-3">
+                <p className="text-xs text-gray-400">2단계</p>
+                <p className="text-sm font-semibold text-white mt-1">모듈 원인 확인</p>
+                <p className="text-xs text-gray-300 mt-1">Expert/Whale/Macro/News 중 어떤 항목이 점수를 움직였는지 확인합니다.</p>
+              </div>
+              <div className="rounded-lg border border-white/15 bg-black/20 p-3">
+                <p className="text-xs text-gray-400">3단계</p>
+                <p className="text-sm font-semibold text-white mt-1">Watchlist 근거 확인</p>
+                <p className="text-xs text-gray-300 mt-1">종목별 이유와 촉매(catalyst)를 보고 우선순위를 정합니다.</p>
+              </div>
+              <div className="rounded-lg border border-white/15 bg-black/20 p-3">
+                <p className="text-xs text-gray-400">4단계</p>
+                <p className="text-sm font-semibold text-white mt-1">리밸런싱 시뮬레이션</p>
+                <p className="text-xs text-gray-300 mt-1">실제 매매 전 비중 변화와 위험도 변화를 먼저 가상으로 확인합니다.</p>
+              </div>
+            </div>
+          </div>
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
               <p className="text-sm text-gray-400">운영 모드</p>
@@ -408,6 +464,18 @@ export default function InvestmentWorld() {
                 지금 새로고침
               </button>
               <p className="mt-2 text-xs text-gray-500">60초마다 자동 갱신</p>
+            </div>
+          </div>
+          <div className="mt-4 rounded-xl border border-gray-700 bg-gray-900/50 p-4">
+            <p className="text-xs uppercase tracking-wider text-gray-400">점수 해석 기준</p>
+            <div className="mt-2 grid gap-2 sm:grid-cols-3">
+              {scoreBands.map((band) => (
+                <div key={band.label} className="rounded-lg border border-gray-700 bg-black/30 p-3">
+                  <p className="text-sm font-semibold text-white">{band.label}</p>
+                  <p className="text-xs text-gray-400 mt-1">기준: {band.label === "Buy" ? "75 이상" : band.label === "Hold" ? "40~74" : "39 이하"}</p>
+                  <p className="text-xs text-gray-300 mt-1">{band.note}</p>
+                </div>
+              ))}
             </div>
           </div>
           <InvestQuoteKpiCards snapshot={quoteKpiData} />
@@ -462,6 +530,7 @@ export default function InvestmentWorld() {
                 </div>
                 <ProgressBar value={m.weight} label="Signal Weight" accentColor={m.palette.bar} />
                 <p className="mt-2 text-sm text-gray-300">추천 액션: {m.action}</p>
+                <p className="mt-1 text-xs text-gray-400">{moduleExplain[m.key] || "모듈 설명 데이터 준비 중"}</p>
                 <ul className="mt-3 space-y-1.5 text-sm text-gray-300">
                   {m.checks.map((c) => (
                     <li key={`${m.key}-${c}`} className="flex items-center gap-2">
@@ -590,6 +659,7 @@ export default function InvestmentWorld() {
                     </div>
                     <p className="text-xs text-gray-400 mt-1">변경 폭: {sugg.deltaPct}%</p>
                     <p className="text-sm text-gray-300 mt-1">{sugg.reason}</p>
+                    <p className="text-xs text-gray-400 mt-1">{explainSuggestion(sugg.action, sugg.deltaPct)}</p>
                   </div>
                 ))}
               </div>
@@ -661,6 +731,15 @@ export default function InvestmentWorld() {
             {error ? <p className="text-xs text-rose-300">{error}</p> : null}
             {loading ? <p className="text-xs text-gray-400">실시간 데이터를 불러오는 중...</p> : null}
             {snapshot?.provenance ? <p className="text-xs text-gray-500">근거 출처: {snapshot.provenance.sources.join(", ")}</p> : null}
+            <div className="rounded-lg border border-gray-700 bg-black/30 p-3">
+              <p className="text-xs font-semibold text-gray-200">용어 빠른 해설</p>
+              <ul className="mt-2 space-y-1 text-xs text-gray-400">
+                <li>• Signal: 현재 종목 행동 권고(`Buy/Hold/Trim`)</li>
+                <li>• Catalyst: 점수 변화를 만든 핵심 이벤트</li>
+                <li>• Rationale: 모델이 그렇게 판단한 직접 근거</li>
+                <li>• Beta: 시장 변동 대비 민감도(1.0보다 크면 변동 큼)</li>
+              </ul>
+            </div>
 
             <div className="space-y-3">
               {watchItems.map((item) => (
@@ -674,6 +753,7 @@ export default function InvestmentWorld() {
                   <p className="text-sm text-gray-300 mt-1">{item.reason}</p>
                   <p className="text-xs text-gray-400 mt-1">{item.catalyst}</p>
                   <p className={`text-sm mt-2 ${formatScore(item.score)}`}>점수 {item.score}</p>
+                  <p className="text-xs text-gray-400 mt-1">{explainSignal(item.signal, item.score)}</p>
                   {item.rationale ? (
                         <div className="mt-1 flex flex-wrap gap-1">
                           <span className="text-[10px] px-2 py-0.5 rounded border border-blue-400/30 text-blue-300">{item.signal}</span>

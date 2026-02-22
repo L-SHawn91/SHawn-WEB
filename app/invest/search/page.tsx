@@ -55,6 +55,13 @@ const SCORE_DESCRIPTIONS = {
   news: "최신 뉴스 기사의 감성 분석(Sentiment Analysis)을 통해 시장의 심리를 파악합니다.",
 };
 
+const SCORE_BAND_GUIDE = [
+  { label: "80~100", meaning: "강한 매수 후보", action: "분할 매수 + 손절 기준 설정" },
+  { label: "60~79", meaning: "매수 우위", action: "소규모 진입 후 추세 확인" },
+  { label: "40~59", meaning: "관망 구간", action: "신규 진입보다 관찰 우선" },
+  { label: "0~39", meaning: "주의 구간", action: "비중 축소/리스크 점검" },
+];
+
 export default function InvestSearchPage() {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
@@ -291,6 +298,21 @@ export default function InvestSearchPage() {
                 </div>
               </InvestCard>
             </div>
+
+            <InvestCard title="How to Read This Result">
+              <div className="grid gap-3 md:grid-cols-2">
+                {SCORE_BAND_GUIDE.map((row) => (
+                  <div key={row.label} className="rounded-lg border border-zinc-700/50 bg-zinc-800/30 p-3">
+                    <p className="text-xs text-zinc-400">점수 구간 {row.label}</p>
+                    <p className="text-sm font-semibold text-white mt-1">{row.meaning}</p>
+                    <p className="text-xs text-zinc-300 mt-1">권장 접근: {row.action}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-3 text-xs text-zinc-500">
+                참고: 본 결과는 투자 판단 보조 도구입니다. 실제 매매는 손실 허용 범위와 분할 원칙을 함께 적용하세요.
+              </p>
+            </InvestCard>
             
             {result.future_value?.rationale && (
                  <InvestCard title="AI Strategy Note">
