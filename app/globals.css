@@ -120,44 +120,44 @@
   }
 
   .bw-prose {
-    @apply text-black;
+    @apply text-foreground;
   }
 
   .bw-prose :where(h1, h2, h3, h4, h5, h6) {
-    @apply text-black font-heading font-semibold tracking-tight;
+    @apply text-foreground font-heading font-semibold tracking-tight;
   }
 
   .bw-prose :where(p, li, blockquote) {
-    @apply text-black/85 leading-8;
+    @apply text-foreground/90 leading-8;
   }
 
   .bw-prose :where(strong) {
-    @apply text-black font-semibold;
+    @apply text-foreground font-semibold;
   }
 
   .bw-prose :where(a) {
-    @apply text-black underline decoration-black/35 underline-offset-4 transition-colors hover:text-black/70;
+    @apply text-foreground underline decoration-foreground/35 underline-offset-4 transition-colors hover:text-foreground/75;
   }
 
   .bw-prose :where(hr) {
-    @apply border-black/20;
+    @apply border-border;
   }
 
   .bw-prose :where(ul > li)::marker,
   .bw-prose :where(ol > li)::marker {
-    color: rgba(0, 0, 0, 0.65);
+    color: hsl(var(--muted-foreground));
   }
 
   .bw-prose :where(blockquote) {
-    @apply border-l-4 border-black bg-zinc-50 px-5 py-3 italic;
+    @apply border-l-4 border-foreground/50 bg-muted/45 px-5 py-3 italic;
   }
 
   .bw-prose :where(code):not(pre code) {
-    @apply rounded border border-black/20 bg-zinc-100 px-1.5 py-0.5 text-[0.9em] text-black;
+    @apply rounded border border-border bg-muted px-1.5 py-0.5 text-[0.9em] text-foreground;
   }
 
   .bw-prose :where(pre) {
-    @apply overflow-x-auto rounded-xl border border-black bg-black p-4 text-zinc-100;
+    @apply overflow-x-auto rounded-xl border border-border bg-zinc-900 p-4 text-zinc-100 dark:bg-zinc-950;
   }
 
   .bw-prose :where(pre code) {
@@ -165,15 +165,15 @@
   }
 
   .bw-prose :where(img) {
-    @apply rounded-xl border border-black/20;
+    @apply rounded-xl border border-border;
   }
 
   .bw-prose :where(table) {
-    @apply border border-black/20;
+    @apply border border-border;
   }
 
   .bw-prose :where(thead) {
-    @apply bg-zinc-100;
+    @apply bg-muted;
   }
 }
 

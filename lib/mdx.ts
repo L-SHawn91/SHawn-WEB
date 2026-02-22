@@ -18,6 +18,16 @@ export type Post = {
     featured?: boolean;
 };
 
+function normalizeTags(tags: unknown): string[] {
+    if (!Array.isArray(tags)) return [];
+    const normalized = tags
+        .filter((tag): tag is string => typeof tag === 'string')
+        .map((tag) => tag.replace(/^#+/, '').trim())
+        .filter(Boolean);
+
+    return Array.from(new Set(normalized));
+}
+
 export function getAllPosts(): Post[] {
     if (!fs.existsSync(postsDirectory)) {
         return [];
@@ -38,7 +48,7 @@ export function getAllPosts(): Post[] {
                 date: new Date(data.date).toISOString().split('T')[0],
                 description: data.description || '',
                 category: data.category || 'research',
-                tags: data.tags || [],
+                tags: normalizeTags(data.tags),
                 image: data.image,
                 content,
                 readingTime: Math.ceil(readingTime(content).minutes) + '분 소요',
@@ -65,7 +75,7 @@ export function getPostBySlug(slug: string): Post | null {
         date: new Date(data.date).toISOString().split('T')[0],
         description: data.description || '',
         category: data.category || 'research',
-        tags: data.tags || [],
+        tags: normalizeTags(data.tags),
         image: data.image,
         content,
         readingTime: Math.ceil(readingTime(content).minutes) + '분 소요',
