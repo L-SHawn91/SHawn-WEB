@@ -2,6 +2,11 @@ import { getPostBySlug, getAllPosts } from '@/lib/mdx';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+import { RelatedPosts } from '@/components/blog/related-posts';
+import { ShareButtons } from '@/components/blog/share-buttons';
+
+const SITE_URL = 'https://phdshawn.com';
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -10,21 +15,107 @@ export async function generateStaticParams() {
   }));
 }
 
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = getPostBySlug(params.slug);
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+    };
+  }
+
+  const postUrl = `${SITE_URL}/blog/${post.slug}`;
+  const description = post.description || `${post.title} | SHawn_LAB`;
+
+  return {
+    title: post.title,
+    description,
+    keywords: post.tags,
+    alternates: {
+      canonical: postUrl,
+    },
+    openGraph: {
+      type: 'article',
+      url: postUrl,
+      title: post.title,
+      description,
+      siteName: 'SHawn_LAB',
+      locale: 'ko_KR',
+      publishedTime: post.date,
+      tags: post.tags,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+    },
+  };
+}
+
 export default function BlogPost({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
+  const allPosts = getAllPosts();
 
   if (!post) {
     notFound();
   }
 
+  const postUrl = `${SITE_URL}/blog/${post.slug}`;
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Person',
+      name: 'SHawn',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'SHawn_LAB',
+      url: SITE_URL,
+    },
+    mainEntityOfPage: postUrl,
+    keywords: post.tags.join(', '),
+    articleSection: post.category,
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: `${SITE_URL}/blog`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: postUrl,
+      },
+    ],
+  };
+
   return (
     <article className="relative mx-auto max-w-4xl px-4 py-10 md:py-14">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(0,0,0,0.08),transparent_58%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.09),transparent_58%)]" />
       <header className="mb-10 border-b border-border pb-8">
         <div className="mb-4 inline-flex items-center rounded-full border border-foreground bg-foreground px-3 py-1 text-xs font-semibold tracking-wide text-background">
           {post.category}
         </div>
-        <h1 className="mb-4 text-balance font-heading text-3xl font-bold leading-tight text-foreground md:text-5xl">
+        <h1 className="mb-4 text-balance font-heading text-3xl font-bold leading-tight text-foreground md:text-4xl">
           {post.title}
         </h1>
         <div className="mb-5 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -35,9 +126,12 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
             {post.description}
           </p>
         )}
+        <div className="mt-6">
+          <ShareButtons title={post.title} url={postUrl} />
+        </div>
       </header>
 
-      <div className="bw-prose prose prose-lg max-w-none">
+      <div className="bw-prose prose prose-base max-w-none">
         <MDXRemote source={post.content} />
       </div>
 
@@ -58,6 +152,34 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           </div>
         </footer>
       )}
+
+      <section className="mt-12 rounded-2xl border border-border bg-muted/30 p-6">
+        <h2 className="font-heading text-xl font-bold text-foreground">다음 액션</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          실전 운영/리서치 사례를 주간으로 받아보려면 블로그를 북마크하고, 필요한 주제는 문의로 남겨주세요.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link
+            href="/blog"
+            className="inline-flex items-center rounded-md border border-foreground bg-foreground px-4 py-2 text-sm font-medium text-background transition hover:bg-background hover:text-foreground"
+          >
+            최신 글 더 보기
+          </Link>
+          <Link
+            href="/about"
+            className="inline-flex items-center rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition hover:border-foreground"
+          >
+            협업/문의
+          </Link>
+        </div>
+      </section>
+
+      <RelatedPosts
+        posts={allPosts}
+        currentSlug={post.slug}
+        currentCategory={post.category}
+        currentTags={post.tags}
+      />
 
       <div className="mt-12 border-t border-border pt-8">
         <Link

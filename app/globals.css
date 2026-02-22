@@ -128,7 +128,7 @@
   }
 
   .bw-prose :where(p, li, blockquote) {
-    @apply text-foreground/90 leading-8;
+    @apply text-[1rem] text-foreground/90 leading-7;
   }
 
   .bw-prose :where(strong) {
@@ -165,7 +165,9 @@
   }
 
   .bw-prose :where(img) {
-    @apply rounded-xl border border-border;
+    @apply my-8 block w-full max-w-3xl rounded-xl border border-border object-contain;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .bw-prose :where(table) {
