@@ -171,6 +171,20 @@ function renderSparklinePath(values: number[], width = 560, height = 180): strin
         .join(" ");
 }
 
+function isPlaceholderNarrative(text?: string): boolean {
+    const s = String(text || "").trim().toLowerCase();
+    if (!s) return true;
+    return s === "calculating..." || s === "n/a" || s === "none" || s === "null";
+}
+
+function buildNarrativeFallback(report: StockReport): string {
+    const score = Number(report.score || 0);
+    const mom = Number(report.price_info?.change_pct || 0);
+    const verdict = score >= 70 ? "강한 매수 후보" : score >= 60 ? "매수 우위" : score <= 40 ? "보수적 관점 필요" : "관망 구간";
+    const momentum = mom >= 0 ? `단기 변동은 +${mom.toFixed(2)}%` : `단기 변동은 ${mom.toFixed(2)}%`;
+    return `현재 ${verdict}로 해석됩니다. ${momentum}이며, 분할 진입과 손절 기준을 함께 관리하는 접근이 적절합니다.`;
+}
+
 export function ReportDetailView({ data, loading, onDateSelect }: ReportDetailViewProps) {
     const [selectedTicker, setSelectedTicker] = useState<StockReport | null>(null);
 
@@ -364,7 +378,10 @@ function DetailModalContent({ report }: { report: StockReport }) {
         : report.enhanced_diagnosis?.primary || "분석 데이터 준비 중";
     const shortDetails = report.short_term?.details || [];
     const longDetails = report.long_term?.details || [];
-    const detailNarrative = report.future_value?.rationale || "미래 가치 설명 데이터 준비 중";
+    const rawNarrative = report.future_value?.rationale;
+    const detailNarrative = isPlaceholderNarrative(rawNarrative)
+        ? buildNarrativeFallback(report)
+        : String(rawNarrative).trim();
 
     return (
         <div className="space-y-6">

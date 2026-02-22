@@ -128,6 +128,9 @@ type QuantReportItem = {
   details?: {
     news?: string[];
   };
+  future_value?: {
+    rationale?: string;
+  };
   price_info?: {
     change_pct?: number;
   };
@@ -559,6 +562,35 @@ function resolveCompanyName(symbol?: string, tickerNameMap?: Map<string, string>
     if (fromBase) return fromBase;
   }
   return undefined;
+}
+
+function isPlaceholderNarrative(text?: string): boolean {
+  const s = String(text || "").trim().toLowerCase();
+  if (!s) return true;
+  return s === "calculating..." || s === "n/a" || s === "none" || s === "null";
+}
+
+function buildNarrativeFallback(item: QuantReportItem): string {
+  const score = Number(item.score || 0);
+  const expert = Number(item.scores?.expert || 0);
+  const whale = Number(item.scores?.whale || 0);
+  const macro = Number(item.scores?.macro || 0);
+  const news = Number(item.scores?.news || 0);
+  const mom = Number(item.price_info?.change_pct || 0);
+
+  const lines: string[] = [];
+  lines.push(`종합 점수 ${score.toFixed(1)}점 기준으로 ${score >= 60 ? "매수 우위" : score <= 40 ? "보수적 접근" : "관망"} 구간입니다.`);
+  lines.push(`기술(${expert.toFixed(0)})·수급(${whale.toFixed(0)})·거시(${macro.toFixed(0)})·뉴스(${news.toFixed(0)})를 합산해 판단했습니다.`);
+
+  if (mom > 0.8) {
+    lines.push(`단기 모멘텀이 +${mom.toFixed(2)}%로 우호적입니다.`);
+  } else if (mom < -0.8) {
+    lines.push(`단기 모멘텀이 ${mom.toFixed(2)}%로 약세이므로 변동성 관리가 필요합니다.`);
+  } else {
+    lines.push("단기 변동은 제한적이어서 분할 접근이 유효합니다.");
+  }
+
+  return lines.join(" ");
 }
 
 async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
@@ -1220,6 +1252,8 @@ export async function GET(request: NextRequest) {
 function collectWatchReason(entry: QuantReportItem, region: "k" | "us", tickerNameMap?: Map<string, string>): WatchItem {
   const reasons = buildEvidenceFromItem(entry);
   const top = reasons.find((r) => r.impact === "up") || reasons[0];
+  const rawNarrative = entry.future_value?.rationale;
+  const resolvedNarrative = isPlaceholderNarrative(rawNarrative) ? buildNarrativeFallback(entry) : String(rawNarrative).trim();
   return {
     symbol: String(entry.ticker || ""),
     name: String(entry.name || "").trim() || resolveCompanyName(entry.ticker, tickerNameMap),
@@ -1228,7 +1262,7 @@ function collectWatchReason(entry: QuantReportItem, region: "k" | "us", tickerNa
     reason: entry.synthesis_verdict || "중립/Watch",
     catalyst: (entry.details?.news || [])[0] || `${region.toUpperCase()} 시장 모멘텀 기반 자동 점수`,
     region,
-    rationale: top ? `${top.module}: ${top.rationale}` : undefined,
+    rationale: top ? `${top.module}: ${top.rationale} | ${resolvedNarrative}` : resolvedNarrative,
   };
 }
 
