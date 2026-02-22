@@ -118,6 +118,63 @@
   [title] {
     cursor: help;
   }
+
+  .bw-prose {
+    @apply text-black;
+  }
+
+  .bw-prose :where(h1, h2, h3, h4, h5, h6) {
+    @apply text-black font-heading font-semibold tracking-tight;
+  }
+
+  .bw-prose :where(p, li, blockquote) {
+    @apply text-black/85 leading-8;
+  }
+
+  .bw-prose :where(strong) {
+    @apply text-black font-semibold;
+  }
+
+  .bw-prose :where(a) {
+    @apply text-black underline decoration-black/35 underline-offset-4 transition-colors hover:text-black/70;
+  }
+
+  .bw-prose :where(hr) {
+    @apply border-black/20;
+  }
+
+  .bw-prose :where(ul > li)::marker,
+  .bw-prose :where(ol > li)::marker {
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  .bw-prose :where(blockquote) {
+    @apply border-l-4 border-black bg-zinc-50 px-5 py-3 italic;
+  }
+
+  .bw-prose :where(code):not(pre code) {
+    @apply rounded border border-black/20 bg-zinc-100 px-1.5 py-0.5 text-[0.9em] text-black;
+  }
+
+  .bw-prose :where(pre) {
+    @apply overflow-x-auto rounded-xl border border-black bg-black p-4 text-zinc-100;
+  }
+
+  .bw-prose :where(pre code) {
+    @apply bg-transparent p-0 text-inherit;
+  }
+
+  .bw-prose :where(img) {
+    @apply rounded-xl border border-black/20;
+  }
+
+  .bw-prose :where(table) {
+    @apply border border-black/20;
+  }
+
+  .bw-prose :where(thead) {
+    @apply bg-zinc-100;
+  }
 }
 
 

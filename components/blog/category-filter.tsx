@@ -1,7 +1,6 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useState } from "react"
 
 interface CategoryFilterProps {
     categories: string[]
@@ -17,8 +16,8 @@ export function CategoryFilter({ categories, selectedCategory, onSelectCategory 
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={() => onSelectCategory("All")}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === "All"
-                        ? "bg-primary text-primary-foreground shadow-md"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        ? "bg-black text-white border border-black shadow-sm"
+                        : "bg-white text-black border border-black/20 hover:border-black"
                     }`}
             >
                 전체
@@ -31,8 +30,8 @@ export function CategoryFilter({ categories, selectedCategory, onSelectCategory 
                     transition={{ delay: (index + 1) * 0.05 }}
                     onClick={() => onSelectCategory(category)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === category
-                            ? "bg-primary text-primary-foreground shadow-md"
-                            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                            ? "bg-black text-white border border-black shadow-sm"
+                            : "bg-white text-black border border-black/20 hover:border-black"
                         }`}
                 >
                     {category}
