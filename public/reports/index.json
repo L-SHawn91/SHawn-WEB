@@ -1,5 +1,25 @@
 [
   {
+    "date": "2026-02-22",
+    "time": "22:56",
+    "type": "KR",
+    "title": "2026-02-22 22:56 KR Market Report",
+    "path": "/reports/2026-02-22_22-56_KR.html",
+    "filename": "2026-02-22_22-56_KR.html",
+    "timestamp": "2026-02-22T22:56:51.551782",
+    "json_path": "/reports/2026-02-22_22-56_KR.json"
+  },
+  {
+    "date": "2026-02-22",
+    "time": "22:56",
+    "type": "US",
+    "title": "2026-02-22 22:56 US Market Report",
+    "path": "/reports/2026-02-22_22-56_US.html",
+    "filename": "2026-02-22_22-56_US.html",
+    "timestamp": "2026-02-22T22:56:51.551782",
+    "json_path": "/reports/2026-02-22_22-56_US.json"
+  },
+  {
     "date": "2026-02-18",
     "time": "10:00",
     "type": "SONOLBOT_ANALYSIS",
