@@ -859,12 +859,12 @@ function buildEvidenceFromItem(item: QuantReportItem): SnapshotReason[] {
   return reasons.filter((r) => r.value !== null && r.value !== undefined);
 }
 
-function deriveRelativeScore(item: QuantReportItem): RelativeMetric {
+function deriveRelativeScore(item: QuantReportItem, tickerNameMap?: Map<string, string>): RelativeMetric {
   const score = Number(item.score || 50);
   const change = Number(item.price_info?.change_pct || 0);
   return {
     symbol: String(item.ticker || ""),
-    name: String(item.name || "").trim() || resolveCompanyName(item.ticker),
+    name: String(item.name || "").trim() || resolveCompanyName(item.ticker, tickerNameMap),
     alphaVsBenchmark: Number((score - 50 + Math.min(20, Math.max(-20, change))).toFixed(2)),
     beta: riskToDecimal(score),
     drawdown60d: Number((Math.abs(Math.min(0, change)) * 1.8).toFixed(2)),
@@ -918,10 +918,10 @@ function buildDriftDetector(markets: MarketCard[], modules: SignalModule[], sign
   };
 }
 
-function toQuantWatchlist(item: QuantReportPayload | null, region: "k" | "us"): WatchItem[] {
+function toQuantWatchlist(item: QuantReportPayload | null, region: "k" | "us", tickerNameMap?: Map<string, string>): WatchItem[] {
   if (!item?.reports?.length) return BASE_WATCH;
 
-  return item.reports.slice(0, 5).map((entry) => collectWatchReason(entry, region));
+  return item.reports.slice(0, 5).map((entry) => collectWatchReason(entry, region, tickerNameMap));
 }
 
 
@@ -1128,7 +1128,7 @@ export async function GET(request: NextRequest) {
   );
   const mergedWatchlist = Array.from(
     new Map<string, WatchItem>(
-      [...toQuantWatchlist(usReport, "us"), ...toQuantWatchlist(krReport, "k")].map((w) => [w.symbol, w])
+      [...toQuantWatchlist(usReport, "us", tickerNameMap), ...toQuantWatchlist(krReport, "k", tickerNameMap)].map((w) => [w.symbol, w])
     ).values()
   );
 
@@ -1142,8 +1142,8 @@ export async function GET(request: NextRequest) {
   const driftDetector = buildDriftDetector(liveMarkets.markets, modules, signalConfidence);
 
   const relative = [
-    ...buildBenchmarkRelative(usReport),
-    ...buildBenchmarkRelative(krReport),
+    ...buildBenchmarkRelative(usReport, tickerNameMap),
+    ...buildBenchmarkRelative(krReport, tickerNameMap),
   ];
 
   const reasons = [
@@ -1217,12 +1217,12 @@ export async function GET(request: NextRequest) {
 }
 
 
-function collectWatchReason(entry: QuantReportItem, region: "k" | "us"): WatchItem {
+function collectWatchReason(entry: QuantReportItem, region: "k" | "us", tickerNameMap?: Map<string, string>): WatchItem {
   const reasons = buildEvidenceFromItem(entry);
   const top = reasons.find((r) => r.impact === "up") || reasons[0];
   return {
     symbol: String(entry.ticker || ""),
-    name: String(entry.name || "").trim() || resolveCompanyName(entry.ticker),
+    name: String(entry.name || "").trim() || resolveCompanyName(entry.ticker, tickerNameMap),
     signal: parseSignalFromVerdict(entry.synthesis_verdict),
     score: Math.round(entry.score || 0),
     reason: entry.synthesis_verdict || "중립/Watch",
@@ -1233,10 +1233,10 @@ function collectWatchReason(entry: QuantReportItem, region: "k" | "us"): WatchIt
 }
 
 
-function buildBenchmarkRelative(reports: QuantReportPayload | null): RelativeMetric[] {
+function buildBenchmarkRelative(reports: QuantReportPayload | null, tickerNameMap?: Map<string, string>): RelativeMetric[] {
   if (!reports?.reports?.length) return [];
   return reports.reports
     .filter((item) => item?.ticker)
     .slice(0, 8)
-    .map((item) => deriveRelativeScore(item));
+    .map((item) => deriveRelativeScore(item, tickerNameMap));
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, TrendingUp, TrendingDown, Activity, ArrowRight, Brain, AlertCircle, DollarSign, BarChart2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -85,12 +85,61 @@ interface ReportDetailViewProps {
     onDateSelect?: (date: string) => void;
 }
 
+const COMPANY_NAME_BY_TICKER: Record<string, string> = {
+    AAPL: "Apple",
+    NVDA: "NVIDIA",
+    MSFT: "Microsoft",
+    GOOGL: "Alphabet",
+    GOOG: "Alphabet",
+    AMZN: "Amazon",
+    TSLA: "Tesla",
+    AVGO: "Broadcom",
+    AMD: "Advanced Micro Devices",
+    INTC: "Intel",
+    META: "Meta Platforms",
+    "005930.KS": "삼성전자",
+    "000660.KS": "SK하이닉스",
+    "035420.KS": "NAVER",
+    "005380.KS": "현대차",
+    "373220.KS": "LG에너지솔루션",
+    "247540.KQ": "에코프로비엠",
+};
+
+function normalizeTicker(ticker?: string): string {
+    return String(ticker || "").trim().toUpperCase();
+}
+
+function resolveNameByTicker(ticker?: string): string | undefined {
+    const key = normalizeTicker(ticker);
+    if (!key) return undefined;
+    if (COMPANY_NAME_BY_TICKER[key]) return COMPANY_NAME_BY_TICKER[key];
+    if (key.endsWith(".KS")) {
+        const noSuffix = key.replace(/\.KS$/, "");
+        if (COMPANY_NAME_BY_TICKER[noSuffix]) return COMPANY_NAME_BY_TICKER[noSuffix];
+    }
+    return undefined;
+}
+
+function displayInstrument(ticker?: string, name?: string): string {
+    const normalizedTicker = String(ticker || "").trim();
+    const resolvedName = String(name || "").trim() || resolveNameByTicker(ticker);
+    if (!normalizedTicker) return resolvedName || "N/A";
+    if (!resolvedName) return normalizedTicker;
+    return `${normalizedTicker} · ${resolvedName}`;
+}
+
 export function ReportDetailView({ data, loading, onDateSelect }: ReportDetailViewProps) {
     const [selectedTicker, setSelectedTicker] = useState<StockReport | null>(null);
 
     // Filter Logic
     const activeBuys = data?.reports.filter(r => r.score >= 60) || [];
     const watchList = data?.reports.filter(r => r.score < 60) || [];
+    const topAlphaLabel = useMemo(() => {
+        if (!data?.meta?.top_alpha_ticker) return "N/A";
+        const ticker = String(data.meta.top_alpha_ticker).trim();
+        const match = data.reports.find((r) => normalizeTicker(r.ticker) === normalizeTicker(ticker));
+        return displayInstrument(ticker, match?.name);
+    }, [data]);
 
     if (loading) {
         return <div className="flex h-full items-center justify-center text-gray-500">Loading Report Data...</div>;
@@ -106,7 +155,7 @@ export function ReportDetailView({ data, loading, onDateSelect }: ReportDetailVi
             <div className="p-6 pb-2 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <KPICard
                     title="Top Alpha"
-                    value={data.meta.top_alpha_ticker || "N/A"}
+                    value={topAlphaLabel}
                     desc="Highest Score Asset"
                     icon={<TrendingUp className="text-green-400" />}
                     color="border-l-4 border-green-500"
@@ -218,12 +267,12 @@ function ReportItem({ report, onClick, isWatchList = false }: { report: StockRep
                 <div>
                     <div className="flex items-center gap-2">
                         <span className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
-                            {report.ticker}
+                            {displayInstrument(report.ticker, report.name)}
                         </span>
                         {report.badges.includes("S-Tier Alpha") && <Badge className="bg-yellow-500 text-black hover:bg-yellow-600">S-TIER</Badge>}
                         {report.badges.includes("Whale Entry") && <Badge className="bg-blue-500 hover:bg-blue-600">WHALE</Badge>}
                     </div>
-                    <span className="text-sm text-gray-400">{report.name}</span>
+                    <span className="text-sm text-gray-400">{report.sector}</span>
                 </div>
                 <div className={`px-3 py-1 rounded-lg font-bold text-lg ${isWatchList ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'}`}>
                     {report.score.toFixed(0)}
@@ -262,8 +311,7 @@ function DetailModalContent({ report }: { report: StockReport }) {
         <div className="space-y-6">
             <DialogHeader>
                 <DialogTitle className="text-2xl flex items-center gap-3">
-                    {report.ticker}
-                    <span className="text-lg font-normal text-gray-400">{report.name}</span>
+                    {displayInstrument(report.ticker, report.name)}
                 </DialogTitle>
                 <DialogDescription className="text-gray-400">
                     Sector: {report.sector}
