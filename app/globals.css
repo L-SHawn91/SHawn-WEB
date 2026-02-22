@@ -114,6 +114,10 @@
   .text-gradient-revenue {
     @apply from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400;
   }
+
+  [title] {
+    cursor: help;
+  }
 }
 
 
