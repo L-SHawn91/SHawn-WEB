@@ -1,0 +1,3078 @@
+{
+  "meta": {
+    "market": "US",
+    "date": "2026-02-20",
+    "time": "08:24:42",
+    "timestamp": "2026-02-20T08:24:42.785626",
+    "avg_score": 59.48,
+    "strong_buy_count": 0,
+    "buy_count": 9,
+    "watch_count": 11,
+    "sell_count": 0,
+    "high_growth_count": 0,
+    "top_alpha_ticker": "AKAM",
+    "failed_count": 0,
+    "benchmark_ticker": "^GSPC",
+    "benchmark_change_pct": 0.694,
+    "drift": {
+      "avg_score": 11.45,
+      "max_score": 25.0,
+      "min_score": 0.0,
+      "count": 20,
+      "status": "stable"
+    },
+    "score_meta": {
+      "avg_vol_60": 0.0,
+      "count": 20,
+      "max_vol_60": 0.0,
+      "min_vol_60": 0.0,
+      "avg_data_coverage": 100.0,
+      "avg_quality_penalty": 0.0,
+      "avg_disagreement_penalty": 0.0
+    }
+  },
+  "reports": [
+    {
+      "ticker": "AKAM",
+      "name": "AKAM",
+      "score": 69.4,
+      "rank": 1,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 84.1,
+        "whale": 68,
+        "macro": 50,
+        "news": 54
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +16.8%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (64.8)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Uptrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:12",
+          "• [NEWSDATA] Nasdaq, S&P 500 Futures Edge Higher, Trump Speech In Focus: Why WMT, META, IBRX, MSFT, EBAY ",
+          "• [NEWSDATA] Serembu remains calm ahead of anticipated state election",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 109.44,
+        "change_pct": 0.11892781996157299,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 64.79,
+        "ret_20d": 16.77,
+        "ret_60d": 25.25,
+        "vol_60d_ann": 0.4199,
+        "ma20": 99.35,
+        "ma60": 91.9307,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 1.5114
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Nasdaq, S&P 500 Futures Edge Higher, Trump Speech In Focus: Why WMT, META, IBRX, MSFT, EBAY Are On Traders' Radar Today",
+          "url": "https://newsable.asianetnews.com/markets/nasdaq-s-p-500-futures-edge-higher-trump-speech-in-focus-why-wmt-meta-ibrx-msft-ebay-are-on-traders-radar-today-articleshow-rdabi6y"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Serembu remains calm ahead of anticipated state election",
+          "url": "https://www.sarawaktribune.com/serembu-remains-calm-ahead-of-anticipated-state-election/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Ex-WWE star reveals scrapped plans for WrestleMania 40",
+          "url": "https://www.sportskeeda.com/wwe/news-ex-wwe-star-reveals-scrapped-plans-wrestlemania-40"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Akamai Technologies (AKAM) Projected to Post Earnings on Thursday",
+          "url": "https://baseballnewssource.com/2026/02/18/akamai-technologies-akam-projected-to-post-earnings-on-thursday/11032097.html"
+        },
+        {
+          "source": "REDDIT",
+          "title": "Akame Ga KILL!",
+          "url": "https://www.reddit.com/search.rss?q=AKAM&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "r/SquaredCircle",
+          "url": "https://www.reddit.com/search?q=AKAM&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "/r/WWEGames",
+          "url": "https://www.reddit.com/r/AkameGaKILL/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "After-Hours Gainers and Losers for Today (February 19, 2026) 📈 📉",
+          "url": "https://www.reddit.com/r/SquaredCircle/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "$AKAM Akamai Q4 Earnings Beat Estimates, Cloud Growth Hits 45% on AI Demand",
+          "url": "https://www.reddit.com/r/WWEGames/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "What is it exactly that Primmie lacks that I don't see?",
+          "url": "https://www.reddit.com/r/DeepFuckingValue/comments/1r9ctv4/afterhours_gainers_and_losers_for_today_february/"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 0.0,
+        "status": "stable",
+        "reasons": [],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 69.4,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "APD",
+      "name": "APD",
+      "score": 67.7,
+      "rank": 2,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 79.9,
+        "whale": 68,
+        "macro": 50,
+        "news": 53
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +6.7%",
+          "🟢 Trend Above MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Uptrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:18",
+          "• [NEWSDATA] Austin needs a second legal opinion on police cooperation with ICE",
+          "• [NEWSDATA] Skandinaviska Enskilda Banken AB publ Trims Stake in Air Products and Chemicals, Inc. $APD",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 280.83,
+        "change_pct": -0.5524274938914276,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 68.03,
+        "ret_20d": 6.73,
+        "ret_60d": 11.84,
+        "vol_60d_ann": 0.3269,
+        "ma20": 275.8065,
+        "ma60": 260.8027,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 1.1763
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Austin needs a second legal opinion on police cooperation with ICE",
+          "url": "https://www.statesman.com/opinion/columns/your-voice/article/austin-needs-second-legal-opinion-police-21352804.php"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Skandinaviska Enskilda Banken AB publ Trims Stake in Air Products and Chemicals, Inc. $APD",
+          "url": "https://www.themarketsdaily.com/2026/02/19/skandinaviska-enskilda-banken-ab-publ-trims-stake-in-air-products-and-chemicals-inc-apd.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Disney+ viewers praise 'hidden gem' drama TV series based on best-selling book",
+          "url": "https://www.express.co.uk/showbiz/tv-radio/2171579/drama-tv-series-will-trent-disney"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "'Hidden gem' drama TV series based on best-selling book available on Disney+",
+          "url": "https://www.mirror.co.uk/tv/tv-news/hidden-gem-drama-tv-series-36730696"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Austin police officer seen punching man on 6th St. indefinitely suspended",
+          "url": "https://www.fox7austin.com/news/austin-police-officer-seen-punching-man-6th-st-indefinite-suspension"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "APD officer suspended indefinitely due to 6th St. incident",
+          "url": "https://www.fox7austin.com/video/fmc-2i2el52rpdb5zoay"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "LA City hires a firm to relight the darkened Sixth Street Bridge",
+          "url": "https://us.headtopics.com/news/la-city-hires-a-firm-to-relight-the-darkened-sixth-street-79949931"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Man killed near Gus Garcia Recreation Center identified; APD looking for suspect",
+          "url": "https://www.fox7austin.com/news/man-killed-near-gus-garcia-recreation-center-identified-apd-looking-suspect"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Hacker Who Targeted Cops Gets Jail Time",
+          "url": "https://www.infosecurity-magazine.com/news/hacker-who-targeted-cops-gets-jail/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "North Texas figure skating coach arrested on sexual assault charges",
+          "url": "https://www.fox4news.com/news/north-texas-figure-skating-coach-arrested-sexual-assault-charges"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 0.0,
+        "status": "stable",
+        "reasons": [],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 67.7,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "MMM",
+      "name": "MMM",
+      "score": 62.9,
+      "rank": 3,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 81.7,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +5.9%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (60.3)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:13",
+          "• [NEWSDATA] Google Brings Marketing Mix Modeling to the Masses, No Coding Needed",
+          "• [NEWSDATA] Omah Lay's recent video elicits worries among fans as they pray for him",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 165.05,
+        "change_pct": 0.5360297252847803,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 60.35,
+        "ret_20d": 5.88,
+        "ret_60d": 0.27,
+        "vol_60d_ann": 0.2866,
+        "ma20": 163.841,
+        "ma60": 164.942,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.8848
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Google Brings Marketing Mix Modeling to the Masses, No Coding Needed",
+          "url": "https://www.adweek.com/media/google-brings-marketing-mix-modeling-to-the-masses-no-coding-needed/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Omah Lay's recent video elicits worries among fans as they pray for him",
+          "url": "https://www.legit.ng/entertainment/music/1697705-fans-raise-alarm-omah-lays-worrisome-clip-records-cutting-hair-lips/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Monark Raises $8.1M in Strategic Funding Round to Build Standard Rails for Private Markets",
+          "url": "https://www.prnewswire.com/news-releases/monark-raises-8-1m-in-strategic-funding-round-to-build-standard-rails-for-private-markets-302691520.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "After a glitch botched Overwatch's first big post-reboot event, it's sending out the rewards—including 14 lootboxes—out to players anyway",
+          "url": "https://www.pcgamer.com/games/fps/after-a-glitch-botched-overwatchs-first-big-post-reboot-event-its-sending-out-the-rewards-including-14-lootboxes-out-to-players-anyway/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "5 Bonkers Moments From The Most Explosive Dinner Party In Married At First Sight History",
+          "url": "https://www.pedestrian.tv/entertainment/five-explosive-moments-from-married-at-first-sight-dinner-party/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "All things Mystery Movie Monday",
+          "url": "https://www.reddit.com/search.rss?q=MMM&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "RegalMMM",
+          "url": "https://www.reddit.com/search?q=MMM&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "/r/Memes the original since 2008",
+          "url": "https://www.reddit.com/r/Mmm/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "What happens next?",
+          "url": "https://www.reddit.com/r/RegalMMM/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "26F. I’ve never been in a relationship. Will I ever have a partner? When? And if I do, what will they be like? Honestly, though, I wouldn't mind if love just isn't for me. I'm just curious",
+          "url": "https://www.reddit.com/r/memes/"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(62.9)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 62.9,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "AES",
+      "name": "AES",
+      "score": 62.9,
+      "rank": 4,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 82.3,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +14.9%",
+          "🟢 Trend Above MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:1 | items:18",
+          "• [NEWSDATA] Private Equity Targets Clean Energy After Steep Drop-Off in 2025",
+          "• [NEWSDATA] YolTech Therapeutics Announces Positive Interim Data on YOLT-202 for the Treatment of Alpha-",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 16.36,
+        "change_pct": 0.42971147943523813,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 67.46,
+        "ret_20d": 14.89,
+        "ret_60d": 21.1,
+        "vol_60d_ann": 0.3178,
+        "ma20": 15.588,
+        "ma60": 14.5525,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.843
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Private Equity Targets Clean Energy After Steep Drop-Off in 2025",
+          "url": "https://financialpost.com/pmn/business-pmn/private-equity-targets-clean-energy-after-steep-drop-off-in-2025"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "YolTech Therapeutics Announces Positive Interim Data on YOLT-202 for the Treatment of Alpha-1 Antitrypsin Deficiency",
+          "url": "https://newshub.medianet.com.au/2026/02/yoltech-therapeutics-announces-positive-interim-data-on-yolt-202-for-the-treatment-of-alpha-1-antitrypsin-deficiency/140616/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "YolTech Therapeutics Announces Positive Interim Data on YOLT-202 for the Treatment of Alpha-1 Antitrypsin Deficiency",
+          "url": "https://www.timesargus.com/news/business/yoltech-therapeutics-announces-positive-interim-data-on-yolt-202-for-the-treatment-of-alpha-1/article_e1fb4fbe-1365-5fd7-9f94-28ddb990fbd5.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "YolTech Therapeutics Announces Positive Interim Data on YOLT-202 for the Treatment of Alpha-1 Antitrypsin Deficiency",
+          "url": "https://www.rutlandherald.com/news/business/yoltech-therapeutics-announces-positive-interim-data-on-yolt-202-for-the-treatment-of-alpha-1/article_f720cdb2-2d8c-5d16-85bb-0ab003c82078.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "YolTech Therapeutics Announces Positive Interim Data on YOLT-202 for the Treatment of Alpha-1 Antitrypsin Deficiency",
+          "url": "https://www.cadillacnews.com/ap/business/yoltech-therapeutics-announces-positive-interim-data-on-yolt-202-for-the-treatment-of-alpha-1/article_8459dd2e-b4d8-52e4-bafb-5929a1b1ccc5.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Somerset Solar development looking for IDA incentives",
+          "url": "https://www.niagara-gazette.com/news/local_news/somerset-solar-development-looking-for-ida-incentives/article_5de63917-ba81-4fb5-9bde-af4386796a75.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Merck Announces Positive New Data for ENFLONSIATM (clesrovimab) for Infants and Children Under 2 Years of Age at Increased Risk for Severe Respiratory Syncytial Virus (RSV) Disease Over Two RSV Seasons",
+          "url": "https://www.hastingstribune.com/ap/business/merck-announces-positive-new-data-for-enflonsia-clesrovimab-for-infants-and-children-under-2-years/article_7d27a918-1b6c-5407-b7de-643f2938a42e.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Merck Announces Positive New Data for ENFLONSIATM (clesrovimab) for Infants and Children Under 2 Years of Age at Increased Risk for Severe Respiratory Syncytial Virus (RSV) Disease Over Two RSV Seasons",
+          "url": "https://www.cadillacnews.com/ap/business/merck-announces-positive-new-data-for-enflonsia-clesrovimab-for-infants-and-children-under-2-years/article_72c05712-ef1d-5ecc-8809-14292f702e68.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Merck Announces Positive New Data for ENFLONSIATM (clesrovimab) for Infants and Children Under 2 Years of Age at Increased Risk for Severe Respiratory Syncytial Virus (RSV) Disease Over Two RSV Seasons",
+          "url": "https://www.timesargus.com/news/business/merck-announces-positive-new-data-for-enflonsia-clesrovimab-for-infants-and-children-under-2-years/article_5a37e8b5-46e4-54fd-b8d4-2003d574f621.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Merck Announces Positive New Data for ENFLONSIATM (clesrovimab) for Infants and Children Under 2 Years of Age at Increased Risk for Severe Respiratory Syncytial Virus (RSV) Disease Over Two RSV Seasons",
+          "url": "https://www.merck.com/news/merck-announces-positive-new-data-for-enflonsia-clesrovimab-for-infants-and-children-under-2-years-of-age-at-increased-risk-for-severe-respiratory-syncytial-virus-rsv-disease-over-two-rsv/"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(62.9)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 62.9,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ABBV",
+      "name": "ABBV",
+      "score": 62.7,
+      "rank": 5,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 76.3,
+        "whale": 50,
+        "macro": 50,
+        "news": 72
+      },
+      "details": {
+        "expert": [
+          "🌡️ RSI Healthy (54.5)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:9 / neg:2 | items:30",
+          "• [NEWSDATA] Analysts Set AbbVie Inc. (NYSE:ABBV) PT at $251.00",
+          "• [NEWSDATA] Best Pharmaceutical Stocks To Follow Now – February 17th",
+          "📣 Buzz: GDELT 12 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 224.35,
+        "change_pct": -1.9106330884924818,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 54.55,
+        "ret_20d": 3.79,
+        "ret_60d": -2.22,
+        "vol_60d_ann": 0.2622,
+        "ma20": 223.328,
+        "ma60": 224.639,
+        "above_ma20": true,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.9692
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Analysts Set AbbVie Inc. (NYSE:ABBV) PT at $251.00",
+          "url": "https://www.dailypolitical.com/2026/02/19/analysts-set-abbvie-inc-nyseabbv-pt-at-251-00.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Best Pharmaceutical Stocks To Follow Now – February 17th",
+          "url": "https://www.defenseworld.net/2026/02/19/best-pharmaceutical-stocks-to-follow-now-february-17th.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Evercore Notes AbbVie Inc.’s (ABBV) Tremfya Gains Market Share, But Future Earnings Growth May Be Limited",
+          "url": "https://www.insidermonkey.com/blog/evercore-notes-abbvie-inc-s-abbv-tremfya-gains-market-share-but-future-earnings-growth-may-be-limited-1698511/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "AbbVie (NYSE:ABBV) Shares Down 1.7% – Here’s What Happened",
+          "url": "https://www.tickerreport.com/banking-finance/13351430/abbvie-nyseabbv-shares-down-1-7-heres-what-happened.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "AbbVie (NYSE:ABBV) Shares Down 1.7% – Here’s What Happened",
+          "url": "https://www.watchlistnews.com/abbvie-nyseabbv-shares-down-1-7-heres-what-happened/10992908.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Dividend Stocks To Consider – February 18th",
+          "url": "https://www.tickerreport.com/banking-finance/13351352/dividend-stocks-to-consider-february-18th.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Dividend Stocks To Consider – February 18th",
+          "url": "https://www.watchlistnews.com/dividend-stocks-to-consider-february-18th/10992828.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Top Medical Stocks To Follow Now – February 18th",
+          "url": "https://www.watchlistnews.com/top-medical-stocks-to-follow-now-february-18th/10992778.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Best Pharmaceutical Stocks To Watch Today – February 18th",
+          "url": "https://baseballnewssource.com/2026/02/18/best-pharmaceutical-stocks-to-watch-today-february-18th/11032970.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Top Medical Stocks To Follow Now – February 18th",
+          "url": "https://www.tickerreport.com/banking-finance/13351294/top-medical-stocks-to-follow-now-february-18th.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(62.7)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 62.7,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ALGN",
+      "name": "ALGN",
+      "score": 62.2,
+      "rank": 6,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 79.9,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +11.5%",
+          "🟢 Trend Above MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:14",
+          "• [NEWSDATA] Rhumbline Advisers Has $18.14 Million Stock Position in Align Technology, Inc. $ALGN",
+          "• [NEWSDATA] Align Technology, Inc. $ALGN Shares Sold by Thrivent Financial for Lutherans",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 189.41,
+        "change_pct": -0.7389162561576337,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 67.87,
+        "ret_20d": 11.45,
+        "ret_60d": 42.62,
+        "vol_60d_ann": 0.3933,
+        "ma20": 176.6985,
+        "ma60": 165.5489,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.9755
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Rhumbline Advisers Has $18.14 Million Stock Position in Align Technology, Inc. $ALGN",
+          "url": "https://www.americanbankingnews.com/2026/02/18/rhumbline-advisers-has-18-14-million-stock-position-in-align-technology-inc-algn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Align Technology, Inc. $ALGN Shares Sold by Thrivent Financial for Lutherans",
+          "url": "https://www.americanbankingnews.com/2026/02/18/align-technology-inc-algn-shares-sold-by-thrivent-financial-for-lutherans.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Align Technology, Inc. $ALGN Stock Position Raised by Rhumbline Advisers",
+          "url": "https://www.defenseworld.net/2026/02/18/align-technology-inc-algn-stock-position-raised-by-rhumbline-advisers.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Thrivent Financial for Lutherans Lowers Position in Align Technology, Inc. $ALGN",
+          "url": "https://www.defenseworld.net/2026/02/18/thrivent-financial-for-lutherans-lowers-position-in-align-technology-inc-algn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Align Technology, Inc. $ALGN Shares Purchased by Zions Bancorporation National Association UT",
+          "url": "https://www.americanbankingnews.com/2026/02/18/align-technology-inc-algn-shares-purchased-by-zions-bancorporation-national-association-ut.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Zions Bancorporation National Association UT Increases Position in Align Technology, Inc. $ALGN",
+          "url": "https://www.defenseworld.net/2026/02/18/zions-bancorporation-national-association-ut-increases-position-in-align-technology-inc-algn.html"
+        },
+        {
+          "source": "REDDIT",
+          "title": "wallstreetbets",
+          "url": "https://www.reddit.com/search.rss?q=ALGN&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "CelebsSpain",
+          "url": "https://www.reddit.com/search?q=ALGN&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "Stocks - Investing and trading for all",
+          "url": "https://www.reddit.com/r/wallstreetbets/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "Getting back into trucks.",
+          "url": "https://www.reddit.com/r/CelebsSpain/"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(62.2)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 62.2,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "LNT",
+      "name": "LNT",
+      "score": 61.8,
+      "rank": 7,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 78.4,
+        "whale": 50,
+        "macro": 50,
+        "news": 54
+      },
+      "details": {
+        "expert": [
+          "🟢 Trend Above MA20/MA60",
+          "🛡️ Low Volatility (0.16)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:10",
+          "• [NEWSDATA] Earnings live: Wingstop stock surges on Q4 earnings beat, Garmin spikes, Analog Devices rise",
+          "• [NEWSDATA] Alliant Energy (NASDAQ:LNT) Reaches New 52-Week High – What’s Next?",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 69.96,
+        "change_pct": 0.6184380842801562,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 68.77,
+        "ret_20d": 3.74,
+        "ret_60d": 3.69,
+        "vol_60d_ann": 0.1561,
+        "ma20": 67.6455,
+        "ma60": 66.5843,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 1.0363
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Earnings live: Wingstop stock surges on Q4 earnings beat, Garmin spikes, Analog Devices rises",
+          "url": "https://ca.finance.yahoo.com/news/earnings-live-wingstop-stock-surges-on-q4-earnings-beat-garmin-spikes-analog-devices-rises-155112495.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alliant Energy (NASDAQ:LNT) Reaches New 52-Week High – What’s Next?",
+          "url": "https://www.dailypolitical.com/2026/02/18/alliant-energy-nasdaqlnt-reaches-new-52-week-high-whats-next.html"
+        },
+        {
+          "source": "REDDIT",
+          "title": "IndiaNonPolitical",
+          "url": "https://www.reddit.com/search.rss?q=LNT&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "Rainbow Six Teams",
+          "url": "https://www.reddit.com/search?q=LNT&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "A sub for the Lightning Network tip bot",
+          "url": "https://www.reddit.com/r/IndiaNonPolitical/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "i touch myself while listening to this song",
+          "url": "https://www.reddit.com/r/R6STeams/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "Dreams DO come true",
+          "url": "https://www.reddit.com/r/LNTipBot2/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "IRS Help",
+          "url": "https://www.reddit.com/r/u_cosmicvirtuoso/comments/1r9ec97/i_touch_myself_while_listening_to_this_song/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "Started Thinklist as a personal OS, just crossed $100 MRR 💙",
+          "url": "https://www.reddit.com/r/JunoMains/comments/1r9c1ie/dreams_do_come_true/"
+        },
+        {
+          "source": "REDDIT",
+          "title": "Found on the shelf in Albany Oregon",
+          "url": "https://www.reddit.com/r/IRS/comments/1r9bn14/irs_help/"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(61.8)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 61.8,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ALL",
+      "name": "ALL",
+      "score": 61.5,
+      "rank": 8,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 76.3,
+        "whale": 50,
+        "macro": 50,
+        "news": 60
+      },
+      "details": {
+        "expert": [
+          "🌡️ RSI Healthy (54.5)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:2 / neg:0 | items:30",
+          "• [NEWSDATA] Watch: Rajpal Yadav dances at niece’s wedding celebrations after interim bail",
+          "• [NEWSDATA] Reese Witherspoon pays touching tribute to 'wonderful gentleman' Robert Duvall after his dea",
+          "📣 Buzz: GDELT 12 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 203.22,
+        "change_pct": -2.9651912333476615,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 54.51,
+        "ret_20d": 4.94,
+        "ret_60d": -4.02,
+        "vol_60d_ann": 0.2553,
+        "ma20": 202.584,
+        "ma60": 204.9563,
+        "above_ma20": true,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.0824
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Watch: Rajpal Yadav dances at niece’s wedding celebrations after interim bail",
+          "url": "https://www.news9live.com/entertainment/rajpal-yadav-dances-at-nieces-wedding-celebrations-after-interim-bail-2933313"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Reese Witherspoon pays touching tribute to 'wonderful gentleman' Robert Duvall after his death",
+          "url": "https://www.thenews.com.pk/latest/1392874-reese-witherspoon-pays-touching-tribute-to-wonderful-gentleman-robert-duvall-after-his-death"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Movie review: 'EPiC: Elvis Presley in Concert' reanimates King of Rock and Roll",
+          "url": "https://www.gazettextra.com/entertainment/movie-review-epic-elvis-presley-in-concert-reanimates-king-of-rock-and-roll/article_5dcdfcbc-391b-4522-8261-190360045c94.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Cancer patient dies after ambulance stopped in Philippine busway; official in-charge fired",
+          "url": "https://gulfnews.com/world/asia/philippines/cancer-patient-dies-after-ambulance-stopped-in-philippine-busway-official-in-charge-fired-1.500448651"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Wrong-way driver arrested on Highway 84 in Grady County",
+          "url": "https://www.walb.com/2026/02/19/wrong-way-driver-arrested-highway-84-grady-county/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "XBTFX Introduces xPRO — A Platform Shaped by Trader Insight and Engineered for the Future",
+          "url": "https://techbullion.com/xbtfx-introduces-xpro-a-platform-shaped-by-trader-insight-and-engineered-for-the-future/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "'I hope it raises a smile and helps protect cars': Villager near Banbury uses potholes to create monster art",
+          "url": "https://www.banburyguardian.co.uk/news/people/i-hope-it-raises-a-smile-and-helps-protect-cars-villager-near-banbury-uses-potholes-to-create-monster-art-5604235"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Juventus striker keen to force Barcelona move in bid to replace Robert Lewandowski",
+          "url": "https://uk.sports.yahoo.com/news/juventus-striker-keen-force-barcelona-112350103.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Scout Willis stuns in a yellow floral midi dress as she joins sister Tallulah and Florence Given at Baz Luhrmann's EPiC: Elvis Presley In Concert premiere afterparty in LA",
+          "url": "https://www.dailymail.co.uk/tvshowbiz/article-15573577/Scout-Willis-joins-sister-Tallulah-Willis-Florence-Given-Baz-Luhrmanns-EPiC-Elvis-Presley-Concert-premiere-party-LA.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Yeti: Q4 Earnings Snapshot",
+          "url": "https://www.12news.com/article/syndication/associatedpress/yeti-q4-earnings-snapshot/616-e2b8fec5-92a1-40dd-b1b9-ee02dd536681"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(61.5)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 61.5,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ALLE",
+      "name": "ALLE",
+      "score": 60.1,
+      "rank": 9,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 73.9,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "🔴 Trend Below MA20/MA60",
+          "🌡️ RSI Healthy (45.9)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:2 / neg:2 | items:30",
+          "• [NEWSDATA] Winter Olympics 2026: GB men advance to curling semis, ski mountaineering and more – live",
+          "• [NEWSDATA] Allegion PLC $ALLE Shares Purchased by Aberdeen Group plc",
+          "🧾 Analyst mentions (from headlines)",
+          "• JPMorgan | downgrade",
+          "📣 Buzz: GDELT 12 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 161.23,
+        "change_pct": -0.8364598068762,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 45.9,
+        "ret_20d": -2.8,
+        "ret_60d": 1.12,
+        "vol_60d_ann": 0.2755,
+        "ma20": 170.238,
+        "ma60": 164.7338,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.3915
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Winter Olympics 2026: GB men advance to curling semis, ski mountaineering and more – live",
+          "url": "https://en.news4social.com/winter-olympics-2026-gb-men-advance-to-curling-semis-ski-mountaineering-and-more-live/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Allegion PLC $ALLE Shares Purchased by Aberdeen Group plc",
+          "url": "https://www.americanbankingnews.com/2026/02/19/allegion-plc-alle-shares-purchased-by-aberdeen-group-plc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Allegion PLC $ALLE Shares Acquired by Aberdeen Group plc",
+          "url": "https://www.dailypolitical.com/2026/02/19/allegion-plc-alle-shares-acquired-by-aberdeen-group-plc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Allegion (NYSE:ALLE) Price Target Lowered to $180.00 at JPMorgan Chase & Co.",
+          "url": "https://www.defenseworld.net/2026/02/19/allegion-nysealle-price-target-lowered-to-180-00-at-jpmorgan-chase-co.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Winter Olympics 2026: curling, ski mountaineering, ice hockey and more on day 13 – live",
+          "url": "https://www.theguardian.com/sport/live/2026/feb/19/winter-olympics-2026-winter-olympics-2026-day-13-live-updates-slalom-slopestyle-curling-biathlon"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Allegion (NYSE:ALLE) Stock Price Down 8.4% on Disappointing Earnings",
+          "url": "https://www.americanbankingnews.com/2026/02/19/allegion-nysealle-stock-price-down-8-4-on-disappointing-earnings.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Indigenous-owned building company and Defence employee deny $71million fraud alle...",
+          "url": "https://nit.com.au/19-02-2026/22725/business-as-usual-while-couple-deny-71m-fraud"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Allegion Q4 Earnings Call Highlights",
+          "url": "https://www.defenseworld.net/2026/02/19/allegion-q4-earnings-call-highlights.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Salim Khan health update: Stable after DSA, under ICU observation at Lilavati Hospital",
+          "url": "https://english.mathrubhumi.com/movies-music/news/salim-khan-stable-lilavati-hospital-qjacsqck"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Reliance, Inc. Profit Advances In Q4",
+          "url": "https://www.finanzen.at/nachrichten/aktien/reliance-inc-profit-advances-in-q4-1035842539"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "JPMorgan",
+          "action": "downgrade",
+          "evidence": "Allegion (NYSE:ALLE) Price Target Lowered to $180.00 at JPMorgan Chase & Co. Allegion (NYSE:ALLE – Free Report) had its target price decreased by JPMorgan Chase"
+        }
+      ],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(60.1)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 60.1,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ABT",
+      "name": "ABT",
+      "score": 59.4,
+      "rank": 10,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 71.5,
+        "whale": 50,
+        "macro": 50,
+        "news": 58
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -7.1%",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:30",
+          "• [NEWSDATA] CLOSE YOUR EYES’ Yeojun Diagnosed With Life-Threatening Condition, Sparking Massive Fears",
+          "• [NEWSDATA] Weekly Analysts’ Ratings Updates for Abbott Laboratories (ABT)",
+          "🧾 Analyst mentions (from headlines)",
+          "• Barclays | mention",
+          "📣 Buzz: GDELT 12 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 112.19,
+        "change_pct": -0.9709594845087902,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 69.3,
+        "ret_20d": -7.07,
+        "ret_60d": -9.5,
+        "vol_60d_ann": 0.2748,
+        "ma20": 109.994,
+        "ma60": 120.195,
+        "above_ma20": true,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.5847
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "CLOSE YOUR EYES’ Yeojun Diagnosed With Life-Threatening Condition, Sparking Massive Fears",
+          "url": "https://www.koreaboo.com/news/close-eyes-yeojun-diagnosed-life-threatening-condition-sparking-massive-fears/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Weekly Analysts’ Ratings Updates for Abbott Laboratories (ABT)",
+          "url": "https://www.americanbankingnews.com/2026/02/19/weekly-analysts-ratings-updates-for-abbott-laboratories-abt.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Weekly Analysts’ Ratings Updates for Abbott Laboratories (ABT)",
+          "url": "https://baseballnewssource.com/2026/02/19/weekly-analysts-ratings-updates-for-abbott-laboratories-abt/11033280.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "“Tell Me Lies” fans discover the show won’t be returning for a fourth season right before its third finale dropped",
+          "url": "https://dailydot.com/tell-me-lies-fans-shocked-show-is-over/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "BLACKPINK Jisoo’s “Idol Boyfriend” In New K-Drama Sparks Heavily Divided Reactions",
+          "url": "https://www.koreaboo.com/news/blackpink-jisoos-idol-boyfriend-guest-star-in-new-k-drama-sparks-heavily-divided-reactions/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Face, Meet Plant: Sharice Davids Uses Actual Copypasta to Wish Her 'Neighbors' a Peaceful Ramadan",
+          "url": "https://twitchy.com/grateful-calvin/2026/02/18/face-meet-plant-sharice-davids-uses-actual-copypasta-to-wish-her-neighbors-a-peaceful-ramadan-n2425176"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Fitchburg State roundup: Falcons get past Trailblazers",
+          "url": "https://www.sentinelandenterprise.com/2026/02/18/fitchburg-state-roundup-falcons-get-past-trailblazers/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Pritzker proposes $56B budget with minimal new spending, tax on social media companies",
+          "url": "https://qconline.com/news/state-regional/government-politics/article_18bcdbe5-fc97-56b1-bf31-397d7af5374d.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Many Democrats are still down on the Democratic Party, a new AP-NORC poll finds",
+          "url": "https://qconline.com/news/nation-world/government-politics/article_23789cae-2635-55d2-a34c-465e7eb098e0.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Many Democrats are still down on the Democratic Party, a new AP-NORC poll finds",
+          "url": "https://theindependent.com/news/nation-world/government-politics/article_dc276a78-41ea-5638-8d33-10c6ad5ba992.html"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "Barclays",
+          "action": "mention",
+          "evidence": "Weekly Analysts’ Ratings Updates for Abbott Laboratories (ABT) Several analysts have recently updated their ratings and price targets for Abbott Laboratories (N"
+        }
+      ],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(59.4)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 59.4,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ADBE",
+      "name": "ADBE",
+      "score": 58.7,
+      "rank": 11,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 70.3,
+        "whale": 50,
+        "macro": 50,
+        "news": 56
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -11.9%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (27.0)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:18",
+          "• [NEWSDATA] Digital Media Stocks To Keep An Eye On – February 16th",
+          "• [NEWSDATA] Best Digital Media Stocks To Follow Now – February 17th",
+          "🧾 Analyst mentions (from headlines)",
+          "• Morgan Stanley | mention",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 259.19,
+        "change_pct": -1.512330432800098,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 26.99,
+        "ret_20d": -11.91,
+        "ret_60d": -17.03,
+        "vol_60d_ann": 0.3314,
+        "ma20": 278.411,
+        "ma60": 315.4288,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.9879
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Digital Media Stocks To Keep An Eye On – February 16th",
+          "url": "https://www.americanbankingnews.com/2026/02/19/digital-media-stocks-to-keep-an-eye-on-february-16th.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Best Digital Media Stocks To Follow Now – February 17th",
+          "url": "https://www.defenseworld.net/2026/02/19/best-digital-media-stocks-to-follow-now-february-17th.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Why Wall Street Is Turning Cautious on Adobe Inc. (ADBE)",
+          "url": "https://www.insidermonkey.com/blog/why-wall-street-is-turning-cautious-on-adobe-inc-adbe-1697666/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Why Wall Street Is Turning Cautious on Adobe Inc. (ADBE)",
+          "url": "https://ca.finance.yahoo.com/news/why-wall-street-turning-cautious-054246646.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Mega-cap tech most under-owned in 17 years, says Morgan Stanley",
+          "url": "https://investinglive.com/stocks/mega-cap-tech-most-under-owned-in-17-years-says-morgan-stanley-20260219/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Intuit: An Economic Moat Deepened By Artificial Intelligence",
+          "url": "https://seekingalpha.com/article/4871796-intuit-stock-economic-moat-deepened-by-artificial-intelligence"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Here's How Much You Would Have Made Owning Adobe Stock In The Last 20 Years",
+          "url": "https://www.benzinga.com/insights/news/26/02/50708507/heres-how-much-you-would-have-made-owning-adobe-stock-in-the-last-20-years"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Smart Money Is Short Tech",
+          "url": "https://seekingalpha.com/article/4871656-smart-money-is-short-tech"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Jim Cramer Believes Adobe’s (ADBE) In Trouble",
+          "url": "https://www.insidermonkey.com/blog/jim-cramer-believes-adobes-adbe-in-trouble-1698272/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Jim Cramer Believes Adobe’s (ADBE) In Trouble",
+          "url": "https://ca.finance.yahoo.com/news/jim-cramer-believes-adobe-adbe-175240283.html"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "Morgan Stanley",
+          "action": "mention",
+          "evidence": "Mega-cap tech most under-owned in 17 years, says Morgan Stanley Posting this ICYMI from a Wednesday note from Morgan Stanley. Morgan Stanley says Nvidia is the "
+        }
+      ],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(58.7)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 58.7,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "AOS",
+      "name": "AOS",
+      "score": 58.4,
+      "rank": 12,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 69.4,
+        "whale": 50,
+        "macro": 50,
+        "news": 56
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +7.4%",
+          "🟢 Trend Above MA20/MA60",
+          "🧾 Analyst: FINNHUB:BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:18",
+          "• [NEWSDATA] Nutanix (NASDAQ:NTNX) Receives $67.13 Average Price Target from Analysts",
+          "• [NEWSDATA] Christian Bautista at Mark Bautista, muntik nang umalis sa showbiz noon",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 77.615,
+        "change_pct": -1.7033941236068884,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 67.99,
+        "ret_20d": 7.44,
+        "ret_60d": 22.71,
+        "vol_60d_ann": 0.2458,
+        "ma20": 76.2882,
+        "ma60": 70.9146,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.6804
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Nutanix (NASDAQ:NTNX) Receives $67.13 Average Price Target from Analysts",
+          "url": "https://www.tickerreport.com/banking-finance/13351770/nutanix-nasdaqntnx-receives-67-13-average-price-target-from-analysts.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Christian Bautista at Mark Bautista, muntik nang umalis sa showbiz noon",
+          "url": "https://www.gmanetwork.com/entertainment/showbiznews/christian-bautista-at-mark-bautista-muntik-nang-umalis-sa-showbiz-noon/130629"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "11 PAF Bases Hammered, Airbases Exposed: Why Highway Landing Strips Are Critical For Air Power Survival?",
+          "url": "https://www.eurasiantimes.com/highway-landing-strips/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Bonners Ferry Gun Club: Bryant records his first perfect score",
+          "url": "https://bonnersferryherald.com/news/2026/feb/19/bonners-ferry-gun-club-bryant-records-his-first-perfect-score/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "A. O. Smith (NYSE:AOS) SVP Darrell Schuh Sells 356 Shares of Stock",
+          "url": "https://www.watchlistnews.com/a-o-smith-nyseaos-svp-darrell-schuh-sells-356-shares-of-stock/10992145.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alpha and Omega releases AOTL037V60DE2 600V super junction mosfet",
+          "url": "https://www.electronicsweekly.com/news/products/power-supplies/alpha-and-omega-releases-aotl037v60de2-600v-super-junction-mosfet-2026-02/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Skandinaviska Enskilda Banken AB publ Grows Stock Position in Nutanix $NTNX",
+          "url": "https://www.americanbankingnews.com/2026/02/18/skandinaviska-enskilda-banken-ab-publ-grows-stock-position-in-nutanix-ntnx.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Nutanix $NTNX Shares Purchased by Skandinaviska Enskilda Banken AB publ",
+          "url": "https://www.defenseworld.net/2026/02/18/nutanix-ntnx-shares-purchased-by-skandinaviska-enskilda-banken-ab-publ.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "A. O. Smith Corporation (NYSE:AOS) Given Consensus Rating of “Hold” by Brokerages",
+          "url": "https://www.thelincolnianonline.com/2026/02/18/a-o-smith-corporation-nyseaos-given-consensus-rating-of-hold-by-brokerages.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Nutanix (NTNX) to Release Quarterly Earnings on Wednesday",
+          "url": "https://www.defenseworld.net/2026/02/18/nutanix-ntnx-to-release-quarterly-earnings-on-wednesday.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(58.4)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 58.4,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "score": 58.4,
+      "rank": 13,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 70.3,
+        "whale": 50,
+        "macro": 50,
+        "news": 53
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -7.8%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (16.2)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:18",
+          "• [NEWSDATA] Independent Investors Inc. Sells 22,298 Shares of Apple Inc. $AAPL",
+          "• [NEWSDATA] Apple Inc. $AAPL Shares Acquired by Accredited Investors Inc.",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 302.85,
+        "change_pct": -0.15824349718127498,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 16.17,
+        "ret_20d": -7.77,
+        "ret_60d": 4.63,
+        "vol_60d_ann": 0.2534,
+        "ma20": 324.2935,
+        "ma60": 319.6958,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.9132
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Independent Investors Inc. Sells 22,298 Shares of Apple Inc. $AAPL",
+          "url": "https://www.defenseworld.net/2026/02/19/independent-investors-inc-sells-22298-shares-of-apple-inc-aapl.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Apple Inc. $AAPL Shares Acquired by Accredited Investors Inc.",
+          "url": "https://www.defenseworld.net/2026/02/19/apple-inc-aapl-shares-acquired-by-accredited-investors-inc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Naples Global Advisors LLC Has $47.79 Million Position in Apple Inc. $AAPL",
+          "url": "https://www.defenseworld.net/2026/02/19/naples-global-advisors-llc-has-47-79-million-position-in-apple-inc-aapl.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Covenant Asset Management LLC Decreases Stock Holdings in Apple Inc. $AAPL",
+          "url": "https://www.defenseworld.net/2026/02/19/covenant-asset-management-llc-decreases-stock-holdings-in-apple-inc-aapl.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Mountain Pacific Investment Advisers LLC Sells 2,769 Shares of Apple Inc. $AAPL",
+          "url": "https://www.defenseworld.net/2026/02/19/mountain-pacific-investment-advisers-llc-sells-2769-shares-of-apple-inc-aapl.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Apple Inc. $AAPL Shares Acquired by iA Global Asset Management Inc.",
+          "url": "https://www.defenseworld.net/2026/02/19/apple-inc-aapl-shares-acquired-by-ia-global-asset-management-inc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Technology Stocks Worth Watching – February 17th",
+          "url": "https://www.defenseworld.net/2026/02/19/technology-stocks-worth-watching-february-17th.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alphabet Inc. $GOOG Shares Purchased by Balboa Wealth Partners",
+          "url": "https://baseballnewssource.com/2026/02/19/alphabet-inc-goog-shares-purchased-by-balboa-wealth-partners/11033364.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "BIP Wealth LLC Buys 15,177 Shares of Apple Inc. $AAPL",
+          "url": "https://www.defenseworld.net/2026/02/19/bip-wealth-llc-buys-15177-shares-of-apple-inc-aapl.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Hardy Reed LLC Decreases Position in Alphabet Inc. $GOOG",
+          "url": "https://baseballnewssource.com/2026/02/19/hardy-reed-llc-decreases-position-in-alphabet-inc-goog/11033362.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(58.4)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 58.4,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ALB",
+      "name": "ALB",
+      "score": 58.3,
+      "rank": 14,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 69.4,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -6.5%",
+          "⚠️ High Volatility (0.56)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:1 | items:30",
+          "• [NEWSDATA] CenterBook Partners LP Acquires Shares of 47,627 Albemarle Corporation $ALB",
+          "• [NEWSDATA] CenterBook Partners LP Acquires New Shares in Albemarle Corporation $ALB",
+          "🧾 Analyst mentions (from headlines)",
+          "• Deutsche Bank | mention",
+          "• Wells Fargo | mention",
+          "📣 Buzz: GDELT 12 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 168.41,
+        "change_pct": -1.6411634154888461,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 42.87,
+        "ret_20d": -6.47,
+        "ret_60d": 44.66,
+        "vol_60d_ann": 0.5609,
+        "ma20": 173.254,
+        "ma60": 153.4968,
+        "above_ma20": false,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.7914
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "CenterBook Partners LP Acquires Shares of 47,627 Albemarle Corporation $ALB",
+          "url": "https://baseballnewssource.com/2026/02/19/centerbook-partners-lp-acquires-shares-of-47627-albemarle-corporation-alb/11033461.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "CenterBook Partners LP Acquires New Shares in Albemarle Corporation $ALB",
+          "url": "https://www.thelincolnianonline.com/2026/02/19/centerbook-partners-lp-acquires-new-shares-in-albemarle-corporation-alb.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "After-Earnings-Is-Albemarle-Stock-Buy-Sell-Or-Fairly-Valued-7",
+          "url": "https://www.morningstar.com/stocks/after-earnings-is-albemarle-stock-buy-sell-or-fairly-valued-7"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Evercore Issues Positive Forecast for Albemarle (NYSE:ALB) Stock Price",
+          "url": "https://www.defenseworld.net/2026/02/19/evercore-issues-positive-forecast-for-albemarle-nysealb-stock-price.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Deutsche Bank Aktiengesellschaft Increases Albemarle (NYSE:ALB) Price Target to $195.00",
+          "url": "https://www.americanbankingnews.com/2026/02/19/deutsche-bank-aktiengesellschaft-increases-albemarle-nysealb-price-target-to-195-00.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Royal Bank Of Canada Forecasts Strong Price Appreciation for Albemarle (NYSE:ALB) Stock",
+          "url": "https://www.americanbankingnews.com/2026/02/19/royal-bank-of-canada-forecasts-strong-price-appreciation-for-albemarle-nysealb-stock.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Travellers Stranded at Fort Lauderdale International Airport in Broward County, Florida, US as 110 Flights Are Delayed and 9 Cancelled, Disrupting Spirit, Delta, JetBlue, and More Across New York, Dallas, Toronto, Chicag",
+          "url": "https://www.travelandtourworld.com/news/article/travellers-stranded-at-fort-lauderdale-international-airport-in-broward-county-florida-us-as-110-flights-are-delayed-and-9-cancelled-disrupting-spirit-delta-jetblue-and-more-across-new-york-dal/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Stock Analysts’ Price Target Changes for February 18th (ACLS, ADSK, AEM, ALB, ALKT, ALLE, ALRM, AMGN, ATMU, ATRC)",
+          "url": "https://zolmax.com/investing/stock-analysts-price-target-changes-for-february-18th-acls-adsk-aem-alb-alkt-alle-alrm-amgn-atmu-atrc/11766416.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Stock Analysts’ Price Target Changes for February 18th (ACLS, ADSK, AEM, ALB, ALKT, ALLE, ALRM, AMGN, ATMU, ATRC)",
+          "url": "https://www.dailypolitical.com/2026/02/18/stock-analysts-price-target-changes-for-february-18th-acls-adsk-aem-alb-alkt-alle-alrm-amgn-atmu-atrc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "ANAR: Cancellation of Mihaileni hydroengineering project means huge loss of public money",
+          "url": "https://www.stiripesurse.ro/anar-cancellation-of-mihaileni-hydroengineering-project-means-huge-loss-of-public-money_3860517"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "Deutsche Bank",
+          "action": "mention",
+          "evidence": "Deutsche Bank Aktiengesellschaft Increases Albemarle (NYSE:ALB) Price Target to $195.00 Albemarle (NYSE:ALB – Get Free Report) had its target price lifted by st"
+        },
+        {
+          "firm": "Wells Fargo",
+          "action": "mention",
+          "evidence": "Stock Analysts’ Price Target Changes for February 18th (ACLS, ADSK, AEM, ALB, ALKT, ALLE, ALRM, AMGN, ATMU, ATRC) Stock Analysts’ price target changes for Wedne"
+        }
+      ],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(58.3)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 58.3,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "A",
+      "name": "A",
+      "score": 58.2,
+      "rank": 15,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 69.1,
+        "whale": 50,
+        "macro": 50,
+        "news": 56
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -9.6%",
+          "🔴 Trend Below MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:2 / neg:1 | items:18",
+          "• [NEWSDATA] UK space rocket company collapses into administration - 163 jobs at risk",
+          "• [NEWSDATA] Deere Reports First Quarter Net Income of $656 Million",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 126.34,
+        "change_pct": -0.47266425082715796,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 35.47,
+        "ret_20d": -9.61,
+        "ret_60d": -12.91,
+        "vol_60d_ann": 0.2679,
+        "ma20": 130.962,
+        "ma60": 139.4485,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.0964
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "UK space rocket company collapses into administration - 163 jobs at risk",
+          "url": "https://www.express.co.uk/news/uk/2172953/uk-space-rocket-company-administration-orbex"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Deere Reports First Quarter Net Income of $656 Million",
+          "url": "https://www.prnewswire.com/news-releases/deere-reports-first-quarter-net-income-of-656-million-302692550.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Steel Wire Rods Market to Surpass US$125.48 Billion by 2031, Fuelled by Demand for Steel Wire Rods — Latest Industry Research by The Insight Partners.",
+          "url": "https://www.globenewswire.com/fr/news-release/2026/02/19/3240871/0/en/Steel-Wire-Rods-Market-to-Surpass-US-125-48-Billion-by-2031-Fuelled-by-Demand-for-Steel-Wire-Rods-Latest-Industry-Research-by-The-Insight-Partners.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Steel Wire Rods Market to Surpass US$125.48 Billion by 2031, Fuelled by Demand for Steel Wire Rods — Latest Industry Research by The Insight Partners.",
+          "url": "https://www.globenewswire.com/news-release/2026/02/19/3240871/0/en/Steel-Wire-Rods-Market-to-Surpass-US-125-48-Billion-by-2031-Fuelled-by-Demand-for-Steel-Wire-Rods-Latest-Industry-Research-by-The-Insight-Partners.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Beautiful UK village looks 'just like Mediterranean' and was home to iconic TV show",
+          "url": "https://www.express.co.uk/travel/uk/2172921/uk-town-built-look-mediterranean"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Hilda Koronel, balik-pelikula sa historical-thriller na 'Sisa\" na 'di raw mula sa kuwento ni Rizal",
+          "url": "https://www.gmanetwork.com/news/balitambayan/chikamuna/977174/hilda-koronel-balik-pelikula-sa-historical-thriller-na-sisa-na-di-raw-mula-sa-kuwento-ni-rizal/story/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Deere Reports First Quarter Net Income of $656 Million",
+          "url": "https://www.newswire.ca/news-releases/deere-reports-first-quarter-net-income-of-656-million-863515612.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Flat-Pack Packaging Market to Reach USD 8.36B by 2036 (12.9% CAGR) | FedEx & UPS Dimensional Pricing Shifts Demand | China, Germany & U.S. Lead -- FMI",
+          "url": "https://www.prnewswire.com/news-releases/flat-pack-packaging-market-to-reach-usd-8-36b-by-2036-12-9-cagr--fedex--ups-dimensional-pricing-shifts-demand--china-germany--us-lead--fmi-302692548.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Deere Reports First Quarter Net Income of $656 Million",
+          "url": "https://www.benzinga.com/pressreleases/26/02/n50713389/deere-reports-first-quarter-net-income-of-656-million"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Five must-watch medical dramas for fans of 'ER'",
+          "url": "https://businessreport.co.za/entertainment/tv/2026-02-19-five-must-watch-medical-dramas-for-fans-of-er/"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(58.2)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 58.2,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "AMD",
+      "name": "AMD",
+      "score": 56.6,
+      "rank": 16,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 64.6,
+        "whale": 50,
+        "macro": 50,
+        "news": 58
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -18.6%",
+          "🔴 Trend Below MA20/MA60",
+          "⚠️ High Volatility (0.59)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:30",
+          "• [NEWSDATA] Future of India Eye Health Supplements Market: Size, Share, Trends, Opportunity & Forecast 2",
+          "• [NEWSDATA] Government allocates funds for co-financed projects",
+          "📣 Buzz: GDELT 12 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 203.41,
+        "change_pct": 1.644013591844889,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 30.37,
+        "ret_20d": -18.57,
+        "ret_60d": -1.27,
+        "vol_60d_ann": 0.592,
+        "ma20": 225.5465,
+        "ma60": 219.2568,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.7625
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Future of India Eye Health Supplements Market: Size, Share, Trends, Opportunity & Forecast 2033",
+          "url": "https://www.openpr.com/news/4397444/future-of-india-eye-health-supplements-market-size-share"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Government allocates funds for co-financed projects",
+          "url": "http://www.panarmenian.net/eng/news/330903/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Love, Long Distance, and Linux: Building a VPN Blind to Bridge the Gap",
+          "url": "https://hackernoon.com/love-long-distance-and-linux-building-a-vpn-blind-to-bridge-the-gap"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Remidio recognised among top 3 in India’s AI by HER Challenge at the India AI Impact Summit 2026",
+          "url": "https://www.expresshealthcare.in/news/remidio-recognised-among-top-3-in-indias-ai-by-her-challenge-at-the-india-ai-impact-summit-2026/452832/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Zydus introduces biosimilar Aflibercept 2 mg Anyra for advancing ophthalmic care",
+          "url": "https://pharmabiz.com/ArticleDetails.aspx?aid=184329&sid=13"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "No RM18 million for NFDP until FAM settles crisis, says minister",
+          "url": "https://www.nst.com.my/sports/football/2026/02/1381172/no-rm18-million-nfdp-until-fam-settles-crisis-says-minister"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Technology Stocks Worth Watching – February 17th",
+          "url": "https://www.defenseworld.net/2026/02/19/technology-stocks-worth-watching-february-17th.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Tata Group in process of adopting AI across stack; plans domain-centric AI chips",
+          "url": "https://www.dailyexcelsior.com/tata-group-in-process-of-adopting-ai-across-stack-plans-domain-centric-ai-chips/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "AI godmother Fei-Fei Li’s World Labs lands $1B to power AI’s 3D world understanding",
+          "url": "https://techfundingnews.com/world-labs-1b-funding-feifei-li-autodesk/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Dow Jones Futures Surge as Technology Shares Stage Remarkable Rebound",
+          "url": "https://bitcoinworld.co.in/dow-jones-futures-technology-shares-rebound/"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(56.6)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 56.6,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ARE",
+      "name": "ARE",
+      "score": 55.3,
+      "rank": 17,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 62.8,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -8.6%",
+          "🌡️ RSI Healthy (48.0)",
+          "🧾 Analyst: FINNHUB:BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:1 | items:30",
+          "• [NEWSDATA] India vs South Africa: ‘Baby AB’ Dewald Brevis unfazed by Varun Chakravarthy threat",
+          "• [NEWSDATA] Save Up to $600 With the Best Electric Mower Deals I’ve Found This Week",
+          "📣 Buzz: GDELT 12 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 53.4,
+        "change_pct": -1.4032496307237778,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 48.0,
+        "ret_20d": -8.64,
+        "ret_60d": 9.29,
+        "vol_60d_ann": 0.4304,
+        "ma20": 55.119,
+        "ma60": 52.1295,
+        "above_ma20": false,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.8048
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "India vs South Africa: ‘Baby AB’ Dewald Brevis unfazed by Varun Chakravarthy threat",
+          "url": "https://sports.yahoo.com/articles/india-vs-south-africa-baby-112300110.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Save Up to $600 With the Best Electric Mower Deals I’ve Found This Week",
+          "url": "https://www.cnet.com/deals/best-electric-lawnmower-deals/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Blood Test May Forecast Alzheimer's Symptoms Years Ahead",
+          "url": "https://www.newser.com/story/384021/blood-test-may-forecast-alzheimers-symptoms-years-ahead.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Everything we know so far as Andrew Mountbatten-Windsor is arrested in Norfolk",
+          "url": "https://www.eveningnews24.co.uk/news/25868507.know-andrew-mountbatten-windsor-arrested-norfolk/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Europe could face gas crisis, prices to rise next winter — expert",
+          "url": "https://tass.com/economy/2089139"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Everything we know so far as Andrew Mountbatten-Windsor is arrested in Norfolk",
+          "url": "https://www.eadt.co.uk/news/25868507.know-andrew-mountbatten-windsor-arrested-norfolk/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Elite 2027 Tight End Names UNC in Top 6",
+          "url": "https://www.si.com/college/unc/north-carolina-tar-heels-2027-tight-end-names-top-6"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Surya Kiran, Sarang Helicopter teams to perform over Jaipur’s Jal Mahal on Feb 20, 22",
+          "url": "https://theprint.in/india/surya-kiran-sarang-helicopter-teams-to-perform-over-jaipurs-jal-mahal-on-feb-20-22/2858710/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Andrew Mountbatten-Windsor arrested by UK police",
+          "url": "https://news.rthk.hk/rthk/en/component/k2/1844357-20260219.htm"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "India is Becoming the Preferred Global Destination for Medical Tourism and Value Travel",
+          "url": "https://www.travelandtourworld.com/news/article/india-is-becoming-the-preferred-global-destination-for-medical-tourism-and-value-travel/"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(55.3)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 55.3,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ABNB",
+      "name": "ABNB",
+      "score": 53.7,
+      "rank": 18,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 69.1,
+        "whale": 35,
+        "macro": 50,
+        "news": 56
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -5.8%",
+          "🔴 Trend Below MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:18",
+          "• [NEWSDATA] Hodges Capital Management Inc. Sells 10,033 Shares of Airbnb, Inc. $ABNB",
+          "• [NEWSDATA] Airbnb, Inc. $ABNB Shares Sold by Skandinaviska Enskilda Banken AB publ",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 125.81,
+        "change_pct": 1.239237144926375,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 41.82,
+        "ret_20d": -5.82,
+        "ret_60d": 12.79,
+        "vol_60d_ann": 0.3045,
+        "ma20": 125.9247,
+        "ma60": 128.6227,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.4842
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Hodges Capital Management Inc. Sells 10,033 Shares of Airbnb, Inc. $ABNB",
+          "url": "https://www.themarketsdaily.com/2026/02/19/hodges-capital-management-inc-sells-10033-shares-of-airbnb-inc-abnb.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Airbnb, Inc. $ABNB Shares Sold by Skandinaviska Enskilda Banken AB publ",
+          "url": "https://www.thelincolnianonline.com/2026/02/19/airbnb-inc-abnb-shares-sold-by-skandinaviska-enskilda-banken-ab-publ.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "PNC Financial Services Group Inc. Reduces Holdings in Airbnb, Inc. $ABNB",
+          "url": "https://www.americanbankingnews.com/2026/02/19/pnc-financial-services-group-inc-reduces-holdings-in-airbnb-inc-abnb.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "PNC Financial Services Group Inc. Decreases Stock Position in Airbnb, Inc. $ABNB",
+          "url": "https://www.tickerreport.com/banking-finance/13351607/pnc-financial-services-group-inc-decreases-stock-position-in-airbnb-inc-abnb.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Top Leisure Stocks To Watch Now – February 17th",
+          "url": "https://www.defenseworld.net/2026/02/19/top-leisure-stocks-to-watch-now-february-17th.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Leisure Stocks To Add to Your Watchlist – February 18th",
+          "url": "https://www.thelincolnianonline.com/2026/02/18/leisure-stocks-to-add-to-your-watchlist-february-18th.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Earnings live: Wingstop stock surges on Q4 earnings beat, Garmin spikes, Analog Devices rises",
+          "url": "https://ca.finance.yahoo.com/news/earnings-live-wingstop-stock-surges-on-q4-earnings-beat-garmin-spikes-analog-devices-rises-155112495.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "ABNB Federal Credit Union to acquire two branches in NC",
+          "url": "https://www.rrdailyherald.com/news/local/abnb-federal-credit-union-to-acquire-two-branches-in-nc/article_9a836260-5095-52d5-86f1-5b1684ce949d.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Vanguard Group Inc. Increases Stock Holdings in Airbnb, Inc. $ABNB",
+          "url": "https://www.themarketsdaily.com/2026/02/18/vanguard-group-inc-increases-stock-holdings-in-airbnb-inc-abnb.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Promising Leisure Stocks To Follow Today – February 15th",
+          "url": "https://www.americanbankingnews.com/2026/02/18/promising-leisure-stocks-to-follow-today-february-15th.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(53.7)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 53.7,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "ACN",
+      "name": "ACN",
+      "score": 53.3,
+      "rank": 19,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 67.9,
+        "whale": 35,
+        "macro": 50,
+        "news": 56
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -23.4%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (25.0)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:18",
+          "• [NEWSDATA] True north to invest inr 150 crore in ACN healthcare to revolutionise healthcare revenue cyc",
+          "• [NEWSDATA] True north to invest inr 150 crore in ACN healthcare to revolutionise healthcare revenue cyc",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 214.95,
+        "change_pct": -3.8728142748535506,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 24.95,
+        "ret_20d": -23.43,
+        "ret_60d": -10.73,
+        "vol_60d_ann": 0.3978,
+        "ma20": 247.7295,
+        "ma60": 262.3232,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.3021
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "True north to invest inr 150 crore in ACN healthcare to revolutionise healthcare revenue cycle",
+          "url": "https://www.thetimesofbengal.com/national/true-north-to-invest-inr-150-crore-in-acn-healthcare-to-revolutionise-healthcare-revenue-cycle/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "True north to invest inr 150 crore in ACN healthcare to revolutionise healthcare revenue cycle",
+          "url": "https://www.expresshealthcare.in/news/true-north-to-invest-inr-150-crore-in-acn-healthcare-to-revolutionise-healthcare-revenue-cycle/452823/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "2027 credibility battle shifts to INEC as Tinubu signs amended Electoral Act",
+          "url": "https://newmail-ng.com/inec-66/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "True North to invest Rs 150 cr in ACN Healthcare, to fund growth, expansion of service",
+          "url": "https://economictimes.indiatimes.com/small-biz/entrepreneurship/true-north-to-invest-rs-150-cr-in-acn-healthcare-to-fund-growth-expansion-of-service/articleshow/128538813.cms"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Asia's Protein Buyers Still Trail Global Best Practice -- But Momentum Is Building, New ARE Benchmark Finds",
+          "url": "https://menafn.com/1110761812/Asias-Protein-Buyers-Still-Trail-Global-Best-Practice-But-Momentum-Is-Building-New-ARE-Benchmark-Finds"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Asia’s Protein Buyers Still Trail Global Best Practice — But Momentum is Building, New ARE Benchmark Finds",
+          "url": "https://platodata.ai/w3ai/4766293/platodata/asias-protein-buyers-still-trail-global-best-practice-but-momentum-is-building-new-are-benchmark-finds/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "LP Reps caucus faults Tinubu’s hurried assent to Electoral Act amendment",
+          "url": "https://punchng.com/lp-reps-caucus-faults-tinubus-hurried-assent-to-electoral-act-amendment/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Michael Hakes’s Top Picks for Feb. 18, 2026",
+          "url": "https://www.bnnbloomberg.ca/markets/2026/02/18/michael-hakess-top-picks-for-feb-18-2026/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Accenture PLC $ACN Shares Acquired by Advisors Capital Management LLC",
+          "url": "https://www.dailypolitical.com/2026/02/18/accenture-plc-acn-shares-acquired-by-advisors-capital-management-llc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Accenture PLC $ACN Shares Sold by BOK Financial Private Wealth Inc.",
+          "url": "https://www.themarketsdaily.com/2026/02/18/accenture-plc-acn-shares-sold-by-bok-financial-private-wealth-inc.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(53.3)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 53.3,
+        "volatility": 0.0
+      }
+    },
+    {
+      "ticker": "AFL",
+      "name": "AFL",
+      "score": 48.1,
+      "rank": 20,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 45.2,
+        "whale": 50,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (56.0)",
+          "🛡️ Low Volatility (0.17)",
+          "🧾 Analyst: FINNHUB:SELL"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:1 | items:18",
+          "• [NEWSDATA] Fremantle Dockers CEO Simon Garlick and West Coast Eagles boss Don Pyke in push to keep AFL ",
+          "• [NEWSDATA] NEOS Investment Management LLC Has $7.53 Million Stock Position in Aflac Incorporated $AFL",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:SELL",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 112.76,
+        "change_pct": -0.7569089948952644,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 55.99,
+        "ret_20d": 3.87,
+        "ret_60d": 2.0,
+        "vol_60d_ann": 0.1747,
+        "ma20": 112.662,
+        "ma60": 110.7978,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.9457
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "SELL",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Fremantle Dockers CEO Simon Garlick and West Coast Eagles boss Don Pyke in push to keep AFL Origin in Perth",
+          "url": "https://thewest.com.au/sport/afl/fremantle-dockers-ceo-simon-garlick-and-west-coast-eagles-boss-don-pyke-in-push-to-keep-afl-origin-in-perth-c-21692549"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "NEOS Investment Management LLC Has $7.53 Million Stock Position in Aflac Incorporated $AFL",
+          "url": "https://www.watchlistnews.com/neos-investment-management-llc-has-7-53-million-stock-position-in-aflac-incorporated-afl/10993199.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "NEOS Investment Management LLC Purchases 19,368 Shares of Aflac Incorporated $AFL",
+          "url": "https://www.tickerreport.com/banking-finance/13351716/neos-investment-management-llc-purchases-19368-shares-of-aflac-incorporated-afl.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Vahe Gregorian: How Kansas City went from soccer ‘hick town’ to coveted 2026 FIFA World Cup site",
+          "url": "https://tucson.com/sports/college/article_24d0fe6e-1a5f-545c-adbc-366d27773991.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Vahe Gregorian: How Kansas City went from soccer ‘hick town’ to coveted 2026 FIFA World Cup site",
+          "url": "https://www.dailygazette.com/tribune/vahe-gregorian-how-kansas-city-went-from-soccer-hick-town-to-coveted-2026-fifa-world/article_18848a65-d43d-5f4a-a7a2-a9e3473087b2.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Austin Appelbee: Local hero awarded Australian Army Cadets Gold Commendation, weeks after saving family",
+          "url": "https://www.perthnow.com.au/wa/austin-appelbee-local-hero-awarded-australian-army-cadets-gold-commendation-weeks-after-saving-family-c-21683027"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Nick Daicos connection links Collingwood to rumour mill surrounding Port Adelaide free agent Zak Butters",
+          "url": "https://7news.com.au/sport/afl/nick-daicos-connection-links-collingwood-to-rumour-mill-surrounding-port-adelaide-free-agent-zak-butters-c-21692102"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "AFL injury news: Hamstring strain for Cerra - carltonfc.com.au",
+          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxObXFpZm5NNGxIX1BtR3lkdVB2a2Z0ck9BQzdxeFdOZG5kdUpTZk9tcjBmaC1nWjR1NXl2MWFVa1Jqa1owM2ZRb1lhUDQwT29ubEdsLVdybVBzcGRCTi0zZ0w0N09BaWtKdjBTUGZzLXozRzd5d0FIWlY4YkhWUFdjTG0zX3RvUGVWUUVxUQ?oc=5"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "West Coast player Tyler Brockman appears in court charged with serious assault following alleged street fight",
+          "url": "https://thewest.com.au/news/geraldton-guardian/west-coast-player-tyler-brockman-appears-in-court-charged-with-serious-assault-following-alleged-street-fight-c-21690900"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Hard Ball Gets: Xavier Ellis, Ryan Daniels and Nick Rynne reveal schorching hot takes for the 2026 AFL season",
+          "url": "https://thewest.com.au/sport/afl/hard-ball-gets-xavier-ellis-ryan-daniels-and-nick-rynne-reveal-schorching-hot-takes-for-the-2026-afl-season--c-21690759"
+        }
+      ],
+      "analyst_mentions": [],
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 0.0,
+        "data_coverage": 100.0,
+        "vol_60": 0.0
+      },
+      "drift": {
+        "score": 25.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 저하(48.1)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 48.1,
+        "volatility": 0.0
+      }
+    }
+  ]
+}
