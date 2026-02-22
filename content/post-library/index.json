@@ -4,7 +4,7 @@
     "date": "2026-02-14",
     "category": "market-intelligence",
     "source_post": "content/posts/ai-20afd6.mdx",
-    "archived_post": "content/post-library/2026-02-14/market-intelligence/blog-ai/post.mdx",
+    "archived_post": "content/post-library/2026-02-14/market-intelligence/blog-미국-금리ai반도체빅테크-실적-최신-트렌드-기반-투자-인사이트/post.mdx",
     "images": []
   },
   {
@@ -12,7 +12,7 @@
     "date": "2026-02-23",
     "category": "automation",
     "source_post": "content/posts/ai-automation-practical-worklog.mdx",
-    "archived_post": "content/post-library/2026-02-23/automation/ai/post.mdx",
+    "archived_post": "content/post-library/2026-02-23/automation/ai-자동화-실전기-운영-기준을-고정한-작업-기록/post.mdx",
     "images": []
   },
   {
@@ -20,10 +20,10 @@
     "date": "2026-02-23",
     "category": "bio-science",
     "source_post": "content/posts/autophagy-measurement-visualized-guide.mdx",
-    "archived_post": "content/post-library/2026-02-23/bio-science/autophagy-imagej/post.mdx",
+    "archived_post": "content/post-library/2026-02-23/bio-science/autophagy는-어떻게-측정할까-원리해석-함정imagej-정량시각화/post.mdx",
     "images": [
-      "content/post-library/2026-02-23/bio-science/autophagy-imagej/images/ai-lc3-p62-flux-interpretation.png",
-      "content/post-library/2026-02-23/bio-science/autophagy-imagej/images/ai-autophagy-process-schematic.png"
+      "content/post-library/2026-02-23/bio-science/autophagy는-어떻게-측정할까-원리해석-함정imagej-정량시각화/images/ai-lc3-p62-flux-interpretation.png",
+      "content/post-library/2026-02-23/bio-science/autophagy는-어떻게-측정할까-원리해석-함정imagej-정량시각화/images/ai-autophagy-process-schematic.png"
     ]
   },
   {
@@ -31,10 +31,10 @@
     "date": "2026-02-23",
     "category": "bio-science",
     "source_post": "content/posts/organoid-historical-flow-paper-based.mdx",
-    "archived_post": "content/post-library/2026-02-23/bio-science/uncategorized/post.mdx",
+    "archived_post": "content/post-library/2026-02-23/bio-science/오가노이드의-역사적-흐름-핵심-논문으로-읽는-기술-전환의-연대기/post.mdx",
     "images": [
-      "content/post-library/2026-02-23/bio-science/uncategorized/images/organoid-history-timeline.png",
-      "content/post-library/2026-02-23/bio-science/uncategorized/images/organoid-field-evolution-map.png"
+      "content/post-library/2026-02-23/bio-science/오가노이드의-역사적-흐름-핵심-논문으로-읽는-기술-전환의-연대기/images/organoid-history-timeline.png",
+      "content/post-library/2026-02-23/bio-science/오가노이드의-역사적-흐름-핵심-논문으로-읽는-기술-전환의-연대기/images/organoid-field-evolution-map.png"
     ]
   },
   {
@@ -66,10 +66,10 @@
     "date": "2026-02-23",
     "category": "bio-science",
     "source_post": "content/posts/worklog-20260223-0605-c3a7c6ac.mdx",
-    "archived_post": "content/post-library/2026-02-23/bio-science/uncategorized/post.mdx",
+    "archived_post": "content/post-library/2026-02-23/bio-science/오가노이드의-역사적-흐름-운영-기준을-고정한-작업-기록/post.mdx",
     "images": [
-      "content/post-library/2026-02-23/bio-science/uncategorized/images/ai-figure-1.png",
-      "content/post-library/2026-02-23/bio-science/uncategorized/images/ai-figure-2.png"
+      "content/post-library/2026-02-23/bio-science/오가노이드의-역사적-흐름-운영-기준을-고정한-작업-기록/images/ai-figure-1.png",
+      "content/post-library/2026-02-23/bio-science/오가노이드의-역사적-흐름-운영-기준을-고정한-작업-기록/images/ai-figure-2.png"
     ]
   }
 ]
