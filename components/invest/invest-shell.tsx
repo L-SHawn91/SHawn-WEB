@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { InvestTrackBoard } from "./invest-track-board";
 
-type InvestTab = "overview" | "reports" | "dashboard" | "archive";
+type InvestTab = "overview" | "reports" | "dashboard" | "archive" | "search";
 
 type InvestShellProps = {
   currentTab?: InvestTab;
@@ -13,6 +13,7 @@ type InvestShellProps = {
 };
 
 const investTabs: { key: InvestTab; label: string; href: string }[] = [
+  { key: "search", label: "검색", href: "/invest/search" },
   { key: "archive", label: "아카이브", href: "/market-intelligence/archive" },
   { key: "dashboard", label: "대시보드", href: "/cartridges/invest" },
   { key: "reports", label: "리포트", href: "/market-intelligence" },

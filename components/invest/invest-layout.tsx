@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { InvestShell } from "./invest-shell";
 
-export type InvestLayoutTab = "overview" | "reports" | "dashboard" | "archive";
+export type InvestLayoutTab = "overview" | "reports" | "dashboard" | "archive" | "search";
 
 export const investUiClass = {
   page: "space-y-6",
@@ -64,13 +64,16 @@ export function InvestPanel({
 
 export function InvestCard({
   className = "",
+  title,
   children,
 }: {
   className?: string;
+  title?: string;
   children: ReactNode;
 }) {
   return (
     <article className={`${investUiClass.panel} ${investUiClass.panelRadiusSm} ${investUiClass.panelInner} ${className}`}>
+      {title ? <h3 className="mb-4 text-base font-semibold text-white">{title}</h3> : null}
       {children}
     </article>
   );

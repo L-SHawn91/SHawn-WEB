@@ -1,0 +1,5654 @@
+{
+  "meta": {
+    "market": "US",
+    "date": "2026-02-22",
+    "time": "23:20:24",
+    "timestamp": "2026-02-22T23:20:24.245031",
+    "avg_score": 58.09,
+    "strong_buy_count": 0,
+    "buy_count": 9,
+    "watch_count": 7,
+    "sell_count": 4,
+    "high_growth_count": 0,
+    "top_alpha_ticker": "APD",
+    "failed_count": 0,
+    "benchmark_ticker": "^GSPC",
+    "benchmark_change_pct": 0.694,
+    "drift": {
+      "avg_score": 27.4,
+      "max_score": 40.0,
+      "min_score": 12.0,
+      "count": 20,
+      "status": "stable"
+    },
+    "score_meta": {
+      "avg_vol_60": 0.3261,
+      "count": 20,
+      "max_vol_60": 0.5924,
+      "min_vol_60": 0.1571,
+      "avg_data_coverage": 97.5,
+      "avg_quality_penalty": 0.3,
+      "avg_disagreement_penalty": 0.0
+    }
+  },
+  "reports": [
+    {
+      "ticker": "APD",
+      "name": "APD",
+      "score": 68.7,
+      "rank": 1,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 81.7,
+        "whale": 68,
+        "macro": 50,
+        "news": 56
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +6.5%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (58.2)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Uptrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:24",
+          "• [NEWSDATA] Off-duty APD officer shoots, kills man who shot barber shop employee",
+          "• [NEWSDATA] Off-Duty Officer Involved in Fatal Shooting at Austin Barbershop",
+          "📣 Buzz: GDELT 12 | Reddit 2",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 281.18,
+        "change_pct": 0.16386434881731957,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 58.21,
+        "ret_20d": 6.49,
+        "ret_60d": 9.25,
+        "vol_60d_ann": 0.3235,
+        "ma20": 276.658,
+        "ma60": 261.1977,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 1.2428
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          256.58,
+          258.93,
+          258.96,
+          261.05,
+          260.86,
+          256.77,
+          260.35,
+          261.62,
+          260.69,
+          236.05,
+          230.76,
+          236.71,
+          243.73,
+          243.0,
+          245.01,
+          242.25,
+          246.38,
+          243.75,
+          239.96,
+          244.78,
+          244.77,
+          245.84,
+          247.42,
+          247.85,
+          248.82,
+          247.02,
+          250.47,
+          253.84,
+          258.36,
+          261.87,
+          261.22,
+          263.72,
+          267.04,
+          266.18,
+          267.25,
+          265.98,
+          267.53,
+          258.18,
+          263.11,
+          264.04,
+          261.35,
+          262.62,
+          259.12,
+          255.89,
+          256.02,
+          272.5,
+          270.99,
+          277.96,
+          286.59,
+          283.5,
+          283.12,
+          286.37,
+          290.77,
+          293.14,
+          291.5,
+          279.74,
+          277.69,
+          282.39,
+          280.72,
+          281.18
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 256.58,
+        "end": 281.18
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 2
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Off-duty APD officer shoots, kills man who shot barber shop employee",
+          "url": "https://www.fox7austin.com/news/1-dead-shooting-involving-off-duty-austin-police-officer"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Off-Duty Officer Involved in Fatal Shooting at Austin Barbershop",
+          "url": "https://us.headtopics.com/news/off-duty-officer-involved-in-fatal-shooting-at-austin-80082930"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "TTW Announces Top 50 Nightlife Travel Destinations In The World For 2026",
+          "url": "https://menafn.com/1110772230/TTW-Announces-Top-50-Nightlife-Travel-Destinations-In-The-World-For-2026"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "TTW Announces Top 50 Nightlife Travel Destinations in the World for 2026",
+          "url": "https://www.travelandtourworld.com/news/article/ttw-announces-top-50-nightlife-travel-destinations-in-the-world-for-2026/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Recently sworn-in Asheville police officer facing assault charges",
+          "url": "https://newschannel9.com/news/nation-world/recently-sworn-in-asheville-police-officer-arrested-charged-with-assault-on-a-female"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Recently sworn-in Asheville police officer facing assault charges",
+          "url": "https://news3lv.com/news/nation-world/recently-sworn-in-asheville-police-officer-arrested-charged-with-assault-on-a-female"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Recently sworn-in Asheville police officer facing assault charges",
+          "url": "https://kutv.com/news/nation-world/recently-sworn-in-asheville-police-officer-arrested-charged-with-assault-on-a-female"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Recently sworn-in Asheville police officer facing assault charges",
+          "url": "https://wgxa.tv/news/nation-world/recently-sworn-in-asheville-police-officer-arrested-charged-with-assault-on-a-female"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Late‐Night SR‐429 Rollover Near Apopka Leaves One Dead, Three Hurt",
+          "url": "https://hoodline.com/2026/02/late-night-sr-429-rollover-near-apopka-leaves-one-dead-three-hurt/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Raiffeisen Bank International AG Has $24.75 Million Stock Holdings in Air Products and Chemicals, Inc. $APD",
+          "url": "https://www.thelincolnianonline.com/2026/02/21/raiffeisen-bank-international-ag-has-24-75-million-stock-holdings-in-air-products-and-chemicals-inc-apd.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 12.1374,
+        "data_coverage": 100.0,
+        "vol_60": 0.3235
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 14.0,
+        "status": "stable",
+        "reasons": [
+          "변동성 상승(0.32)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 68.7,
+        "volatility": 0.3235
+      }
+    },
+    {
+      "ticker": "AES",
+      "name": "AES",
+      "score": 63.1,
+      "rank": 2,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 82.3,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +13.0%",
+          "🟢 Trend Above MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:11",
+          "• [NEWSDATA] YolTech Therapeutics Announces Positive Interim Data on YOLT-202 for the Treatment of Alpha-",
+          "• [NEWSDATA] B.C. climate news: Solar project in B.C. Hydro's call for power kicks off environmental revi",
+          "🧾 Analyst mentions (from headlines)",
+          "• Citi | mention",
+          "📣 Buzz: GDELT 0 | Reddit 1",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 16.51,
+        "change_pct": 0.9168704156479348,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 76.27,
+        "ret_20d": 13.0,
+        "ret_60d": 20.07,
+        "vol_60d_ann": 0.3166,
+        "ma20": 15.683,
+        "ma60": 14.5985,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.8521
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          13.88,
+          13.81,
+          13.91,
+          14.06,
+          13.99,
+          13.96,
+          13.71,
+          13.93,
+          13.92,
+          13.86,
+          13.96,
+          13.8,
+          14.0,
+          13.83,
+          13.86,
+          13.62,
+          13.48,
+          13.68,
+          13.53,
+          13.86,
+          13.9,
+          13.96,
+          14.07,
+          14.13,
+          14.5,
+          14.34,
+          14.82,
+          14.73,
+          14.9,
+          14.45,
+          14.22,
+          14.32,
+          14.04,
+          13.97,
+          14.0,
+          14.44,
+          14.19,
+          13.77,
+          14.24,
+          14.61,
+          14.25,
+          14.62,
+          14.92,
+          15.19,
+          15.04,
+          14.65,
+          14.73,
+          16.09,
+          15.75,
+          15.59,
+          16.05,
+          16.06,
+          16.25,
+          16.44,
+          16.2,
+          16.28,
+          16.39,
+          16.29,
+          16.36,
+          16.51
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 13.88,
+        "end": 16.51
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 1
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "YolTech Therapeutics Announces Positive Interim Data on YOLT-202 for the Treatment of Alpha-1 Antitrypsin Deficiency",
+          "url": "https://www.newswire.co.kr/newsRead.php?no=1029001&sourceType=rss"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "B.C. climate news: Solar project in B.C. Hydro's call for power kicks off environmental review | New calf arrives for B.C.'s endangered southern resident killer whales",
+          "url": "https://vancouversun.com/news/climate-change-news-to-feb-22-26"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "New Shai-Hulud–like npm Worm Attack 19+ Packages to Steal dev/CI Secrets",
+          "url": "https://cybersecuritynews.com/shai-hulud-like-npm-worm-attack/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "From Wagner to intelligence service SVR — How Russia rewired its Africa operations",
+          "url": "https://timesofindia.indiatimes.com/world/rest-of-world/from-wagner-to-intelligence-service-svr-how-russia-rewired-its-africa-operations/articleshow/128643002.cms"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Investigation: Russian spy agency takes over Wagner operations in Africa",
+          "url": "http://www.africanews.com/2026/02/21/investigation-russian-spy-agency-takes-over-wagner-operations-in-africa/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Hundreds of Travellers Stranded in Denmark, Norway, Sweden And more As SAS Link Delays 22 and Cancels 15 Flights, Disrupting Geneva, Oslo, Brussels, Stavanger, and Beyond",
+          "url": "https://www.travelandtourworld.com/news/article/hundreds-of-travellers-stranded-in-denmark-norway-sweden-and-more-as-sas-link-delays-22-and-cancels-15-flights-disrupting-geneva-oslo-brussels-stavanger-and-beyond/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Reviewing Consolidated Edison (NYSE:ED) and AES (NYSE:AES)",
+          "url": "https://www.americanbankingnews.com/2026/02/21/reviewing-consolidated-edison-nyseed-and-aes-nyseaes.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "How Algeria's diplomatic reset with Niger advances its Sahel strategy",
+          "url": "https://ca.news.yahoo.com/algerias-diplomatic-reset-niger-advances-072158868.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Merck announces positive new data for Enflonsia for infants and children under 2 years of age at increased risk for severe RSV disease over two RSV seasons",
+          "url": "https://pharmabiz.com/ArticleDetails.aspx?aid=184380&sid=2"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Local Creatives Bag Multiple Award Nominations",
+          "url": "https://www.namibian.com.na/local-creatives-bag-multiple-award-nominations/"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "Citi",
+          "action": "mention",
+          "evidence": "Hundreds of Travellers Stranded in Denmark, Norway, Sweden And more As SAS Link Delays 22 and Cancels 15 Flights, Disrupting Geneva, Oslo, Brussels, Stavanger, "
+        }
+      ],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 13.7219,
+        "data_coverage": 100.0,
+        "vol_60": 0.3166
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(63.1)",
+          "변동성 상승(0.32)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 63.1,
+        "volatility": 0.3166
+      }
+    },
+    {
+      "ticker": "ALGN",
+      "name": "ALGN",
+      "score": 63.1,
+      "rank": 3,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 82.3,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +12.5%",
+          "🟢 Trend Above MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:10",
+          "• [NEWSDATA] Tredje AP fonden Grows Position in Align Technology, Inc. $ALGN",
+          "• [NEWSDATA] Tredje AP fonden Acquires 25,759 Shares of Align Technology, Inc. $ALGN",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 190.02,
+        "change_pct": 0.3273495248152083,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 69.2,
+        "ret_20d": 12.49,
+        "ret_60d": 33.29,
+        "vol_60d_ann": 0.3676,
+        "ma20": 177.753,
+        "ma60": 166.3398,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.8159
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          143.63,
+          147.5,
+          147.23,
+          147.19,
+          146.72,
+          150.93,
+          155.0,
+          156.84,
+          157.21,
+          157.68,
+          159.0,
+          164.58,
+          163.87,
+          165.43,
+          162.73,
+          162.89,
+          160.58,
+          161.44,
+          157.69,
+          159.28,
+          156.76,
+          157.84,
+          158.37,
+          157.84,
+          158.135,
+          156.15,
+          156.03,
+          160.13,
+          167.66,
+          166.81,
+          170.58,
+          172.79,
+          172.0,
+          170.2,
+          169.23,
+          171.47,
+          171.49,
+          165.55,
+          169.95,
+          168.92,
+          168.73,
+          167.65,
+          167.04,
+          164.92,
+          164.12,
+          163.03,
+          163.63,
+          157.05,
+          161.3,
+          175.62,
+          187.6,
+          192.5,
+          196.27,
+          197.51,
+          183.86,
+          186.77,
+          187.22,
+          190.82,
+          189.4,
+          190.02
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 143.63,
+        "end": 190.02
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": false
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 0
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Tredje AP fonden Grows Position in Align Technology, Inc. $ALGN",
+          "url": "https://www.watchlistnews.com/tredje-ap-fonden-grows-position-in-align-technology-inc-algn/10995951.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Tredje AP fonden Acquires 25,759 Shares of Align Technology, Inc. $ALGN",
+          "url": "https://www.tickerreport.com/banking-finance/13354490/tredje-ap-fonden-acquires-25759-shares-of-align-technology-inc-algn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Align Technology (NASDAQ:ALGN) EVP John Morici Sells 7,969 Shares",
+          "url": "https://www.tickerreport.com/banking-finance/13354407/align-technology-nasdaqalgn-evp-john-morici-sells-7969-shares.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Monaco Asset Management SAM Acquires New Shares in Align Technology, Inc. $ALGN",
+          "url": "https://www.themarketsdaily.com/2026/02/21/monaco-asset-management-sam-acquires-new-shares-in-align-technology-inc-algn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Jupiter Asset Management Ltd. Makes New Investment in Align Technology, Inc. $ALGN",
+          "url": "https://baseballnewssource.com/2026/02/21/jupiter-asset-management-ltd-makes-new-investment-in-align-technology-inc-algn/11035807.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Jupiter Asset Management Ltd. Takes $12.13 Million Position in Align Technology, Inc. $ALGN",
+          "url": "https://www.thelincolnianonline.com/2026/02/21/jupiter-asset-management-ltd-takes-12-13-million-position-in-align-technology-inc-algn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "NEOS Investment Management LLC Raises Holdings in Align Technology, Inc. $ALGN",
+          "url": "https://www.watchlistnews.com/neos-investment-management-llc-raises-holdings-in-align-technology-inc-algn/10995496.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "NEOS Investment Management LLC Raises Holdings in Align Technology, Inc. $ALGN",
+          "url": "https://www.tickerreport.com/banking-finance/13354025/neos-investment-management-llc-raises-holdings-in-align-technology-inc-algn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Aberdeen Group plc Raises Stake in Align Technology, Inc. $ALGN",
+          "url": "https://www.defenseworld.net/2026/02/21/aberdeen-group-plc-raises-stake-in-align-technology-inc-algn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Align Technology, Inc. $ALGN Shares Purchased by Aberdeen Group plc",
+          "url": "https://www.americanbankingnews.com/2026/02/21/align-technology-inc-algn-shares-purchased-by-aberdeen-group-plc.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 13.7219,
+        "data_coverage": 100.0,
+        "vol_60": 0.3676
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(63.1)",
+          "변동성 상승(0.37)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 63.1,
+        "volatility": 0.3676
+      }
+    },
+    {
+      "ticker": "ALL",
+      "name": "ALL",
+      "score": 62.9,
+      "rank": 4,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 81.7,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +5.7%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (56.6)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:13",
+          "• [NEWSDATA] Willie Colón, architect of urban salsa music, dies",
+          "• [NEWSDATA] Willie Colón, architect of urban salsa music, dies",
+          "📣 Buzz: GDELT 0 | Reddit 3",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 206.37,
+        "change_pct": 1.5500442869796307,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 56.58,
+        "ret_20d": 5.68,
+        "ret_60d": -3.71,
+        "vol_60d_ann": 0.2561,
+        "ma20": 203.1385,
+        "ma60": 204.8238,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 1.0378
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          212.37,
+          212.65,
+          213.87,
+          212.98,
+          210.0,
+          208.91,
+          208.62,
+          206.37,
+          202.27,
+          200.87,
+          201.05,
+          201.19,
+          206.82,
+          207.18,
+          211.94,
+          209.51,
+          209.08,
+          204.93,
+          205.0,
+          208.28,
+          209.55,
+          209.05,
+          207.8,
+          208.66,
+          209.1,
+          208.15,
+          203.82,
+          205.57,
+          207.92,
+          207.27,
+          211.1,
+          212.21,
+          208.66,
+          197.65,
+          196.02,
+          195.47,
+          192.28,
+          193.55,
+          193.66,
+          195.28,
+          193.65,
+          196.02,
+          194.77,
+          197.33,
+          198.39,
+          198.99,
+          200.76,
+          201.77,
+          207.12,
+          215.19,
+          207.55,
+          199.94,
+          201.15,
+          204.73,
+          206.56,
+          207.51,
+          212.32,
+          209.43,
+          203.22,
+          206.37
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 212.37,
+        "end": 206.37
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 3
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.colypointobserver.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.gloucesteradvocate.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.southcoastregister.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.theadvocate.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.theleader.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.crookwellgazette.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.nynganobserver.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.dungogchronicle.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.cootamundraherald.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Willie Colón, architect of urban salsa music, dies",
+          "url": "https://www.bluemountainsgazette.com.au/story/9180292/willie-colon-architect-of-urban-salsa-music-dies/"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 13.4626,
+        "data_coverage": 100.0,
+        "vol_60": 0.2561
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(62.9)",
+          "변동성 상승(0.26)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 62.9,
+        "volatility": 0.2561
+      }
+    },
+    {
+      "ticker": "ABBV",
+      "name": "ABBV",
+      "score": 61.7,
+      "rank": 5,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 78.7,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (52.2)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:1 | items:15",
+          "• [NEWSDATA] AbbVie (NYSE:ABBV) Stock Price Down 2% – Should You Sell?",
+          "• [NEWSDATA] Tredje AP fonden Increases Stock Position in AbbVie Inc. $ABBV",
+          "📣 Buzz: GDELT 0 | Reddit 5",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 224.81,
+        "change_pct": 0.20503677289949096,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 52.2,
+        "ret_20d": 3.07,
+        "ret_60d": -4.85,
+        "vol_60d_ann": 0.2547,
+        "ma20": 223.663,
+        "ma60": 224.4478,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.9101
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          229.51,
+          231.8,
+          227.66,
+          227.7,
+          225.11,
+          224.37,
+          230.24,
+          228.71,
+          226.08,
+          223.12,
+          222.99,
+          225.18,
+          223.98,
+          223.32,
+          227.45,
+          223.67,
+          224.31,
+          222.82,
+          226.82,
+          227.91,
+          228.79,
+          229.89,
+          229.98,
+          230.84,
+          229.74,
+          228.49,
+          229.31,
+          220.18,
+          223.93,
+          233.42,
+          224.13,
+          220.08,
+          220.04,
+          220.75,
+          221.89,
+          216.75,
+          214.35,
+          214.04,
+          216.15,
+          218.11,
+          219.26,
+          220.77,
+          223.93,
+          218.67,
+          220.43,
+          223.01,
+          225.64,
+          225.66,
+          217.11,
+          219.02,
+          223.43,
+          223.26,
+          222.44,
+          220.89,
+          227.5,
+          231.5,
+          232.86,
+          228.72,
+          224.35,
+          224.81
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 229.51,
+        "end": 224.81
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 5
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "AbbVie (NYSE:ABBV) Stock Price Down 2% – Should You Sell?",
+          "url": "https://www.watchlistnews.com/abbvie-nyseabbv-stock-price-down-2-should-you-sell/10996165.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Tredje AP fonden Increases Stock Position in AbbVie Inc. $ABBV",
+          "url": "https://www.watchlistnews.com/tredje-ap-fonden-increases-stock-position-in-abbvie-inc-abbv/10996088.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Tredje AP fonden Increases Stock Holdings in AbbVie Inc. $ABBV",
+          "url": "https://www.tickerreport.com/banking-finance/13354616/tredje-ap-fonden-increases-stock-holdings-in-abbvie-inc-abbv.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Siligmueller & Norvid Wealth Advisors LLC Purchases Shares of 12,436 AbbVie Inc. $ABBV",
+          "url": "https://zolmax.com/investing/siligmueller-norvid-wealth-advisors-llc-purchases-shares-of-12436-abbvie-inc-abbv/11769724.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Siligmueller & Norvid Wealth Advisors LLC Makes New Investment in AbbVie Inc. $ABBV",
+          "url": "https://www.dailypolitical.com/2026/02/21/siligmueller-norvid-wealth-advisors-llc-makes-new-investment-in-abbvie-inc-abbv.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "AbbVie Inc. (ABBV) to Issue Quarterly Dividend of $1.73 on May 15th",
+          "url": "https://zolmax.com/investing/abbvie-inc-abbv-to-issue-quarterly-dividend-of-1-73-on-may-15th/11769687.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Heartland Bank & Trust Co Has $3.85 Million Position in AbbVie Inc. $ABBV",
+          "url": "https://www.dailypolitical.com/2026/02/21/heartland-bank-trust-co-has-3-85-million-position-in-abbvie-inc-abbv.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Heartland Bank & Trust Co Has $3.85 Million Holdings in AbbVie Inc. $ABBV",
+          "url": "https://www.tickerreport.com/banking-finance/13354300/heartland-bank-trust-co-has-3-85-million-holdings-in-abbvie-inc-abbv.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Fiera Capital Corp Has $38.12 Million Stake in AbbVie Inc. $ABBV",
+          "url": "https://baseballnewssource.com/2026/02/21/fiera-capital-corp-has-38-12-million-stake-in-abbvie-inc-abbv/11035767.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Fiera Capital Corp Has $38.12 Million Stock Position in AbbVie Inc. $ABBV",
+          "url": "https://www.thelincolnianonline.com/2026/02/21/fiera-capital-corp-has-38-12-million-stock-position-in-abbvie-inc-abbv.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 12.1662,
+        "data_coverage": 100.0,
+        "vol_60": 0.2547
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(61.7)",
+          "변동성 상승(0.25)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 61.7,
+        "volatility": 0.2547
+      }
+    },
+    {
+      "ticker": "MMM",
+      "name": "MMM",
+      "score": 61.1,
+      "rank": 6,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 76.9,
+        "whale": 50,
+        "macro": 50,
+        "news": 53
+      },
+      "details": {
+        "expert": [
+          "🟢 Trend Above MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:18",
+          "• [NEWSDATA] Scientists Simulated The Big Bang's Aftermath, And Found The Universe Was Like Soup",
+          "• [NEWSDATA] WE WILL BRING TO BOOK THOSE IN THE DIASPORA PUSHING LIES, FALSEHOODS AND HATE SPEECH-PRESIDE",
+          "📣 Buzz: GDELT 12 | Reddit 3",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 167.06,
+        "change_pct": 1.2178127840048414,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 67.08,
+        "ret_20d": 4.0,
+        "ret_60d": -0.61,
+        "vol_60d_ann": 0.2844,
+        "ma20": 164.1625,
+        "ma60": 164.9248,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.8157
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          169.56,
+          171.54,
+          170.8,
+          172.05,
+          170.48,
+          171.56,
+          173.09,
+          169.27,
+          167.48,
+          163.96,
+          165.09,
+          165.66,
+          168.6,
+          168.9,
+          165.7,
+          163.2,
+          162.17,
+          161.76,
+          161.96,
+          160.0,
+          160.15,
+          160.34,
+          162.08,
+          161.72,
+          161.17,
+          160.1,
+          161.82,
+          163.55,
+          166.21,
+          162.91,
+          165.24,
+          165.24,
+          167.94,
+          169.42,
+          169.99,
+          171.1,
+          167.8,
+          156.12,
+          155.88,
+          160.63,
+          162.68,
+          159.52,
+          158.05,
+          155.94,
+          156.38,
+          153.16,
+          153.43,
+          155.68,
+          163.79,
+          165.08,
+          172.65,
+          170.28,
+          173.43,
+          172.85,
+          174.61,
+          171.82,
+          167.62,
+          164.17,
+          165.05,
+          167.06
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 169.56,
+        "end": 167.06
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 3
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Scientists Simulated The Big Bang's Aftermath, And Found The Universe Was Like Soup",
+          "url": "https://www.sciencealert.com/scientists-simulated-the-big-bangs-aftermath-and-found-the-universe-was-like-soup"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "WE WILL BRING TO BOOK THOSE IN THE DIASPORA PUSHING LIES, FALSEHOODS AND HATE SPEECH-PRESIDENT HAKAINDE HICHILEMA",
+          "url": "https://zambianobserver.com/we-will-bring-to-book-those-in-the-diaspora-pushing-lies-falsehoods-and-hate-speech-president-hakainde-hichilema/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "MMM Sports Plus decorate 3 coaches",
+          "url": "https://www.malawivoice.com/2026/02/20/mmm-sports-plus-decorate-3-coaches/"
+        },
+        {
+          "source": "GDELT",
+          "title": "Mauritius : Will the MMM Split Again ?",
+          "url": "https://allafrica.com/stories/202601160554.html"
+        },
+        {
+          "source": "GDELT",
+          "title": "Google Brings Marketing Mix Modeling to the Masses , No Coding Needed",
+          "url": "https://www.adweek.com/media/google-brings-mmm-to-the-masses-no-coding-needed/"
+        },
+        {
+          "source": "GDELT",
+          "title": "Marketing mix modelling is shifting from experimental to essential in SA",
+          "url": "https://www.bizcommunity.com/article/marketing-mix-modelling-is-shifting-from-experimental-to-essential-in-sa-951454a"
+        },
+        {
+          "source": "GDELT",
+          "title": "Актёр , сыгравший Лёню Голубкова в рекламе МММ , может ослепнуть",
+          "url": "https://life.ru/p/1828504"
+        },
+        {
+          "source": "GDELT",
+          "title": "Πώς θα κινηθούν τα ΜΜΜ τα Χριστούγεννα – Τα δρομολόγια σε Μετρό , λεωφορεία , τραμ",
+          "url": "https://www.inewsgr.com/438/pos-tha-kinithoun-ta-mmm-ta-christougenna--ta-dromologia-se-metro-leoforeia-tram.htm"
+        },
+        {
+          "source": "GDELT",
+          "title": "Πώς θα κινηθούν τα ΜΜΜ τις γιορτές – Αναλυτικά το πρόγραμμα",
+          "url": "https://www.inewsgr.com/438/pos-tha-kinithoun-ta-mmm-tis-giortes--analytika-to-programma.htm"
+        },
+        {
+          "source": "GDELT",
+          "title": "Domino offers free lava cakes for 65th birthday . How to get one .",
+          "url": "https://www.yahoo.com/lifestyle/articles/dominos-offers-free-lava-cakes-203146173.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 11.2817,
+        "data_coverage": 100.0,
+        "vol_60": 0.2844
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(61.1)",
+          "변동성 상승(0.28)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 61.1,
+        "volatility": 0.2844
+      }
+    },
+    {
+      "ticker": "ABT",
+      "name": "ABT",
+      "score": 60.7,
+      "rank": 7,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 76.3,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "🌡️ RSI Healthy (61.5)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:12",
+          "• [NEWSDATA] You are killing your PC's performance by running after \"stable\" defaults",
+          "• [NEWSDATA] Video as Regina Daniels arrives movie set with mum in luxury cars, people react",
+          "📣 Buzz: GDELT 0 | Reddit 2",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 112.21,
+        "change_pct": 0.017826900793293538,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 61.54,
+        "ret_20d": 3.31,
+        "ret_60d": -12.41,
+        "vol_60d_ann": 0.265,
+        "ma20": 110.174,
+        "ma60": 119.93,
+        "above_ma20": true,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.5839
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          127.19,
+          128.05,
+          128.54,
+          128.9,
+          128.01,
+          126.32,
+          125.29,
+          125.4,
+          125.08,
+          122.09,
+          121.25,
+          122.55,
+          123.28,
+          125.46,
+          128.47,
+          126.86,
+          126.71,
+          125.12,
+          125.45,
+          125.2,
+          124.54,
+          124.81,
+          124.84,
+          124.57,
+          125.78,
+          125.29,
+          124.19,
+          126.45,
+          127.78,
+          127.04,
+          126.18,
+          125.92,
+          124.64,
+          124.3,
+          125.0,
+          123.53,
+          121.76,
+          121.14,
+          120.73,
+          108.61,
+          107.42,
+          108.77,
+          108.27,
+          106.05,
+          106.09,
+          109.3,
+          109.41,
+          109.02,
+          108.2,
+          109.08,
+          110.83,
+          111.07,
+          112.28,
+          113.59,
+          111.47,
+          112.68,
+          112.26,
+          113.29,
+          112.19,
+          112.21
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 127.19,
+        "end": 112.21
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 2
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "You are killing your PC's performance by running after \"stable\" defaults",
+          "url": "https://www.xda-developers.com/pc-stable-defaults-killing-performance/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Video as Regina Daniels arrives movie set with mum in luxury cars, people react",
+          "url": "https://www.legit.ng/people/1698110-nigerian-lady-captures-how-regina-daniels-arrived-movie-set-mum-video-shows-luxury-cars/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Mike Ekeler Reveals Philosophy to Improve USC Trojans Special Teams Unit",
+          "url": "https://www.si.com/college/usc/football/mike-ekeler-reveals-philosophy-improve-usc-trojans-special-teams-unit-lincoln-riley-hire"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Hasan Piker’s controversial “bro tips” resurface after comments about third party voting. People don’t understand it’s a joke",
+          "url": "https://dailydot.com/hasan-piker-brotips/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Arcblock Achieves Self Reported Market Cap of $18.30 Million (ABT)",
+          "url": "https://baseballnewssource.com/2026/02/21/arcblock-achieves-self-reported-market-cap-of-18-30-million-abt/11036271.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Abbott Laboratories $ABT Shares Sold by Tredje AP fonden",
+          "url": "https://www.thelincolnianonline.com/2026/02/21/abbott-laboratories-abt-shares-sold-by-tredje-ap-fonden.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Siligmueller & Norvid Wealth Advisors LLC Acquires Shares of 11,538 Abbott Laboratories $ABT",
+          "url": "https://www.themarketsdaily.com/2026/02/21/siligmueller-norvid-wealth-advisors-llc-acquires-shares-of-11538-abbott-laboratories-abt.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "China Universal Asset Management Co. Ltd. Sells 15,607 Shares of Abbott Laboratories $ABT",
+          "url": "https://www.americanbankingnews.com/2026/02/21/china-universal-asset-management-co-ltd-sells-15607-shares-of-abbott-laboratories-abt.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "China Universal Asset Management Co. Ltd. Sells 15,607 Shares of Abbott Laboratories $ABT",
+          "url": "https://www.defenseworld.net/2026/02/21/china-universal-asset-management-co-ltd-sells-15607-shares-of-abbott-laboratories-abt.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Lucas Di Grassi says new F1 rules resemble Formula E: “I don’t agree with them”",
+          "url": "https://timesofindia.indiatimes.com/sports/formula-e/lucas-di-grassi-says-new-f1-rules-resemble-formula-e-i-dont-agree-with-them/articleshow/128639293.cms"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 11.1295,
+        "data_coverage": 100.0,
+        "vol_60": 0.265
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(60.7)",
+          "변동성 상승(0.27)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 60.7,
+        "volatility": 0.265
+      }
+    },
+    {
+      "ticker": "ALLE",
+      "name": "ALLE",
+      "score": 60.2,
+      "rank": 8,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 73.9,
+        "whale": 50,
+        "macro": 50,
+        "news": 56
+      },
+      "details": {
+        "expert": [
+          "🔴 Trend Below MA20/MA60",
+          "🌡️ RSI Healthy (45.9)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:23",
+          "• [NEWSDATA] 9 Best Video Surveillance and Private Security Stocks to Buy",
+          "• [NEWSDATA] Allegion (NYSE:ALLE) Director Steven Mizell Sells 400 Shares",
+          "🧾 Analyst mentions (from headlines)",
+          "• JPMorgan | mention",
+          "📣 Buzz: GDELT 12 | Reddit 1",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 162.14,
+        "change_pct": 0.5644110897475635,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 45.87,
+        "ret_20d": -2.86,
+        "ret_60d": -0.45,
+        "vol_60d_ann": 0.2722,
+        "ma20": 169.999,
+        "ma60": 164.7217,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.3698
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          162.29,
+          166.09,
+          165.67,
+          166.03,
+          165.17,
+          164.16,
+          164.03,
+          160.85,
+          159.08,
+          158.86,
+          157.49,
+          160.3,
+          164.71,
+          160.83,
+          163.06,
+          159.67,
+          160.71,
+          159.92,
+          160.0,
+          160.77,
+          160.62,
+          160.85,
+          160.79,
+          161.35,
+          161.13,
+          159.22,
+          160.91,
+          161.88,
+          161.84,
+          159.02,
+          164.27,
+          162.69,
+          161.46,
+          161.69,
+          161.62,
+          163.49,
+          164.99,
+          163.01,
+          165.88,
+          166.92,
+          166.8,
+          166.94,
+          166.89,
+          164.9,
+          164.46,
+          165.39,
+          165.52,
+          167.84,
+          173.04,
+          175.83,
+          179.77,
+          177.94,
+          178.94,
+          179.39,
+          178.2,
+          179.5,
+          162.67,
+          162.59,
+          161.23,
+          162.14
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 162.29,
+        "end": 162.14
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 1
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "9 Best Video Surveillance and Private Security Stocks to Buy",
+          "url": "https://www.insidermonkey.com/blog/9-best-video-surveillance-and-private-security-stocks-to-buy-1699386/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Allegion (NYSE:ALLE) Director Steven Mizell Sells 400 Shares",
+          "url": "https://baseballnewssource.com/2026/02/21/allegion-nysealle-director-steven-mizell-sells-400-shares/11036238.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Allegion (NYSE:ALLE) Director Steven Mizell Sells 1,000 Shares of Stock",
+          "url": "https://www.tickerreport.com/banking-finance/13354530/allegion-nysealle-director-steven-mizell-sells-1000-shares-of-stock.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Allegion PLC (NYSE:ALLE) Receives Average Rating of “Hold” from Analysts",
+          "url": "https://www.watchlistnews.com/allegion-plc-nysealle-receives-average-rating-of-hold-from-analysts/10995390.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "JPMorgan Chase & Co. Cuts Allegion (NYSE:ALLE) Price Target to $180.00",
+          "url": "https://www.watchlistnews.com/jpmorgan-chase-co-cuts-allegion-nysealle-price-target-to-180-00/10995314.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Houston attorney back in jail as police investigate possible murder of man who went missing in 2024",
+          "url": "https://www.click2houston.com/news/local/2026/02/21/houston-attorney-back-in-jail-as-police-investigate-possible-murder-of-man-who-went-missing-in-2024/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Steven Mizell Sells 1,000 Shares of Allegion (NYSE:ALLE) Stock",
+          "url": "https://www.watchlistnews.com/steven-mizell-sells-1000-shares-of-allegion-nysealle-stock/10995109.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Steven Mizell Sells 400 Shares of Allegion (NYSE:ALLE) Stock",
+          "url": "https://www.watchlistnews.com/steven-mizell-sells-400-shares-of-allegion-nysealle-stock/10995111.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Steven Mizell Sells 400 Shares of Allegion (NYSE:ALLE) Stock",
+          "url": "https://www.tickerreport.com/banking-finance/13353638/steven-mizell-sells-400-shares-of-allegion-nysealle-stock.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Insider Selling: Allegion (NYSE:ALLE) Director Sells 1,000 Shares of Stock",
+          "url": "https://www.tickerreport.com/banking-finance/13353637/insider-selling-allegion-nysealle-director-sells-1000-shares-of-stock.html"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "JPMorgan",
+          "action": "mention",
+          "evidence": "JPMorgan Chase & Co. Cuts Allegion (NYSE:ALLE) Price Target to $180.00 Allegion (NYSE:ALLE – Free Report) had its price target decreased by JPMorgan Chase & Co."
+        }
+      ],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 9.7942,
+        "data_coverage": 100.0,
+        "vol_60": 0.2722
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(60.2)",
+          "변동성 상승(0.27)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 60.2,
+        "volatility": 0.2722
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "score": 60.2,
+      "rank": 9,
+      "synthesis_verdict": "Buy (Aggregated)",
+      "scores": {
+        "expert": 72.1,
+        "whale": 50,
+        "macro": 50,
+        "news": 64
+      },
+      "details": {
+        "expert": [
+          "🔴 Trend Below MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:5 / neg:1 | items:25",
+          "• [NEWSDATA] Google Gave Amazing News to Nvidia and Broadcom Stock Investors",
+          "• [NEWSDATA] Nvidia vs. Alphabet: Which Is the Best Artificial Intelligence (AI) Stock to Buy Now?",
+          "📣 Buzz: GDELT 12 | Reddit 3",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 314.98,
+        "change_pct": 4.005283143470363,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 32.07,
+        "ret_20d": -4.71,
+        "ret_60d": 5.11,
+        "vol_60d_ann": 0.2563,
+        "ma20": 323.5155,
+        "ma60": 319.9512,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.9102
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          318.58,
+          323.44,
+          319.95,
+          320.18,
+          314.89,
+          315.81,
+          319.63,
+          317.62,
+          321.27,
+          313.72,
+          317.08,
+          320.21,
+          312.43,
+          309.29,
+          308.22,
+          306.57,
+          296.72,
+          302.46,
+          307.16,
+          309.78,
+          314.35,
+          314.09,
+          313.51,
+          313.56,
+          313.85,
+          313.0,
+          315.15,
+          316.54,
+          314.34,
+          321.98,
+          325.44,
+          328.57,
+          331.86,
+          335.97,
+          335.84,
+          332.78,
+          330.0,
+          322.0,
+          328.38,
+          330.54,
+          327.93,
+          333.26,
+          334.55,
+          336.01,
+          338.25,
+          338.0,
+          343.69,
+          339.71,
+          333.04,
+          331.25,
+          322.86,
+          324.32,
+          318.58,
+          310.96,
+          309.0,
+          305.72,
+          302.02,
+          303.33,
+          302.85,
+          314.98
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 318.58,
+        "end": 314.98
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": true,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 12,
+        "reddit": 3
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Google Gave Amazing News to Nvidia and Broadcom Stock Investors",
+          "url": "https://www.fool.com/investing/2026/02/21/google-gave-amazing-news-to-nvidia-and-broadcom-st/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Nvidia vs. Alphabet: Which Is the Best Artificial Intelligence (AI) Stock to Buy Now?",
+          "url": "https://www.fool.com/investing/2026/02/21/nvidia-vs-alphabet-which-is-the-best-artificial-in/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Why the Companies Using AI Will Beat the Ones Building It",
+          "url": "https://investorplace.com/smartmoney/2026/02/companies-using-ai-beat-ones-building/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Investors Got Scared, But This AI Giant's True Strength Never Wavered",
+          "url": "https://www.fool.com/investing/2026/02/21/investors-got-scared-but-this-ai-giants-true-stren/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Billionaire Druckenmiller buys $152 million in megacap tech stocks",
+          "url": "https://www.thestreet.com/investing/billionaire-druckenmiller-buys-152-million-in-megacap-tech-stocks"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alphabet (NASDAQ:GOOGL) CEO Sundar Pichai Sells 32,500 Shares",
+          "url": "https://www.dailypolitical.com/2026/02/21/alphabet-nasdaqgoogl-ceo-sundar-pichai-sells-32500-shares.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alphabet Inc. $GOOGL Stock Position Lessened by Wells Trecaso Financial Group LLC",
+          "url": "https://www.themarketsdaily.com/2026/02/21/alphabet-inc-googl-stock-position-lessened-by-wells-trecaso-financial-group-llc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Trace Wealth Advisors LLC Cuts Position in Alphabet Inc. $GOOGL",
+          "url": "https://www.watchlistnews.com/trace-wealth-advisors-llc-cuts-position-in-alphabet-inc-googl/10995803.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Virtus Family Office LLC Sells 5,519 Shares of Alphabet Inc. $GOOGL",
+          "url": "https://www.dailypolitical.com/2026/02/21/virtus-family-office-llc-sells-5519-shares-of-alphabet-inc-googl.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "SlateStone Wealth LLC Has $25.34 Million Stock Holdings in Alphabet Inc. $GOOGL",
+          "url": "https://www.thelincolnianonline.com/2026/02/21/slatestone-wealth-llc-has-25-34-million-stock-holdings-in-alphabet-inc-googl.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 9.4685,
+        "data_coverage": 100.0,
+        "vol_60": 0.2563
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(60.2)",
+          "변동성 상승(0.26)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 60.2,
+        "volatility": 0.2563
+      }
+    },
+    {
+      "ticker": "AKAM",
+      "name": "AKAM",
+      "score": 58.6,
+      "rank": 10,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 74.2,
+        "whale": 50,
+        "macro": 50,
+        "news": 54
+      },
+      "details": {
+        "expert": [
+          "🌡️ RSI Healthy (46.9)",
+          "⚠️ High Volatility (0.51)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [
+          "🧯 Adaptive Weights: high-vol regime"
+        ],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:12",
+          "• [NEWSDATA] Citigroup Issues Positive Forecast for Akamai Technologies (NASDAQ:AKAM) Stock Price",
+          "• [NEWSDATA] Vanguard Group Inc. Sells 51,273 Shares of Akamai Technologies, Inc. $AKAM",
+          "🧾 Analyst mentions (from headlines)",
+          "• Citi | mention",
+          "• Goldman Sachs | mention",
+          "• Goldman Sachs | upgrade",
+          "📣 Buzz: GDELT 0 | Reddit 2",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 94.17,
+        "change_pct": -14.070626882014784,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 46.86,
+        "ret_20d": -2.95,
+        "ret_60d": 5.8,
+        "vol_60d_ann": 0.513,
+        "ma20": 99.2145,
+        "ma60": 92.0192,
+        "above_ma20": false,
+        "above_ma60": true,
+        "vol_ratio_5_20": 1.5346
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          88.34,
+          90.71,
+          89.45,
+          89.52,
+          87.71,
+          86.83,
+          87.97,
+          86.6,
+          83.49,
+          85.32,
+          85.66,
+          86.45,
+          85.45,
+          85.88,
+          86.53,
+          87.74,
+          87.55,
+          88.49,
+          89.22,
+          90.11,
+          89.23,
+          88.82,
+          88.42,
+          88.24,
+          87.97,
+          87.25,
+          85.1,
+          85.91,
+          88.74,
+          88.18,
+          85.71,
+          88.12,
+          91.27,
+          88.86,
+          90.65,
+          91.53,
+          93.49,
+          89.6,
+          93.72,
+          97.03,
+          95.08,
+          98.66,
+          103.26,
+          102.1,
+          99.35,
+          97.15,
+          96.63,
+          91.79,
+          91.92,
+          91.49,
+          95.08,
+          94.72,
+          94.4,
+          94.8,
+          104.61,
+          111.76,
+          108.42,
+          109.31,
+          109.59,
+          94.17
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 88.34,
+        "end": 94.17
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 2
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Citigroup Issues Positive Forecast for Akamai Technologies (NASDAQ:AKAM) Stock Price",
+          "url": "https://www.themarketsdaily.com/2026/02/21/citigroup-issues-positive-forecast-for-akamai-technologies-nasdaqakam-stock-price.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Vanguard Group Inc. Sells 51,273 Shares of Akamai Technologies, Inc. $AKAM",
+          "url": "https://www.themarketsdaily.com/2026/02/21/vanguard-group-inc-sells-51273-shares-of-akamai-technologies-inc-akam.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Akamai Technologies (NASDAQ:AKAM) Updates FY 2026 Earnings Guidance",
+          "url": "https://baseballnewssource.com/2026/02/21/akamai-technologies-nasdaqakam-updates-fy-2026-earnings-guidance/11036090.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Akamai Technologies (NASDAQ:AKAM) Announces Quarterly Earnings Results",
+          "url": "https://www.dailypolitical.com/2026/02/21/akamai-technologies-nasdaqakam-announces-quarterly-earnings-results.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Akamai Technologies (NASDAQ:AKAM) Given New $120.00 Price Target at Susquehanna",
+          "url": "https://www.tickerreport.com/banking-finance/13353961/akamai-technologies-nasdaqakam-given-new-120-00-price-target-at-susquehanna.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Akamai Technologies (NASDAQ:AKAM) Price Target Cut to $100.00 by Analysts at TD Cowen",
+          "url": "https://baseballnewssource.com/2026/02/21/akamai-technologies-nasdaqakam-price-target-cut-to-100-00-by-analysts-at-td-cowen/11035633.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Akamai Technologies (NASDAQ:AKAM) Price Target Raised to $76.00 at The Goldman Sachs Group",
+          "url": "https://www.watchlistnews.com/akamai-technologies-nasdaqakam-price-target-raised-to-76-00-at-the-goldman-sachs-group/10995429.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Akamai Technologies (NASDAQ:AKAM) Given New $110.00 Price Target at UBS Group",
+          "url": "https://www.dailypolitical.com/2026/02/21/akamai-technologies-nasdaqakam-given-new-110-00-price-target-at-ubs-group.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Akamai Technologies (NASDAQ:AKAM) Given New $115.00 Price Target at Evercore",
+          "url": "https://zolmax.com/investing/akamai-technologies-nasdaqakam-given-new-115-00-price-target-at-evercore/11769098.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Royal Bank Of Canada Issues Positive Forecast for Akamai Technologies (NASDAQ:AKAM) Stock Price",
+          "url": "https://www.thelincolnianonline.com/2026/02/21/royal-bank-of-canada-issues-positive-forecast-for-akamai-technologies-nasdaqakam-stock-price.html"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "Citi",
+          "action": "mention",
+          "evidence": "Citigroup Issues Positive Forecast for Akamai Technologies (NASDAQ:AKAM) Stock Price Akamai Technologies (NASDAQ:AKAM – Free Report) had its price objective hoi"
+        },
+        {
+          "firm": "Goldman Sachs",
+          "action": "mention",
+          "evidence": "Akamai Technologies (NASDAQ:AKAM) Given New $120.00 Price Target at Susquehanna Akamai Technologies (NASDAQ:AKAM – Free Report) had its price objective lifted b"
+        },
+        {
+          "firm": "Goldman Sachs",
+          "action": "upgrade",
+          "evidence": "Akamai Technologies (NASDAQ:AKAM) Price Target Raised to $76.00 at The Goldman Sachs Group Akamai Technologies (NASDAQ:AKAM – Free Report) had its price target "
+        },
+        {
+          "firm": "Morgan Stanley",
+          "action": "mention",
+          "evidence": "Akamai Technologies (NASDAQ:AKAM) Given New $110.00 Price Target at UBS Group Akamai Technologies (NASDAQ:AKAM – Free Report) had its target price upped by UBS "
+        }
+      ],
+      "score_meta": {
+        "weights": {
+          "expert": 0.33,
+          "whale": 0.27,
+          "macro": 0.25,
+          "news": 0.15
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 10.0353,
+        "data_coverage": 100.0,
+        "vol_60": 0.513
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 40.0,
+        "status": "warn",
+        "reasons": [
+          "신호 합의도 경계(58.6)",
+          "변동성 고위험(0.51)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 58.6,
+        "volatility": 0.513
+      }
+    },
+    {
+      "ticker": "AOS",
+      "name": "AOS",
+      "score": 57.9,
+      "rank": 11,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 69.4,
+        "whale": 50,
+        "macro": 50,
+        "news": 51
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +6.5%",
+          "🟢 Trend Above MA20/MA60",
+          "🧾 Analyst: FINNHUB:BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:8",
+          "• [NEWSDATA] Saturday Pre-orders – Knock knock, it’s time to give up the bone-tithe - Warhammer Community",
+          "• [NEWSDATA] CenterBook Partners LP Invests $1.18 Million in A. O. Smith Corporation $AOS",
+          "📣 Buzz: GDELT 0 | Reddit 1",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 77.81,
+        "change_pct": 0.15446003346634643,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 67.88,
+        "ret_20d": 6.46,
+        "ret_60d": 19.52,
+        "vol_60d_ann": 0.2396,
+        "ma20": 76.528,
+        "ma60": 71.1277,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.7071
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          64.1,
+          65.41,
+          66.33,
+          65.98,
+          66.02,
+          65.96,
+          67.32,
+          67.2,
+          68.03,
+          67.15,
+          66.43,
+          67.92,
+          68.58,
+          68.72,
+          68.82,
+          67.94,
+          68.08,
+          68.19,
+          68.01,
+          68.11,
+          67.74,
+          67.96,
+          67.76,
+          68.08,
+          67.74,
+          66.88,
+          68.32,
+          68.51,
+          68.65,
+          67.12,
+          70.4,
+          70.52,
+          71.01,
+          70.57,
+          71.18,
+          71.99,
+          72.48,
+          70.56,
+          72.24,
+          73.09,
+          72.46,
+          71.02,
+          70.64,
+          69.49,
+          73.17,
+          73.49,
+          74.71,
+          76.34,
+          78.37,
+          78.11,
+          78.98,
+          79.08,
+          80.47,
+          80.22,
+          79.62,
+          80.46,
+          79.47,
+          78.96,
+          77.69,
+          77.81
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 64.1,
+        "end": 77.81
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 1
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Saturday Pre-orders – Knock knock, it’s time to give up the bone-tithe - Warhammer Community",
+          "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOQ2hHUXZlbDRteHN4dU9hUHItRWpPUmhldVJ2dDZZQVU1dHBqbnpSa3htblpEc1JNVU1tdkVMR0d4elkyTU5rQjFjNUt3OEpxWjJhUERTSGNDSDFJeUJzbTlsWUxWZWFKSVhhSnIzejhkRWI3NDVXSmY5SmlfLVp2RnZ3dHVmTG9TWW5zSXlMYWpSbFJwNzV1b1BXX09BaHA4OUE0NXVCZjBrTDlXTk9uWFJ6WEJ3YTBnOHRjLVpLZGlDSW1iNkE?oc=5"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "CenterBook Partners LP Invests $1.18 Million in A. O. Smith Corporation $AOS",
+          "url": "https://www.americanbankingnews.com/2026/02/21/centerbook-partners-lp-invests-1-18-million-in-a-o-smith-corporation-aos.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "CenterBook Partners LP Buys New Holdings in A. O. Smith Corporation $AOS",
+          "url": "https://www.defenseworld.net/2026/02/21/centerbook-partners-lp-buys-new-holdings-in-a-o-smith-corporation-aos.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "KeyCorp Issues Positive Outlook for Nutanix Earnings",
+          "url": "https://www.defenseworld.net/2026/02/21/keycorp-issues-positive-outlook-for-nutanix-earnings.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Rega's Award-winning Planar 6 turntable gets the 'RS Edition' treatment",
+          "url": "https://www.whathifi.com/hi-fi/turntables/regas-award-winning-planar-6-turntable-gets-the-rs-edition-treatment"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Vanguard Group Inc. Increases Stock Position in Nutanix $NTNX",
+          "url": "https://www.watchlistnews.com/vanguard-group-inc-increases-stock-position-in-nutanix-ntnx/10994758.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Nutanix $NTNX Shares Acquired by Vanguard Group Inc.",
+          "url": "https://www.tickerreport.com/banking-finance/13353285/nutanix-ntnx-shares-acquired-by-vanguard-group-inc.html"
+        },
+        {
+          "source": "REDDIT",
+          "title": "19countriesAOS",
+          "url": "https://www.reddit.com/search.rss?q=AOS&amp;sort=new&amp;t=week"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 8.2662,
+        "data_coverage": 100.0,
+        "vol_60": 0.2396
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(57.9)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 57.9,
+        "volatility": 0.2396
+      }
+    },
+    {
+      "ticker": "LNT",
+      "name": "LNT",
+      "score": 57.8,
+      "rank": 12,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 73,
+        "whale": 50,
+        "macro": 50,
+        "news": 56
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +6.2%",
+          "🟢 Trend Above MA20/MA60",
+          "🛡️ Low Volatility (0.16)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)",
+          "🚀 Adaptive Weights: stable-trend regime"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:2 / neg:0 | items:11",
+          "• [NEWSDATA] Alliant Energy (NASDAQ:LNT) Updates FY 2026 Earnings Guidance",
+          "• [NEWSDATA] Alliant Energy Corporation (NASDAQ:LNT) Q4 2025 Earnings Call Transcript",
+          "📣 Buzz: GDELT 0 | Reddit 1",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 71.01,
+        "change_pct": 1.42836737608913,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 74.76,
+        "ret_20d": 6.19,
+        "ret_60d": 4.01,
+        "vol_60d_ann": 0.1571,
+        "ma20": 67.855,
+        "ma60": 66.6308,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 1.0611
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          68.41,
+          68.48,
+          69.18,
+          69.47,
+          67.6,
+          66.53,
+          66.38,
+          65.71,
+          65.5,
+          64.78,
+          64.89,
+          64.81,
+          64.93,
+          65.33,
+          65.63,
+          65.26,
+          65.48,
+          65.69,
+          64.63,
+          65.03,
+          65.26,
+          65.45,
+          65.24,
+          65.42,
+          65.42,
+          65.01,
+          65.59,
+          64.9,
+          65.38,
+          64.6,
+          65.55,
+          65.02,
+          65.17,
+          66.17,
+          66.86,
+          67.06,
+          67.34,
+          67.28,
+          67.44,
+          66.87,
+          66.83,
+          67.01,
+          67.19,
+          66.26,
+          66.33,
+          65.91,
+          65.11,
+          66.53,
+          66.75,
+          66.83,
+          66.69,
+          66.9,
+          68.01,
+          68.23,
+          69.68,
+          71.19,
+          71.1,
+          69.53,
+          70.01,
+          71.01
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 68.41,
+        "end": 71.01
+      },
+      "analyst_consensus": {
+        "source": "NONE",
+        "recommendation": "N/A",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 1
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Alliant Energy (NASDAQ:LNT) Updates FY 2026 Earnings Guidance",
+          "url": "https://baseballnewssource.com/2026/02/21/alliant-energy-nasdaqlnt-updates-fy-2026-earnings-guidance/11036215.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alliant Energy Corporation (NASDAQ:LNT) Q4 2025 Earnings Call Transcript",
+          "url": "https://www.insidermonkey.com/blog/alliant-energy-corporation-nasdaqlnt-q4-2025-earnings-call-transcript-1700297/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Aberdeen Group plc Sells 9,888 Shares of Alliant Energy Corporation $LNT",
+          "url": "https://www.americanbankingnews.com/2026/02/21/aberdeen-group-plc-sells-9888-shares-of-alliant-energy-corporation-lnt.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Aberdeen Group plc Sells 9,888 Shares of Alliant Energy Corporation $LNT",
+          "url": "https://www.defenseworld.net/2026/02/21/aberdeen-group-plc-sells-9888-shares-of-alliant-energy-corporation-lnt.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alliant Energy (NASDAQ:LNT) Rating Increased to Hold at Wall Street Zen",
+          "url": "https://www.americanbankingnews.com/2026/02/21/alliant-energy-nasdaqlnt-rating-increased-to-hold-at-wall-street-zen.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alliant Energy (NASDAQ:LNT) Upgraded to “Hold” at Wall Street Zen",
+          "url": "https://www.defenseworld.net/2026/02/21/alliant-energy-nasdaqlnt-upgraded-to-hold-at-wall-street-zen.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alliant Energy (NASDAQ:LNT) Reaches New 1-Year High – Here’s Why",
+          "url": "https://www.watchlistnews.com/alliant-energy-nasdaqlnt-reaches-new-1-year-high-heres-why/10995228.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alliant Energy (LNT) Q4 2025 Earnings Transcript",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/02/20/alliant-energy-lnt-q4-2025-earnings-transcript/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Alliant Energy (NASDAQ:LNT) Announces Earnings Results, Beats Expectations By $0.02 EPS",
+          "url": "https://www.dailypolitical.com/2026/02/20/alliant-energy-nasdaqlnt-announces-earnings-results-beats-expectations-by-0-02-eps.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Vanguard Group Inc. Purchases 97,980 Shares of Alliant Energy Corporation $LNT",
+          "url": "https://www.dailypolitical.com/2026/02/20/vanguard-group-inc-purchases-97980-shares-of-alliant-energy-corporation-lnt.html"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.45,
+          "whale": 0.32,
+          "macro": 0.16,
+          "news": 0.07
+        },
+        "quality_penalty": 3.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 9.4174,
+        "data_coverage": 75.0,
+        "vol_60": 0.1571
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 12.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(57.8)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 57.8,
+        "volatility": 0.1571
+      }
+    },
+    {
+      "ticker": "ADBE",
+      "name": "ADBE",
+      "score": 57.4,
+      "rank": 13,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 67.9,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -13.7%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (25.1)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:1 | items:10",
+          "• [NEWSDATA] Tredje AP fonden Sells 17,727 Shares of Adobe Inc. $ADBE",
+          "• [NEWSDATA] Stevens Capital Management LP Decreases Stock Position in Adobe Inc. $ADBE",
+          "🧾 Analyst mentions (from headlines)",
+          "• Baird | reiterate",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 258.61,
+        "change_pct": -0.23147255121328883,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 25.09,
+        "ret_20d": -13.72,
+        "ret_60d": -20.23,
+        "vol_60d_ann": 0.3204,
+        "ma20": 276.356,
+        "ma60": 314.3362,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.9055
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          318.73,
+          319.55,
+          317.52,
+          320.13,
+          322.85,
+          322.81,
+          326.78,
+          328.73,
+          346.26,
+          339.12,
+          344.32,
+          343.13,
+          350.43,
+          356.43,
+          351.15,
+          347.89,
+          354.66,
+          355.81,
+          355.86,
+          357.53,
+          352.42,
+          352.98,
+          353.8,
+          353.16,
+          352.51,
+          349.99,
+          333.3,
+          331.56,
+          335.99,
+          338.1,
+          339.04,
+          333.95,
+          327.65,
+          309.93,
+          304.44,
+          304.09,
+          296.12,
+          290.37,
+          294.23,
+          299.73,
+          301.07,
+          304.72,
+          297.42,
+          299.58,
+          291.65,
+          293.25,
+          293.38,
+          271.93,
+          279.71,
+          269.39,
+          268.38,
+          266.9,
+          264.67,
+          257.16,
+          262.5,
+          263.97,
+          260.45,
+          263.17,
+          259.21,
+          258.61
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 318.73,
+        "end": 258.61
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": false
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 0
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Tredje AP fonden Sells 17,727 Shares of Adobe Inc. $ADBE",
+          "url": "https://www.themarketsdaily.com/2026/02/21/tredje-ap-fonden-sells-17727-shares-of-adobe-inc-adbe.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Stevens Capital Management LP Decreases Stock Position in Adobe Inc. $ADBE",
+          "url": "https://www.dailypolitical.com/2026/02/21/stevens-capital-management-lp-decreases-stock-position-in-adobe-inc-adbe.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Stevens Capital Management LP Trims Stock Holdings in Adobe Inc. $ADBE",
+          "url": "https://zolmax.com/investing/stevens-capital-management-lp-trims-stock-holdings-in-adobe-inc-adbe/11769608.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Jupiter Asset Management Ltd. Has $19.63 Million Stake in Adobe Inc. $ADBE",
+          "url": "https://www.dailypolitical.com/2026/02/21/jupiter-asset-management-ltd-has-19-63-million-stake-in-adobe-inc-adbe.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Jupiter Asset Management Ltd. Sells 131,588 Shares of Adobe Inc. $ADBE",
+          "url": "https://www.tickerreport.com/banking-finance/13354122/jupiter-asset-management-ltd-sells-131588-shares-of-adobe-inc-adbe.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Adobe Target of Unusually Large Options Trading (NASDAQ:ADBE)",
+          "url": "https://www.americanbankingnews.com/2026/02/21/adobe-target-of-unusually-large-options-trading-nasdaqadbe.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Is AI now threatening Software Companies?",
+          "url": "https://ca.investing.com/analysis/is-ai-now-threatening-software-companies-200622277"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Reasons Why Adobe (ADBE) Offers Such Impressive Upside",
+          "url": "https://finance.yahoo.com/news/reasons-why-adobe-adbe-offers-163645712.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Reasons Why Adobe (ADBE) Offers Such Impressive Upside",
+          "url": "https://www.insidermonkey.com/blog/reasons-why-adobe-adbe-offers-such-impressive-upside-1699166/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Spotlight on Adobe: Analyzing the Surge in Options Activity",
+          "url": "https://www.benzinga.com/insights/options/26/02/50753144/spotlight-on-adobe-analyzing-the-surge-in-options-activity"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "Baird",
+          "action": "reiterate",
+          "evidence": "Reasons Why Adobe (ADBE) Offers Such Impressive Upside Adobe Incorporated (NASDAQ:ADBE) is one of the 12 oversold software stocks to invest in. On January 14, R"
+        }
+      ],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 7.5068,
+        "data_coverage": 100.0,
+        "vol_60": 0.3204
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(57.4)",
+          "변동성 상승(0.32)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 57.4,
+        "volatility": 0.3204
+      }
+    },
+    {
+      "ticker": "ALB",
+      "name": "ALB",
+      "score": 57.3,
+      "rank": 14,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 71.2,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -10.6%",
+          "🌡️ RSI Healthy (48.5)",
+          "⚠️ High Volatility (0.56)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [
+          "🧯 Adaptive Weights: high-vol regime"
+        ],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:13",
+          "• [NEWSDATA] 2 Mining Stocks to Buy in February",
+          "• [NEWSDATA] Devon boat rescue as crew battles dangerous waves",
+          "📣 Buzz: GDELT 0 | Reddit 3",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 168.42,
+        "change_pct": 0.005937889674004456,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 48.55,
+        "ret_20d": -10.57,
+        "ret_60d": 44.17,
+        "vol_60d_ann": 0.561,
+        "ma20": 172.259,
+        "ma60": 154.3568,
+        "above_ma20": false,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.6638
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          115.88,
+          125.26,
+          126.91,
+          129.99,
+          128.33,
+          128.14,
+          126.49,
+          119.14,
+          125.19,
+          127.2,
+          129.29,
+          133.21,
+          134.59,
+          132.74,
+          132.22,
+          131.07,
+          134.71,
+          140.48,
+          145.88,
+          145.38,
+          146.7,
+          148.51,
+          150.01,
+          144.58,
+          142.01,
+          141.44,
+          143.93,
+          146.13,
+          158.15,
+          161.57,
+          158.31,
+          161.29,
+          169.33,
+          176.88,
+          177.55,
+          173.78,
+          163.04,
+          172.54,
+          180.06,
+          188.32,
+          189.51,
+          189.75,
+          194.18,
+          184.33,
+          180.7,
+          170.63,
+          164.93,
+          170.64,
+          168.66,
+          156.48,
+          163.37,
+          165.76,
+          168.56,
+          175.43,
+          158.93,
+          166.35,
+          168.92,
+          171.22,
+          168.41,
+          168.42
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 115.88,
+        "end": 168.42
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 3
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "2 Mining Stocks to Buy in February",
+          "url": "https://www.fool.com/investing/2026/02/21/2-mining-stocks-to-buy-in-february/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Devon boat rescue as crew battles dangerous waves",
+          "url": "https://www.devonlive.com/news/devon-news/devon-boat-rescue-crew-battles-10828931"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Mitsubishi UFJ Asset Management UK Ltd. Makes New $1.38 Million Investment in Albemarle Corporation $ALB",
+          "url": "https://www.dailypolitical.com/2026/02/21/mitsubishi-ufj-asset-management-uk-ltd-makes-new-1-38-million-investment-in-albemarle-corporation-alb.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "17,000 Shares in Albemarle Corporation $ALB Bought by Mitsubishi UFJ Asset Management UK Ltd.",
+          "url": "https://www.tickerreport.com/banking-finance/13354395/17000-shares-in-albemarle-corporation-alb-bought-by-mitsubishi-ufj-asset-management-uk-ltd.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Albemarle Corporation $ALB Shares Purchased by Sava Infond d.o.o.",
+          "url": "https://baseballnewssource.com/2026/02/21/albemarle-corporation-alb-shares-purchased-by-sava-infond-d-o-o/11035941.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Albemarle Corporation $ALB Stock Holdings Lifted by Sava Infond d.o.o.",
+          "url": "https://www.thelincolnianonline.com/2026/02/21/albemarle-corporation-alb-stock-holdings-lifted-by-sava-infond-d-o-o.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Fashion consultant and TV star Gok Wan joins Essex festival line-up",
+          "url": "https://www.gazette-news.co.uk/news/25874640.gok-wan-close-alb-festival-essex-year/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Fashion consultant and TV star Gok Wan joins Essex festival line-up",
+          "url": "https://www.harwichandmanningtreestandard.co.uk/news/25874640.gok-wan-close-alb-festival-essex-year/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Fashion consultant and TV star Gok Wan joins Essex festival line-up",
+          "url": "https://www.dunmowbroadcast.co.uk/news/25874640.gok-wan-close-alb-festival-essex-year/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Fashion consultant and TV star Gok Wan joins Essex festival line-up",
+          "url": "https://www.clactonandfrintongazette.co.uk/news/25874640.gok-wan-close-alb-festival-essex-year/"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.33,
+          "whale": 0.27,
+          "macro": 0.25,
+          "news": 0.15
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 8.9286,
+        "data_coverage": 100.0,
+        "vol_60": 0.561
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 40.0,
+        "status": "warn",
+        "reasons": [
+          "신호 합의도 경계(57.3)",
+          "변동성 고위험(0.56)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 57.3,
+        "volatility": 0.561
+      }
+    },
+    {
+      "ticker": "ARE",
+      "name": "ARE",
+      "score": 55.6,
+      "rank": 15,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 62.8,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -7.6%",
+          "🌡️ RSI Healthy (46.9)",
+          "🧾 Analyst: FINNHUB:BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:15",
+          "• [NEWSDATA] With FG-ASUU Agreement, Stability Looms in Universities’ Calendar",
+          "• [NEWSDATA] I went to UK's 'rainiest place' 4 times worse than the rest and can't wait to go back",
+          "📣 Buzz: GDELT 0 | Reddit 5",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 53.65,
+        "change_pct": 0.46816479400749067,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 46.89,
+        "ret_20d": -7.64,
+        "ret_60d": 5.42,
+        "vol_60d_ann": 0.4224,
+        "ma20": 54.897,
+        "ma60": 52.1755,
+        "above_ma20": false,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.6691
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          51.22,
+          52.65,
+          53.57,
+          53.67,
+          53.1,
+          53.83,
+          48.42,
+          46.59,
+          45.48,
+          44.97,
+          45.29,
+          46.47,
+          45.57,
+          46.64,
+          47.41,
+          46.97,
+          47.56,
+          48.95,
+          47.94,
+          48.62,
+          48.07,
+          48.76,
+          48.6,
+          49.17,
+          49.47,
+          48.94,
+          48.97,
+          49.54,
+          52.38,
+          52.18,
+          53.27,
+          53.97,
+          54.36,
+          54.64,
+          56.14,
+          57.26,
+          57.89,
+          57.52,
+          58.45,
+          58.09,
+          59.69,
+          57.16,
+          58.14,
+          54.61,
+          54.05,
+          54.64,
+          54.15,
+          53.82,
+          55.31,
+          55.14,
+          55.9,
+          56.2,
+          56.86,
+          53.76,
+          50.4,
+          52.49,
+          54.41,
+          54.16,
+          53.4,
+          53.65
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 51.22,
+        "end": 53.65
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 5
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "With FG-ASUU Agreement, Stability Looms in Universities’ Calendar",
+          "url": "https://www.thisdaylive.com/2026/02/22/with-fg-asuu-agreement-stability-looms-in-universities-calendar/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "I went to UK's 'rainiest place' 4 times worse than the rest and can't wait to go back",
+          "url": "https://www.mirror.co.uk/travel/uk-ireland/went-uks-rainiest-place-4-36748708"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Rosenberg Crime Control & Prevention on May 2 ballot",
+          "url": "https://www.fbherald.com/article/1793,rosenberg-crime-control-amp-prevention-on-may-2-ballot"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Shipfinex receives in-principle approval from VARA, advancing its maritime asset tokenization roadmap",
+          "url": "https://www.zawya.com/en/press-release/companies-news/shipfinex-receives-in-principle-approval-from-vara-advancing-its-maritime-asset-tokenization-roadmap-pdkw8odl"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Political Drama 'Yellow Letters' Wins Berlin's Golden Bear",
+          "url": "https://www.deccanchronicle.com/entertainment/political-drama-yellow-letters-wins-berlins-golden-bear-1939003"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Chiefs Coach Andy Reid Breaks His Silence on Travis Kelce Retirement Decision",
+          "url": "https://www.capjournal.com/arena/men_s_journal/chiefs-coach-andy-reid-breaks-his-silence-on-travis-kelce-retirement-decision/article_dff5fe83-7e15-563c-860c-752061fbfa73.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "How the Epstein files frustrated Trump’s White House",
+          "url": "https://www.livemint.com/politics/how-the-epstein-files-frustrated-trump-s-white-house-11771726411594.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Jennifer Garner's children think she is \"fully cringe\"",
+          "url": "https://home.nzcity.co.nz/news/article.aspx?id=440389"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "British Gas says find important 'off button' in case of emergency",
+          "url": "https://www.express.co.uk/news/uk/2173527/Households-advised-locate-emergency-off-button-British-Gas"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "This Cool $50 Amazon Find Can Turn A Room Into Your Own Pixel Art Gallery",
+          "url": "https://www.bgr.com/2104366/amazon-find-divoom-timebox-evo-pixel-art-speaker/"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 5.2352,
+        "data_coverage": 100.0,
+        "vol_60": 0.4224
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 40.0,
+        "status": "warn",
+        "reasons": [
+          "신호 합의도 경계(55.6)",
+          "변동성 고위험(0.42)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 55.6,
+        "volatility": 0.4224
+      }
+    },
+    {
+      "ticker": "AMD",
+      "name": "AMD",
+      "score": 55.1,
+      "rank": 16,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 64.6,
+        "whale": 50,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -21.1%",
+          "🔴 Trend Below MA20/MA60",
+          "⚠️ High Volatility (0.59)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [
+          "🧯 Adaptive Weights: high-vol regime"
+        ],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:14",
+          "• [NEWSDATA] Rampant AI demand for memory is fuelling a growing chip crisis",
+          "• [NEWSDATA] Top 10 AI Stocks in Focus on Wall Street – Nvidia, Broadcom & More",
+          "🧾 Analyst mentions (from headlines)",
+          "• Raymond James | mention",
+          "📣 Buzz: GDELT 0 | Reddit 4",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 200.15,
+        "change_pct": -1.583321040468112,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 33.66,
+        "ret_20d": -21.12,
+        "ret_60d": -1.78,
+        "vol_60d_ann": 0.5924,
+        "ma20": 222.8655,
+        "ma60": 219.1957,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 0.785
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          215.05,
+          206.13,
+          214.24,
+          217.53,
+          219.76,
+          215.24,
+          217.6,
+          215.98,
+          217.97,
+          221.11,
+          221.62,
+          221.42,
+          221.43,
+          210.78,
+          207.58,
+          209.17,
+          198.11,
+          201.06,
+          213.43,
+          214.95,
+          214.9,
+          215.04,
+          214.99,
+          215.61,
+          215.34,
+          214.16,
+          223.47,
+          221.08,
+          214.35,
+          210.02,
+          204.68,
+          203.17,
+          207.69,
+          220.97,
+          223.6,
+          227.92,
+          231.83,
+          231.92,
+          249.8,
+          253.73,
+          259.68,
+          251.31,
+          252.03,
+          252.74,
+          252.18,
+          236.73,
+          246.27,
+          242.11,
+          200.19,
+          192.5,
+          208.44,
+          216.0,
+          213.57,
+          213.58,
+          205.94,
+          207.32,
+          203.08,
+          200.12,
+          203.37,
+          200.15
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 215.05,
+        "end": 200.15
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 4
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Rampant AI demand for memory is fuelling a growing chip crisis",
+          "url": "https://www.moneyweb.co.za/news/tech/rampant-ai-demand-for-memory-is-fuelling-a-growing-chip-crisis/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Top 10 AI Stocks in Focus on Wall Street – Nvidia, Broadcom & More",
+          "url": "https://www.insidermonkey.com/blog/top-10-ai-stocks-in-focus-on-wall-street-nvidia-amd-more-1700618/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Michigan falls short vs. Duke in monster nonconference matchup",
+          "url": "https://www.mlive.com/wolverines/2026/02/michigan-falls-short-vs-duke-in-monster-nonconference-matchup.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Code unknown: What is spooking IT stocks?",
+          "url": "https://www.livemint.com/industry/infotech/ai-disruption-software-industry-indian-it-stocks-fall-investment-impact-11771591201525.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "The Thaumaturge v77.229 Free Download",
+          "url": "https://oceantogames.com/thaumaturge-v77-229-free-download/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "7 things I can’t wait to see at next week’s biggest phone launch – News 4 Social",
+          "url": "https://en.news4social.com/7-things-i-cant-wait-to-see-at-next-weeks-biggest-phone-launch-news-4-social/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "AP gears up to explore rare-earth minerals",
+          "url": "https://www.hindustantimes.com/india-news/ap-gears-up-to-explore-rare-earth-minerals-101771700539876.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Abiotic Factor v1.2.0.23023 Free Download",
+          "url": "https://oceantogames.com/abiotic-factor-v1-2-0-23023-free-download/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Intel Accelerates Nova Lake-S CPU Launch to 2025 to Challenge AMD",
+          "url": "https://www.webpronews.com/intel-accelerates-nova-lake-s-cpu-launch-to-2025-to-challenge-amd/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "AMD Zen 6 and Intel Nova Lake CPUs reportedly arriving late, delayed to CES 2027 — next-gen chips rocked by industry turmoil",
+          "url": "https://startupnews.fyi/2026/02/22/amd-zen-6-and-intel-nova-lake-cpus-reportedly-arriving-late-delayed-to-ces-2027-next-gen-chips-rocked-by-industry-turmoil/"
+        }
+      ],
+      "analyst_mentions": [
+        {
+          "firm": "Raymond James",
+          "action": "mention",
+          "evidence": "Top 10 AI Stocks in Focus on Wall Street – Nvidia, Broadcom & More Speaking on CNBC, Dan Ives, Global Head of Technology Research at Wedbush Securities, and Wil"
+        }
+      ],
+      "score_meta": {
+        "weights": {
+          "expert": 0.33,
+          "whale": 0.27,
+          "macro": 0.25,
+          "news": 0.15
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 6.0883,
+        "data_coverage": 100.0,
+        "vol_60": 0.5924
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 40.0,
+        "status": "warn",
+        "reasons": [
+          "신호 합의도 경계(55.1)",
+          "변동성 고위험(0.59)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 55.1,
+        "volatility": 0.5924
+      }
+    },
+    {
+      "ticker": "A",
+      "name": "A",
+      "score": 53.1,
+      "rank": 17,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 69.1,
+        "whale": 35,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -11.3%",
+          "🔴 Trend Below MA20/MA60",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:1 | items:18",
+          "• [NEWSDATA] Almost 20,000 cast early ballots so far",
+          "• [NEWSDATA] Duke defeats top-ranked Michigan. Observations from a top-5 clash.",
+          "📣 Buzz: GDELT 0 | Reddit 8",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 122.9,
+        "change_pct": -2.7228114611366134,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 29.5,
+        "ret_20d": -11.35,
+        "ret_60d": -18.74,
+        "vol_60d_ann": 0.2559,
+        "ma20": 130.1755,
+        "ma60": 138.976,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.1001
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          153.6,
+          157.2,
+          154.37,
+          153.5,
+          150.1,
+          148.81,
+          149.26,
+          148.32,
+          145.49,
+          142.44,
+          140.64,
+          143.47,
+          142.87,
+          139.68,
+          140.6,
+          139.19,
+          136.66,
+          136.9,
+          137.24,
+          138.52,
+          138.36,
+          138.32,
+          138.39,
+          137.93,
+          137.62,
+          136.07,
+          137.95,
+          142.93,
+          147.6,
+          147.81,
+          145.76,
+          148.52,
+          147.99,
+          146.32,
+          145.92,
+          144.83,
+          139.64,
+          135.83,
+          139.77,
+          138.63,
+          135.05,
+          135.65,
+          135.95,
+          133.87,
+          133.27,
+          133.85,
+          135.39,
+          132.14,
+          132.98,
+          129.64,
+          129.58,
+          127.5,
+          129.0,
+          128.9,
+          124.88,
+          125.81,
+          123.87,
+          126.94,
+          126.34,
+          122.9
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 153.6,
+        "end": 122.9
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 8
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Almost 20,000 cast early ballots so far",
+          "url": "https://www.fbherald.com/article/1792,almost-20-000-cast-early-ballots-so-far"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Duke defeats top-ranked Michigan. Observations from a top-5 clash.",
+          "url": "https://thebrunswicknews.com/news/national_news/duke-defeats-top-ranked-michigan-observations-from-a-top-5-clash/article_c99951b4-2fba-5784-803f-2f390c5baddc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Well, that's a pretty snappy comeback: Bears get last laugh on Arizona State in rally win",
+          "url": "https://wacotrib.com/sports/college/baylor/article_e90cd481-0f5e-4def-89b9-4a10c80b4f34.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Surin scam hub raided after staged fake government offices found",
+          "url": "https://www.nationthailand.com/blogs/news/general/40062819"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "CANADA-TORONTO-CHINESE ZODIAC CASE EXHIBITION-YEAR OF THE HORSE",
+          "url": "http://pekingpress.com/news/278881351/canada-toronto-chinese-zodiac-case-exhibition-year-of-the-horse"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "CANADA-TORONTO-CHINESE ZODIAC CASE EXHIBITION-YEAR OF THE HORSE",
+          "url": "http://beijingbulletin.com/news/278881351/canada-toronto-chinese-zodiac-case-exhibition-year-of-the-horse"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "CANADA-TORONTO-CHINESE ZODIAC CASE EXHIBITION-YEAR OF THE HORSE",
+          "url": "http://torontotelegraph.com/news/278881351/canada-toronto-chinese-zodiac-case-exhibition-year-of-the-horse"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "CANADA-TORONTO-CHINESE ZODIAC CASE EXHIBITION-YEAR OF THE HORSE",
+          "url": "http://chinanationalnews.com/news/278881351/canada-toronto-chinese-zodiac-case-exhibition-year-of-the-horse"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "The bones of St. Francis are going on public display, a mixed blessing for Assisi",
+          "url": "https://www.manilatimes.net/2026/02/22/world/americas-emea/the-bones-of-st-francis-are-going-on-public-display-a-mixed-blessing-for-assisi/2282435"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Jaden Ivey’s injury concerns add another chapter to the Chicago Bulls’ confounding trade-deadline saga",
+          "url": "https://www.chicagotribune.com/2026/02/21/chicago-bulls-jaden-ivey-injury-concerns/"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 12.0997,
+        "data_coverage": 100.0,
+        "vol_60": 0.2559
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(53.1)",
+          "변동성 상승(0.26)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 53.1,
+        "volatility": 0.2559
+      }
+    },
+    {
+      "ticker": "ACN",
+      "name": "ACN",
+      "score": 52.9,
+      "rank": 18,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 67.9,
+        "whale": 35,
+        "macro": 50,
+        "news": 52
+      },
+      "details": {
+        "expert": [
+          "📉 20d Momentum -24.5%",
+          "🔴 Trend Below MA20/MA60",
+          "🧊 RSI Oversold Rebound Zone (23.3)",
+          "🧾 Analyst: FINNHUB:STRONG_BUY"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:11",
+          "• [NEWSDATA] Tredje AP fonden Sells 72,067 Shares of Accenture PLC $ACN",
+          "• [NEWSDATA] Accenture (NYSE:ACN) Reaches New 12-Month Low – What’s Next?",
+          "📣 Buzz: GDELT 0 | Reddit 1",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:STRONG_BUY",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 215.35,
+        "change_pct": 0.18608978832286843,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 23.28,
+        "ret_20d": -24.46,
+        "ret_60d": -14.49,
+        "vol_60d_ann": 0.3853,
+        "ma20": 244.2425,
+        "ma60": 261.7148,
+        "above_ma20": false,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.1564
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          243.62,
+          249.23,
+          247.85,
+          250.0,
+          257.43,
+          261.02,
+          272.85,
+          269.34,
+          266.59,
+          266.5,
+          269.53,
+          272.22,
+          270.37,
+          271.56,
+          274.66,
+          272.04,
+          273.74,
+          269.96,
+          272.25,
+          270.67,
+          270.77,
+          269.98,
+          271.09,
+          271.34,
+          270.0,
+          268.3,
+          259.95,
+          263.98,
+          275.93,
+          273.98,
+          281.82,
+          280.67,
+          280.96,
+          276.8,
+          288.54,
+          287.77,
+          286.21,
+          272.71,
+          280.72,
+          285.09,
+          281.07,
+          280.71,
+          275.8,
+          270.43,
+          261.22,
+          263.64,
+          266.79,
+          241.21,
+          241.65,
+          233.58,
+          240.62,
+          236.76,
+          240.86,
+          230.43,
+          222.05,
+          224.23,
+          219.89,
+          223.61,
+          214.95,
+          215.35
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 243.62,
+        "end": 215.35
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "STRONG_BUY",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 1
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Tredje AP fonden Sells 72,067 Shares of Accenture PLC $ACN",
+          "url": "https://www.thelincolnianonline.com/2026/02/21/tredje-ap-fonden-sells-72067-shares-of-accenture-plc-acn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Accenture (NYSE:ACN) Reaches New 12-Month Low – What’s Next?",
+          "url": "https://www.tickerreport.com/banking-finance/13354432/accenture-nyseacn-reaches-new-12-month-low-whats-next.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Journey Advisory Group LLC Reduces Stock Position in Accenture PLC $ACN",
+          "url": "https://www.dailypolitical.com/2026/02/21/journey-advisory-group-llc-reduces-stock-position-in-accenture-plc-acn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Journey Advisory Group LLC Sells 9,531 Shares of Accenture PLC $ACN",
+          "url": "https://www.tickerreport.com/banking-finance/13354322/journey-advisory-group-llc-sells-9531-shares-of-accenture-plc-acn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Accenture PLC $ACN Stock Position Increased by Dearborn Partners LLC",
+          "url": "https://www.americanbankingnews.com/2026/02/21/accenture-plc-acn-stock-position-increased-by-dearborn-partners-llc.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Dearborn Partners LLC Has $29.91 Million Stock Holdings in Accenture PLC $ACN",
+          "url": "https://www.dailypolitical.com/2026/02/21/dearborn-partners-llc-has-29-91-million-stock-holdings-in-accenture-plc-acn.html"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Electoral Act Amendment: Actual motives of political players now clear — Opposition lawmakers",
+          "url": "https://www.vanguardngr.com/2026/02/electoral-act-amendment-actual-motives-of-political-players-now-clear-opposition-lawmakers/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Hong Kong Designer Labels Shine At London Fashion Week",
+          "url": "https://menafn.com/1110770224/Hong-Kong-Designer-Labels-Shine-At-London-Fashion-Week"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Shoucheng Holdings Draws Focus After Portfolio Companies Appear In Spring Festival Gala Robotics Showcase",
+          "url": "https://menafn.com/1110769084/Shoucheng-Holdings-Draws-Focus-After-Portfolio-Companies-Appear-In-Spring-Festival-Gala-Robotics-Showcase"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Investee Companies Take The National Stage: Shoucheng Holdings' 'Capital+Scenario+Industry Chain' Strategy Validated, Entering The Value Realization Phase",
+          "url": "https://menafn.com/1110769083/Investee-Companies-Take-The-National-Stage-Shoucheng-Holdings-CapitalScenarioIndustry-Chain-Strategy-Validated-Entering-The-Value-Realization-Phase"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 11.6556,
+        "data_coverage": 100.0,
+        "vol_60": 0.3853
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 26.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 경계(52.9)",
+          "변동성 상승(0.39)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 52.9,
+        "volatility": 0.3853
+      }
+    },
+    {
+      "ticker": "AFL",
+      "name": "AFL",
+      "score": 49.5,
+      "rank": 19,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 48.2,
+        "whale": 50,
+        "macro": 50,
+        "news": 55
+      },
+      "details": {
+        "expert": [
+          "📈 20d Momentum +5.3%",
+          "🟢 Trend Above MA20/MA60",
+          "🌡️ RSI Healthy (57.8)",
+          "🛡️ Low Volatility (0.18)",
+          "🧾 Analyst: FINNHUB:SELL",
+          "🚀 Adaptive Weights: stable-trend regime"
+        ],
+        "whale": [
+          "⚪ No reliable flow data"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:1 / neg:0 | items:15",
+          "• [NEWSDATA] Police bungle allows millionaire to escape speeding charge",
+          "• [NEWSDATA] First test case looms for key ban tweak; ‘flashpoint’ for escalating draft debate — AFL Dail",
+          "📣 Buzz: GDELT 0 | Reddit 5",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "FINNHUB:SELL",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 114.03,
+        "change_pct": 1.1262859169918376,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 57.85,
+        "ret_20d": 5.29,
+        "ret_60d": 2.75,
+        "vol_60d_ann": 0.176,
+        "ma20": 112.9485,
+        "ma60": 110.8487,
+        "above_ma20": true,
+        "above_ma60": true,
+        "vol_ratio_5_20": 0.8831
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          110.38,
+          111.63,
+          110.55,
+          110.31,
+          109.55,
+          108.83,
+          109.04,
+          109.24,
+          109.28,
+          108.06,
+          108.02,
+          107.19,
+          108.85,
+          110.05,
+          111.5,
+          109.49,
+          110.5,
+          110.46,
+          110.36,
+          110.05,
+          110.72,
+          110.62,
+          109.9,
+          109.96,
+          110.8,
+          110.27,
+          110.24,
+          112.19,
+          111.96,
+          110.19,
+          110.26,
+          109.24,
+          108.88,
+          107.96,
+          110.18,
+          109.61,
+          109.51,
+          109.26,
+          108.56,
+          108.3,
+          107.09,
+          108.94,
+          108.38,
+          108.92,
+          110.51,
+          110.95,
+          111.95,
+          112.04,
+          113.62,
+          117.47,
+          117.15,
+          113.2,
+          115.88,
+          116.25,
+          115.88,
+          114.91,
+          115.42,
+          113.62,
+          112.76,
+          114.03
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 110.38,
+        "end": 114.03
+      },
+      "analyst_consensus": {
+        "source": "FINNHUB",
+        "recommendation": "SELL",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 5
+      },
+      "news_items": [
+        {
+          "source": "NEWSDATA",
+          "title": "Police bungle allows millionaire to escape speeding charge",
+          "url": "https://www.afr.com/wealth/people/police-bungle-allows-millionaire-to-escape-speeding-charge-20260220-p5o45w"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "First test case looms for key ban tweak; ‘flashpoint’ for escalating draft debate — AFL Daily - fox sports",
+          "url": "https://news.google.com/rss/articles/CBMixgJBVV95cUxNWFBUWnFfWU9KSmxfNDRJZUFQMVJxRmJSM1dpeGMtNUN6Rmg0cE9TTkZpUUdlZk1XSU9xa3I4Mm02TF9rZE0tSmozM2NWZDdLajN6OFpMTEdEcW9kMFAwYUNMN2JJSU1sTnRXdUJUc2NrMFJMSTR3VTFfZFVmLVNjaGt3UTItYVpFUkRuazR4Wm0xN1Zza0FjY25QUXU1VWtiLXFWX1ktYVd2eXlYWHJzYk5xTXpnbkV1Sk1tUkJUX2c2Y3pPVzE4ZUVqQXdRY0w3aDZvdlc4cWdPZF9JdWptY3Q2bGR5YlN1Q3NDRkhQVEpxeEdpeEdPeVFxeVowZ0tPNmxHaWhyZDNWanpWSWxya1lYU28wNTA5WExHY00xdUcyaXJTQUd6Vmx2djFlaTZJYTB1dF9qTHh6SE5TRU1oSjNCaXljUQ?oc=5"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "First test case looms for key ban tweak; ‘flashpoint’ for escalating draft debate — AFL Daily",
+          "url": "https://www.foxsports.com.au/afl/afl-latest-news-updates-fox-footy-afl-daily-for-sunday-february-22-charlie-comben-mro-tackle-cooper-hodge-draft-call-between-hawthorn-and-brisbane/news-story/2c55a2284a22ee13e4a68ff0ca30f6f7"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Seagulls legends honoured",
+          "url": "https://cranbournenews.starcommunity.com.au/sport/2026-02-22/seagulls-legends-honoured/"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Disney slammed for ‘tone-deaf’ new character",
+          "url": "https://www.news.com.au/entertainment/tv/disney-under-fire-for-tonedeaf-and-divisive-new-cartoon-character/news-story/ace666fc0d0dd7af72da2f8573f65206?from=rss-basic"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Ex-AFL rising star Jaidyn Stephenson speaks after Port Adelaide opt against offering contract - 7NEWS",
+          "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOWUh3X2FoZWhtZ3ZvaUFrb3FJdXdTaFRkMlBNT09TTmZUelRUd3ppeEt6YjZWbjRlMkUxQUgzcVJDZk9sdGlwemhKbE5YRGdZa3dCZVRmLXQ1eWEtdzl5bmZyLXg1YkNMNE9FUFlfSmZGTVRkdWNnbXdjLVlMSDRSb2h6TVN1b3c4QmVJRGV6VzBOMEFrZG1CaVZRbTNReWE0NXJoYk92eTlKVkdjbV92WWcxVVNjRzFtQzE4MnRHUWFGd3VDc2dFWFdfMktFV0Np?oc=5"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Ex-AFL rising star Jaidyn Stephenson speaks after Port Adelaide opt against offering contract",
+          "url": "https://7news.com.au/sport/afl/ex-afl-rising-star-jaidyn-stephenson-speaks-after-port-adelaide-opt-against-offering-contract-c-21716097"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Ex-AFL rising star Jaidyn Stephenson speaks after Port Adelaide opt against offering contract",
+          "url": "https://www.perthnow.com.au/sport/afl/ex-afl-rising-star-jaidyn-stephenson-speaks-after-port-adelaide-opt-against-offering-contract-c-21716097"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Ex-AFL rising star Jaidyn Stephenson speaks after Port Adelaide opt against offering contract",
+          "url": "https://thewest.com.au/sport/afl/ex-afl-rising-star-jaidyn-stephenson-speaks-after-port-adelaide-opt-against-offering-contract-c-21716097"
+        },
+        {
+          "source": "NEWSDATA",
+          "title": "Ex-AFL rising star Jaidyn Stephenson speaks after Port Adelaide opt against offering contract",
+          "url": "https://thenightly.com.au/sport/afl/ex-afl-rising-star-jaidyn-stephenson-speaks-after-port-adelaide-opt-against-offering-contract-c-21716097"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.45,
+          "whale": 0.32,
+          "macro": 0.16,
+          "news": 0.07
+        },
+        "quality_penalty": 0.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 2.5338,
+        "data_coverage": 100.0,
+        "vol_60": 0.176
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 25.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 저하(49.5)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 49.5,
+        "volatility": 0.176
+      }
+    },
+    {
+      "ticker": "ABNB",
+      "name": "ABNB",
+      "score": 44.9,
+      "rank": 20,
+      "synthesis_verdict": "Neutral/Watch",
+      "scores": {
+        "expert": 56,
+        "whale": 35,
+        "macro": 50,
+        "news": 50
+      },
+      "details": {
+        "expert": [
+          "🌡️ RSI Healthy (48.0)",
+          "⚠️ No Analyst Coverage (Tech-driven fallback)"
+        ],
+        "whale": [
+          "⚪ No reliable flow data",
+          "🔍 Volume Expansion Downtrend"
+        ],
+        "macro": [],
+        "news": [
+          "📰 News/Social tone pos:0 / neg:0 | items:2",
+          "• [REDDIT] ABNB Stock Message Board on Reddit. AirBNB technology and stock prices discussion. $ABNB",
+          "• [REDDIT] Question about Checkout Messages And ABnB Terms",
+          "📣 Buzz: GDELT 0 | Reddit 2",
+          "📄 No recent SEC filings signal"
+        ]
+      },
+      "future_value": {
+        "prediction": "N/A",
+        "rationale": "Calculating..."
+      },
+      "external_consensus": "Neutral",
+      "whale_activity": "Neutral",
+      "badges": [],
+      "price_info": {
+        "current": 127.89,
+        "change_pct": 1.6532867021699376,
+        "currency": "USD"
+      },
+      "features": {
+        "rsi": 47.95,
+        "ret_20d": -4.42,
+        "ret_60d": 11.93,
+        "vol_60d_ann": 0.3025,
+        "ma20": 125.6292,
+        "ma60": 128.8499,
+        "above_ma20": true,
+        "above_ma60": false,
+        "vol_ratio_5_20": 1.3092
+      },
+      "price_trend": {
+        "period": "60D",
+        "points": [
+          114.41,
+          118.56,
+          116.74,
+          116.99,
+          118.8,
+          118.5,
+          120.13,
+          120.82,
+          124.32,
+          122.01,
+          125.39,
+          127.57,
+          128.0,
+          128.39,
+          131.81,
+          132.01,
+          133.78,
+          133.99,
+          135.28,
+          136.95,
+          136.49,
+          136.78,
+          136.82,
+          136.62,
+          136.91,
+          135.72,
+          133.01,
+          135.87,
+          138.02,
+          137.04,
+          138.66,
+          139.27,
+          138.51,
+          140.07,
+          132.79,
+          132.6,
+          130.66,
+          130.73,
+          133.59,
+          133.8,
+          132.15,
+          133.39,
+          132.22,
+          131.55,
+          131.77,
+          129.37,
+          131.31,
+          122.075,
+          124.61,
+          121.27,
+          122.18,
+          121.31,
+          120.32,
+          119.55,
+          115.96,
+          121.35,
+          124.23,
+          124.27,
+          125.81,
+          127.89
+        ],
+        "dates": [
+          "2025-11-24",
+          "2025-11-25",
+          "2025-11-26",
+          "2025-11-28",
+          "2025-12-01",
+          "2025-12-02",
+          "2025-12-03",
+          "2025-12-04",
+          "2025-12-05",
+          "2025-12-08",
+          "2025-12-09",
+          "2025-12-10",
+          "2025-12-11",
+          "2025-12-12",
+          "2025-12-15",
+          "2025-12-16",
+          "2025-12-17",
+          "2025-12-18",
+          "2025-12-19",
+          "2025-12-22",
+          "2025-12-23",
+          "2025-12-24",
+          "2025-12-26",
+          "2025-12-29",
+          "2025-12-30",
+          "2025-12-31",
+          "2026-01-02",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-12",
+          "2026-01-13",
+          "2026-01-14",
+          "2026-01-15",
+          "2026-01-16",
+          "2026-01-20",
+          "2026-01-21",
+          "2026-01-22",
+          "2026-01-23",
+          "2026-01-26",
+          "2026-01-27",
+          "2026-01-28",
+          "2026-01-29",
+          "2026-01-30",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-02-13",
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20"
+        ],
+        "start": 114.41,
+        "end": 127.89
+      },
+      "analyst_consensus": {
+        "source": "NONE",
+        "recommendation": "N/A",
+        "target_price": null,
+        "upside": null
+      },
+      "news_sources": {
+        "newsapi": false,
+        "newsdata": true,
+        "gdelt": false,
+        "reddit_rss": true
+      },
+      "news_buzz": {
+        "gdelt": 0,
+        "reddit": 2
+      },
+      "news_items": [
+        {
+          "source": "REDDIT",
+          "title": "ABNB Stock Message Board on Reddit. AirBNB technology and stock prices discussion. $ABNB",
+          "url": "https://www.reddit.com/search.rss?q=ABNB&amp;sort=new&amp;t=week"
+        },
+        {
+          "source": "REDDIT",
+          "title": "Question about Checkout Messages And ABnB Terms",
+          "url": "https://www.reddit.com/r/EverHint/comments/1r8pi36/everhint_ema10_ema30_crossover_top_10_buy_and_top/"
+        }
+      ],
+      "analyst_mentions": [],
+      "score_meta": {
+        "weights": {
+          "expert": 0.4,
+          "whale": 0.3,
+          "macro": 0.2,
+          "news": 0.1
+        },
+        "quality_penalty": 3.0,
+        "disagreement_penalty": 0.0,
+        "component_dispersion": 7.7581,
+        "data_coverage": 75.0,
+        "vol_60": 0.3025
+      },
+      "enhanced_diagnosis": {
+        "primary": "N/A (API Blocked)",
+        "layers": []
+      },
+      "drift": {
+        "score": 39.0,
+        "status": "stable",
+        "reasons": [
+          "신호 합의도 저하(44.9)",
+          "변동성 상승(0.30)"
+        ],
+        "benchmark_change_pct": 0.694,
+        "signal_confidence": 44.9,
+        "volatility": 0.3025
+      }
+    }
+  ]
+}
