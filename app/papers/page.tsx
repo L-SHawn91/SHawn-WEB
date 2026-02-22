@@ -380,6 +380,11 @@ export default function PapersPage() {
     return ` → ${top}`;
   }, [contextualSuggestions, effectiveInputQuery]);
 
+  const quickQueries = useMemo(
+    () => SEARCH_GUIDE.quick.map((item) => item.replace(/\s*\(.+\)$/, '')),
+    [],
+  );
+
   const commitBufferToChip = (text: string) => {
     const tokens = tokenizeInput(text);
     if (!tokens.length) return;
@@ -387,8 +392,8 @@ export default function PapersPage() {
     lastChipCommitAtRef.current = Date.now();
   };
 
-  const searchPapers = async () => {
-    const userQuery = effectiveInputQuery;
+  const searchPapers = async (forcedQuery?: string) => {
+    const userQuery = (forcedQuery ?? effectiveInputQuery).trim();
     if (!userQuery.trim()) return;
 
     setLoading(true);
@@ -420,6 +425,13 @@ export default function PapersPage() {
     }
 
     setLoading(false);
+  };
+
+  const runQuickQuery = async (item: string) => {
+    const normalized = item.trim();
+    setChips([]);
+    setQuery(normalized);
+    await searchPapers(normalized);
   };
 
   useEffect(() => {

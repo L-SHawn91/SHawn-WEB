@@ -67,6 +67,7 @@ type MarketCard = {
 
 type Holding = {
   symbol: string;
+  name?: string;
   allocation: number;
   pnl: number;
   beta: number;
@@ -75,6 +76,7 @@ type Holding = {
 
 type WatchItem = {
   symbol: string;
+  name?: string;
   signal: SignalAction;
   score: number;
   reason: string;
@@ -85,6 +87,7 @@ type WatchItem = {
 
 type RebalanceSuggestion = {
   symbol: string;
+  name?: string;
   action: "up" | "down" | "hold";
   deltaPct: number;
   reason: string;
@@ -92,6 +95,7 @@ type RebalanceSuggestion = {
 
 type SimulationChange = {
   symbol: string;
+  name?: string;
   prevAllocation: number;
   nextAllocation: number;
   direction: "up" | "down";
@@ -100,6 +104,7 @@ type SimulationChange = {
 
 type RelativeMetric = {
   symbol: string;
+  name?: string;
   alphaVsBenchmark: number;
   beta: number;
   drawdown60d: number;
@@ -232,6 +237,7 @@ export default function InvestmentWorld() {
   const [error, setError] = useState<string>("");
   const [simulation, setSimulation] = useState<RebalanceSimulation | null>(null);
   const [simulateLoading, setSimulateLoading] = useState<boolean>(false);
+  const [refreshTick, setRefreshTick] = useState<number>(0);
 
   useEffect(() => {
     const abort = new AbortController();
@@ -262,7 +268,14 @@ export default function InvestmentWorld() {
     })();
 
     return () => abort.abort();
-  }, [strategy]);
+  }, [strategy, refreshTick]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRefreshTick((prev) => prev + 1);
+    }, 60_000);
+    return () => clearInterval(timer);
+  }, []);
 
   const watchItems =
     marketFocus === "all"
@@ -339,6 +352,11 @@ export default function InvestmentWorld() {
     return "전체";
   };
 
+  const renderInstrument = (symbol: string, name?: string) => {
+    if (!name) return symbol;
+    return `${symbol} · ${name}`;
+  };
+
   return (
     <InvestLayout
       currentTab="dashboard"
@@ -372,6 +390,16 @@ export default function InvestmentWorld() {
               <p className="text-sm text-gray-400">벤치마크</p>
               <p className="text-xl font-bold text-white mt-1">{snapshot?.benchmark ? `${snapshot.benchmark.KR} / ${snapshot.benchmark.US}` : "-"}</p>
               <p className="text-xs text-gray-500 mt-2">갱신시각: {snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "-"}</p>
+            </div>
+            <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
+              <p className="text-sm text-gray-400">데이터 갱신</p>
+              <button
+                onClick={() => setRefreshTick((prev) => prev + 1)}
+                className="mt-2 rounded-lg border border-sky-400/40 bg-sky-500/10 px-3 py-1.5 text-xs font-semibold text-sky-200 hover:bg-sky-500/20"
+              >
+                지금 새로고침
+              </button>
+              <p className="mt-2 text-xs text-gray-500">60초마다 자동 갱신</p>
             </div>
           </div>
           <InvestQuoteKpiCards snapshot={quoteKpiData} />
@@ -512,7 +540,7 @@ export default function InvestmentWorld() {
                   <div key={h.symbol} className="space-y-1">
                     <div className="flex justify-between text-sm text-gray-200">
                       <div className="flex items-center gap-2">
-                        <span>{h.symbol}</span>
+                        <span>{renderInstrument(h.symbol, h.name)}</span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded border ${riskText[h.risk]}`}>{h.risk}</span>
                       </div>
                       <span className="text-xs text-gray-400">β {h.beta.toFixed(2)} / PnL {h.pnl.toFixed(1)}%</span>
@@ -543,7 +571,7 @@ export default function InvestmentWorld() {
                 {(snapshot?.rebalanceSuggestions || []).map((sugg) => (
                   <div key={`${sugg.symbol}-${sugg.action}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                     <div className="flex justify-between items-center gap-2">
-                      <p className="font-semibold text-white">{sugg.symbol}</p>
+                      <p className="font-semibold text-white">{renderInstrument(sugg.symbol, sugg.name)}</p>
                       <span className={`text-[11px] px-2 py-0.5 rounded border ${suggestionBadge[sugg.action]}`}>
                         {sugg.action === "up" ? "증가" : sugg.action === "down" ? "감소" : "보유"}
                       </span>
@@ -562,7 +590,7 @@ export default function InvestmentWorld() {
                   {(simulation.changes.length > 0 ? simulation.changes : []).map((change) => (
                     <div key={`${change.symbol}-${change.direction}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                       <div className="flex justify-between items-center gap-2">
-                        <span className="font-semibold text-white">{change.symbol}</span>
+                        <span className="font-semibold text-white">{renderInstrument(change.symbol, change.name)}</span>
                         <span
                           className={`text-[11px] px-2 py-0.5 rounded border ${
                             change.direction === "up"
@@ -624,7 +652,7 @@ export default function InvestmentWorld() {
               {watchItems.map((item) => (
                 <div key={`${item.symbol}-${item.region}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="font-semibold text-white">{item.symbol}</span>
+                    <span className="font-semibold text-white">{renderInstrument(item.symbol, item.name)}</span>
                     <span className={`text-[11px] px-2 py-0.5 rounded border ${signalBadge[item.signal]}`}>{item.signal}</span>
                   </div>
                   <p className="text-sm text-gray-300 mt-1">{item.reason}</p>

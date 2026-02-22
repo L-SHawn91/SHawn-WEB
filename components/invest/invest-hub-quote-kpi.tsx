@@ -15,7 +15,7 @@ export function InvestHubQuoteKpiPanel() {
   useEffect(() => {
     let cancelled = false;
 
-    (async () => {
+    const fetchSnapshot = async () => {
       try {
         const res = await fetch("/api/invest/snapshot?mode=balanced", { cache: "no-store" });
         if (!res.ok) return;
@@ -26,10 +26,14 @@ export function InvestHubQuoteKpiPanel() {
       } catch (error) {
         console.error("Failed to load invest hub quote KPI", error);
       }
-    })();
+    };
+
+    fetchSnapshot();
+    const timer = setInterval(fetchSnapshot, 60_000);
 
     return () => {
       cancelled = true;
+      clearInterval(timer);
     };
   }, []);
 

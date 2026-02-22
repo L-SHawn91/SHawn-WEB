@@ -46,6 +46,7 @@ type SnapshotReason = {
 
 type RelativeMetric = {
   symbol: string;
+  name?: string;
   alphaVsBenchmark: number;
   beta: number;
   drawdown60d: number;
@@ -91,6 +92,7 @@ type MarketCard = {
 
 type Holding = {
   symbol: string;
+  name?: string;
   allocation: number;
   pnl: number;
   beta: number;
@@ -140,6 +142,7 @@ type QuantReportPayload = {
 
 type WatchItem = {
   symbol: string;
+  name?: string;
   signal: SignalAction;
   score: number;
   reason: string;
@@ -150,6 +153,7 @@ type WatchItem = {
 
 type RebalanceSuggestion = {
   symbol: string;
+  name?: string;
   action: "up" | "down" | "hold";
   deltaPct: number;
   reason: string;
@@ -158,6 +162,7 @@ type RebalanceSuggestion = {
 
 type SimulationChange = {
   symbol: string;
+  name?: string;
   prevAllocation: number;
   nextAllocation: number;
   direction: "up" | "down";
@@ -285,12 +290,12 @@ const BASE_MARKETS: MarketCard[] = [
 ];
 
 const BASE_HOLDINGS: Holding[] = [
-  { symbol: "AAPL", allocation: 12, pnl: 4.8, beta: 1.15, risk: "Medium" },
-  { symbol: "NVDA", allocation: 8, pnl: 11.2, beta: 1.52, risk: "High" },
-  { symbol: "MSFT", allocation: 7.5, pnl: 7.1, beta: 0.98, risk: "Medium" },
-  { symbol: "TSMC", allocation: 7, pnl: 3.2, beta: 1.12, risk: "Medium" },
-  { symbol: "005930.KS", allocation: 10, pnl: 2.6, beta: 1.38, risk: "High" },
-  { symbol: "GOOGL", allocation: 6.5, pnl: -0.9, beta: 1.08, risk: "Medium" },
+  { symbol: "AAPL", name: "Apple", allocation: 12, pnl: 4.8, beta: 1.15, risk: "Medium" },
+  { symbol: "NVDA", name: "NVIDIA", allocation: 8, pnl: 11.2, beta: 1.52, risk: "High" },
+  { symbol: "MSFT", name: "Microsoft", allocation: 7.5, pnl: 7.1, beta: 0.98, risk: "Medium" },
+  { symbol: "TSMC", name: "Taiwan Semiconductor", allocation: 7, pnl: 3.2, beta: 1.12, risk: "Medium" },
+  { symbol: "005930.KS", name: "Samsung Electronics", allocation: 10, pnl: 2.6, beta: 1.38, risk: "High" },
+  { symbol: "GOOGL", name: "Alphabet", allocation: 6.5, pnl: -0.9, beta: 1.08, risk: "Medium" },
 ];
 
 
@@ -308,6 +313,7 @@ let cachedMarketReport: { [key: string]: { at: number; data: QuantReportPayload 
 const BASE_WATCH: WatchItem[] = [
   {
     symbol: "SMCI",
+    name: "Super Micro Computer",
     signal: "Buy",
     score: 88,
     reason: "AI 데이터센터 실적 개선 기대",
@@ -316,6 +322,7 @@ const BASE_WATCH: WatchItem[] = [
   },
   {
     symbol: "AMZN",
+    name: "Amazon",
     signal: "Hold",
     score: 61,
     reason: "가격대비 모멘텀 완만",
@@ -324,6 +331,7 @@ const BASE_WATCH: WatchItem[] = [
   },
   {
     symbol: "TSLA",
+    name: "Tesla",
     signal: "Trim",
     score: 46,
     reason: "고위험 구간 확대",
@@ -331,6 +339,27 @@ const BASE_WATCH: WatchItem[] = [
     region: "us",
   },
 ];
+
+const COMPANY_NAME_BY_SYMBOL: Record<string, string> = {
+  AAPL: "Apple",
+  NVDA: "NVIDIA",
+  MSFT: "Microsoft",
+  TSM: "Taiwan Semiconductor",
+  TSMC: "Taiwan Semiconductor",
+  "005930": "Samsung Electronics",
+  "005930.KS": "Samsung Electronics",
+  GOOGL: "Alphabet",
+  GOOG: "Alphabet",
+  AMZN: "Amazon",
+  TSLA: "Tesla",
+  SMCI: "Super Micro Computer",
+  META: "Meta Platforms",
+  AVGO: "Broadcom",
+  AMD: "Advanced Micro Devices",
+  INTC: "Intel",
+  "000660": "SK hynix",
+  "000660.KS": "SK hynix",
+};
 
 const MODE_WEIGHTS_PROFILES: Record<StrategyMode, WeightProfile> = {
   balanced: { technical: 0.40, flow: 0.25, macro: 0.20, news: 0.15 },
@@ -347,6 +376,11 @@ const MODE_WEIGHTS: Record<StrategyMode, number[]> = {
 type QuoteHealth = "ok" | "degraded" | "fallback";
 
 type YahooQuote = { regularMarketPrice?: number; regularMarketChangePercent?: number; regularMarketTime?: number; symbol?: string };
+type NaverIndexRow = {
+  localTradedAt?: string;
+  closePrice?: string;
+  fluctuationsRatio?: string;
+};
 
 type MarketLiveSnapshot = {
   markets: MarketCard[];
@@ -385,6 +419,94 @@ function formatChangePct(v?: number): string {
   return `${sign}${v.toFixed(2)}%`;
 }
 
+function parseNumber(input?: string | number | null): number | undefined {
+  if (typeof input === "number") return Number.isFinite(input) ? input : undefined;
+  if (typeof input !== "string") return undefined;
+  const parsed = Number.parseFloat(input.replace(/,/g, "").trim());
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function parseStooqDateTime(date?: string, time?: string): number | undefined {
+  if (!date || !/^\d{8}$/.test(date)) return undefined;
+  const year = Number.parseInt(date.slice(0, 4), 10);
+  const month = Number.parseInt(date.slice(4, 6), 10);
+  const day = Number.parseInt(date.slice(6, 8), 10);
+  let hour = 0;
+  let minute = 0;
+  let second = 0;
+
+  if (time && /^\d{6}$/.test(time)) {
+    hour = Number.parseInt(time.slice(0, 2), 10);
+    minute = Number.parseInt(time.slice(2, 4), 10);
+    second = Number.parseInt(time.slice(4, 6), 10);
+  }
+
+  const ts = Date.UTC(year, month - 1, day, hour, minute, second);
+  return Number.isFinite(ts) ? ts : undefined;
+}
+
+async function fetchNaverIndex(symbol: "KOSPI" | "KOSDAQ"): Promise<{ price?: number; chg?: number; at?: number } | null> {
+  try {
+    const res = await fetch(`https://m.stock.naver.com/api/index/${symbol}/price`, {
+      signal: AbortSignal.timeout(8000),
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const rows = (await res.json()) as NaverIndexRow[];
+    const latest = Array.isArray(rows) ? rows[0] : null;
+    if (!latest) return null;
+
+    const price = parseNumber(latest.closePrice);
+    const chg = parseNumber(latest.fluctuationsRatio);
+    const at = latest.localTradedAt ? Date.parse(`${latest.localTradedAt}T15:30:00+09:00`) : undefined;
+    return { price, chg, at: Number.isFinite(at) ? at : undefined };
+  } catch {
+    return null;
+  }
+}
+
+async function fetchStooqQuotes(symbols: string[]): Promise<Map<string, { close?: number; changePct?: number; at?: number }>> {
+  const bySymbol = new Map<string, { close?: number; changePct?: number; at?: number }>();
+  if (!symbols.length) return bySymbol;
+
+  const rows = await Promise.all(
+    symbols.map(async (symbol) => {
+      try {
+        const res = await fetch(`https://stooq.com/q/l/?s=${encodeURIComponent(symbol)}&i=d`, {
+          signal: AbortSignal.timeout(8000),
+          cache: "no-store",
+        });
+        if (!res.ok) return null;
+        const line = (await res.text()).trim().split(/\r?\n/)[0];
+        if (!line) return null;
+        const cols = line.split(",");
+        if (cols.length < 7) return null;
+        const parsedSymbol = String(cols[0] || "").trim().toUpperCase();
+        const date = String(cols[1] || "").trim();
+        const time = String(cols[2] || "").trim();
+        const open = parseNumber(cols[3]);
+        const close = parseNumber(cols[6]);
+        const at = parseStooqDateTime(date, time);
+        if (close === undefined) return null;
+        const changePct =
+          open !== undefined && open !== 0
+            ? Number((((close - open) / open) * 100).toFixed(2))
+            : undefined;
+        return { symbol: parsedSymbol, close, changePct, at };
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  for (const row of rows) {
+    if (!row) continue;
+    bySymbol.set(row.symbol, { close: row.close, changePct: row.changePct, at: row.at });
+  }
+
+  return bySymbol;
+}
+
 const QUOTE_HEALTH_OK_SEC = 3_600;
 const QUOTE_HEALTH_DEGRADED_SEC = 14_400;
 
@@ -401,6 +523,42 @@ function classifyQuoteHealth(freshnessSec: number): QuoteHealth {
   if (freshnessSec <= QUOTE_HEALTH_OK_SEC) return "ok";
   if (freshnessSec <= QUOTE_HEALTH_DEGRADED_SEC) return "degraded";
   return "fallback";
+}
+
+function normalizeSymbol(symbol?: string): string {
+  return String(symbol || "").trim().toUpperCase();
+}
+
+function buildSymbolAliases(symbol?: string): string[] {
+  const key = normalizeSymbol(symbol);
+  if (!key) return [];
+  const aliases = new Set<string>([key]);
+  if (key.endsWith(".KS")) aliases.add(key.replace(/\.KS$/, ""));
+  return [...aliases];
+}
+
+function buildTickerNameMap(...payloads: Array<QuantReportPayload | null>): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const payload of payloads) {
+    for (const item of payload?.reports || []) {
+      const name = String(item?.name || "").trim();
+      if (!name) continue;
+      for (const alias of buildSymbolAliases(item?.ticker)) {
+        map.set(alias, name);
+      }
+    }
+  }
+  return map;
+}
+
+function resolveCompanyName(symbol?: string, tickerNameMap?: Map<string, string>): string | undefined {
+  for (const alias of buildSymbolAliases(symbol)) {
+    const fromReport = tickerNameMap?.get(alias);
+    if (fromReport) return fromReport;
+    const fromBase = COMPANY_NAME_BY_SYMBOL[alias];
+    if (fromBase) return fromBase;
+  }
+  return undefined;
 }
 
 async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
@@ -476,46 +634,66 @@ async function fetchLiveMarkets(): Promise<MarketLiveSnapshot> {
     };
   } catch {
     try {
-      const stooq = await fetch('https://stooq.com/q/l/?s=spx,ndq,ks11,kq11&i=d', {
-        signal: AbortSignal.timeout(8000),
-        cache: 'no-store',
-      });
-      const csv = await stooq.text();
-      const lines = csv.trim().split(/\r?\n/);
-      // stooq format: SYMBOL,DATE,TIME,OPEN,HIGH,LOW,CLOSE,VOLUME
-      const closeBy = new Map<string, number>();
-      const latestBy = new Map<string, string>();
-      for (let i = 0; i < lines.length; i++) {
-        const cols = lines[i].split(',');
-        if (!cols[0] || cols.length < 7) continue;
-        const symbol = cols[0].trim().toUpperCase();
-        const close = Number.parseFloat(cols[6]);
-        const date = cols[1]?.trim();
-        const time = cols[2]?.trim();
-        const timestamp = [date, time].filter(Boolean).join('T');
+      const [kospi, kosdaq, stooq] = await Promise.all([
+        fetchNaverIndex("KOSPI"),
+        fetchNaverIndex("KOSDAQ"),
+        fetchStooqQuotes(["^SPX", "^NDX"]),
+      ]);
 
-        if (Number.isFinite(close)) {
-          closeBy.set(symbol, close);
-          if (timestamp) latestBy.set(symbol, timestamp);
-        }
+      const hasHybridData = Boolean(
+        kospi?.price !== undefined ||
+          kosdaq?.price !== undefined ||
+          stooq.get("^SPX")?.close !== undefined ||
+          stooq.get("^NDX")?.close !== undefined
+      );
+
+      if (hasHybridData) {
+        apply({
+          ks11: { price: kospi?.price, chg: kospi?.chg },
+          kq11: { price: kosdaq?.price, chg: kosdaq?.chg },
+          gspc: { price: stooq.get("^SPX")?.close, chg: stooq.get("^SPX")?.changePct },
+          ndx: { price: stooq.get("^NDX")?.close, chg: stooq.get("^NDX")?.changePct },
+        });
+
+        const hybridTimestamps = [kospi?.at, kosdaq?.at, stooq.get("^SPX")?.at, stooq.get("^NDX")?.at]
+          .filter((it): it is number => typeof it === "number" && Number.isFinite(it));
+        const hybridFreshnessSec = parseFreshnessSec(
+          hybridTimestamps.length ? Math.max(...hybridTimestamps) : null,
+          86_400,
+        );
+
+        return {
+          markets,
+          sourceName: "Naver + Stooq hybrid fallback",
+          providerPriority: 1,
+          freshnessSec: hybridFreshnessSec,
+          fetchedAt: new Date(now).toISOString(),
+          fallbackLevel: 1,
+          quoteHealth: classifyQuoteHealth(hybridFreshnessSec),
+          updatedAt: new Date(now).toISOString(),
+        };
       }
 
-      const stooqTimestamp = latestBy.values().next().value;
-
+      const stooqAll = await fetchStooqQuotes(["^SPX", "^NDX", "^KOSPI"]);
       apply({
-        ks11: { price: closeBy.get('KS11') },
-        kq11: { price: closeBy.get('KQ11') },
-        gspc: { price: closeBy.get('SPX') },
-        ndx: { price: closeBy.get('NDQ') },
+        ks11: { price: stooqAll.get("^KOSPI")?.close, chg: stooqAll.get("^KOSPI")?.changePct },
+        kq11: {},
+        gspc: { price: stooqAll.get("^SPX")?.close, chg: stooqAll.get("^SPX")?.changePct },
+        ndx: { price: stooqAll.get("^NDX")?.close, chg: stooqAll.get("^NDX")?.changePct },
       });
-      const stooqFreshnessSec = parseFreshnessSec(stooqTimestamp, 86_400);
+      const stooqTimestamps = [stooqAll.get("^KOSPI")?.at, stooqAll.get("^SPX")?.at, stooqAll.get("^NDX")?.at]
+        .filter((it): it is number => typeof it === "number" && Number.isFinite(it));
+      const stooqFreshnessSec = parseFreshnessSec(
+        stooqTimestamps.length ? Math.max(...stooqTimestamps) : null,
+        86_400,
+      );
       return {
         markets,
-        sourceName: 'Stooq EOD fallback',
-        providerPriority: 1,
+        sourceName: 'Stooq fallback',
+        providerPriority: 2,
         freshnessSec: stooqFreshnessSec,
         fetchedAt: new Date(now).toISOString(),
-        fallbackLevel: 1,
+        fallbackLevel: 2,
         quoteHealth: classifyQuoteHealth(stooqFreshnessSec),
         updatedAt: new Date(now).toISOString(),
       };
@@ -610,7 +788,7 @@ async function readLatestReportByMarket(type: "KR" | "US"): Promise<QuantReportP
   }
 }
 
-function toQuantHoldings(reports: QuantReportPayload | null): Holding[] {
+function toQuantHoldings(reports: QuantReportPayload | null, tickerNameMap?: Map<string, string>): Holding[] {
   if (!reports?.reports?.length) return BASE_HOLDINGS;
 
   const rows = reports.reports
@@ -618,6 +796,7 @@ function toQuantHoldings(reports: QuantReportPayload | null): Holding[] {
     .slice(0, 8)
     .map((item) => ({
       symbol: String(item.ticker || "").trim(),
+      name: String(item.name || "").trim() || resolveCompanyName(item.ticker, tickerNameMap),
       allocation: Number((((Number(item.score) || 45) - 40) * 4).toFixed(2)),
       pnl: Number(((Number(item.price_info?.change_pct) || 0)).toFixed(2)),
       beta: riskToDecimal(item.score),
@@ -685,6 +864,7 @@ function deriveRelativeScore(item: QuantReportItem): RelativeMetric {
   const change = Number(item.price_info?.change_pct || 0);
   return {
     symbol: String(item.ticker || ""),
+    name: String(item.name || "").trim() || resolveCompanyName(item.ticker),
     alphaVsBenchmark: Number((score - 50 + Math.min(20, Math.max(-20, change))).toFixed(2)),
     beta: riskToDecimal(score),
     drawdown60d: Number((Math.abs(Math.min(0, change)) * 1.8).toFixed(2)),
@@ -775,6 +955,7 @@ function computeRebalanceSuggestions(holdings: Holding[], signalScore: number): 
     if (item.allocation > maxRisk && item.risk === "High") {
       suggestions.push({
         symbol: item.symbol,
+        name: item.name,
         action: "down",
         deltaPct: 1.5,
         reason: "고위험+고농축 구간에서 완만 감축", 
@@ -787,6 +968,7 @@ function computeRebalanceSuggestions(holdings: Holding[], signalScore: number): 
     if (top) {
       suggestions.push({
         symbol: top.symbol,
+        name: top.name,
         action: "up",
         deltaPct: 1.0,
         reason: "우호적 신호 구간에서 점진적 비중 확대",
@@ -797,6 +979,7 @@ function computeRebalanceSuggestions(holdings: Holding[], signalScore: number): 
   if (suggestions.length === 0) {
     suggestions.push({
       symbol: holdings[0]?.symbol || "Portfolio",
+      name: holdings[0]?.name,
       action: "hold",
       deltaPct: 0,
       reason: "현재 제약 내에서 즉시 조정 불필요",
@@ -830,6 +1013,7 @@ function simulateRebalance(holdings: Holding[], suggestions: RebalanceSuggestion
     if (target.allocation !== prevAllocation) {
       changes.push({
         symbol: target.symbol,
+        name: target.name,
         prevAllocation,
         nextAllocation: target.allocation,
         direction: sugg.action,
@@ -934,10 +1118,11 @@ export async function GET(request: NextRequest) {
   const { modules, signalConfidence } = injectSignals(BASE_SIGNAL_MODULES, fallbackMode);
   const krReport = await readLatestReportByMarket("KR");
   const usReport = await readLatestReportByMarket("US");
+  const tickerNameMap = buildTickerNameMap(krReport, usReport);
 
   const mergedHoldings = normalizeAllocations(
-    toQuantHoldings(fallbackMode === "alpha" || fallbackMode === "balanced" ? usReport : krReport)
-      .concat(toQuantHoldings(fallbackMode === "defensive" ? krReport : usReport))
+    toQuantHoldings(fallbackMode === "alpha" || fallbackMode === "balanced" ? usReport : krReport, tickerNameMap)
+      .concat(toQuantHoldings(fallbackMode === "defensive" ? krReport : usReport, tickerNameMap))
       .slice(0, 12)
       .map((item, idx) => ({ ...item, allocation: Math.max(1, Number(item.allocation.toFixed(2))) }))
   );
@@ -962,8 +1147,16 @@ export async function GET(request: NextRequest) {
   ];
 
   const reasons = [
-    ...(usReport?.reports || []).slice(0, 8).map((item) => ({ symbol: String(item.ticker || ""), reasons: buildEvidenceFromItem(item) })),
-    ...(krReport?.reports || []).slice(0, 8).map((item) => ({ symbol: String(item.ticker || ""), reasons: buildEvidenceFromItem(item) })),
+    ...(usReport?.reports || []).slice(0, 8).map((item) => ({
+      symbol: String(item.ticker || ""),
+      name: String(item.name || "").trim() || resolveCompanyName(item.ticker, tickerNameMap),
+      reasons: buildEvidenceFromItem(item),
+    })),
+    ...(krReport?.reports || []).slice(0, 8).map((item) => ({
+      symbol: String(item.ticker || ""),
+      name: String(item.name || "").trim() || resolveCompanyName(item.ticker, tickerNameMap),
+      reasons: buildEvidenceFromItem(item),
+    })),
   ].filter((item) => item.symbol);
 
   const payload = {
@@ -1029,6 +1222,7 @@ function collectWatchReason(entry: QuantReportItem, region: "k" | "us"): WatchIt
   const top = reasons.find((r) => r.impact === "up") || reasons[0];
   return {
     symbol: String(entry.ticker || ""),
+    name: String(entry.name || "").trim() || resolveCompanyName(entry.ticker),
     signal: parseSignalFromVerdict(entry.synthesis_verdict),
     score: Math.round(entry.score || 0),
     reason: entry.synthesis_verdict || "중립/Watch",
