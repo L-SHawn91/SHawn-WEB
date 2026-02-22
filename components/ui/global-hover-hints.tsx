@@ -37,7 +37,46 @@ const KEYWORD_HINTS: Array<{ key: string; hint: string }> = [
   { key: "신호 가중치", hint: "기술/수급/매크로/뉴스의 반영 비율입니다." },
   { key: "전략 모드", hint: "알파/방어/균형 전략 프리셋을 선택합니다." },
   { key: "검색", hint: "기업명 또는 티커로 종목을 조회합니다." },
+  { key: "대시보드", hint: "핵심 지표와 신호를 한 화면에서 확인합니다." },
+  { key: "리포트", hint: "분석 리포트 상세를 확인합니다." },
+  { key: "아카이브", hint: "과거 리포트를 모아 확인합니다." },
+  { key: "refresh", hint: "최신 데이터로 다시 조회합니다." },
+  { key: "score", hint: "종목의 종합 신호 점수입니다." },
+  { key: "신뢰도", hint: "현재 분석 결과의 신뢰 수준입니다." },
 ];
+
+function cleanHint(value: string): string {
+  return value.replace(/�/g, "").replace(/\s+/g, " ").trim();
+}
+
+function compactText(value: string, max = 42): string {
+  const cleaned = cleanHint(value);
+  if (cleaned.length <= max) return cleaned;
+  return `${cleaned.slice(0, max - 1)}…`;
+}
+
+function nearestContextText(el: Element): string {
+  const candidates = [
+    el.closest("button"),
+    el.closest("a"),
+    el.closest("article"),
+    el.closest("section"),
+    el.closest("[class*='panel']"),
+    el.parentElement,
+  ].filter(Boolean) as Element[];
+
+  for (const node of candidates) {
+    const text = compactText(node.textContent || "");
+    if (text && text.length >= 2) return text;
+  }
+  return "";
+}
+
+function buildIconHint(iconKey: string, context: string): string {
+  const base = cleanHint(ICON_HINTS[iconKey] || "관련 기능 아이콘");
+  if (!context) return base;
+  return `${base} · ${context}`;
+}
 
 function applyIconHints(root: ParentNode) {
   const icons = root.querySelectorAll<SVGElement>("svg.lucide");
@@ -48,11 +87,12 @@ function applyIconHints(root: ParentNode) {
     const classes = Array.from(icon.classList);
     const iconClass = classes.find((cls) => cls.startsWith("lucide-"));
     const key = iconClass ? iconClass.replace("lucide-", "") : "";
-    const hint = ICON_HINTS[key];
+    const context = nearestContextText(icon);
+    const hint = buildIconHint(key, context);
     if (hint) {
-      icon.setAttribute("title", hint);
+      icon.setAttribute("title", cleanHint(hint));
       if (!icon.getAttribute("aria-label")) {
-        icon.setAttribute("aria-label", hint);
+        icon.setAttribute("aria-label", cleanHint(hint));
       }
     }
     icon.setAttribute("data-hover-bound", "1");
@@ -75,7 +115,9 @@ function applyKeywordHints(root: ParentNode) {
     const lowered = text.toLowerCase();
     const hit = KEYWORD_HINTS.find((item) => lowered.includes(item.key.toLowerCase()));
     if (hit) {
-      node.setAttribute("title", hit.hint);
+      const context = compactText(text);
+      const message = cleanHint(`${hit.hint} · ${context}`);
+      node.setAttribute("title", message);
     }
     node.setAttribute("data-hover-keyword-bound", "1");
   });
@@ -115,4 +157,3 @@ export function GlobalHoverHints() {
 
   return null;
 }
-
