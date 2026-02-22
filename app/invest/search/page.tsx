@@ -35,21 +35,21 @@ type AnalysisResult = {
 };
 
 export default function InvestSearchPage() {
-  const [ticker, setTicker] = useState("");
+  const [query, setQuery] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ticker.trim()) return;
+    if (!query.trim()) return;
 
     setLoading(true);
     setError(null);
     setResult(null);
 
     try {
-      const res = await fetch(`/api/invest/analyze?ticker=${encodeURIComponent(ticker)}`);
+      const res = await fetch(`/api/invest/analyze?q=${encodeURIComponent(query)}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -81,15 +81,15 @@ export default function InvestSearchPage() {
     <InvestLayout
       currentTab="search"
       title="Investment Search"
-      description="실시간으로 개별 종목을 분석하고 진단합니다."
+      description="티커 없이 기업명(한글/영문)으로 검색해 실시간 분석합니다."
     >
       <div className="mx-auto max-w-2xl">
         <form onSubmit={handleSearch} className="mb-8 flex gap-2">
           <input
             type="text"
-            value={ticker}
-            onChange={(e) => setTicker(e.target.value)}
-            placeholder="Enter Ticker (e.g., AAPL, 005930.KS)"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="기업명 또는 티커 (예: 삼성전자, Apple, AAPL)"
             className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none"
           />
           <button
@@ -112,13 +112,13 @@ export default function InvestSearchPage() {
             <InvestCard>
               <div className="flex items-start justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">
+                  <h2
+                    className="text-2xl font-bold text-white"
+                    title={`티커: ${result.ticker}\n종목: ${result.name}`}
+                  >
                     {result.name.includes(`(${result.ticker})`) 
                         ? result.name.replace(`(${result.ticker})`, "").trim() 
                         : result.name}
-                    <span className="ml-2 text-lg text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded-full border border-zinc-700">
-                        {result.ticker}
-                    </span>
                   </h2>
                   <div className="mt-1 flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-white">

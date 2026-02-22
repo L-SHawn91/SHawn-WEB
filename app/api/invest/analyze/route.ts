@@ -49,6 +49,25 @@ type AnalyzePayload = {
   };
 };
 
+type SearchResolved = {
+  ticker: string;
+  displayName?: string;
+};
+
+const QUERY_ALIAS_MAP: Record<string, SearchResolved> = {
+  "삼성전자": { ticker: "005930.KS", displayName: "삼성전자" },
+  "삼성전자우": { ticker: "005935.KS", displayName: "삼성전자우" },
+  "sk하이닉스": { ticker: "000660.KS", displayName: "SK하이닉스" },
+  "애플": { ticker: "AAPL", displayName: "Apple Inc." },
+  "apple": { ticker: "AAPL", displayName: "Apple Inc." },
+  "tesla": { ticker: "TSLA", displayName: "Tesla, Inc." },
+  "테슬라": { ticker: "TSLA", displayName: "Tesla, Inc." },
+  "nvidia": { ticker: "NVDA", displayName: "NVIDIA Corporation" },
+  "엔비디아": { ticker: "NVDA", displayName: "NVIDIA Corporation" },
+  "microsoft": { ticker: "MSFT", displayName: "Microsoft Corporation" },
+  "마이크로소프트": { ticker: "MSFT", displayName: "Microsoft Corporation" },
+};
+
 function clamp(value: number, min = 0, max = 100) {
   return Math.max(min, Math.min(max, value));
 }
@@ -74,6 +93,20 @@ function verdict(score: number) {
   return "Neutral/Watch";
 }
 
+function normalizeTickerInput(value: string): string {
+  return String(value || "").trim().toUpperCase();
+}
+
+function looksLikeTicker(value: string): boolean {
+  const raw = String(value || "").trim();
+  const v = normalizeTickerInput(raw);
+  if (!v) return false;
+  const isExplicitTickerCase = raw === raw.toUpperCase();
+  if (/^\d{6}\.(KS|KQ)$/.test(v)) return true;
+  if (/^[A-Z][A-Z0-9.\-^]{0,14}$/.test(v) && isExplicitTickerCase) return true;
+  return false;
+}
+
 async function fetchJson(url: string) {
   const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) throw new Error(`fetch failed: ${response.status}`);
@@ -85,6 +118,75 @@ async function fetchText(url: string, encoding: string = "utf-8") {
   if (!response.ok) throw new Error(`fetch failed: ${response.status}`);
   const bytes = await response.arrayBuffer();
   return new TextDecoder(encoding).decode(bytes);
+}
+
+function scoreSearchMatch(input: string, itemName: string, code: string): number {
+  const q = input.trim().toLowerCase();
+  const n = itemName.trim().toLowerCase();
+  const c = code.trim().toLowerCase();
+  if (!q) return 0;
+  if (n === q || c === q) return 100;
+  if (n.startsWith(q)) return 85;
+  if (n.includes(q)) return 70;
+  if (c.startsWith(q)) return 60;
+  return 10;
+}
+
+async function resolveTickerFromQuery(rawQuery: string): Promise<SearchResolved> {
+  const query = String(rawQuery || "").trim();
+  if (!query) throw new Error("Ticker or company name is required");
+
+  const alias = QUERY_ALIAS_MAP[query.toLowerCase()];
+  if (alias) return alias;
+
+  if (looksLikeTicker(query)) {
+    return { ticker: normalizeTickerInput(query) };
+  }
+
+  const url =
+    `https://m.stock.naver.com/front-api/search?target=stock&size=20&page=1&q=${encodeURIComponent(query)}`;
+  const data = await fetchJson(url);
+  const items: any[] = Array.isArray(data?.result?.items) ? data.result.items : [];
+  if (!items.length) throw new Error(`No matched ticker for query: ${query}`);
+
+  const ranked = items
+    .map((item) => {
+      const code = String(item?.code || "").trim().toUpperCase();
+      const name = String(item?.name || "").trim();
+      const nation = String(item?.nationCode || "").trim().toUpperCase();
+      const typeCode = String(item?.typeCode || "").trim().toUpperCase();
+      let ticker = code;
+      if (nation === "KOR" && /^\d{6}$/.test(code)) {
+        ticker = `${code}.${typeCode === "KOSDAQ" ? "KQ" : "KS"}`;
+      }
+      const baseScore = scoreSearchMatch(query, name, code);
+      const nationBoost = nation === "KOR" || nation === "USA" ? 8 : 0;
+      return {
+        ticker,
+        displayName: name || ticker,
+        score: baseScore + nationBoost,
+      };
+    })
+    .filter((row) => row.ticker)
+    .sort((a, b) => b.score - a.score);
+
+  if (!ranked.length) throw new Error(`No valid ticker resolved for query: ${query}`);
+  return {
+    ticker: ranked[0].ticker,
+    displayName: ranked[0].displayName,
+  };
+}
+
+function applyPreferredName(payload: AnalyzePayload, preferredName?: string): AnalyzePayload {
+  const ticker = String(payload?.ticker || "").trim();
+  if (!ticker) return payload;
+  const rawName = String(payload?.name || "").trim();
+  const safePreferred = String(preferredName || "").trim();
+  const nameLooksBroken = !rawName || rawName === ticker || rawName.includes("�");
+  if (safePreferred && nameLooksBroken) {
+    return { ...payload, name: `${safePreferred} (${ticker})` };
+  }
+  return payload;
 }
 
 async function callRemoteAnalyzerData(endpoint: string, ticker: string): Promise<AnalyzePayload> {
@@ -361,19 +463,29 @@ async function buildNaverKrFallback(ticker: string): Promise<AnalyzePayload | nu
 }
 
 export async function GET(request: NextRequest) {
-  const ticker = request.nextUrl.searchParams.get("ticker");
-  if (!ticker) {
-    return NextResponse.json({ error: "Ticker parameter is required" }, { status: 400 });
+  const query = request.nextUrl.searchParams.get("q") || request.nextUrl.searchParams.get("ticker");
+  if (!query) {
+    return NextResponse.json({ error: "Ticker or company name parameter is required" }, { status: 400 });
   }
 
-  const safeTicker = ticker.replace(/[^a-zA-Z0-9.\-^]/g, "").toUpperCase();
+  let resolved: SearchResolved;
+  try {
+    resolved = await resolveTickerFromQuery(query);
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Failed to resolve company name", details: error?.message || "unknown" },
+      { status: 404 }
+    );
+  }
+
+  const safeTicker = resolved.ticker.replace(/[^a-zA-Z0-9.\-^]/g, "").toUpperCase();
   const errors: string[] = [];
 
   try {
     const endpoint = process.env.INV_ANALYZE_ENDPOINT?.trim();
     if (endpoint) {
       const payload = await callRemoteAnalyzerData(endpoint, safeTicker);
-      return NextResponse.json(payload);
+      return NextResponse.json(applyPreferredName(payload, resolved.displayName));
     }
   } catch (error: any) {
     errors.push(`remote: ${error?.message || "failed"}`);
@@ -381,28 +493,28 @@ export async function GET(request: NextRequest) {
 
   try {
     const localPayload = await callLocalAnalyzerData(safeTicker);
-    if (localPayload) return NextResponse.json(localPayload);
+    if (localPayload) return NextResponse.json(applyPreferredName(localPayload, resolved.displayName));
   } catch (error: any) {
     errors.push(`local: ${error?.message || "failed"}`);
   }
 
   try {
     const fallback = await buildYahooFallback(safeTicker);
-    if (fallback) return NextResponse.json(fallback);
+    if (fallback) return NextResponse.json(applyPreferredName(fallback, resolved.displayName));
   } catch (error: any) {
     errors.push(`yahoo: ${error?.message || "failed"}`);
   }
 
   try {
     const stooq = await buildStooqFallback(safeTicker);
-    if (stooq) return NextResponse.json(stooq);
+    if (stooq) return NextResponse.json(applyPreferredName(stooq, resolved.displayName));
   } catch (error: any) {
     errors.push(`stooq: ${error?.message || "failed"}`);
   }
 
   try {
     const naver = await buildNaverKrFallback(safeTicker);
-    if (naver) return NextResponse.json(naver);
+    if (naver) return NextResponse.json(applyPreferredName(naver, resolved.displayName));
   } catch (error: any) {
     errors.push(`naver: ${error?.message || "failed"}`);
   }

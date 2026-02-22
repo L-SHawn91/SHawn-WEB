@@ -132,7 +132,18 @@ function displayInstrument(ticker?: string, name?: string): string {
     const resolvedName = String(name || "").trim() || resolveNameByTicker(ticker);
     if (!normalizedTicker) return resolvedName || "N/A";
     if (!resolvedName) return normalizedTicker;
-    return `${normalizedTicker} · ${resolvedName}`;
+    const tickerToken = `(${normalizedTicker})`;
+    const stripped = resolvedName.includes(tickerToken)
+        ? resolvedName.replace(tickerToken, "").trim()
+        : resolvedName;
+    return stripped || normalizedTicker;
+}
+
+function instrumentTooltip(ticker?: string, name?: string): string {
+    const normalizedTicker = String(ticker || "").trim();
+    const resolvedName = String(name || "").trim() || resolveNameByTicker(ticker) || normalizedTicker || "N/A";
+    if (!normalizedTicker) return `종목: ${resolvedName}`;
+    return `티커: ${normalizedTicker}\n종목: ${resolvedName}`;
 }
 
 function buildTrendSeries(report: StockReport): { points: number[]; dates: string[] } {
@@ -287,6 +298,8 @@ function ReportItem({ report, onClick, isWatchList = false }: { report: StockRep
     const currency = isKr ? '₩' : '$';
     const priceStr = report.price_info.current.toLocaleString();
     const changeColor = report.price_info.change_pct >= 0 ? 'text-red-400' : 'text-blue-400'; // KR Standard: Red is up
+    const instrumentLabel = displayInstrument(report.ticker, report.name);
+    const instrumentTitle = instrumentTooltip(report.ticker, report.name);
     // Note: US Standard is Green up, modify logic if needed based on `report.meta.market` prop if available
 
     return (
@@ -299,7 +312,7 @@ function ReportItem({ report, onClick, isWatchList = false }: { report: StockRep
                 <div>
                     <div className="flex items-center gap-2">
                         <span className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
-                            {displayInstrument(report.ticker, report.name)}
+                            <span title={instrumentTitle}>{instrumentLabel}</span>
                         </span>
                         {report.badges.includes("S-Tier Alpha") && <Badge className="bg-yellow-500 text-black hover:bg-yellow-600">S-TIER</Badge>}
                         {report.badges.includes("Whale Entry") && <Badge className="bg-blue-500 hover:bg-blue-600">WHALE</Badge>}
@@ -357,7 +370,9 @@ function DetailModalContent({ report }: { report: StockReport }) {
         <div className="space-y-6">
             <DialogHeader>
                 <DialogTitle className="text-2xl flex items-center gap-3">
-                    {displayInstrument(report.ticker, report.name)}
+                    <span title={instrumentTooltip(report.ticker, report.name)}>
+                        {displayInstrument(report.ticker, report.name)}
+                    </span>
                 </DialogTitle>
                 <DialogDescription className="text-gray-400">
                     Sector: {report.sector}

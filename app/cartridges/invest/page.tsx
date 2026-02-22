@@ -352,9 +352,17 @@ export default function InvestmentWorld() {
     return "전체";
   };
 
-  const renderInstrument = (symbol: string, name?: string) => {
-    if (!name) return symbol;
-    return `${symbol} · ${name}`;
+  const renderInstrumentLabel = (symbol: string, name?: string) => {
+    const rawName = String(name || "").trim();
+    const token = `(${symbol})`;
+    if (!rawName) return symbol;
+    if (rawName.includes(token)) return rawName.replace(token, "").trim() || symbol;
+    return rawName;
+  };
+
+  const renderInstrumentTooltip = (symbol: string, name?: string) => {
+    const rawName = String(name || "").trim() || symbol;
+    return `티커: ${symbol}\n종목: ${rawName}`;
   };
 
   return (
@@ -540,7 +548,9 @@ export default function InvestmentWorld() {
                   <div key={h.symbol} className="space-y-1">
                     <div className="flex justify-between text-sm text-gray-200">
                       <div className="flex items-center gap-2">
-                        <span>{renderInstrument(h.symbol, h.name)}</span>
+                        <span title={renderInstrumentTooltip(h.symbol, h.name)}>
+                          {renderInstrumentLabel(h.symbol, h.name)}
+                        </span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded border ${riskText[h.risk]}`}>{h.risk}</span>
                       </div>
                       <span className="text-xs text-gray-400">β {h.beta.toFixed(2)} / PnL {h.pnl.toFixed(1)}%</span>
@@ -571,7 +581,9 @@ export default function InvestmentWorld() {
                 {(snapshot?.rebalanceSuggestions || []).map((sugg) => (
                   <div key={`${sugg.symbol}-${sugg.action}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                     <div className="flex justify-between items-center gap-2">
-                      <p className="font-semibold text-white">{renderInstrument(sugg.symbol, sugg.name)}</p>
+                      <p className="font-semibold text-white" title={renderInstrumentTooltip(sugg.symbol, sugg.name)}>
+                        {renderInstrumentLabel(sugg.symbol, sugg.name)}
+                      </p>
                       <span className={`text-[11px] px-2 py-0.5 rounded border ${suggestionBadge[sugg.action]}`}>
                         {sugg.action === "up" ? "증가" : sugg.action === "down" ? "감소" : "보유"}
                       </span>
@@ -590,7 +602,9 @@ export default function InvestmentWorld() {
                   {(simulation.changes.length > 0 ? simulation.changes : []).map((change) => (
                     <div key={`${change.symbol}-${change.direction}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                       <div className="flex justify-between items-center gap-2">
-                        <span className="font-semibold text-white">{renderInstrument(change.symbol, change.name)}</span>
+                        <span className="font-semibold text-white" title={renderInstrumentTooltip(change.symbol, change.name)}>
+                          {renderInstrumentLabel(change.symbol, change.name)}
+                        </span>
                         <span
                           className={`text-[11px] px-2 py-0.5 rounded border ${
                             change.direction === "up"
@@ -652,7 +666,9 @@ export default function InvestmentWorld() {
               {watchItems.map((item) => (
                 <div key={`${item.symbol}-${item.region}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="font-semibold text-white">{renderInstrument(item.symbol, item.name)}</span>
+                    <span className="font-semibold text-white" title={renderInstrumentTooltip(item.symbol, item.name)}>
+                      {renderInstrumentLabel(item.symbol, item.name)}
+                    </span>
                     <span className={`text-[11px] px-2 py-0.5 rounded border ${signalBadge[item.signal]}`}>{item.signal}</span>
                   </div>
                   <p className="text-sm text-gray-300 mt-1">{item.reason}</p>
