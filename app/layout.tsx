@@ -7,6 +7,7 @@ import { AdSense } from "@/components/ads/adsense";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/providers/language-provider";
 import { ShawnChatUI } from "@/components/marketing/shawn-chat-ui";
+import { Header } from "@/components/ui/header";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
@@ -50,6 +51,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>
+            <Header />
             {children}
             <ShawnChatUI />
             <Analytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""} />

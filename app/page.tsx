@@ -1,4 +1,3 @@
-import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import Link from "next/link";
 
@@ -53,8 +52,6 @@ const laneLinks = [
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-black text-white overflow-x-hidden">
-      <Header />
-
       <main className="flex-1">
         <section className="relative">
           <div className="absolute inset-0 pointer-events-none opacity-30">
