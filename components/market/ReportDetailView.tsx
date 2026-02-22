@@ -75,6 +75,7 @@ export interface StockReport {
     price_trend?: {
         period?: string;
         points?: number[];
+        dates?: string[];
         start?: number;
         end?: number;
     } | null;
@@ -134,16 +135,14 @@ function displayInstrument(ticker?: string, name?: string): string {
     return `${normalizedTicker} · ${resolvedName}`;
 }
 
-function buildTrendSeries(report: StockReport): number[] {
+function buildTrendSeries(report: StockReport): { points: number[]; dates: string[] } {
     const raw = report.price_trend?.points?.filter((v) => Number.isFinite(v)) || [];
-    if (raw.length >= 2) return raw as number[];
+    const dates = Array.isArray(report.price_trend?.dates) ? report.price_trend?.dates || [] : [];
+    if (raw.length >= 3 && dates.length === raw.length) {
+        return { points: raw as number[], dates: dates.map((d) => String(d)) };
+    }
 
-    const current = Number(report.price_info?.current || 0);
-    const changePct = Number(report.price_info?.change_pct || 0);
-    if (!Number.isFinite(current) || current <= 0) return [];
-    const prev = current / (1 + changePct / 100);
-    const mid = (prev + current) / 2;
-    return [prev, mid, current];
+    return { points: [], dates: [] };
 }
 
 function renderSparklinePath(values: number[], width = 560, height = 180): string {
@@ -339,8 +338,10 @@ function ReportItem({ report, onClick, isWatchList = false }: { report: StockRep
 function DetailModalContent({ report }: { report: StockReport }) {
     const isKr = report.price_info.currency === 'KRW';
     const currency = isKr ? '₩' : '$';
-    const trendValues = buildTrendSeries(report);
+    const trendSeries = buildTrendSeries(report);
+    const trendValues = trendSeries.points;
     const trendPath = renderSparklinePath(trendValues);
+    const trendDates = trendSeries.dates;
     const startValue = trendValues.length ? trendValues[0] : null;
     const endValue = trendValues.length ? trendValues[trendValues.length - 1] : null;
     const trendDeltaPct = startValue && endValue ? ((endValue - startValue) / startValue) * 100 : null;
@@ -397,11 +398,17 @@ function DetailModalContent({ report }: { report: StockReport }) {
                         <path d={trendPath} fill="none" stroke="url(#trendStroke)" strokeWidth="3" strokeLinecap="round" />
                     </svg>
                 ) : (
-                    <div className="text-sm text-gray-400 py-6">추이 데이터가 아직 수집되지 않았습니다.</div>
+                    <div className="text-sm text-gray-400 py-6">실제 일별 종가 데이터가 없어 표시할 수 없습니다. (추정치 미사용)</div>
                 )}
                 <div className="mt-2 flex justify-between text-xs text-gray-400">
-                    <span>Start: {startValue ? `${currency}${startValue.toLocaleString()}` : "N/A"}</span>
-                    <span>End: {endValue ? `${currency}${endValue.toLocaleString()}` : "N/A"}</span>
+                    <span>
+                        Start: {startValue ? `${currency}${startValue.toLocaleString()}` : "N/A"}
+                        {trendDates.length ? ` · ${trendDates[0]}` : ""}
+                    </span>
+                    <span>
+                        End: {endValue ? `${currency}${endValue.toLocaleString()}` : "N/A"}
+                        {trendDates.length ? ` · ${trendDates[trendDates.length - 1]}` : ""}
+                    </span>
                 </div>
             </div>
 
