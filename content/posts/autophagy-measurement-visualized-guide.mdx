@@ -1,7 +1,7 @@
 ---
 title: "Autophagy는 어떻게 측정할까: 원리·해석 함정·ImageJ 정량·시각화"
 date: "2026-02-23"
-description: "Autophagy 측정법을 flux 중심으로 정리하고, ImageJ 정량 루틴과 CC BY 논문 Figure를 포함해 실험 설계 관점에서 정리한 가이드."
+description: "Autophagy 측정법을 flux 중심으로 정리하고, ImageJ 정량 루틴과 참고용 AI 시각화를 포함해 실험 설계 관점에서 정리한 가이드."
 category: "bio-science"
 tags:
   - "Autophagy"
@@ -30,23 +30,26 @@ Autophagy는 정적인 양이 아니라 **동적인 흐름(autophagic flux)** �
 
 ---
 
-## 🖼️ 먼저 보는 핵심 개념 Figure (논문 원본)
+## 🖼️ 먼저 보는 핵심 개념 Figure (참고용 AI 시각화)
 
 ### Figure A. 오토파지 단계 개념도 (형성→성숙→융합→분해)
 
-![Autophagy process schematic (Figure 1)](https://www.mdpi.com/ijms/ijms-18-01865/article_deploy/html/images/ijms-18-01865-g001.png)
+![AI reference image - autophagy process schematic](/images/blog/autophagy/ai-autophagy-process-schematic.svg)
 
-출처: Yoshii SR, Mizushima N. *Monitoring and Measuring Autophagy*. Int J Mol Sci. 2017;18(9):1865. Figure 1.  
-라이선스: CC BY 4.0.  
-논문: [https://doi.org/10.3390/ijms18091865](https://doi.org/10.3390/ijms18091865)
+이미지 표기: **참고용 AI 생성 이미지 (NanoBanana/OpenAI). 실제 실험 데이터가 아님.**
 
 ### Figure B. LC3/p62 기반 Flux 해석 프레임 (±Bafilomycin A1)
 
-![Autophagic flux interpretation (Figure 2)](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/b49d/5618514/a87a421a3099/ijms-18-01865-g002.jpg)
+![AI reference image - LC3 p62 flux interpretation](/images/blog/autophagy/ai-lc3-p62-flux-interpretation.svg)
 
-출처: Yoshii SR, Mizushima N. *Monitoring and Measuring Autophagy*. Int J Mol Sci. 2017;18(9):1865. Figure 2.  
-라이선스: CC BY 4.0.  
-논문: [https://doi.org/10.3390/ijms18091865](https://doi.org/10.3390/ijms18091865)
+이미지 표기: **참고용 AI 생성 이미지 (NanoBanana/OpenAI). 실제 실험 데이터가 아님.**
+
+### AI 이미지 생성 프롬프트 예시 (재사용용)
+
+- Figure A prompt:
+  - `Create a scientific schematic of autophagy in mammalian cells: initiation, phagophore elongation, autophagosome formation, autolysosome fusion, and degradation. Flat biomedical illustration style, white background, clean labels, publication-ready layout, no brand watermark. Add a footer label: "AI-generated reference illustration, not actual experimental data."`
+- Figure B prompt:
+  - `Create a conceptual figure for LC3/p62 autophagic flux interpretation with two conditions: control vs bafilomycin A1. Show LC3-II accumulation logic and p62 direction. Include arrows for increased formation vs blocked degradation. Scientific infographic style, neutral colors, high readability, and footer text: "AI-generated reference illustration, not actual experimental data."`
 
 ---
 
