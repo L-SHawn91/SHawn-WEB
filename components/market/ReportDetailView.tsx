@@ -65,13 +65,19 @@ export interface StockReport {
         signal: string;
         score: number;
         details: string[];
-    };
+    } | null;
     long_term: {
         signal: string;
         score: number;
         details: string[];
-    };
+    } | null;
     badges: string[];
+    price_trend?: {
+        period?: string;
+        points?: number[];
+        start?: number;
+        end?: number;
+    } | null;
 }
 
 export interface FullJsonReport {
@@ -126,6 +132,33 @@ function displayInstrument(ticker?: string, name?: string): string {
     if (!normalizedTicker) return resolvedName || "N/A";
     if (!resolvedName) return normalizedTicker;
     return `${normalizedTicker} · ${resolvedName}`;
+}
+
+function buildTrendSeries(report: StockReport): number[] {
+    const raw = report.price_trend?.points?.filter((v) => Number.isFinite(v)) || [];
+    if (raw.length >= 2) return raw as number[];
+
+    const current = Number(report.price_info?.current || 0);
+    const changePct = Number(report.price_info?.change_pct || 0);
+    if (!Number.isFinite(current) || current <= 0) return [];
+    const prev = current / (1 + changePct / 100);
+    const mid = (prev + current) / 2;
+    return [prev, mid, current];
+}
+
+function renderSparklinePath(values: number[], width = 560, height = 180): string {
+    if (values.length < 2) return "";
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const range = Math.max(max - min, 1e-6);
+
+    return values
+        .map((v, i) => {
+            const x = (i / (values.length - 1)) * width;
+            const y = height - ((v - min) / range) * height;
+            return `${i === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
+        })
+        .join(" ");
 }
 
 export function ReportDetailView({ data, loading, onDateSelect }: ReportDetailViewProps) {
@@ -306,6 +339,18 @@ function ReportItem({ report, onClick, isWatchList = false }: { report: StockRep
 function DetailModalContent({ report }: { report: StockReport }) {
     const isKr = report.price_info.currency === 'KRW';
     const currency = isKr ? '₩' : '$';
+    const trendValues = buildTrendSeries(report);
+    const trendPath = renderSparklinePath(trendValues);
+    const startValue = trendValues.length ? trendValues[0] : null;
+    const endValue = trendValues.length ? trendValues[trendValues.length - 1] : null;
+    const trendDeltaPct = startValue && endValue ? ((endValue - startValue) / startValue) * 100 : null;
+    const trendPositive = (trendDeltaPct ?? 0) >= 0;
+    const diagnosisPrimary = typeof report.enhanced_diagnosis === "string"
+        ? report.enhanced_diagnosis
+        : report.enhanced_diagnosis?.primary || "분석 데이터 준비 중";
+    const shortDetails = report.short_term?.details || [];
+    const longDetails = report.long_term?.details || [];
+    const detailNarrative = report.future_value?.rationale || "미래 가치 설명 데이터 준비 중";
 
     return (
         <div className="space-y-6">
@@ -332,6 +377,42 @@ function DetailModalContent({ report }: { report: StockReport }) {
                 </div>
             </div>
 
+            <div className="bg-[#1e1e1e] p-4 rounded-xl border border-gray-700">
+                <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold flex items-center gap-2">
+                        <BarChart2 size={16} /> 주가 변화 추이
+                    </h3>
+                    <span className={`text-sm font-semibold ${trendPositive ? "text-emerald-400" : "text-rose-400"}`}>
+                        {trendDeltaPct !== null ? `${trendDeltaPct >= 0 ? "+" : ""}${trendDeltaPct.toFixed(2)}%` : "N/A"}
+                    </span>
+                </div>
+                {trendPath ? (
+                    <svg viewBox="0 0 560 180" className="w-full h-36 rounded bg-[#141414] border border-gray-800">
+                        <defs>
+                            <linearGradient id="trendStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor={trendPositive ? "#22c55e" : "#fb7185"} />
+                                <stop offset="100%" stopColor={trendPositive ? "#34d399" : "#f43f5e"} />
+                            </linearGradient>
+                        </defs>
+                        <path d={trendPath} fill="none" stroke="url(#trendStroke)" strokeWidth="3" strokeLinecap="round" />
+                    </svg>
+                ) : (
+                    <div className="text-sm text-gray-400 py-6">추이 데이터가 아직 수집되지 않았습니다.</div>
+                )}
+                <div className="mt-2 flex justify-between text-xs text-gray-400">
+                    <span>Start: {startValue ? `${currency}${startValue.toLocaleString()}` : "N/A"}</span>
+                    <span>End: {endValue ? `${currency}${endValue.toLocaleString()}` : "N/A"}</span>
+                </div>
+            </div>
+
+            <div className="bg-[#1e1e1e] p-4 rounded-xl border border-gray-700 space-y-3">
+                <h3 className="font-semibold flex items-center gap-2">
+                    <AlertCircle size={16} /> 상세 설명
+                </h3>
+                <p className="text-sm text-gray-300 leading-relaxed">{diagnosisPrimary}</p>
+                <p className="text-sm text-gray-400 leading-relaxed">{detailNarrative}</p>
+            </div>
+
             {/* Neural Diagnosis (Layers) */}
             <div className="space-y-3">
                 <h3 className="font-semibold flex items-center gap-2">
@@ -339,7 +420,7 @@ function DetailModalContent({ report }: { report: StockReport }) {
                 </h3>
                 <div className="space-y-2">
                     {typeof report.enhanced_diagnosis === 'object' ? (
-                        report.enhanced_diagnosis.layers.map((layer, idx) => (
+                        (report.enhanced_diagnosis.layers || []).map((layer, idx) => (
                             <div key={idx} className="bg-[#1e1e1e] p-3 rounded-lg border-l-2" style={{ borderLeftColor: layer.color }}>
                                 <div className="font-semibold text-sm mb-1" style={{ color: layer.color }}>{layer.diagnosis}</div>
                                 <div className="text-xs text-gray-400">{layer.detail}</div>
@@ -355,17 +436,23 @@ function DetailModalContent({ report }: { report: StockReport }) {
                 <div className="space-y-2">
                     <h4 className="text-xs font-bold text-gray-500">SHORT TERM Factors</h4>
                     <div className="flex flex-wrap gap-2">
-                        {report.short_term.details.map((d, i) => (
+                        {shortDetails.map((d, i) => (
                             <Badge key={i} variant="outline" className="text-xs border-gray-600">{d}</Badge>
                         ))}
+                        {shortDetails.length === 0 && (
+                            <span className="text-xs text-gray-500">단기 팩터 데이터 준비 중</span>
+                        )}
                     </div>
                 </div>
                 <div className="space-y-2">
                     <h4 className="text-xs font-bold text-gray-500">LONG TERM Factors</h4>
                     <div className="flex flex-wrap gap-2">
-                        {report.long_term.details.map((d, i) => (
+                        {longDetails.map((d, i) => (
                             <Badge key={i} variant="outline" className="text-xs border-gray-600 bg-gray-800">{d}</Badge>
                         ))}
+                        {longDetails.length === 0 && (
+                            <span className="text-xs text-gray-500">장기 팩터 데이터 준비 중</span>
+                        )}
                     </div>
                 </div>
             </div>
