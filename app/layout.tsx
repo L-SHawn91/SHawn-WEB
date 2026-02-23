@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/providers/language-provider";
 import { ShawnChatUI } from "@/components/marketing/shawn-chat-ui";
 import { Header } from "@/components/ui/header";
+import { SuppressTitleTooltips } from "@/components/ui/suppress-title-tooltips";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
@@ -51,6 +52,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>
+            <SuppressTitleTooltips />
             <Header />
             {children}
             <ShawnChatUI />
