@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, FileText, ExternalLink, RefreshCw, TrendingUp, Globe, AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -21,7 +21,7 @@ type ReportData = {
   US: ReportRequest[];
 };
 
-export default function MarketIntelligencePage() {
+function MarketIntelligenceContent() {
   const searchParams = useSearchParams();
   const [indexData, setIndexData] = useState<ReportData>({ KR: [], US: [] });
   const [activeTab, setActiveTab] = useState<"KR" | "US">("KR");
@@ -282,5 +282,19 @@ export default function MarketIntelligencePage() {
         </div>
       </div>
     </InvestLayout>
+  );
+}
+
+export default function MarketIntelligencePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black text-white">
+          <div className="mx-auto max-w-7xl px-6 py-16 text-sm text-gray-400">Loading market intelligence...</div>
+        </div>
+      }
+    >
+      <MarketIntelligenceContent />
+    </Suspense>
   );
 }

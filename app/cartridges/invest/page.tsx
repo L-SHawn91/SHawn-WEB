@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
 import {
   InvestQuoteKpiCards,
@@ -260,7 +260,7 @@ function formatScore(score: number) {
   return "text-rose-300";
 }
 
-export default function InvestmentWorld() {
+function InvestmentWorldContent() {
   const searchParams = useSearchParams();
   const [strategy, setStrategy] = useState<StrategyMode>("balanced");
   const [marketFocus, setMarketFocus] = useState<string>("all");
@@ -855,5 +855,19 @@ export default function InvestmentWorld() {
         </section>
       </>
     </InvestLayout>
+  );
+}
+
+export default function InvestmentWorld() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black text-white">
+          <div className="mx-auto max-w-7xl px-6 py-16 text-sm text-gray-400">Loading investment dashboard...</div>
+        </div>
+      }
+    >
+      <InvestmentWorldContent />
+    </Suspense>
   );
 }
