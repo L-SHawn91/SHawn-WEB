@@ -17,13 +17,16 @@ const targets = changedFiles().filter((file) => {
   return file.startsWith("app/");
 });
 
-if (!targets.length) {
-  console.log("[i18n-check] no changed app pages.");
-  process.exit(0);
-}
+const alwaysRequired = [
+  "app/invest/page.tsx",
+  "app/market-intelligence/page.tsx",
+  "app/market-intelligence/archive/page.tsx",
+  "app/cartridges/invest/page.tsx",
+];
 
 const violations = [];
-for (const file of targets) {
+for (const file of [...new Set([...targets, ...alwaysRequired])]) {
+  if (!fs.existsSync(file)) continue;
   const src = fs.readFileSync(file, "utf8");
   const hasI18nHook = src.includes("useLanguage(") || src.includes("translations[") || src.includes("useI18n(");
   const exempt = src.includes("i18n-exempt");
@@ -41,4 +44,8 @@ if (violations.length) {
   process.exit(1);
 }
 
-console.log("[i18n-check] passed.");
+if (!targets.length) {
+  console.log("[i18n-check] no changed app pages; verified investment/report critical pages.");
+} else {
+  console.log("[i18n-check] passed.");
+}

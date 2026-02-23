@@ -453,11 +453,6 @@ function InvestmentWorldContent() {
     return rawName;
   };
 
-  const renderInstrumentTooltip = (symbol: string, name?: string) => {
-    const rawName = String(name || "").trim() || symbol;
-    return isKo ? `티커: ${symbol}\n종목: ${rawName}` : `Ticker: ${symbol}\nName: ${rawName}`;
-  };
-
   return (
     <InvestLayout
       currentTab="dashboard"
@@ -470,29 +465,13 @@ function InvestmentWorldContent() {
             {tr("통합 운영은 ", "Start from ")}<Link href="/invest" className="underline font-semibold">Investment Command Center</Link>{tr("에서 시작하고, 이 페이지는 시그널/리밸런싱 상세 점검에 사용하세요.", ", then use this page for deep signal/rebalancing checks.")}
           </div>
           <div className="mt-4 rounded-2xl border border-sky-500/30 bg-sky-500/10 p-5">
-            <p className="text-sm font-semibold text-sky-200">{tr("처음 보는 분을 위한 대시보드 읽는 순서", "Recommended dashboard reading order")}</p>
-            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4">
-              <div className="rounded-lg border border-white/15 bg-black/20 p-3">
-                <p className="text-xs text-gray-400">1단계</p>
-                <p className="text-sm font-semibold text-white mt-1">신호 점수 확인</p>
-                <p className="text-xs text-gray-300 mt-1">`Buy/Hold/Trim` 기준으로 현재 구간을 먼저 파악합니다.</p>
-              </div>
-              <div className="rounded-lg border border-white/15 bg-black/20 p-3">
-                <p className="text-xs text-gray-400">2단계</p>
-                <p className="text-sm font-semibold text-white mt-1">모듈 원인 확인</p>
-                <p className="text-xs text-gray-300 mt-1">Expert/Whale/Macro/News 중 어떤 항목이 점수를 움직였는지 확인합니다.</p>
-              </div>
-              <div className="rounded-lg border border-white/15 bg-black/20 p-3">
-                <p className="text-xs text-gray-400">3단계</p>
-                <p className="text-sm font-semibold text-white mt-1">Watchlist 근거 확인</p>
-                <p className="text-xs text-gray-300 mt-1">종목별 이유와 촉매(catalyst)를 보고 우선순위를 정합니다.</p>
-              </div>
-              <div className="rounded-lg border border-white/15 bg-black/20 p-3">
-                <p className="text-xs text-gray-400">4단계</p>
-                <p className="text-sm font-semibold text-white mt-1">리밸런싱 시뮬레이션</p>
-                <p className="text-xs text-gray-300 mt-1">실제 매매 전 비중 변화와 위험도 변화를 먼저 가상으로 확인합니다.</p>
-              </div>
-            </div>
+            <p className="text-sm font-semibold text-sky-200">{tr("핵심 확인 순서", "Quick check order")}</p>
+            <p className="mt-2 text-xs text-gray-200">
+              {tr(
+                "신호 점수 → 모듈 원인 → Watchlist 근거 → 리밸런싱 시뮬레이션 순으로 점검하면 중복 확인 없이 빠르게 의사결정할 수 있습니다.",
+                "Signal score -> module drivers -> watchlist rationale -> rebalance simulation. This flow minimizes duplicate checks.",
+              )}
+            </p>
           </div>
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
@@ -542,11 +521,11 @@ function InvestmentWorldContent() {
           </div>
           <InvestQuoteKpiCards snapshot={quoteKpiData} />
           <InvestQuoteKpiNotice snapshot={quoteKpiData} />
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Link href="/cartridges/invest?focus=strategy" className={investUiClass.actionButtonDefault}>{tr("전략 모드", "Strategy Mode")}</Link>
-            <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>{tr("모듈 분석", "Module Analysis")}</Link>
+            <div className="mt-4 flex flex-wrap gap-2">
+            <Link href="/cartridges/invest?focus=strategy" className={investUiClass.actionButtonDefault}>{tr("전략", "Strategy")}</Link>
+            <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>{tr("모듈", "Modules")}</Link>
             <Link href="/cartridges/invest?focus=portfolio" className={investUiClass.actionButtonDefault}>{tr("포트폴리오", "Portfolio")}</Link>
-            <Link href="/cartridges/invest?focus=watchlist" className={investUiClass.actionButtonDefault}>Watchlist</Link>
+            <Link href="/cartridges/invest?focus=watchlist" className={investUiClass.actionButtonDefault}>{tr("워치리스트", "Watchlist")}</Link>
           </div>
         </section>
 
@@ -685,9 +664,7 @@ function InvestmentWorldContent() {
                   <div key={h.symbol} className="space-y-1">
                     <div className="flex justify-between text-sm text-gray-200">
                       <div className="flex items-center gap-2">
-                        <span title={renderInstrumentTooltip(h.symbol, h.name)}>
-                          {renderInstrumentLabel(h.symbol, h.name)}
-                        </span>
+                        <span>{renderInstrumentLabel(h.symbol, h.name)}</span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded border ${riskText[h.risk]}`}>{h.risk}</span>
                       </div>
                       <span className="text-xs text-gray-400">β {h.beta.toFixed(2)} / PnL {h.pnl.toFixed(1)}%</span>
@@ -718,7 +695,7 @@ function InvestmentWorldContent() {
                 {(snapshot?.rebalanceSuggestions || []).map((sugg) => (
                   <div key={`${sugg.symbol}-${sugg.action}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                     <div className="flex justify-between items-center gap-2">
-                      <p className="font-semibold text-white" title={renderInstrumentTooltip(sugg.symbol, sugg.name)}>
+                      <p className="font-semibold text-white">
                         {renderInstrumentLabel(sugg.symbol, sugg.name)}
                       </p>
                       <span className={`text-[11px] px-2 py-0.5 rounded border ${suggestionBadge[sugg.action]}`}>
@@ -740,7 +717,7 @@ function InvestmentWorldContent() {
                   {(simulation.changes.length > 0 ? simulation.changes : []).map((change) => (
                     <div key={`${change.symbol}-${change.direction}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
                       <div className="flex justify-between items-center gap-2">
-                        <span className="font-semibold text-white" title={renderInstrumentTooltip(change.symbol, change.name)}>
+                        <span className="font-semibold text-white">
                           {renderInstrumentLabel(change.symbol, change.name)}
                         </span>
                         <span
@@ -782,30 +759,28 @@ function InvestmentWorldContent() {
               <select
                 className="w-full rounded bg-gray-900 border border-gray-700 px-3 py-2 text-sm"
                 value={marketFocus}
-                onChange={(e) => setMarketFocus(e.target.value)}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setMarketFocus(next);
+                  setNotice(tr("필터 적용: ", "Filter applied: ") + getMarketFocusLabel(next));
+                }}
               >
-                <option value="all">전체</option>
-                <option value="k">국내({getMarketFocusLabel("k")})</option>
-                <option value="us">미국({getMarketFocusLabel("us")})</option>
+                <option value="all">{tr("전체", "All")}</option>
+                <option value="k">{tr("국내", "KR Core")}</option>
+                <option value="us">US</option>
               </select>
-              <button
-                onClick={() => setNotice(`필터 적용: ${getMarketFocusLabel(marketFocus)}`)}
-                className="px-3 rounded border border-gray-700 hover:bg-gray-800/70"
-              >
-                적용
-              </button>
             </div>
 
             {error ? <p className="text-xs text-rose-300">{error}</p> : null}
             {loading ? <p className="text-xs text-gray-400">실시간 데이터를 불러오는 중...</p> : null}
             {snapshot?.provenance ? <p className="text-xs text-gray-500">근거 출처: {snapshot.provenance.sources.join(", ")}</p> : null}
             <div className="rounded-lg border border-gray-700 bg-black/30 p-3">
-              <p className="text-xs font-semibold text-gray-200">용어 빠른 해설</p>
+              <p className="text-xs font-semibold text-gray-200">{tr("핵심 용어", "Key terms")}</p>
               <ul className="mt-2 space-y-1 text-xs text-gray-400">
-                <li>• Signal: 현재 종목 행동 권고(`Buy/Hold/Trim`)</li>
-                <li>• Catalyst: 점수 변화를 만든 핵심 이벤트</li>
-                <li>• Rationale: 모델이 그렇게 판단한 직접 근거</li>
-                <li>• Beta: 시장 변동 대비 민감도(1.0보다 크면 변동 큼)</li>
+                <li>{tr("• Signal: 현재 종목 행동 권고(Buy/Hold/Trim)", "• Signal: current action suggestion (Buy/Hold/Trim)")}</li>
+                <li>{tr("• Catalyst: 점수 변화의 핵심 이벤트", "• Catalyst: primary event behind score changes")}</li>
+                <li>{tr("• Rationale: 판단 근거 요약", "• Rationale: concise decision evidence")}</li>
+                <li>{tr("• Beta: 시장 변동 대비 민감도", "• Beta: sensitivity versus market moves")}</li>
               </ul>
             </div>
 
@@ -824,7 +799,7 @@ function InvestmentWorldContent() {
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <span className="font-semibold text-white" title={renderInstrumentTooltip(item.symbol, item.name)}>
+                    <span className="font-semibold text-white">
                       {renderInstrumentLabel(item.symbol, item.name)}
                     </span>
                     <span className={`text-[11px] px-2 py-0.5 rounded border ${signalBadge[item.signal]}`}>{item.signal}</span>
