@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
+import { useLanguage } from "@/components/providers/language-provider";
 import {
   InvestQuoteKpiCards,
   InvestQuoteKpiNotice,
@@ -262,6 +263,9 @@ function formatScore(score: number) {
 
 function InvestmentWorldContent() {
   const searchParams = useSearchParams();
+  const { language } = useLanguage();
+  const isKo = language === "ko";
+  const tr = (ko: string, en: string) => (isKo ? ko : en);
   const [strategy, setStrategy] = useState<StrategyMode>("balanced");
   const [marketFocus, setMarketFocus] = useState<string>("all");
   const [notice, setNotice] = useState<string>("");
@@ -436,9 +440,9 @@ function InvestmentWorldContent() {
     : [];
 
   const getMarketFocusLabel = (value: string) => {
-    if (value === "k") return "코어(국내)";
-    if (value === "us") return "미국";
-    return "전체";
+    if (value === "k") return tr("코어(국내)", "Core (KR)");
+    if (value === "us") return tr("미국", "US");
+    return tr("전체", "All");
   };
 
   const renderInstrumentLabel = (symbol: string, name?: string) => {
@@ -451,22 +455,22 @@ function InvestmentWorldContent() {
 
   const renderInstrumentTooltip = (symbol: string, name?: string) => {
     const rawName = String(name || "").trim() || symbol;
-    return `티커: ${symbol}\n종목: ${rawName}`;
+    return isKo ? `티커: ${symbol}\n종목: ${rawName}` : `Ticker: ${symbol}\nName: ${rawName}`;
   };
 
   return (
     <InvestLayout
       currentTab="dashboard"
       title="Investment World"
-      description="Dual Quant System × Sovereign Alpha 강화 대시보드"
+      description={tr("Dual Quant System × Sovereign Alpha 강화 대시보드", "Enhanced dashboard powered by Dual Quant System × Sovereign Alpha")}
     >
       <>
         <section id="invest-overview" className="mb-8">
           <div className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-            통합 운영은 <Link href="/invest" className="underline font-semibold">Investment Command Center</Link>에서 시작하고, 이 페이지는 시그널/리밸런싱 상세 점검에 사용하세요.
+            {tr("통합 운영은 ", "Start from ")}<Link href="/invest" className="underline font-semibold">Investment Command Center</Link>{tr("에서 시작하고, 이 페이지는 시그널/리밸런싱 상세 점검에 사용하세요.", ", then use this page for deep signal/rebalancing checks.")}
           </div>
           <div className="mt-4 rounded-2xl border border-sky-500/30 bg-sky-500/10 p-5">
-            <p className="text-sm font-semibold text-sky-200">처음 보는 분을 위한 대시보드 읽는 순서</p>
+            <p className="text-sm font-semibold text-sky-200">{tr("처음 보는 분을 위한 대시보드 읽는 순서", "Recommended dashboard reading order")}</p>
             <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4">
               <div className="rounded-lg border border-white/15 bg-black/20 p-3">
                 <p className="text-xs text-gray-400">1단계</p>
@@ -492,36 +496,36 @@ function InvestmentWorldContent() {
           </div>
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-              <p className="text-sm text-gray-400">운영 모드</p>
+              <p className="text-sm text-gray-400">{tr("운영 모드", "Mode")}</p>
               <p className="text-xl font-bold text-white mt-1">Dual Quant v2.2</p>
             </div>
             <InvestSignalConfidenceCard confidence={snapshot?.signalConfidence} updatedAt={snapshot?.updatedAt} compact />
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-              <p className="text-sm text-gray-400">리밸런싱 위험도</p>
-              <p className="text-xl font-bold text-white mt-1">{riskSummary ? riskSummary.state : "로딩"}</p>
+              <p className="text-sm text-gray-400">{tr("리밸런싱 위험도", "Rebalancing Risk")}</p>
+              <p className="text-xl font-bold text-white mt-1">{riskSummary ? riskSummary.state : tr("로딩", "Loading")}</p>
             </div>
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-              <p className="text-sm text-gray-400">시그널 임계값</p>
+              <p className="text-sm text-gray-400">{tr("시그널 임계값", "Signal Thresholds")}</p>
               <p className="text-xs text-gray-200 mt-1">Buy: {snapshot?.decisionThresholds?.buy ?? 75} / Hold: {snapshot?.decisionThresholds?.hold?.min ?? 40}-{snapshot?.decisionThresholds?.hold?.max ?? 75} / Trim: {snapshot?.decisionThresholds?.trim ?? 40}</p>
             </div>
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-              <p className="text-sm text-gray-400">신호 가중치</p>
+              <p className="text-sm text-gray-400">{tr("신호 가중치", "Signal Weights")}</p>
               <p className="text-xl font-bold text-white mt-1">{snapshot?.weights ? `T:${Math.round((snapshot.weights.technical||0)*100)} / F:${Math.round((snapshot.weights.flow||0)*100)} / M:${Math.round((snapshot.weights.macro||0)*100)} / N:${Math.round((snapshot.weights.news||0)*100)}` : "-"}</p>
             </div>
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-              <p className="text-sm text-gray-400">벤치마크</p>
+              <p className="text-sm text-gray-400">{tr("벤치마크", "Benchmark")}</p>
               <p className="text-xl font-bold text-white mt-1">{snapshot?.benchmark ? `${snapshot.benchmark.KR} / ${snapshot.benchmark.US}` : "-"}</p>
-              <p className="text-xs text-gray-500 mt-2">갱신시각: {snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "-"}</p>
+              <p className="text-xs text-gray-500 mt-2">{tr("갱신시각", "Updated")}: {snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "-"}</p>
             </div>
             <div className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-              <p className="text-sm text-gray-400">데이터 갱신</p>
+              <p className="text-sm text-gray-400">{tr("데이터 갱신", "Data Refresh")}</p>
               <button
                 onClick={() => setRefreshTick((prev) => prev + 1)}
                 className="mt-2 rounded-lg border border-sky-400/40 bg-sky-500/10 px-3 py-1.5 text-xs font-semibold text-sky-200 hover:bg-sky-500/20"
               >
-                지금 새로고침
+                {tr("지금 새로고침", "Refresh Now")}
               </button>
-              <p className="mt-2 text-xs text-gray-500">60초마다 자동 갱신</p>
+              <p className="mt-2 text-xs text-gray-500">{tr("60초마다 자동 갱신", "Auto-refresh every 60s")}</p>
             </div>
           </div>
           <div className="mt-4 rounded-xl border border-gray-700 bg-gray-900/50 p-4">
@@ -539,9 +543,9 @@ function InvestmentWorldContent() {
           <InvestQuoteKpiCards snapshot={quoteKpiData} />
           <InvestQuoteKpiNotice snapshot={quoteKpiData} />
           <div className="mt-4 flex flex-wrap gap-2">
-            <Link href="/cartridges/invest?focus=strategy" className={investUiClass.actionButtonDefault}>전략 모드</Link>
-            <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>모듈 분석</Link>
-            <Link href="/cartridges/invest?focus=portfolio" className={investUiClass.actionButtonDefault}>포트폴리오</Link>
+            <Link href="/cartridges/invest?focus=strategy" className={investUiClass.actionButtonDefault}>{tr("전략 모드", "Strategy Mode")}</Link>
+            <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>{tr("모듈 분석", "Module Analysis")}</Link>
+            <Link href="/cartridges/invest?focus=portfolio" className={investUiClass.actionButtonDefault}>{tr("포트폴리오", "Portfolio")}</Link>
             <Link href="/cartridges/invest?focus=watchlist" className={investUiClass.actionButtonDefault}>Watchlist</Link>
           </div>
         </section>

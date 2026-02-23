@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { InvestLayout, InvestCard, investUiClass } from "@/components/invest/invest-layout";
 import { Info, HelpCircle } from "lucide-react";
+import { useLanguage } from "@/components/providers/language-provider";
 
 type AnalysisResult = {
   ticker: string;
@@ -49,20 +50,61 @@ function ScoreTooltip({ title, desc }: { title: string; desc: string }) {
 }
 
 const SCORE_DESCRIPTIONS = {
-  expert: "기술적 분석(RSI, 이동평균선)과 재무 건전성을 바탕으로 한 정량적 지표입니다.",
-  whale: "기관 투자자와 외국인의 수급 동향을 분석하여 큰 자금의 흐름을 추적합니다.",
-  macro: "금리, 환율, 유가 등 거시경제 지표가 해당 기업에 미치는 영향을 평가합니다.",
-  news: "최신 뉴스 기사의 감성 분석(Sentiment Analysis)을 통해 시장의 심리를 파악합니다.",
-};
-
-const SCORE_BAND_GUIDE = [
-  { label: "80~100", meaning: "강한 매수 후보", action: "분할 매수 + 손절 기준 설정" },
-  { label: "60~79", meaning: "매수 우위", action: "소규모 진입 후 추세 확인" },
-  { label: "40~59", meaning: "관망 구간", action: "신규 진입보다 관찰 우선" },
-  { label: "0~39", meaning: "주의 구간", action: "비중 축소/리스크 점검" },
-];
+  ko: {
+    expert: "기술적 분석(RSI, 이동평균선)과 재무 건전성을 바탕으로 한 정량적 지표입니다.",
+    whale: "기관 투자자와 외국인의 수급 동향을 분석하여 큰 자금의 흐름을 추적합니다.",
+    macro: "금리, 환율, 유가 등 거시경제 지표가 해당 기업에 미치는 영향을 평가합니다.",
+    news: "최신 뉴스 감성 분석으로 시장 심리를 반영합니다.",
+  },
+  en: {
+    expert: "A quantitative signal based on technicals (RSI, moving averages) and fundamentals.",
+    whale: "Tracks institutional and foreign flow to capture large capital movement.",
+    macro: "Evaluates macro pressure from rates, FX, and commodity conditions.",
+    news: "Reflects market sentiment based on recent news analysis.",
+  },
+} as const;
 
 export default function InvestSearchPage() {
+  const { language } = useLanguage();
+  const isKo = language === "ko";
+  const text = {
+    title: isKo ? "Investment Search" : "Investment Search",
+    desc: isKo
+      ? "Zero to Quant: 초보자부터 전문가까지, 데이터 기반의 실시간 종목 분석."
+      : "Zero to Quant: data-driven real-time ticker analysis for all levels.",
+    placeholder: isKo ? "기업명 또는 티커 (예: 삼성전자, Apple, AAPL)" : "Company or ticker (e.g., Samsung, Apple, AAPL)",
+    searching: isKo ? "분석 중..." : "Analyzing...",
+    search: isKo ? "검색" : "Search",
+    introTitle: isKo ? "SHawn-INV: From Zero to Quant" : "SHawn-INV: From Zero to Quant",
+    introDesc: isKo
+      ? "단순한 가격 정보가 아닌, 왜(Why) 오르고 내리는지 분석합니다."
+      : "Not only price moves, but the reasons behind them.",
+    verdict: isKo ? "투자 판단" : "Investment Verdict",
+    marketConsensus: isKo ? "시장 컨센서스" : "Market Consensus",
+    quantCard: isKo ? "정량 분석" : "Quantitative Analysis",
+    contextCard: isKo ? "정성 컨텍스트" : "Qualitative Context",
+    readGuide: isKo ? "결과 읽는 법" : "How to Read This Result",
+    bandPrefix: isKo ? "점수 구간" : "Score Band",
+    approach: isKo ? "권장 접근" : "Recommended Approach",
+    note: isKo
+      ? "참고: 본 결과는 투자 판단 보조 도구입니다. 실제 매매는 손실 허용 범위와 분할 원칙을 함께 적용하세요."
+      : "Note: This output is an aid for decision-making. Apply position sizing and loss limits for real trades.",
+    strategyNote: isKo ? "AI 전략 노트" : "AI Strategy Note",
+  };
+  const scoreDescriptions = SCORE_DESCRIPTIONS[language];
+  const scoreBandGuide = isKo
+    ? [
+        { label: "80~100", meaning: "강한 매수 후보", action: "분할 매수 + 손절 기준 설정" },
+        { label: "60~79", meaning: "매수 우위", action: "소규모 진입 후 추세 확인" },
+        { label: "40~59", meaning: "관망 구간", action: "신규 진입보다 관찰 우선" },
+        { label: "0~39", meaning: "주의 구간", action: "비중 축소/리스크 점검" },
+      ]
+    : [
+        { label: "80~100", meaning: "Strong buy candidate", action: "Scale in with predefined stop-loss rules" },
+        { label: "60~79", meaning: "Buy-leaning zone", action: "Start small and validate trend continuation" },
+        { label: "40~59", meaning: "Watch zone", action: "Observe first rather than opening a new position" },
+        { label: "0~39", meaning: "Caution zone", action: "Reduce exposure and recheck risk" },
+      ];
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -108,8 +150,8 @@ export default function InvestSearchPage() {
   return (
     <InvestLayout
       currentTab="search"
-      title="Investment Search"
-      description="Zero to Quant: 초보자부터 전문가까지, 데이터 기반의 실시간 종목 분석."
+      title={text.title}
+      description={text.desc}
     >
       <div className="mx-auto max-w-3xl">
         <form onSubmit={handleSearch} className="mb-8 flex gap-2">
@@ -117,7 +159,7 @@ export default function InvestSearchPage() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="기업명 또는 티커 (예: 삼성전자, Apple, AAPL)"
+            placeholder={text.placeholder}
             className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none"
           />
           <button
@@ -128,10 +170,10 @@ export default function InvestSearchPage() {
             {loading ? (
               <span className="flex items-center gap-2">
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white"></span>
-                Analyzing...
+                {text.searching}
               </span>
             ) : (
-              "Search"
+              text.search
             )}
           </button>
         </form>
@@ -146,11 +188,10 @@ export default function InvestSearchPage() {
         {/* Introduction / Empty State */}
         {!result && !loading && !error && (
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-            <h3 className="text-lg font-semibold text-white mb-2">SHawn-INV: From Zero to Quant</h3>
+            <h3 className="text-lg font-semibold text-white mb-2">{text.introTitle}</h3>
             <p className="text-zinc-400 text-sm max-w-lg mx-auto mb-4">
-              단순한 가격 정보가 아닌, <strong>왜(Why)</strong> 오르고 내리는지 분석합니다.<br/>
-              SHawn Score와 4가지 핵심 지표(Expert, Whale, Macro, News)를 통해<br/>
-              투자의 본질적인 이유를 찾아보세요.
+              {text.introDesc}<br/>
+              SHawn Score + 4 core factors (Expert, Whale, Macro, News)
             </p>
             <div className="flex flex-wrap justify-center gap-2 text-xs text-zinc-500">
               <span className="px-2 py-1 rounded bg-zinc-800">#퀀트분석</span>
@@ -205,11 +246,11 @@ export default function InvestSearchPage() {
               </div>
 
               <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {(Object.entries(result.scores) as [keyof typeof SCORE_DESCRIPTIONS, number][]).map(([key, val]) => (
+                {(Object.entries(result.scores) as [keyof typeof scoreDescriptions, number][]).map(([key, val]) => (
                   <div key={key} className="rounded-lg bg-zinc-800/40 border border-zinc-700/30 p-3 text-center transition-colors hover:bg-zinc-800/60">
                     <div className="text-xs uppercase text-zinc-500 mb-1 flex items-center justify-center gap-1">
                       {key}
-                      <ScoreTooltip title={key.toUpperCase()} desc={SCORE_DESCRIPTIONS[key]} />
+                      <ScoreTooltip title={key.toUpperCase()} desc={scoreDescriptions[key]} />
                     </div>
                     <div className={`text-2xl font-bold ${getScoreColor(val)}`}>{val.toFixed(0)}</div>
                   </div>
@@ -217,14 +258,14 @@ export default function InvestSearchPage() {
               </div>
 
               <div className="mt-6">
-                <h3 className="text-sm font-semibold text-zinc-400 mb-2 uppercase tracking-wider">Investment Verdict</h3>
+                <h3 className="text-sm font-semibold text-zinc-400 mb-2 uppercase tracking-wider">{text.verdict}</h3>
                 <div className="bg-gradient-to-r from-zinc-800 to-zinc-900/50 p-4 rounded-lg border border-zinc-700/50">
                   <p className="text-lg text-zinc-200 font-medium leading-relaxed">
                     {result.synthesis_verdict}
                   </p>
                    {result.external_consensus && (
                        <div className="mt-3 flex items-center gap-2 text-sm text-zinc-400 border-t border-zinc-700/50 pt-3">
-                           <span className="font-semibold text-zinc-500">Market Consensus:</span>
+                           <span className="font-semibold text-zinc-500">{text.marketConsensus}:</span>
                            {result.external_consensus}
                        </div>
                    )}
@@ -241,7 +282,7 @@ export default function InvestSearchPage() {
             </InvestCard>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <InvestCard title="Quantitative Analysis">
+              <InvestCard title={text.quantCard}>
                 <div className="space-y-6">
                   <div>
                     <h4 className="flex items-center gap-2 text-sm font-semibold text-zinc-300 mb-3 pb-2 border-b border-zinc-800">
@@ -274,7 +315,7 @@ export default function InvestSearchPage() {
                 </div>
               </InvestCard>
 
-              <InvestCard title="Qualitative Context">
+              <InvestCard title={text.contextCard}>
                 <div className="space-y-6">
                   <div>
                     <h4 className="flex items-center gap-2 text-sm font-semibold text-zinc-300 mb-3 pb-2 border-b border-zinc-800">
@@ -299,23 +340,23 @@ export default function InvestSearchPage() {
               </InvestCard>
             </div>
 
-            <InvestCard title="How to Read This Result">
+            <InvestCard title={text.readGuide}>
               <div className="grid gap-3 md:grid-cols-2">
-                {SCORE_BAND_GUIDE.map((row) => (
+                {scoreBandGuide.map((row) => (
                   <div key={row.label} className="rounded-lg border border-zinc-700/50 bg-zinc-800/30 p-3">
-                    <p className="text-xs text-zinc-400">점수 구간 {row.label}</p>
+                    <p className="text-xs text-zinc-400">{text.bandPrefix} {row.label}</p>
                     <p className="text-sm font-semibold text-white mt-1">{row.meaning}</p>
-                    <p className="text-xs text-zinc-300 mt-1">권장 접근: {row.action}</p>
+                    <p className="text-xs text-zinc-300 mt-1">{text.approach}: {row.action}</p>
                   </div>
                 ))}
               </div>
               <p className="mt-3 text-xs text-zinc-500">
-                참고: 본 결과는 투자 판단 보조 도구입니다. 실제 매매는 손실 허용 범위와 분할 원칙을 함께 적용하세요.
+                {text.note}
               </p>
             </InvestCard>
             
             {result.future_value?.rationale && (
-                 <InvestCard title="AI Strategy Note">
+                 <InvestCard title={text.strategyNote}>
                      <div className="prose prose-invert prose-sm max-w-none whitespace-pre-line text-zinc-300">
                          {result.future_value.rationale}
                      </div>

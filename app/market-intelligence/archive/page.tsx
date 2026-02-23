@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
+import { useLanguage } from "@/components/providers/language-provider";
 
 interface Report {
   date: string;
@@ -19,6 +20,32 @@ interface Report {
 }
 
 export default function ReportsPage() {
+  const { language } = useLanguage();
+  const isKo = language === "ko";
+  const text = {
+    title: isKo ? "시장 분석 리포트" : "Market Analysis Reports",
+    desc: isKo
+      ? "Dual Quant System 분석 리포트 아카이브 (날짜/시간별 추적)"
+      : "Dual Quant report archive (date/time based tracking)",
+    back: isKo ? "Invest Hub" : "Invest Hub",
+    archiveDashboard: isKo ? "아카이브 검색 대시보드" : "Archive Search Dashboard",
+    filterHint: isKo ? "제목/타입 검색 + 날짜 필터" : "Title/type search + date filter",
+    searchPlaceholder: isKo ? "리포트 검색 (제목, 타입 등)..." : "Search reports (title, type, etc.)...",
+    reset: isKo ? "초기화" : "Reset",
+    totalLoaded: isKo ? "총 로드" : "Total Loaded",
+    hasMore: isKo ? "추가 항목" : "Has More",
+    yes: isKo ? "있음" : "Yes",
+    no: isKo ? "없음" : "No",
+    loading: isKo ? "리포트를 불러오는 중입니다..." : "Loading reports...",
+    noResultTitle: isKo ? "검색 결과가 없습니다." : "No matching reports found.",
+    noResultDesc: isKo ? "검색어 또는 날짜를 변경해보세요." : "Try changing the query or date filter.",
+    krBadge: isKo ? "🇰🇷 한국" : "🇰🇷 Korea",
+    usBadge: isKo ? "🇺🇸 미국" : "🇺🇸 United States",
+    krTitle: isKo ? "국내 시장 정밀 분석" : "Korean Market Deep Analysis",
+    usTitle: isKo ? "미국 시장 정밀 분석" : "US Market Deep Analysis",
+    openReport: isKo ? "리포트 열기" : "Open Report",
+    loadMore: isKo ? "더 보기" : "Load More",
+  };
   const [reports, setReports] = useState<Report[]>([]);
   const [filteredReports, setFilteredReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,12 +97,12 @@ export default function ReportsPage() {
   return (
     <InvestLayout
       currentTab="archive"
-      title="시장 분석 리포트"
-      description="Dual Quant System 분석 리포트 아카이브 (날짜/시간별 추적)"
+      title={text.title}
+      description={text.desc}
       actions={
         <Link href="/invest" className={investUiClass.actionButton}>
           <ArrowLeft size={14} />
-          Invest Hub
+          {text.back}
         </Link>
       }
     >
@@ -83,15 +110,15 @@ export default function ReportsPage() {
         <div className={investUiClass.panelInner}>
           <div className="sticky top-3 z-20 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 via-sky-50 to-indigo-50 p-4 dark:border-blue-900/40 dark:from-slate-900 dark:via-blue-950/30 dark:to-slate-900">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold text-slate-900 dark:text-white">Archive Search Dashboard</p>
-              <p className="text-xs text-slate-600 dark:text-slate-300">제목/타입 검색 + 날짜 필터</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">{text.archiveDashboard}</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">{text.filterHint}</p>
             </div>
             <div className="max-w-4xl mx-auto flex gap-3 flex-col md:flex-row">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="리포트 검색 (제목, 타입 등)..."
+                  placeholder={text.searchPlaceholder}
                   className="pl-9 bg-white dark:bg-slate-900"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -111,7 +138,7 @@ export default function ReportsPage() {
                 }}
                 className={`${investUiClass.actionButtonDefault} px-3 py-2`}
               >
-                초기화
+                {text.reset}
               </button>
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -127,19 +154,19 @@ export default function ReportsPage() {
               ))}
             </div>
             <div className="mt-3 text-xs text-slate-600 dark:text-slate-300">
-              Total Loaded: <span className="font-semibold">{filteredReports.length}</span>
-              {" "}· Has More: <span className="font-semibold">{hasMore ? "Yes" : "No"}</span>
+              {text.totalLoaded}: <span className="font-semibold">{filteredReports.length}</span>
+              {" "}· {text.hasMore}: <span className="font-semibold">{hasMore ? text.yes : text.no}</span>
             </div>
           </div>
         </div>
       </div>
 
       {loading ? (
-        <div className="text-center py-20 text-muted-foreground">리포트를 불러오는 중입니다...</div>
+        <div className="text-center py-20 text-muted-foreground">{text.loading}</div>
       ) : filteredReports.length === 0 ? (
         <div className={`${investUiClass.panel} ${investUiClass.panelInner} text-center`}>
-          <p className="text-lg">검색 결과가 없습니다.</p>
-          <p className="text-sm text-muted-foreground mt-2">검색어 또는 날짜를 변경해보세요.</p>
+          <p className="text-lg">{text.noResultTitle}</p>
+          <p className="text-sm text-muted-foreground mt-2">{text.noResultDesc}</p>
         </div>
       ) : (
         <>
@@ -156,7 +183,7 @@ export default function ReportsPage() {
                       className={`${investUiClass.badge} border`
                       }
                     >
-                      {report.type === 'KR' ? '🇰🇷 한국' : '🇺🇸 미국'}
+                      {report.type === 'KR' ? text.krBadge : text.usBadge}
                     </Badge>
                     <div className="flex flex-col items-end text-xs text-muted-foreground font-mono">
                       <span className="flex items-center mb-1">
@@ -172,7 +199,7 @@ export default function ReportsPage() {
                     </div>
                   </div>
                   <CardTitle className="text-xl">
-                    {report.type === 'KR' ? '국내 시장 정밀 분석' : '미국 시장 정밀 분석'}
+                    {report.type === 'KR' ? text.krTitle : text.usTitle}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -181,7 +208,7 @@ export default function ReportsPage() {
                     <Link href={report.path} target="_blank" className="w-full">
                       <div className="p-3 bg-muted/50 rounded-md group-hover:bg-primary/10 transition-colors flex items-center justify-center gap-2 text-sm font-medium">
                         <ExternalLink className="w-4 h-4" />
-                        리포트 열기
+                        {text.openReport}
                       </div>
                     </Link>
                   </div>
@@ -195,7 +222,7 @@ export default function ReportsPage() {
                 onClick={loadMore}
                 className={`${investUiClass.actionButtonDefault} px-4 py-2`}
               >
-                더 보기
+                {text.loadMore}
               </button>
             </div>
           )}

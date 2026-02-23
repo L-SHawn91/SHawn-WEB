@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { ReportDetailView, FullJsonReport } from "@/components/market/ReportDetailView";
 import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
 import { InvestQuoteKpiCards, InvestQuoteKpiNotice, type QuoteKpiSnapshot } from "@/components/invest/invest-kpi-components";
+import { useLanguage } from "@/components/providers/language-provider";
 
 type ReportRequest = {
   date: string;
@@ -22,6 +23,23 @@ type ReportData = {
 };
 
 function MarketIntelligenceContent() {
+  const { language } = useLanguage();
+  const isKo = language === "ko";
+  const text = {
+    title: isKo ? "Market Intelligence" : "Market Intelligence",
+    desc: isKo ? "실시간 AI 시장 분석 및 시그널" : "Real-time AI market analysis and signals",
+    hub: isKo ? "Invest Hub" : "Invest Hub",
+    dashboard: isKo ? "투자 대시보드" : "Investment Dashboard",
+    watchFocus: isKo ? "워치리스트 포커스" : "Watchlist Focus",
+    refresh: isKo ? "새로고침" : "Refresh",
+    archive: isKo ? "아카이브 이동" : "Go to Archive",
+    loading: isKo ? "로딩 중..." : "Loading...",
+    empty: isKo ? "리포트가 없습니다." : "No reports found.",
+    loadMore: isKo ? "더 보기" : "Load more",
+    legacy: isKo ? "레거시 HTML 리포트 모드" : "Legacy HTML Report Mode",
+    fullWindow: isKo ? "전체 창으로 열기" : "Open in full window",
+    selectReport: isKo ? "리포트를 선택하세요" : "Select a report to view details",
+  };
   const searchParams = useSearchParams();
   const [indexData, setIndexData] = useState<ReportData>({ KR: [], US: [] });
   const [activeTab, setActiveTab] = useState<"KR" | "US">("KR");
@@ -132,29 +150,29 @@ function MarketIntelligenceContent() {
   return (
     <InvestLayout
       currentTab="reports"
-      title="Market Intelligence"
-      description="Real-time AI Market Analysis & Sovereign Alpha Signals"
+      title={text.title}
+      description={text.desc}
       actions={
         <>
           <Link href="/invest" className={investUiClass.actionButton}>
             <ArrowLeft size={14} />
-            Invest Hub
+            {text.hub}
           </Link>
           <Link href="/cartridges/invest" className={investUiClass.actionButtonDefault}>
             <TrendingUp size={14} />
-            Investment Dashboard
+            {text.dashboard}
           </Link>
           <Link href="/cartridges/invest?focus=watchlist" className={investUiClass.actionButtonDefault}>
             <TrendingUp size={14} />
-            Watchlist Focus
+            {text.watchFocus}
           </Link>
           <button onClick={fetchIndex} className={investUiClass.actionButtonDefault}>
             <RefreshCw size={14} className={loadingIndex ? "animate-spin" : ""} />
-            Refresh
+            {text.refresh}
           </button>
           <Link href="/market-intelligence/archive" className={investUiClass.actionButtonPrimary}>
             <FileText size={14} />
-            Go to Archive
+            {text.archive}
           </Link>
         </>
       }
@@ -192,9 +210,9 @@ function MarketIntelligenceContent() {
 
           <div className={`flex-1 overflow-y-auto pr-2 custom-scrollbar ${investUiClass.panel} ${investUiClass.panelInner} ${investUiClass.panelSpace}`}>
             {loadingIndex ? (
-              <div className="text-center py-10 text-gray-500 text-sm">Loading...</div>
+              <div className="text-center py-10 text-gray-500 text-sm">{text.loading}</div>
             ) : currentList.length === 0 ? (
-              <div className="text-center py-10 text-gray-500 text-sm">No reports found.</div>
+              <div className="text-center py-10 text-gray-500 text-sm">{text.empty}</div>
             ) : (
               <AnimatePresence>
                 <div className="space-y-2">
@@ -241,7 +259,7 @@ function MarketIntelligenceContent() {
                       onClick={loadMore}
                       className={`${investUiClass.actionButtonDefault} w-full mt-2 justify-center`}
                     >
-                      Load more
+                      {text.loadMore}
                     </button>
                   )}
                 </div>
@@ -259,7 +277,7 @@ function MarketIntelligenceContent() {
                 <div className="bg-[#2c2c2c] px-4 py-2 flex justify-between items-center border-b border-gray-700 shrink-0">
                   <div className="flex items-center gap-2 text-yellow-500 text-xs">
                     <AlertTriangle size={14} />
-                    <span>Legacy HTML Report Mode</span>
+                    <span>{text.legacy}</span>
                   </div>
                   <Link
                     href={selectedReportPath}
@@ -267,7 +285,7 @@ function MarketIntelligenceContent() {
                     className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 hover:underline"
                   >
                     <ExternalLink size={12} />
-                    Full Window
+                    {text.fullWindow}
                   </Link>
                 </div>
                 <iframe src={selectedReportPath} className="w-full flex-1 bg-white" title="Report Viewer" />
@@ -276,7 +294,7 @@ function MarketIntelligenceContent() {
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-gray-500">
               <FileText size={48} className="mb-4 opacity-20" />
-              <p>Select a report to view details</p>
+              <p>{text.selectReport}</p>
             </div>
           )}
         </div>

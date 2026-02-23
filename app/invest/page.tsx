@@ -10,6 +10,7 @@ import {
   type QuoteKpiSnapshot,
 } from "@/components/invest/invest-kpi-components";
 import { InvestSignalConfidenceCard } from "@/components/invest/invest-confidence-card";
+import { useLanguage } from "@/components/providers/language-provider";
 
 type ReportItem = {
   title?: string;
@@ -62,6 +63,26 @@ function shortTitle(raw?: string): string {
 }
 
 export default function InvestHubPage() {
+  const { language } = useLanguage();
+  const isKo = language === "ko";
+  const text = {
+    title: isKo ? "Investment Command Center" : "Investment Command Center",
+    desc: isKo
+      ? "리포트 해석, 시그널 점검, 실행 후보 정리를 한 화면에서 이어서 처리하는 운영 허브"
+      : "An operation hub that connects report reading, signal checks, and action queue decisions in one flow.",
+    reportViewer: isKo ? "리포트 뷰어" : "Report Viewer",
+    dashboardDetail: isKo ? "대시보드 상세" : "Dashboard Detail",
+    search: isKo ? "종목 검색" : "Ticker Search",
+    archive: isKo ? "히스토리 아카이브" : "History Archive",
+    decisionFrame: isKo ? "의사결정 프레임" : "Decision Framework",
+    operationMode: isKo ? "운영 모드" : "Mode",
+    stream: isKo ? "최신 리포트 스트림" : "Latest Report Stream",
+    actionQueue: isKo ? "실행 후보 큐" : "Action Queue",
+    loadingModules: isKo ? "모듈 데이터 로딩 중" : "Loading module data",
+    loadingQueue: isKo ? "후보 리스트 로딩 중" : "Loading action queue",
+    routine: isKo ? "운영 루틴" : "Operation Routine",
+    loadingHub: isKo ? "통합 허브 데이터를 불러오는 중입니다." : "Loading command center data...",
+  };
   const [snapshot, setSnapshot] = useState<SnapshotPayload | null>(null);
   const [reportsKR, setReportsKR] = useState<ReportItem[]>([]);
   const [reportsUS, setReportsUS] = useState<ReportItem[]>([]);
@@ -119,25 +140,25 @@ export default function InvestHubPage() {
   return (
     <InvestLayout
       currentTab="overview"
-      title="Investment Command Center"
-      description="리포트 해석, 시그널 점검, 실행 후보 정리를 한 화면에서 이어서 처리하는 운영 허브"
+      title={text.title}
+      description={text.desc}
       actions={
         <>
           <Link href="/market-intelligence?tab=KR" className={investUiClass.actionButtonDefault}>
             <FileText size={14} />
-            리포트 뷰어
+            {text.reportViewer}
           </Link>
           <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>
             <BarChart3 size={14} />
-            대시보드 상세
+            {text.dashboardDetail}
           </Link>
           <Link href="/invest/search" className={investUiClass.actionButtonDefault}>
             <Search size={14} />
-            종목 검색
+            {text.search}
           </Link>
           <Link href="/market-intelligence/archive" className={investUiClass.actionButtonPrimary}>
             <ArrowRight size={14} />
-            히스토리 아카이브
+            {text.archive}
           </Link>
         </>
       }
@@ -158,10 +179,10 @@ export default function InvestHubPage() {
       </section>
 
       <section className={`${investUiClass.grid} grid-cols-1 xl:grid-cols-12`}>
-        <InvestCard className="xl:col-span-4" title="의사결정 프레임">
+        <InvestCard className="xl:col-span-4" title={text.decisionFrame}>
           <div className="space-y-3 text-sm">
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-xs text-gray-400">운영 모드</p>
+              <p className="text-xs text-gray-400">{text.operationMode}</p>
               <p className="mt-1 text-base font-semibold text-white">{snapshot?.mode || "balanced"}</p>
             </div>
             {topModules.map((module) => (
@@ -180,12 +201,12 @@ export default function InvestHubPage() {
               </div>
             ))}
             {!topModules.length ? (
-              <p className="text-xs text-gray-400">모듈 데이터 로딩 중</p>
+              <p className="text-xs text-gray-400">{text.loadingModules}</p>
             ) : null}
           </div>
         </InvestCard>
 
-        <InvestCard className="xl:col-span-4" title="최신 리포트 스트림">
+        <InvestCard className="xl:col-span-4" title={text.stream}>
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             <div className="rounded-xl border border-blue-500/30 bg-blue-500/10 p-3">
               <p className="mb-2 text-xs font-semibold text-blue-200">KR</p>
@@ -223,7 +244,7 @@ export default function InvestHubPage() {
           </div>
         </InvestCard>
 
-        <InvestCard className="xl:col-span-4" title="실행 후보 큐">
+        <InvestCard className="xl:col-span-4" title={text.actionQueue}>
           <div className="space-y-2.5">
             {actionQueue.map((item) => (
               <Link
@@ -243,12 +264,12 @@ export default function InvestHubPage() {
                 <p className="mt-2 text-xs text-gray-300 line-clamp-2">{item.reason}</p>
               </Link>
             ))}
-            {!actionQueue.length ? <p className="text-xs text-gray-400">후보 리스트 로딩 중</p> : null}
+            {!actionQueue.length ? <p className="text-xs text-gray-400">{text.loadingQueue}</p> : null}
 
             <div className="rounded-xl border border-amber-400/20 bg-amber-500/5 p-3 text-xs text-amber-100">
               <p className="inline-flex items-center gap-1 font-semibold">
                 <Sparkles size={13} />
-                운영 루틴
+                {text.routine}
               </p>
               <p className="mt-1 leading-relaxed text-amber-50/90">
                 1) 리포트 맥락 확인 → 2) 모듈 원인 점검 → 3) 후보 큐 우선순위 확정 → 4) 상세 화면에서 최종 검토
@@ -260,7 +281,7 @@ export default function InvestHubPage() {
 
       {loading ? (
         <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-          <p className="text-sm text-gray-400">통합 허브 데이터를 불러오는 중입니다.</p>
+          <p className="text-sm text-gray-400">{text.loadingHub}</p>
         </section>
       ) : null}
     </InvestLayout>
