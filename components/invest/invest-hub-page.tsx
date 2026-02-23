@@ -35,6 +35,16 @@ type SignalModule = {
   action: string;
 };
 
+type MarketCard = {
+  region: string;
+  flag: string;
+  indexA: { label: string; value: string; change: string };
+  indexB: { label: string; value: string; change: string };
+  traits?: string[];
+  allocation?: number;
+  liquidity?: string;
+};
+
 type WatchItem = {
   symbol: string;
   name?: string;
@@ -49,6 +59,7 @@ type SnapshotPayload = QuoteKpiSnapshot & {
   signalConfidence?: number;
   mode?: string;
   modules?: SignalModule[];
+  markets?: MarketCard[];
   watchlist?: WatchItem[];
 };
 
@@ -62,6 +73,13 @@ function shortTitle(raw?: string): string {
   const base = String(raw || "").trim();
   if (!base) return "Untitled Report";
   return base.replace(/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}\s(KR|US)\sMarket\sReport\s?/i, "").trim() || base;
+}
+
+function changeTone(change?: string): string {
+  const value = String(change || "");
+  if (value.startsWith("+")) return "text-emerald-300";
+  if (value.startsWith("-")) return "text-rose-300";
+  return "text-gray-400";
 }
 
 type InvestPanel = "overview" | "reports" | "archive" | "dashboard";
@@ -89,6 +107,13 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
     reportTabUs: isKo ? "미국 리포트" : "US Reports",
     open: isKo ? "열기" : "Open",
     openDetail: isKo ? "상세 대시보드" : "Open Dashboard",
+    marketPulse: isKo ? "시장 지수 펄스" : "Market Index Pulse",
+    focusView: isKo ? "집중 보기" : "Focus View",
+    flowGuide: isKo ? "운영 순서" : "Operation Flow",
+    flow1: isKo ? "지수 상태 확인" : "Check index pulse",
+    flow2: isKo ? "모듈 강약 확인" : "Review module strength",
+    flow3: isKo ? "후보 큐 우선순위" : "Prioritize action queue",
+    flow4: isKo ? "리포트/아카이브 실행" : "Execute via report/archive",
     unifiedArchive: isKo ? "통합 아카이브 검색" : "Unified Archive Search",
     queryPlaceholder: isKo ? "제목/타입 검색..." : "Search title/type...",
     date: isKo ? "날짜" : "Date",
@@ -111,6 +136,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
   const [archiveDate, setArchiveDate] = useState("");
   const [reportTab, setReportTab] = useState<"KR" | "US">("KR");
   const [loading, setLoading] = useState(true);
+  const focus = String(searchParams.get("focus") || "").toLowerCase();
 
   const loadHub = useCallback(async () => {
     setLoading(true);
@@ -214,6 +240,10 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
     return [...(snapshot?.watchlist || [])];
   }, [snapshot?.watchlist]);
 
+  const marketPulse = useMemo(() => {
+    return snapshot?.markets || [];
+  }, [snapshot?.markets]);
+
   return (
     <InvestLayout
       currentTab={
@@ -252,6 +282,23 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
         <p className="text-xs text-gray-300">{text.allInHub}</p>
       </section>
 
+      <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
+        <p className="text-xs font-semibold text-gray-200">{text.flowGuide}</p>
+        <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          {[
+            { label: text.flow1, href: "#market-pulse" },
+            { label: text.flow2, href: "#decision-frame" },
+            { label: text.flow3, href: "/invest/dashboard?focus=watchlist" },
+            { label: text.flow4, href: "/invest/reports?tab=KR" },
+          ].map((step, idx) => (
+            <Link key={step.label} href={step.href} className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 hover:border-white/30">
+              <p className="text-[10px] text-gray-400">{idx + 1}</p>
+              <p className="mt-1 text-xs text-gray-200">{step.label}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section className="space-y-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
           <div className="xl:col-span-1">
@@ -267,7 +314,41 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
         <InvestQuoteKpiNotice snapshot={snapshot || undefined} />
       </section>
 
-      <section className={`${investUiClass.grid} grid-cols-1 xl:grid-cols-12`}>
+      <section id="market-pulse" className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-base font-semibold text-white">{text.marketPulse}</h2>
+          {focus ? (
+            <span className="rounded border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-[10px] text-amber-200">
+              {text.focusView}: {focus}
+            </span>
+          ) : null}
+        </div>
+        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+          {marketPulse.map((market) => (
+            <article key={market.region} className="rounded-xl border border-white/10 bg-black/25 p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-white">{market.flag} {market.region}</p>
+                <p className="text-[10px] text-gray-400">{market.liquidity || "-"}</p>
+              </div>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <div className="rounded-lg border border-white/10 bg-black/30 p-2">
+                  <p className="text-[10px] text-gray-400">{market.indexA.label}</p>
+                  <p className="text-sm font-semibold text-white">{market.indexA.value}</p>
+                  <p className={`text-[11px] ${changeTone(market.indexA.change)}`}>{market.indexA.change}</p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-black/30 p-2">
+                  <p className="text-[10px] text-gray-400">{market.indexB.label}</p>
+                  <p className="text-sm font-semibold text-white">{market.indexB.value}</p>
+                  <p className={`text-[11px] ${changeTone(market.indexB.change)}`}>{market.indexB.change}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+          {!marketPulse.length ? <p className="text-xs text-gray-400">{text.loadingHub}</p> : null}
+        </div>
+      </section>
+
+      <section id="decision-frame" className={`${investUiClass.grid} grid-cols-1 xl:grid-cols-12`}>
         <InvestCard className="xl:col-span-4" title={text.decisionFrame}>
           <div className="space-y-3 text-sm">
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
@@ -466,7 +547,10 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
 
       {activePanel === "dashboard" ? (
         <section className={`${investUiClass.grid} grid-cols-1 xl:grid-cols-12`}>
-          <InvestCard className="xl:col-span-6" title={text.allModules}>
+          <InvestCard
+            className={`xl:col-span-6 ${focus === "modules" ? "border-amber-300/60" : ""}`}
+            title={text.allModules}
+          >
             <div className="space-y-2">
               {allModules.map((module) => (
                 <div key={module.key} className="rounded-xl border border-white/10 bg-black/20 p-3">
@@ -487,7 +571,10 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
             </div>
           </InvestCard>
 
-          <InvestCard className="xl:col-span-6" title={text.watchlistFull}>
+          <InvestCard
+            className={`xl:col-span-6 ${focus === "watchlist" ? "border-amber-300/60" : ""}`}
+            title={text.watchlistFull}
+          >
             <div className="space-y-2">
               {fullWatchlist.map((item) => (
                 <div key={`${item.region}-${item.symbol}`} className="rounded-xl border border-white/10 bg-black/20 p-3">
