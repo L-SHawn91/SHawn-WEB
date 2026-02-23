@@ -41,7 +41,7 @@ const laneLinks = [
     color: "text-emerald-300",
   },
   {
-    href: "/cartridges/invest",
+    href: "/invest?panel=dashboard",
     title: "Investment Lane",
     desc: "데이터 기반 투자 리서치 워크플로",
     emoji: "💹",

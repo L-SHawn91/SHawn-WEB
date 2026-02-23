@@ -75,6 +75,7 @@ function InvestHubContent() {
       : "An operation hub that connects report reading, signal checks, and action queue decisions in one flow.",
     reportViewer: isKo ? "리포트 뷰어" : "Report Viewer",
     dashboardDetail: isKo ? "대시보드 상세" : "Dashboard Detail",
+    dashboardPanel: isKo ? "통합 대시보드" : "Unified Dashboard",
     search: isKo ? "종목 검색" : "Ticker Search",
     archive: isKo ? "히스토리 아카이브" : "History Archive",
     decisionFrame: isKo ? "의사결정 프레임" : "Decision Framework",
@@ -92,6 +93,8 @@ function InvestHubContent() {
     reset: isKo ? "초기화" : "Reset",
     noArchiveResult: isKo ? "검색 결과가 없습니다." : "No archive result.",
     allInHub: isKo ? "리포트/아카이브/대시보드 기능을 Invest Hub로 통합했습니다." : "Reports, archive, and dashboard flow are unified in Invest Hub.",
+    allModules: isKo ? "전체 모듈" : "All Modules",
+    watchlistFull: isKo ? "전체 워치리스트" : "Full Watchlist",
     loadingModules: isKo ? "모듈 데이터 로딩 중" : "Loading module data",
     loadingQueue: isKo ? "후보 리스트 로딩 중" : "Loading action queue",
     routine: isKo ? "운영 루틴" : "Operation Routine",
@@ -148,7 +151,7 @@ function InvestHubContent() {
 
   const activePanel = useMemo(() => {
     const panel = String(searchParams.get("panel") || "").toLowerCase();
-    if (panel === "reports" || panel === "archive") return panel;
+    if (panel === "reports" || panel === "archive" || panel === "dashboard") return panel;
     return "overview";
   }, [searchParams]);
 
@@ -196,13 +199,29 @@ function InvestHubContent() {
       .slice(0, 4);
   }, [snapshot?.modules]);
 
+  const allModules = useMemo(() => {
+    return [...(snapshot?.modules || [])].sort((a, b) => (b.weight || 0) - (a.weight || 0));
+  }, [snapshot?.modules]);
+
   const actionQueue = useMemo(() => {
     return [...(snapshot?.watchlist || [])].slice(0, 6);
   }, [snapshot?.watchlist]);
 
+  const fullWatchlist = useMemo(() => {
+    return [...(snapshot?.watchlist || [])];
+  }, [snapshot?.watchlist]);
+
   return (
     <InvestLayout
-      currentTab={activePanel === "reports" ? "reports" : activePanel === "archive" ? "archive" : "overview"}
+      currentTab={
+        activePanel === "reports"
+          ? "reports"
+          : activePanel === "archive"
+            ? "archive"
+            : activePanel === "dashboard"
+              ? "dashboard"
+              : "overview"
+      }
       title={text.title}
       description={text.desc}
       actions={
@@ -211,9 +230,9 @@ function InvestHubContent() {
             <FileText size={14} />
             {text.reportViewer}
           </Link>
-          <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>
+          <Link href="/invest?panel=dashboard" className={investUiClass.actionButtonDefault}>
             <BarChart3 size={14} />
-            {text.dashboardDetail}
+            {text.dashboardPanel}
           </Link>
           <Link href="/invest/search" className={investUiClass.actionButtonDefault}>
             <Search size={14} />
@@ -316,7 +335,7 @@ function InvestHubContent() {
             {actionQueue.map((item) => (
               <Link
                 key={`${item.region}-${item.symbol}`}
-                href={`/cartridges/invest?focus=watchlist&market=${item.region}&symbol=${encodeURIComponent(item.symbol)}`}
+                href={`/invest?panel=dashboard&focus=watchlist&market=${item.region}&symbol=${encodeURIComponent(item.symbol)}`}
                 className="block rounded-xl border border-white/10 bg-black/20 p-3 hover:border-white/30"
               >
                 <div className="flex items-start justify-between gap-2">
@@ -350,7 +369,7 @@ function InvestHubContent() {
         <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-lg font-semibold text-white">{text.unifiedReports}</h2>
-            <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>
+            <Link href="/invest?panel=dashboard" className={investUiClass.actionButtonDefault}>
               <BarChart3 size={14} />
               {text.openDetail}
             </Link>
@@ -439,6 +458,51 @@ function InvestHubContent() {
             {archiveLoading ? <p className="text-xs text-gray-400">{text.loadingHub}</p> : null}
             {!archiveLoading && archiveItems.length === 0 ? <p className="text-xs text-gray-400">{text.noArchiveResult}</p> : null}
           </div>
+        </section>
+      ) : null}
+
+      {activePanel === "dashboard" ? (
+        <section className={`${investUiClass.grid} grid-cols-1 xl:grid-cols-12`}>
+          <InvestCard className="xl:col-span-6" title={text.allModules}>
+            <div className="space-y-2">
+              {allModules.map((module) => (
+                <div key={module.key} className="rounded-xl border border-white/10 bg-black/20 p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-semibold text-white">{module.title}</p>
+                    <p className="text-xs text-gray-300">{Math.round(module.weight)}%</p>
+                  </div>
+                  <div className="mt-2 h-1.5 w-full rounded-full bg-zinc-800">
+                    <div
+                      className="h-1.5 rounded-full bg-sky-400"
+                      style={{ width: `${Math.max(0, Math.min(100, Math.round(module.confidence)))}%` }}
+                    />
+                  </div>
+                  <p className="mt-2 text-xs text-gray-300">{module.action}</p>
+                </div>
+              ))}
+              {!allModules.length ? <p className="text-xs text-gray-400">{text.loadingModules}</p> : null}
+            </div>
+          </InvestCard>
+
+          <InvestCard className="xl:col-span-6" title={text.watchlistFull}>
+            <div className="space-y-2">
+              {fullWatchlist.map((item) => (
+                <div key={`${item.region}-${item.symbol}`} className="rounded-xl border border-white/10 bg-black/20 p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-white">{item.name || item.symbol}</p>
+                      <p className="text-[11px] text-gray-400">{item.symbol} · {item.region.toUpperCase()}</p>
+                    </div>
+                    <span className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-semibold ${signalTone[item.signal]}`}>
+                      {item.signal} / {Math.round(item.score)}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-xs text-gray-300">{item.reason}</p>
+                </div>
+              ))}
+              {!fullWatchlist.length ? <p className="text-xs text-gray-400">{text.loadingQueue}</p> : null}
+            </div>
+          </InvestCard>
         </section>
       ) : null}
 
