@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ArrowRight, BarChart3, FileText, Search, Sparkles } from "lucide-react";
 import { InvestLayout, InvestCard, investUiClass } from "@/components/invest/invest-layout";
 import {
@@ -23,6 +24,7 @@ type ReportItem = {
 
 type ReportsResponse = {
   items?: ReportItem[];
+  hasMore?: boolean;
 };
 
 type SignalModule = {
@@ -62,7 +64,8 @@ function shortTitle(raw?: string): string {
   return base.replace(/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}\s(KR|US)\sMarket\sReport\s?/i, "").trim() || base;
 }
 
-export default function InvestHubPage() {
+function InvestHubContent() {
+  const searchParams = useSearchParams();
   const { language } = useLanguage();
   const isKo = language === "ko";
   const text = {
@@ -78,6 +81,17 @@ export default function InvestHubPage() {
     operationMode: isKo ? "운영 모드" : "Mode",
     stream: isKo ? "최신 리포트 스트림" : "Latest Report Stream",
     actionQueue: isKo ? "실행 후보 큐" : "Action Queue",
+    unifiedReports: isKo ? "통합 리포트 뷰" : "Unified Report View",
+    reportTabKr: isKo ? "국내 리포트" : "KR Reports",
+    reportTabUs: isKo ? "미국 리포트" : "US Reports",
+    open: isKo ? "열기" : "Open",
+    openDetail: isKo ? "상세 대시보드" : "Open Dashboard",
+    unifiedArchive: isKo ? "통합 아카이브 검색" : "Unified Archive Search",
+    queryPlaceholder: isKo ? "제목/타입 검색..." : "Search title/type...",
+    date: isKo ? "날짜" : "Date",
+    reset: isKo ? "초기화" : "Reset",
+    noArchiveResult: isKo ? "검색 결과가 없습니다." : "No archive result.",
+    allInHub: isKo ? "리포트/아카이브/대시보드 기능을 Invest Hub로 통합했습니다." : "Reports, archive, and dashboard flow are unified in Invest Hub.",
     loadingModules: isKo ? "모듈 데이터 로딩 중" : "Loading module data",
     loadingQueue: isKo ? "후보 리스트 로딩 중" : "Loading action queue",
     routine: isKo ? "운영 루틴" : "Operation Routine",
@@ -86,6 +100,11 @@ export default function InvestHubPage() {
   const [snapshot, setSnapshot] = useState<SnapshotPayload | null>(null);
   const [reportsKR, setReportsKR] = useState<ReportItem[]>([]);
   const [reportsUS, setReportsUS] = useState<ReportItem[]>([]);
+  const [archiveItems, setArchiveItems] = useState<ReportItem[]>([]);
+  const [archiveLoading, setArchiveLoading] = useState(false);
+  const [archiveQuery, setArchiveQuery] = useState("");
+  const [archiveDate, setArchiveDate] = useState("");
+  const [reportTab, setReportTab] = useState<"KR" | "US">("KR");
   const [loading, setLoading] = useState(true);
 
   const loadHub = useCallback(async () => {
@@ -93,8 +112,8 @@ export default function InvestHubPage() {
     try {
       const [snapshotRes, krRes, usRes] = await Promise.all([
         fetch("/api/invest/snapshot?mode=balanced", { cache: "no-store" }),
-        fetch("/api/reports?type=KR&limit=4&offset=0", { cache: "no-store" }),
-        fetch("/api/reports?type=US&limit=4&offset=0", { cache: "no-store" }),
+        fetch("/api/reports?type=KR&limit=12&offset=0", { cache: "no-store" }),
+        fetch("/api/reports?type=US&limit=12&offset=0", { cache: "no-store" }),
       ]);
 
       if (snapshotRes.ok) {
@@ -127,6 +146,50 @@ export default function InvestHubPage() {
     return () => clearInterval(timer);
   }, [loadHub]);
 
+  const activePanel = useMemo(() => {
+    const panel = String(searchParams.get("panel") || "").toLowerCase();
+    if (panel === "reports" || panel === "archive") return panel;
+    return "overview";
+  }, [searchParams]);
+
+  useEffect(() => {
+    const tab = String(searchParams.get("tab") || "").toUpperCase();
+    if (tab === "KR" || tab === "US") setReportTab(tab);
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (activePanel !== "archive") return;
+    const q = String(searchParams.get("q") || "");
+    const date = String(searchParams.get("date") || "");
+    setArchiveQuery(q);
+    setArchiveDate(date);
+  }, [activePanel, searchParams]);
+
+  const loadArchive = useCallback(async () => {
+    setArchiveLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.set("limit", "60");
+      params.set("offset", "0");
+      if (archiveQuery.trim()) params.set("q", archiveQuery.trim());
+      if (archiveDate) params.set("date", archiveDate);
+
+      const res = await fetch(`/api/reports?${params.toString()}`, { cache: "no-store" });
+      if (!res.ok) return;
+      const data = (await res.json()) as ReportsResponse;
+      setArchiveItems(Array.isArray(data.items) ? data.items : []);
+    } catch (error) {
+      console.error("Failed to load archive in hub", error);
+    } finally {
+      setArchiveLoading(false);
+    }
+  }, [archiveDate, archiveQuery]);
+
+  useEffect(() => {
+    if (activePanel !== "archive") return;
+    void loadArchive();
+  }, [activePanel, loadArchive]);
+
   const topModules = useMemo(() => {
     return [...(snapshot?.modules || [])]
       .sort((a, b) => (b.weight || 0) - (a.weight || 0))
@@ -139,12 +202,12 @@ export default function InvestHubPage() {
 
   return (
     <InvestLayout
-      currentTab="overview"
+      currentTab={activePanel === "reports" ? "reports" : activePanel === "archive" ? "archive" : "overview"}
       title={text.title}
       description={text.desc}
       actions={
         <>
-          <Link href="/market-intelligence?tab=KR" className={investUiClass.actionButtonDefault}>
+          <Link href="/invest?panel=reports&tab=KR" className={investUiClass.actionButtonDefault}>
             <FileText size={14} />
             {text.reportViewer}
           </Link>
@@ -156,13 +219,17 @@ export default function InvestHubPage() {
             <Search size={14} />
             {text.search}
           </Link>
-          <Link href="/market-intelligence/archive" className={investUiClass.actionButtonPrimary}>
+          <Link href="/invest?panel=archive" className={investUiClass.actionButtonPrimary}>
             <ArrowRight size={14} />
             {text.archive}
           </Link>
         </>
       }
     >
+      <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
+        <p className="text-xs text-gray-300">{text.allInHub}</p>
+      </section>
+
       <section className="space-y-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
           <div className="xl:col-span-1">
@@ -214,7 +281,7 @@ export default function InvestHubPage() {
                 {reportsKR.map((item) => (
                   <Link
                     key={`${item.path || item.title}-${item.time || ""}`}
-                    href="/market-intelligence?tab=KR"
+                    href="/invest?panel=reports&tab=KR"
                     className="block rounded-lg border border-white/10 bg-black/20 px-2.5 py-2 hover:border-blue-300/40"
                   >
                     <p className="line-clamp-1 text-sm font-medium text-white">{shortTitle(item.title)}</p>
@@ -231,7 +298,7 @@ export default function InvestHubPage() {
                 {reportsUS.map((item) => (
                   <Link
                     key={`${item.path || item.title}-${item.time || ""}`}
-                    href="/market-intelligence?tab=US"
+                    href="/invest?panel=reports&tab=US"
                     className="block rounded-lg border border-white/10 bg-black/20 px-2.5 py-2 hover:border-emerald-300/40"
                   >
                     <p className="line-clamp-1 text-sm font-medium text-white">{shortTitle(item.title)}</p>
@@ -279,11 +346,121 @@ export default function InvestHubPage() {
         </InvestCard>
       </section>
 
+      {activePanel === "reports" ? (
+        <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-lg font-semibold text-white">{text.unifiedReports}</h2>
+            <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>
+              <BarChart3 size={14} />
+              {text.openDetail}
+            </Link>
+          </div>
+          <div className="mb-4 inline-flex rounded-lg border border-white/10 bg-zinc-950/60 p-1">
+            <button
+              type="button"
+              onClick={() => setReportTab("KR")}
+              className={`rounded px-3 py-1.5 text-xs ${reportTab === "KR" ? "bg-white text-black" : "text-gray-300"}`}
+            >
+              {text.reportTabKr}
+            </button>
+            <button
+              type="button"
+              onClick={() => setReportTab("US")}
+              className={`rounded px-3 py-1.5 text-xs ${reportTab === "US" ? "bg-white text-black" : "text-gray-300"}`}
+            >
+              {text.reportTabUs}
+            </button>
+          </div>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {(reportTab === "KR" ? reportsKR : reportsUS).map((item) => (
+              <Link
+                key={`${item.path || item.title}-${item.time || ""}`}
+                href={item.path || "#"}
+                target="_blank"
+                className="rounded-lg border border-white/10 bg-black/20 p-3 hover:border-white/30"
+              >
+                <p className="line-clamp-1 text-sm font-semibold text-white">{shortTitle(item.title)}</p>
+                <p className="mt-1 text-xs text-gray-400">{item.date} {item.time || ""} · {item.type || reportTab}</p>
+                <p className="mt-2 text-xs text-sky-300">{text.open}</p>
+              </Link>
+            ))}
+            {(reportTab === "KR" ? reportsKR : reportsUS).length === 0 ? (
+              <p className="text-xs text-gray-400">{text.loadingHub}</p>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {activePanel === "archive" ? (
+        <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
+          <h2 className="text-lg font-semibold text-white">{text.unifiedArchive}</h2>
+          <div className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-[1fr_auto_auto_auto]">
+            <input
+              value={archiveQuery}
+              onChange={(e) => setArchiveQuery(e.target.value)}
+              placeholder={text.queryPlaceholder}
+              className="rounded border border-gray-700 bg-zinc-950 px-3 py-2 text-sm text-gray-100"
+            />
+            <input
+              type="date"
+              value={archiveDate}
+              onChange={(e) => setArchiveDate(e.target.value)}
+              className="rounded border border-gray-700 bg-zinc-950 px-3 py-2 text-sm text-gray-100"
+              aria-label={text.date}
+            />
+            <button type="button" onClick={() => void loadArchive()} className={investUiClass.actionButtonDefault}>
+              <Search size={14} />
+              {text.search}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setArchiveQuery("");
+                setArchiveDate("");
+              }}
+              className={investUiClass.actionButtonDefault}
+            >
+              {text.reset}
+            </button>
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+            {archiveItems.map((item) => (
+              <Link
+                key={`${item.path || item.title}-${item.time || ""}`}
+                href={item.path || "#"}
+                target="_blank"
+                className="rounded-lg border border-white/10 bg-black/20 p-3 hover:border-white/30"
+              >
+                <p className="line-clamp-1 text-sm font-semibold text-white">{shortTitle(item.title)}</p>
+                <p className="mt-1 text-xs text-gray-400">{item.date} {item.time || ""} · {item.type || "-"}</p>
+              </Link>
+            ))}
+            {archiveLoading ? <p className="text-xs text-gray-400">{text.loadingHub}</p> : null}
+            {!archiveLoading && archiveItems.length === 0 ? <p className="text-xs text-gray-400">{text.noArchiveResult}</p> : null}
+          </div>
+        </section>
+      ) : null}
+
       {loading ? (
         <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
           <p className="text-sm text-gray-400">{text.loadingHub}</p>
         </section>
       ) : null}
     </InvestLayout>
+  );
+}
+
+export default function InvestHubPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black text-white">
+          <div className="mx-auto max-w-7xl px-6 py-16 text-sm text-gray-400">Loading invest hub...</div>
+        </div>
+      }
+    >
+      <InvestHubContent />
+    </Suspense>
   );
 }

@@ -38,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${SITE_URL}/market-intelligence`,
+      url: `${SITE_URL}/invest`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,

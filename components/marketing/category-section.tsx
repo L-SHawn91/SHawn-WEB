@@ -35,7 +35,7 @@ export function CategorySection() {
             title: t.market_intelligence.title,
             description: t.market_intelligence.desc,
             icon: TrendingUp,
-            href: "/market-intelligence/archive",
+            href: "/invest?panel=archive",
             color: "text-purple-500",
             bg: "bg-purple-500/10",
             border: "group-hover:border-purple-500/50",

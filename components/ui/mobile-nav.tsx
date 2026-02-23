@@ -37,7 +37,7 @@ export function MobileNav() {
         { href: "/blog", label: t.nav.blog },
         { href: "/papers", label: t.nav.papers || 'Papers' },
         { href: "/datasets", label: t.nav.datasets || 'Datasets' },
-        { href: "/market-intelligence", label: t.nav.market_intelligence },
+        { href: "/invest?panel=reports&tab=KR", label: t.nav.market_intelligence },
     ]
 
     const container = {
