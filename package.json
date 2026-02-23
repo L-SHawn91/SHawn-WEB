@@ -16,7 +16,8 @@
     "sync": "python3 ../sync_to_web.py",
     "reports:sync-index": "node scripts/sync-reports-index.mjs",
     "test:search": "node scripts/test-search.mjs",
-    "check:i18n": "node scripts/enforce-i18n.mjs"
+    "check:i18n": "node scripts/enforce-i18n.mjs",
+    "check:forbidden-terms": "node scripts/enforce-forbidden-terms.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

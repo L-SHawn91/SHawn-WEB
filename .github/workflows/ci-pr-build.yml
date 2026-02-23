@@ -25,6 +25,9 @@ jobs:
       - name: Enforce i18n on changed pages
         run: npm run check:i18n
 
+      - name: Enforce forbidden terms
+        run: npm run check:forbidden-terms
+
       - name: Lint
         run: npm run lint
 

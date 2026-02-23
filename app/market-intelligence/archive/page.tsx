@@ -47,14 +47,13 @@ export default function ReportsPage() {
     loadMore: isKo ? "더 보기" : "Load More",
   };
   const [reports, setReports] = useState<Report[]>([]);
-  const [filteredReports, setFilteredReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const LIMIT = 60;
-  const quickQueries = ["KR", "US", "MORNING", "SPECIAL", "MODEL"];
+  const quickQueries = ["KR", "US", "MORNING", "EVENING", "VOLATILITY"];
 
   const fetchReports = useCallback(async (nextOffset: number, append: boolean) => {
     setLoading(true);
@@ -72,10 +71,8 @@ export default function ReportsPage() {
 
       if (append) {
         setReports((prev) => [...prev, ...items]);
-        setFilteredReports((prev) => [...prev, ...items]);
       } else {
         setReports(items);
-        setFilteredReports(items);
       }
       setOffset(nextOffset + items.length);
       setHasMore(Boolean(data.hasMore));
@@ -154,7 +151,7 @@ export default function ReportsPage() {
               ))}
             </div>
             <div className="mt-3 text-xs text-slate-600 dark:text-slate-300">
-              {text.totalLoaded}: <span className="font-semibold">{filteredReports.length}</span>
+              {text.totalLoaded}: <span className="font-semibold">{reports.length}</span>
               {" "}· {text.hasMore}: <span className="font-semibold">{hasMore ? text.yes : text.no}</span>
             </div>
           </div>
@@ -163,7 +160,7 @@ export default function ReportsPage() {
 
       {loading ? (
         <div className="text-center py-20 text-muted-foreground">{text.loading}</div>
-      ) : filteredReports.length === 0 ? (
+      ) : reports.length === 0 ? (
         <div className={`${investUiClass.panel} ${investUiClass.panelInner} text-center`}>
           <p className="text-lg">{text.noResultTitle}</p>
           <p className="text-sm text-muted-foreground mt-2">{text.noResultDesc}</p>
@@ -171,7 +168,7 @@ export default function ReportsPage() {
       ) : (
         <>
           <div className={`${investUiClass.grid} md:grid-cols-2 lg:grid-cols-3`}>
-            {filteredReports.map((report, idx) => (
+            {reports.map((report, idx) => (
               <Card
                 key={idx}
                 className={`${investUiClass.panel} border-primary/25 hover:border-primary transition-colors`}
