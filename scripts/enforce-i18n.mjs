@@ -19,6 +19,7 @@ const targets = changedFiles().filter((file) => {
 
 const alwaysRequired = [
   "app/invest/page.tsx",
+  "components/invest/invest-hub-page.tsx",
   "app/market-intelligence/page.tsx",
   "app/market-intelligence/archive/page.tsx",
   "app/cartridges/invest/page.tsx",

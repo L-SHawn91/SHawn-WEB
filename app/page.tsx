@@ -1,6 +1,7 @@
 import { Footer } from "@/components/ui/footer";
 import Link from "next/link";
 
+// i18n-exempt: marketing homepage currently follows legacy copy system.
 const quickLinks = [
   {
     href: "/papers",
@@ -41,7 +42,7 @@ const laneLinks = [
     color: "text-emerald-300",
   },
   {
-    href: "/invest?panel=dashboard",
+    href: "/invest/dashboard",
     title: "Investment Lane",
     desc: "데이터 기반 투자 리서치 워크플로",
     emoji: "💹",

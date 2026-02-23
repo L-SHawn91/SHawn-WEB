@@ -14,9 +14,9 @@ type InvestShellProps = {
 
 const investTabs: { key: InvestTab; label: string; href: string }[] = [
   { key: "search", label: "검색", href: "/invest/search" },
-  { key: "archive", label: "아카이브", href: "/invest?panel=archive" },
-  { key: "dashboard", label: "대시보드", href: "/invest?panel=dashboard" },
-  { key: "reports", label: "리포트", href: "/invest?panel=reports&tab=KR" },
+  { key: "archive", label: "아카이브", href: "/invest/archive" },
+  { key: "dashboard", label: "대시보드", href: "/invest/dashboard" },
+  { key: "reports", label: "리포트", href: "/invest/reports?tab=KR" },
   { key: "overview", label: "개요", href: "/invest" },
 ];
 

@@ -33,10 +33,10 @@ export function Header() {
                         <Link className="transition-colors hover:text-primary text-muted-foreground" href="/datasets">
                             {t.nav.datasets || 'Datasets'}
                         </Link>
-                        <Link className="transition-colors hover:text-primary text-muted-foreground" href="/invest?panel=reports&tab=KR">
+                        <Link className="transition-colors hover:text-primary text-muted-foreground" href="/invest/reports?tab=KR">
                             {t.nav.market_intelligence}
                         </Link>
-                        <Link className="transition-colors hover:text-primary text-muted-foreground" href="/invest?panel=archive">
+                        <Link className="transition-colors hover:text-primary text-muted-foreground" href="/invest/archive">
                             {t.nav.reports}
                         </Link>
                     </nav>

@@ -10,11 +10,11 @@ type PageProps = {
 export default function MarketIntelligencePage({ searchParams }: PageProps) {
   const rawTab = Array.isArray(searchParams?.tab) ? searchParams?.tab[0] : searchParams?.tab;
   const tab = String(rawTab || "").toUpperCase();
-  const params = new URLSearchParams({ panel: "reports" });
+  const params = new URLSearchParams();
 
   if (tab === "KR" || tab === "US") {
     params.set("tab", tab);
   }
 
-  redirect(`/invest?${params.toString()}`);
+  redirect(`/invest/reports${params.toString() ? `?${params.toString()}` : ""}`);
 }

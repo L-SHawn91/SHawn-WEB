@@ -14,10 +14,10 @@ export default function InvestDashboardLegacyPage({ searchParams }: PageProps) {
   const rawMarket = Array.isArray(searchParams?.market) ? searchParams?.market[0] : searchParams?.market;
   const rawSymbol = Array.isArray(searchParams?.symbol) ? searchParams?.symbol[0] : searchParams?.symbol;
 
-  const params = new URLSearchParams({ panel: "dashboard" });
+  const params = new URLSearchParams();
   if (rawFocus) params.set("focus", rawFocus);
   if (rawMarket) params.set("market", rawMarket);
   if (rawSymbol) params.set("symbol", rawSymbol);
 
-  redirect(`/invest?${params.toString()}`);
+  redirect(`/invest/dashboard${params.toString() ? `?${params.toString()}` : ""}`);
 }

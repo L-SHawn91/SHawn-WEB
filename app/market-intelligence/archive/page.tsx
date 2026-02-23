@@ -11,10 +11,10 @@ type PageProps = {
 export default function MarketArchivePage({ searchParams }: PageProps) {
   const rawQ = Array.isArray(searchParams?.q) ? searchParams?.q[0] : searchParams?.q;
   const rawDate = Array.isArray(searchParams?.date) ? searchParams?.date[0] : searchParams?.date;
-  const params = new URLSearchParams({ panel: "archive" });
+  const params = new URLSearchParams();
 
   if (rawQ) params.set("q", rawQ);
   if (rawDate) params.set("date", rawDate);
 
-  redirect(`/invest?${params.toString()}`);
+  redirect(`/invest/archive${params.toString() ? `?${params.toString()}` : ""}`);
 }
