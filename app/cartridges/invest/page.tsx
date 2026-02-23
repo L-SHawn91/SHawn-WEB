@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
 import {
   InvestQuoteKpiCards,
@@ -260,6 +261,7 @@ function formatScore(score: number) {
 }
 
 export default function InvestmentWorld() {
+  const searchParams = useSearchParams();
   const [strategy, setStrategy] = useState<StrategyMode>("balanced");
   const [marketFocus, setMarketFocus] = useState<string>("all");
   const [notice, setNotice] = useState<string>("");
@@ -308,10 +310,66 @@ export default function InvestmentWorld() {
     return () => clearInterval(timer);
   }, []);
 
-  const watchItems =
-    marketFocus === "all"
-      ? snapshot?.watchlist || []
-      : (snapshot?.watchlist || []).filter((item) => item.region === marketFocus);
+  useEffect(() => {
+    const market = String(searchParams.get("market") || "").toLowerCase();
+    if (market === "k" || market === "us" || market === "all") {
+      setMarketFocus(market);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const focus = String(searchParams.get("focus") || "").toLowerCase();
+    if (!focus) return;
+
+    const sectionMap: Record<string, string> = {
+      overview: "invest-overview",
+      strategy: "invest-strategy",
+      modules: "invest-modules",
+      markets: "invest-markets",
+      portfolio: "invest-portfolio",
+      watchlist: "invest-watchlist",
+    };
+
+    const targetId = sectionMap[focus];
+    if (!targetId) return;
+
+    const symbol = String(searchParams.get("symbol") || "").trim().toUpperCase();
+    if (focus === "watchlist" && symbol) {
+      setNotice(`딥링크 대상 종목: ${symbol}`);
+    }
+
+    const timer = setTimeout(() => {
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 120);
+
+    return () => clearTimeout(timer);
+  }, [searchParams]);
+
+  const watchItems = useMemo(
+    () =>
+      marketFocus === "all"
+        ? snapshot?.watchlist || []
+        : (snapshot?.watchlist || []).filter((item) => item.region === marketFocus),
+    [marketFocus, snapshot?.watchlist],
+  );
+  const focusedSymbol = String(searchParams.get("symbol") || "").trim().toUpperCase();
+
+  useEffect(() => {
+    const focus = String(searchParams.get("focus") || "").toLowerCase();
+    if (focus !== "watchlist" || !focusedSymbol) return;
+
+    const timer = setTimeout(() => {
+      const target = document.querySelector<HTMLElement>(`[data-watch-symbol="${focusedSymbol}"]`);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 220);
+
+    return () => clearTimeout(timer);
+  }, [searchParams, focusedSymbol, watchItems]);
 
   const quoteKpiData: QuoteKpiSnapshot | undefined = snapshot
     ? {
@@ -403,9 +461,9 @@ export default function InvestmentWorld() {
       description="Dual Quant System × Sovereign Alpha 강화 대시보드"
     >
       <>
-        <section className="mb-8">
+        <section id="invest-overview" className="mb-8">
           <div className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-            투자 페이지를 단계적으로 통합 중입니다. 리포트 탐색은 <Link href="/market-intelligence" className="underline font-semibold">Market Intelligence</Link>를 기본 허브로 사용하세요.
+            통합 운영은 <Link href="/invest" className="underline font-semibold">Investment Command Center</Link>에서 시작하고, 이 페이지는 시그널/리밸런싱 상세 점검에 사용하세요.
           </div>
           <div className="mt-4 rounded-2xl border border-sky-500/30 bg-sky-500/10 p-5">
             <p className="text-sm font-semibold text-sky-200">처음 보는 분을 위한 대시보드 읽는 순서</p>
@@ -480,9 +538,15 @@ export default function InvestmentWorld() {
           </div>
           <InvestQuoteKpiCards snapshot={quoteKpiData} />
           <InvestQuoteKpiNotice snapshot={quoteKpiData} />
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link href="/cartridges/invest?focus=strategy" className={investUiClass.actionButtonDefault}>전략 모드</Link>
+            <Link href="/cartridges/invest?focus=modules" className={investUiClass.actionButtonDefault}>모듈 분석</Link>
+            <Link href="/cartridges/invest?focus=portfolio" className={investUiClass.actionButtonDefault}>포트폴리오</Link>
+            <Link href="/cartridges/invest?focus=watchlist" className={investUiClass.actionButtonDefault}>Watchlist</Link>
+          </div>
         </section>
 
-        <section className="mb-8">
+        <section id="invest-strategy" className="mb-8">
           <h2 className="text-2xl font-bold text-yellow-400 mb-4">⚙️ 전략 모드</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {strategyModes.map((m) => (
@@ -505,7 +569,7 @@ export default function InvestmentWorld() {
           </div>
         </section>
 
-        <section className="mb-8">
+        <section id="invest-modules" className="mb-8">
           <h2 className="text-2xl font-bold text-yellow-400 mb-4">⚙️ Dual Quant Signal Mix</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {(snapshot?.modules || []).map((m) => (
@@ -544,7 +608,7 @@ export default function InvestmentWorld() {
           </div>
         </section>
 
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <section id="invest-markets" className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {(snapshot?.markets || []).map((market) => (
             <article
               key={market.region}
@@ -595,7 +659,7 @@ export default function InvestmentWorld() {
         </section>
 
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="lg:col-span-2 rounded-2xl border border-gray-700 bg-gray-900/50 p-6">
+          <div id="invest-portfolio" className="lg:col-span-2 rounded-2xl border border-gray-700 bg-gray-900/50 p-6">
             <h2 className="text-2xl font-bold text-yellow-400 mb-4">💼 포트폴리오</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {kpiCards.map((card) => (
@@ -708,7 +772,7 @@ export default function InvestmentWorld() {
             ) : null}
           </div>
 
-          <aside className="rounded-2xl border border-gray-700 bg-gray-900/50 p-6 space-y-4">
+          <aside id="invest-watchlist" className="rounded-2xl border border-gray-700 bg-gray-900/50 p-6 space-y-4">
             <h2 className="text-2xl font-bold text-yellow-400">🎯 Watchlist / 알림</h2>
             <div className="flex gap-2">
               <select
@@ -742,14 +806,26 @@ export default function InvestmentWorld() {
             </div>
 
             <div className="space-y-3">
-              {watchItems.map((item) => (
-                <div key={`${item.symbol}-${item.region}`} className="rounded-lg border border-gray-700 bg-black/35 p-3">
+              {watchItems.map((item) => {
+                const watchSymbol = String(item.symbol || "").trim().toUpperCase();
+                const isFocused = Boolean(focusedSymbol) && watchSymbol === focusedSymbol;
+                return (
+                <div
+                  key={`${item.symbol}-${item.region}`}
+                  data-watch-symbol={watchSymbol}
+                  className={`rounded-lg border p-3 ${
+                    isFocused
+                      ? "border-amber-300/70 bg-amber-500/15 shadow-[0_0_0_1px_rgba(252,211,77,0.4)]"
+                      : "border-gray-700 bg-black/35"
+                  }`}
+                >
                   <div className="flex items-start justify-between gap-2">
                     <span className="font-semibold text-white" title={renderInstrumentTooltip(item.symbol, item.name)}>
                       {renderInstrumentLabel(item.symbol, item.name)}
                     </span>
                     <span className={`text-[11px] px-2 py-0.5 rounded border ${signalBadge[item.signal]}`}>{item.signal}</span>
                   </div>
+                  {isFocused ? <p className="mt-1 text-[11px] font-semibold text-amber-200">선택된 종목</p> : null}
                   <p className="text-sm text-gray-300 mt-1">{item.reason}</p>
                   <p className="text-xs text-gray-400 mt-1">{item.catalyst}</p>
                   <p className={`text-sm mt-2 ${formatScore(item.score)}`}>점수 {item.score}</p>
@@ -761,7 +837,7 @@ export default function InvestmentWorld() {
                         </div>
                       ) : null}
                 </div>
-              ))}
+              )})}
             </div>
 
             {notice ? <p className="text-xs text-amber-300 border border-amber-500/40 rounded p-2">{notice}</p> : null}

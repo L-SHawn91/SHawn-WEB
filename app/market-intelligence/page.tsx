@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, FileText, ExternalLink, RefreshCw, TrendingUp, Globe, AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ReportDetailView, FullJsonReport } from "@/components/market/ReportDetailView";
 import { InvestLayout, investUiClass } from "@/components/invest/invest-layout";
 import { InvestQuoteKpiCards, InvestQuoteKpiNotice, type QuoteKpiSnapshot } from "@/components/invest/invest-kpi-components";
@@ -21,6 +22,7 @@ type ReportData = {
 };
 
 export default function MarketIntelligencePage() {
+  const searchParams = useSearchParams();
   const [indexData, setIndexData] = useState<ReportData>({ KR: [], US: [] });
   const [activeTab, setActiveTab] = useState<"KR" | "US">("KR");
   const [cursor, setCursor] = useState<{ KR: number; US: number }>({ KR: 0, US: 0 });
@@ -95,6 +97,13 @@ export default function MarketIntelligencePage() {
   }, []);
 
   useEffect(() => {
+    const tab = String(searchParams.get("tab") || "").toUpperCase();
+    if (tab === "KR" || tab === "US") {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     void fetchIndex();
     void fetchQuoteKpi();
   }, [fetchIndex, fetchQuoteKpi]);
@@ -134,6 +143,10 @@ export default function MarketIntelligencePage() {
           <Link href="/cartridges/invest" className={investUiClass.actionButtonDefault}>
             <TrendingUp size={14} />
             Investment Dashboard
+          </Link>
+          <Link href="/cartridges/invest?focus=watchlist" className={investUiClass.actionButtonDefault}>
+            <TrendingUp size={14} />
+            Watchlist Focus
           </Link>
           <button onClick={fetchIndex} className={investUiClass.actionButtonDefault}>
             <RefreshCw size={14} className={loadingIndex ? "animate-spin" : ""} />
