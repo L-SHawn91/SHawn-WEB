@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { InvestLayout, InvestCard, investUiClass } from "@/components/invest/invest-layout";
-import { Info, HelpCircle } from "lucide-react";
+import { Info } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 
 type AnalysisResult = {
@@ -35,19 +35,6 @@ type AnalysisResult = {
   external_consensus?: string;
   explanation?: string; // error message
 };
-
-function ScoreTooltip({ title, desc }: { title: string; desc: string }) {
-  return (
-    <div className="group relative ml-1 inline-flex items-center">
-      <HelpCircle className="h-3 w-3 text-zinc-500 hover:text-blue-400 cursor-help" />
-      <div className="absolute bottom-full left-1/2 mb-2 hidden w-48 -translate-x-1/2 rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-xs text-zinc-300 shadow-xl group-hover:block z-10">
-        <div className="font-semibold text-white mb-1">{title}</div>
-        {desc}
-        <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-zinc-700 bg-zinc-900"></div>
-      </div>
-    </div>
-  );
-}
 
 const SCORE_DESCRIPTIONS = {
   ko: {
@@ -237,7 +224,6 @@ export default function InvestSearchPage() {
                 <div className="flex items-center justify-between md:block md:text-right border-t md:border-t-0 border-zinc-800 pt-4 md:pt-0">
                   <div className="text-sm text-zinc-400 mb-1 flex items-center md:justify-end gap-1">
                     SHawn Score
-                    <ScoreTooltip title="SHawn Score" desc="종합 투자 매력도입니다. 80점 이상이면 강력 매수, 40점 미만이면 주의가 필요합니다." />
                   </div>
                   <div className={`text-5xl font-bold tracking-tighter ${getScoreColor(result.score)}`}>
                     {result.score.toFixed(1)}
@@ -250,9 +236,9 @@ export default function InvestSearchPage() {
                   <div key={key} className="rounded-lg bg-zinc-800/40 border border-zinc-700/30 p-3 text-center transition-colors hover:bg-zinc-800/60">
                     <div className="text-xs uppercase text-zinc-500 mb-1 flex items-center justify-center gap-1">
                       {key}
-                      <ScoreTooltip title={key.toUpperCase()} desc={scoreDescriptions[key]} />
                     </div>
                     <div className={`text-2xl font-bold ${getScoreColor(val)}`}>{val.toFixed(0)}</div>
+                    <p className="mt-1 text-[11px] text-zinc-500">{scoreDescriptions[key]}</p>
                   </div>
                 ))}
               </div>

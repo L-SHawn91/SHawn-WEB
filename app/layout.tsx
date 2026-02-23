@@ -8,7 +8,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/providers/language-provider";
 import { ShawnChatUI } from "@/components/marketing/shawn-chat-ui";
 import { Header } from "@/components/ui/header";
-import { GlobalHoverHints } from "@/components/ui/global-hover-hints";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
@@ -52,7 +51,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>
-            <GlobalHoverHints />
             <Header />
             {children}
             <ShawnChatUI />
