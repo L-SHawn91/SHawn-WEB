@@ -54,7 +54,7 @@ export default function ReportsPage() {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const LIMIT = 60;
-  const quickQueries = ["KR", "US", "MORNING", "SONOLBOT", "GEMINI"];
+  const quickQueries = ["KR", "US", "MORNING", "SPECIAL", "MODEL"];
 
   const fetchReports = useCallback(async (nextOffset: number, append: boolean) => {
     setLoading(true);

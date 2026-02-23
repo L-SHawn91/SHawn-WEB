@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gemini CLI 로그인 차단 이슈, 왜 전체 장애가 아니었나</title>
-  <meta name="description" content="Gemini CLI 로그인 차단 이슈를 처음 보는 사람도 이해할 수 있게 정리한 실전형 블로그. 원인, 재현 포인트, API Key 운영 전환 전략, 체크리스트와 시각화를 제공합니다." />
-  <meta name="keywords" content="Gemini CLI 로그인 오류, Gemini API Key, Google 로그인 차단, 인증 경로 분리, Gemini 운영 전략" />
+  <title>CLI 로그인 차단 이슈, 왜 전체 장애가 아니었나</title>
+  <meta name="description" content="CLI 로그인 차단 이슈를 처음 보는 사람도 이해할 수 있게 정리한 실전형 블로그. 원인, 재현 포인트, API Key 운영 전환 전략, 체크리스트와 시각화를 제공합니다." />
+  <meta name="keywords" content="CLI 로그인 오류, Model API Key, Google 로그인 차단, 인증 경로 분리, Model 운영 전략" />
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="Gemini CLI 로그인 차단 이슈, 왜 전체 장애가 아니었나" />
+  <meta property="og:title" content="CLI 로그인 차단 이슈, 왜 전체 장애가 아니었나" />
   <meta property="og:description" content="모델 장애가 아니라 인증 경로 이슈였던 실제 사례와 운영 대응 전략" />
-  <meta property="og:url" content="/reports/2026-02-18_08-22_GEMINI_CLI_AUTH.html" />
+  <meta property="og:url" content="/reports/2026-02-18_08-22_CLI_AUTH_INCIDENT.html" />
   <meta property="og:locale" content="ko_KR" />
   <meta name="twitter:card" content="summary_large_image" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
@@ -58,7 +58,7 @@
   <main class="wrap">
     <section class="card">
       <span class="kicker">MODEL OPS INCIDENT</span>
-      <h1>Gemini CLI 로그인 차단 이슈, 왜 ‘전체 장애’처럼 보였을까</h1>
+      <h1>CLI 로그인 차단 이슈, 왜 ‘전체 장애’처럼 보였을까</h1>
       <p class="lead">이번 이슈의 핵심은 모델 자체 장애가 아니라 인증 경로 분리였습니다. 로그인 경로가 막혀도 API Key 경로가 살아 있으면 운영은 계속할 수 있습니다.</p>
       <div class="meta">2026-02-18 08:22 KST · SHawn Ops Blog</div>
     </section>
@@ -66,11 +66,11 @@
     <section class="card">
       <h2>처음 보는 사람을 위한 30초 요약</h2>
       <ul>
-        <li><b>증상:</b> Gemini CLI의 <code>Login with Google</code> 방식이 실패</li>
+        <li><b>증상:</b> CLI의 <code>Login with Google</code> 방식이 실패</li>
         <li><b>반대 증거:</b> 같은 시점에 <code>API Key</code> 방식은 정상 응답</li>
         <li><b>결론:</b> 모델 품질 문제가 아니라 인증 경로 분리 이슈</li>
       </ul>
-      <div class="quote">즉, “Gemini 전체 장애”가 아니라 “Gemini에 들어가는 문 중 하나가 막힌 상태”였습니다.</div>
+      <div class="quote">즉, “Model 전체 장애”가 아니라 “Model에 들어가는 문 중 하나가 막힌 상태”였습니다.</div>
     </section>
 
     <section class="card">
@@ -81,19 +81,19 @@
 
     <section class="card">
       <h2>시각화 1) 인증 경로 상태 맵</h2>
-      <svg viewBox="0 0 920 285" width="100%" role="img" aria-label="Gemini auth path map">
+      <svg viewBox="0 0 920 285" width="100%" role="img" aria-label="Model auth path map">
         <rect x="28" y="34" width="320" height="46" rx="9" fill="#2f58d8"/>
-        <text x="44" y="63" fill="#fff" font-size="15" font-weight="700">Gemini CLI: Login with Google</text>
+        <text x="44" y="63" fill="#fff" font-size="15" font-weight="700">CLI: Login with Google</text>
         <rect x="380" y="34" width="220" height="46" rx="9" fill="#b4233c"/>
         <text x="447" y="63" fill="#fff" font-size="15" font-weight="700">Blocked</text>
 
         <rect x="28" y="116" width="320" height="46" rx="9" fill="#2f58d8"/>
-        <text x="44" y="145" fill="#fff" font-size="15" font-weight="700">Gemini CLI: API Key</text>
+        <text x="44" y="145" fill="#fff" font-size="15" font-weight="700">CLI: API Key</text>
         <rect x="380" y="116" width="220" height="46" rx="9" fill="#157347"/>
         <text x="455" y="145" fill="#fff" font-size="15" font-weight="700">Healthy</text>
 
         <rect x="28" y="198" width="320" height="46" rx="9" fill="#2f58d8"/>
-        <text x="44" y="227" fill="#fff" font-size="15" font-weight="700">Gemini Server/CI API Key</text>
+        <text x="44" y="227" fill="#fff" font-size="15" font-weight="700">Server/CI API Key</text>
         <rect x="380" y="198" width="220" height="46" rx="9" fill="#157347"/>
         <text x="455" y="227" fill="#fff" font-size="15" font-weight="700">Healthy</text>
 
@@ -127,7 +127,7 @@
     </section>
 
     <section class="card">
-      <h2>오류코드별 플레이북 (Gemini-only)</h2>
+      <h2>오류코드별 플레이북 (model-only)</h2>
       <ul>
         <li><code>401/403</code>: 자격증명/권한 검증 후 해당 경로 즉시 격리</li>
         <li><code>429</code>: 30~60분 쿨다운 후 재시도 (연타 금지)</li>
@@ -152,7 +152,7 @@
 
     <section class="card">
       <h2>FAQ</h2>
-      <p><b>Q.</b> Login이 막히면 Gemini를 중단해야 하나요?<br/><b>A.</b> 아닙니다. API Key 경로가 정상이라면 운영은 지속 가능합니다.</p>
+      <p><b>Q.</b> Login이 막히면 Model를 중단해야 하나요?<br/><b>A.</b> 아닙니다. API Key 경로가 정상이라면 운영은 지속 가능합니다.</p>
       <p><b>Q.</b> 왜 모델 변경보다 경로 분리가 우선인가요?<br/><b>A.</b> 이번 이슈는 모델 품질 문제가 아니라 인증 경로 안정성 문제이기 때문입니다.</p>
       <p><b>Q.</b> 가장 먼저 바꿀 1가지는 무엇인가요?<br/><b>A.</b> 배치/크론/서버 호출 경로를 API Key로 고정하는 것입니다.</p>
     </section>

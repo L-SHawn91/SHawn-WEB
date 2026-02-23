@@ -44,7 +44,7 @@ Switch by runtime/env:
 - Retrieval and assistant layer (for feature explainability and task routing):
   - OpenAI GPT-4.1/4o class
   - Anthropic Claude 3.5/3.7 Sonnet class
-  - Google Gemini 2.0/2.5 class
+  - Google LLM 2.0/2.5 class
 - Local-friendly option for desktop privacy mode:
   - Llama 3.1 8B/70B via Ollama (fallback, lower quality but local)
 

@@ -18,7 +18,7 @@ npm run dev
 
 ## 📜 Governance
 - **Sovereign Alpha**: 네온 하이라이트와 다크 프리미엄 디자인 원칙 고수.
-- 상세 프로토콜은 `GEMINI.md`를 참조하십시오.
+- 상세 프로토콜은 `GOVERNANCE.md`를 참조하십시오.
 
 ---
 *Maintained by SHawn-Bot Creative Engine*

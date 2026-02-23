@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>[DRAFT] Gemini CLI 인증 장애: 경로 분리 운영 가이드</title>
-  <meta name="description" content="Gemini CLI 인증 장애를 처음 보는 사람도 이해할 수 있게 설명한 모바일 최적화 롱폼 글. Login 차단과 API Key 정상 경로를 분리해 운영하는 실무 전략 제시."/>
+  <title>[DRAFT] CLI 인증 장애: 경로 분리 운영 가이드</title>
+  <meta name="description" content="CLI 인증 장애를 처음 보는 사람도 이해할 수 있게 설명한 모바일 최적화 롱폼 글. Login 차단과 API Key 정상 경로를 분리해 운영하는 실무 전략 제시."/>
   <style>
     :root{--bg:#f6f8ff;--card:#fff;--text:#0f1730;--muted:#5c6787;--line:#dde4f6;--primary:#345de3;--ok:#1c7a4a;--bad:#b2243a}
     *{box-sizing:border-box}
@@ -31,7 +31,7 @@
   <main class="wrap">
     <section class="card">
       <span class="tag">DRAFT · MOBILE LONGFORM</span>
-      <h1>Gemini CLI 인증 장애, 왜 ‘전체 장애’가 아니었나</h1>
+      <h1>CLI 인증 장애, 왜 ‘전체 장애’가 아니었나</h1>
       <p class="lead">이번 이슈의 핵심은 모델 자체 장애가 아니라 인증 경로 분리입니다. 운영 표준을 Login 중심에서 API Key 중심으로 재정의하면 장애 전파를 막을 수 있습니다.</p>
       <div class="meta">2026-02-18 · SHawn Ops Blog · 검수 전 초안</div>
     </section>
@@ -39,7 +39,7 @@
     <section class="card">
       <h2>1) 처음 보는 사람을 위한 30초 요약</h2>
       <ul>
-        <li><b>무슨 일?</b> Gemini CLI에서 <code>Login with Google</code> 경로가 차단됨</li>
+        <li><b>무슨 일?</b> CLI에서 <code>Login with Google</code> 경로가 차단됨</li>
         <li><b>근데 왜 계속 쓸 수 있지?</b> <code>API Key</code> 경로는 정상이라 호출 가능</li>
         <li><b>그래서 뭘 해야 함?</b> 운영 기본 경로를 API Key로 고정하고 Login은 진단용 분리</li>
       </ul>
@@ -47,19 +47,19 @@
 
     <section class="card">
       <h2>2) 시각화: 인증 경로별 상태</h2>
-      <svg viewBox="0 0 920 290" width="100%" role="img" aria-label="Gemini auth path health">
+      <svg viewBox="0 0 920 290" width="100%" role="img" aria-label="Model auth path health">
         <rect x="30" y="40" width="290" height="44" rx="9" fill="#355ee3"/>
-        <text x="45" y="68" fill="#fff" font-size="15" font-weight="700">Gemini CLI: Login with Google</text>
+        <text x="45" y="68" fill="#fff" font-size="15" font-weight="700">CLI: Login with Google</text>
         <rect x="350" y="40" width="230" height="44" rx="9" fill="#b2243a"/>
         <text x="405" y="68" fill="#fff" font-size="15" font-weight="700">Blocked</text>
 
         <rect x="30" y="120" width="290" height="44" rx="9" fill="#355ee3"/>
-        <text x="45" y="148" fill="#fff" font-size="15" font-weight="700">Gemini CLI: API Key</text>
+        <text x="45" y="148" fill="#fff" font-size="15" font-weight="700">CLI: API Key</text>
         <rect x="350" y="120" width="230" height="44" rx="9" fill="#1c7a4a"/>
         <text x="430" y="148" fill="#fff" font-size="15" font-weight="700">Healthy</text>
 
         <rect x="30" y="200" width="290" height="44" rx="9" fill="#355ee3"/>
-        <text x="45" y="228" fill="#fff" font-size="15" font-weight="700">Gemini Server/CI API Key</text>
+        <text x="45" y="228" fill="#fff" font-size="15" font-weight="700">Server/CI API Key</text>
         <rect x="350" y="200" width="230" height="44" rx="9" fill="#1c7a4a"/>
         <text x="430" y="228" fill="#fff" font-size="15" font-weight="700">Healthy</text>
 
@@ -71,19 +71,19 @@
         <text x="620" y="132" fill="#4d5f92" font-size="13">운영 기본은 API Key 경로로 고정</text>
         <text x="620" y="172" fill="#4d5f92" font-size="13">Login 경로는 진단 트랙으로 분리</text>
       </svg>
-      <p class="note">해석: “Gemini 전체 장애”가 아니므로 모델 교체보다 경로 분리 운영이 우선입니다.</p>
+      <p class="note">해석: “Model 전체 장애”가 아니므로 모델 교체보다 경로 분리 운영이 우선입니다.</p>
     </section>
 
     <section class="card">
       <h2>3) 왜 이런 현상이 발생하나</h2>
-      <p>같은 Gemini 호출이라도 인증 체인이 다르면 실패 지점도 달라집니다. Login 기반 경로는 세션/OAuth/정책 플래그 영향을 크게 받고, API Key 경로는 서버 자격증명 검증으로 단순화되어 재현성이 높습니다.</p>
+      <p>같은 Model 호출이라도 인증 체인이 다르면 실패 지점도 달라집니다. Login 기반 경로는 세션/OAuth/정책 플래그 영향을 크게 받고, API Key 경로는 서버 자격증명 검증으로 단순화되어 재현성이 높습니다.</p>
       <p>운영에서 중요한 건 “어떤 모델이 최고인가”보다 “어떤 경로가 일관되게 살아있는가”입니다. 이번 이슈는 그 차이를 명확하게 보여준 사례입니다.</p>
     </section>
 
     <section class="card">
-      <h2>4) 실무 조치안 (Gemini-only)</h2>
+      <h2>4) 실무 조치안 (model-only)</h2>
       <ul>
-        <li>운영 자동화/배치는 <code>Gemini API Key</code> 경로로만 고정</li>
+        <li>운영 자동화/배치는 <code>Model API Key</code> 경로로만 고정</li>
         <li>Login 경로는 하루 1회 헬스체크로 분리</li>
         <li><code>401/403</code> 즉시 격리 + 자격증명 검증</li>
         <li><code>429</code> 발생 시 30~60분 쿨다운 후 재시도</li>
@@ -112,7 +112,7 @@
 
     <section class="card faq">
       <h2>7) FAQ</h2>
-      <p><q>Login이 막히면 Gemini를 중단해야 하나요?</q><br/>아닙니다. API Key 경로가 정상이라면 운영 지속이 가능합니다.</p>
+      <p><q>Login이 막히면 Model를 중단해야 하나요?</q><br/>아닙니다. API Key 경로가 정상이라면 운영 지속이 가능합니다.</p>
       <p><q>왜 모델 교체보다 경로 분리가 우선인가요?</q><br/>이번 유형은 모델 품질 이슈가 아니라 인증 경로 안정성 이슈이기 때문입니다.</p>
     </section>
   </main>

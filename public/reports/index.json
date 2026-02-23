@@ -122,23 +122,23 @@
   {
     "date": "2026-02-18",
     "time": "10:00",
-    "type": "SONOLBOT_ANALYSIS",
-    "title": "2026-02-18 10:00 SONOLBOT_ANALYSIS Market Report",
-    "path": "/reports/2026-02-18_10-00_SONOLBOT_ANALYSIS.html",
-    "filename": "2026-02-18_10-00_SONOLBOT_ANALYSIS.json",
+    "type": "SPECIAL_ANALYSIS",
+    "title": "2026-02-18 10:00 SPECIAL_ANALYSIS Market Report",
+    "path": "/reports/2026-02-18_10-00_SPECIAL_ANALYSIS.html",
+    "filename": "2026-02-18_10-00_SPECIAL_ANALYSIS.json",
     "timestamp": "2026-02-18T10:00:00+09:00",
-    "json_path": "/reports/2026-02-18_10-00_SONOLBOT_ANALYSIS.json",
+    "json_path": "/reports/2026-02-18_10-00_SPECIAL_ANALYSIS.json",
     "source": "auto-sync"
   },
   {
     "date": "2026-02-18",
     "time": "08:22",
-    "type": "GEMINI_CLI_AUTH",
-    "title": "2026-02-18 08:22 GEMINI_CLI_AUTH Market Report",
-    "path": "/reports/2026-02-18_08-22_GEMINI_CLI_AUTH.html",
-    "filename": "2026-02-18_08-22_GEMINI_CLI_AUTH.json",
+    "type": "CLI_AUTH_INCIDENT",
+    "title": "2026-02-18 08:22 CLI_AUTH_INCIDENT Market Report",
+    "path": "/reports/2026-02-18_08-22_CLI_AUTH_INCIDENT.html",
+    "filename": "2026-02-18_08-22_CLI_AUTH_INCIDENT.json",
     "timestamp": "2026-02-18T08:22:00+09:00",
-    "json_path": "/reports/2026-02-18_08-22_GEMINI_CLI_AUTH.json",
+    "json_path": "/reports/2026-02-18_08-22_CLI_AUTH_INCIDENT.json",
     "source": "auto-sync"
   },
   {

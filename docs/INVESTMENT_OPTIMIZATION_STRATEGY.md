@@ -30,7 +30,7 @@
 - Market summarization / event explanation:
   - GPT-4.1/4o class
   - Claude Sonnet class
-  - Gemini 2.x class
+  - LLM 2.x class
 - Quant signal QA fallback local mode:
   - Llama 3.1 via Ollama (lower quality, privacy-first)
 
