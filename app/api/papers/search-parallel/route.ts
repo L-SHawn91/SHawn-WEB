@@ -47,6 +47,33 @@ function uniqueList(values: string[]): string[] {
   return Array.from(new Set(values.filter(Boolean).map((value) => value.trim())));
 }
 
+function preprocessUserQuery(raw: string): string {
+  let q = (raw || "").normalize("NFKC").trim();
+  if (!q) return "";
+
+  // Split glued Hangul/Latin tokens: "Bazer논문의" -> "Bazer 논문의"
+  q = q
+    .replace(/([A-Za-z])([가-힣])/g, "$1 $2")
+    .replace(/([가-힣])([A-Za-z])/g, "$1 $2");
+
+  const isMixedLang = /[A-Za-z]/.test(q) && /[가-힣]/.test(q);
+  if (isMixedLang) {
+    // Remove Korean query filler words in mixed-language requests.
+    q = q
+      .replace(/논문(의|들|을|에)?/g, " ")
+      .replace(/관련(된)?/g, " ")
+      .replace(/에\s*대한/g, " ")
+      .replace(/대한/g, " ")
+      .replace(/검색(해줘)?/g, " ")
+      .replace(/찾아줘/g, " ")
+      .replace(/알려줘/g, " ")
+      .replace(/보여줘/g, " ");
+  }
+
+  q = q.replace(/[^\p{L}\p{N}"'\-.\s]/gu, " ").replace(/\s+/g, " ").trim();
+  return q;
+}
+
 function extractAuthorCandidates(query: string): AuthorExtraction {
   const original = (query || "").trim();
   if (!original) return { cleanQuery: "", authorCandidates: [] };
@@ -632,99 +659,172 @@ function t6_integrateAndRank(
   return rankedPapers;
 }
 
+type TrackSource = 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex';
+
+type SearchAttemptResult = {
+  query: string;
+  intent: QueryIntent;
+  authorCandidates: string[];
+  trackResults: { t1: number; t2: number; t3: number; t4: number; t5: number; final: number };
+  papers: Paper[];
+};
+
+function attemptScore(attempt: SearchAttemptResult): number {
+  const diverseHits = attempt.trackResults.t1 + attempt.trackResults.t2 + attempt.trackResults.t3 + attempt.trackResults.t5;
+  return attempt.papers.length + diverseHits * 5;
+}
+
+function shouldStopRetry(attempt: SearchAttemptResult): boolean {
+  const diverseHits = attempt.trackResults.t1 + attempt.trackResults.t2 + attempt.trackResults.t3 + attempt.trackResults.t5;
+  return attempt.papers.length >= 12 && diverseHits >= 1;
+}
+
+function stripKoreanParticle(token: string): string {
+  if (!/[가-힣]/.test(token)) return token;
+  const stripped = token.replace(/(으로|에서|에게|께서|부터|까지|처럼|보다|조차|마저|라도|이나|나|은|는|이|가|을|를|의|에|와|과|도|만|로)$/u, '');
+  return stripped.length >= 2 ? stripped : token;
+}
+
+function buildQueryVariants(rawQuery: string, normalizedQuery: string): string[] {
+  const variants = new Set<string>();
+  const add = (value: string) => {
+    const v = value.replace(/\s+/g, ' ').trim();
+    if (v) variants.add(v);
+  };
+
+  add(normalizedQuery);
+  add(preprocessUserQuery(rawQuery));
+
+  const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
+  if (tokens.length >= 2) {
+    add([...tokens.slice(1), tokens[0]].join(' '));
+  }
+
+  const particleStripped = tokens.map(stripKoreanParticle);
+  add(particleStripped.join(' '));
+  if (particleStripped.length >= 2) {
+    add([...particleStripped.slice(1), particleStripped[0]].join(' '));
+  }
+
+  return Array.from(variants).slice(0, 4);
+}
+
+async function runSingleSearchAttempt(query: string, filters: any): Promise<SearchAttemptResult> {
+  const intent = classifyIntent(query);
+  const split = splitAuthorAndTopic(query);
+  const extracted = extractAuthorCandidates(query);
+  const baseCandidates = split.author ? [split.author] : [split.author, ...extracted.authorCandidates];
+  const authorCandidatesRaw = uniqueList(baseCandidates.filter(Boolean))
+    .filter((name) => String(name || '').trim().split(/\s+/).filter(Boolean).length <= 4);
+  const authorCandidates = intent === 'TOPIC' ? [] : authorCandidatesRaw;
+  const detectedTopic = (split.topic || extracted.cleanQuery || query).trim();
+  const topicQuery = intent === 'AUTHOR_WEAK' && !split.topic ? '' : detectedTopic;
+  const effectiveQuery = (topicQuery || authorCandidates[0] || query).trim();
+
+  const sources: TrackSource[] = filters?.sources || ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'];
+  const yearFrom = filters?.yearFrom;
+  const yearTo = filters?.yearTo;
+  const nonAuthorQuery = topicQuery || query;
+
+  const trackJobs: Array<{ source: TrackSource; promise: Promise<Paper[]> }> = [];
+  if (sources.includes('pubmed')) {
+    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
+  }
+  if (sources.includes('arxiv')) {
+    trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(topicQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
+  }
+  if (sources.includes('semantic')) {
+    trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
+  }
+  if (sources.includes('crossref')) {
+    trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
+  }
+  if (sources.includes('openalex')) {
+    trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
+  }
+
+  const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
+  const bySource: Record<TrackSource, Paper[]> = {
+    pubmed: [],
+    arxiv: [],
+    semantic: [],
+    crossref: [],
+    openalex: [],
+  };
+
+  settled.forEach((result, index) => {
+    const source = trackJobs[index]?.source;
+    if (!source) return;
+    bySource[source] = result.status === 'fulfilled' ? result.value : [];
+  });
+
+  const papers = t6_integrateAndRank(
+    bySource.pubmed,
+    bySource.arxiv,
+    bySource.semantic,
+    bySource.crossref,
+    bySource.openalex,
+    intent,
+    authorCandidates,
+  );
+
+  return {
+    query,
+    intent,
+    authorCandidates,
+    papers,
+    trackResults: {
+      t1: bySource.pubmed.length,
+      t2: bySource.arxiv.length,
+      t3: bySource.semantic.length,
+      t4: bySource.crossref.length,
+      t5: bySource.openalex.length,
+      final: papers.length,
+    },
+  };
+}
+
 export async function POST(request: NextRequest) {
   const overallStart = Date.now();
   
   try {
     const payload = await request.json();
     const rawQuery = typeof payload?.query === 'string' ? String(payload.query).trim() : '';
-    const intent = classifyIntent(rawQuery);
-    const split = splitAuthorAndTopic(rawQuery);
-    const extracted = extractAuthorCandidates(rawQuery);
-    const bioTerms = ['autophagy','lysosome','endometrium','fibrosis','organoid','transcriptomics','rna-seq','single-cell','hormone','uterus','lc3'];
-    const baseCandidates = split.author ? [split.author] : [split.author, ...extracted.authorCandidates];
-    const authorCandidates = uniqueList(baseCandidates.filter(Boolean))
-      .filter((name) => {
-        const n = String(name || '').toLowerCase();
-        const hasBio = bioTerms.some((term) => n.includes(term));
-        const tokenCount = String(name || '').trim().split(/\s+/).filter(Boolean).length;
-        if (hasBio && tokenCount > 2) return false;
-        return true;
-      });
-    const detectedTopic = (split.topic || extracted.cleanQuery || '').trim();
-    const topicQuery = intent === 'AUTHOR_WEAK' && !split.topic ? '' : detectedTopic;
-    const effectiveQuery = (topicQuery || authorCandidates[0] || rawQuery).trim();
+    const normalizedQuery = preprocessUserQuery(rawQuery);
     const filters = payload?.filters || {};
+    const variants = buildQueryVariants(rawQuery, normalizedQuery);
+    const attempts: Array<{ query: string; intent: QueryIntent; count: number }> = [];
 
-    const sources = filters?.sources || ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'];
-    const yearFrom = filters?.yearFrom;
-    const yearTo = filters?.yearTo;
-
-    // Execute selected tracks in parallel and preserve source mapping.
-    const trackJobs: Array<{
-      source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex';
-      promise: Promise<Paper[]>;
-    }> = [];
-    
-    if (sources.includes('pubmed')) {
-      trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
+    let best: SearchAttemptResult | null = null;
+    for (const candidate of variants) {
+      const attempt = await runSingleSearchAttempt(candidate, filters);
+      attempts.push({ query: attempt.query, intent: attempt.intent, count: attempt.papers.length });
+      if (!best || attemptScore(attempt) > attemptScore(best)) {
+        best = attempt;
+      }
+      if (shouldStopRetry(attempt)) break;
     }
-    if (sources.includes('arxiv')) {
-      trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(topicQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
-    }
-    if (sources.includes('semantic')) {
-      trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
-    }
-    const nonAuthorQuery = topicQuery || rawQuery;
-
-    if (sources.includes('crossref')) {
-      trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
-    }
-    if (sources.includes('openalex')) {
-      trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
-    }
-
-    const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
-    const bySource: Record<'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex', Paper[]> = {
-      pubmed: [],
-      arxiv: [],
-      semantic: [],
-      crossref: [],
-      openalex: [],
-    };
-    
-    settled.forEach((result, index) => {
-      const source = trackJobs[index]?.source;
-      if (!source) return;
-      bySource[source] = result.status === 'fulfilled' ? result.value : [];
-    });
-    
-    const papers1 = bySource.pubmed;
-    const papers2 = bySource.arxiv;
-    const papers3 = bySource.semantic;
-    const papers4 = bySource.crossref;
-    const papers5 = bySource.openalex;
-
-    // T6: Integration and ranking
-    const finalPapers = t6_integrateAndRank(papers1, papers2, papers3, papers4, papers5, intent, authorCandidates);
     
     const totalTime = Date.now() - overallStart;
     console.log(`[Parallel Search] Total time: ${totalTime}ms`);
+    const selected = best || {
+      query: normalizedQuery,
+      intent: 'TOPIC' as QueryIntent,
+      authorCandidates: [],
+      papers: [],
+      trackResults: { t1: 0, t2: 0, t3: 0, t4: 0, t5: 0, final: 0 },
+    };
     
     return NextResponse.json({ 
-      papers: finalPapers,
+      papers: selected.papers,
       meta: {
         totalTime,
-        intent,
-        authorCandidates,
-        trackResults: {
-          t1: papers1.length,
-          t2: papers2.length,
-          t3: papers3.length,
-          t4: papers4.length,
-          t5: papers5.length,
-          final: finalPapers.length,
-        }
+        intent: selected.intent,
+        normalizedQuery,
+        selectedQuery: selected.query,
+        attempts,
+        authorCandidates: selected.authorCandidates,
+        trackResults: selected.trackResults,
       }
     });
   } catch (error) {

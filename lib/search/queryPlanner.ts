@@ -1,23 +1,11 @@
 export type QueryIntent = 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'TOPIC';
 
-const BIO_KEYWORDS = [
-  'autophagy',
-  'lysosome',
-  'endometrium',
-  'fibrosis',
-  'organoid',
-  'transcriptomics',
-  'rna-seq',
-  'single-cell',
-  'scRNA',
-  'uterus',
-  'hormone',
-  'lc3',
-];
+function isNameWord(token: string): boolean {
+  return /^[A-Z][A-Za-z'-]{1,}$/.test(token || '');
+}
 
-function hasBioKeyword(query: string): boolean {
-  const q = query.toLowerCase();
-  return BIO_KEYWORDS.some((kw) => q.includes(kw.toLowerCase()));
+function isInitialToken(token: string): boolean {
+  return /^[A-Z](?:\.[A-Z])*\.?$/.test(token || '');
 }
 
 export function classifyIntent(query: string): QueryIntent {
@@ -35,18 +23,18 @@ export function classifyIntent(query: string): QueryIntent {
 
   const looksLikeName2Loose =
     tokens.length >= 2 &&
-    /^[A-Za-z][A-Za-z'-]{1,}$/.test(tokens[0] || '') &&
-    /^[A-Za-z][A-Za-z'-]{1,}$/.test(tokens[1] || '');
+    isNameWord(tokens[0] || '') &&
+    (isNameWord(tokens[1] || '') || isInitialToken(tokens[1] || ''));
 
   const looksLikeSingleName =
-    tokens.length === 1 && /^[A-Za-z][A-Za-z'-]{3,}$/.test(tokens[0] || '');
+    tokens.length === 1 && /^[A-Z][a-z'-]{2,}$/.test(tokens[0] || '');
 
   if (hasQuotes || hasCommaName || looksLikeName2Strict) return 'AUTHOR_STRONG';
 
-  // 저자 우선 정책: 이름처럼 보이고, 바이오 토픽 키워드 단독질의가 아니면 AUTHOR_WEAK로 취급
+  // 저자 우선 정책: 이름처럼 보이면 AUTHOR_WEAK로 취급
   if (looksLikeName2Loose) return 'AUTHOR_WEAK';
 
-  if (looksLikeSingleName && !hasBioKeyword(q)) {
+  if (looksLikeSingleName) {
     return 'AUTHOR_WEAK';
   }
 
@@ -68,7 +56,7 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
   const first = tokens[0] || '';
   const second = tokens[1] || '';
   const looksLikeTwoTokenName =
-    tokens.length >= 2 && /^[A-Za-z][A-Za-z'-]{1,}$/.test(first) && /^[A-Za-z][A-Za-z'-]{1,}$/.test(second);
+    tokens.length >= 2 && isNameWord(first) && (isNameWord(second) || isInitialToken(second));
 
   if (looksLikeTwoTokenName) {
     return {
@@ -77,8 +65,8 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
     };
   }
 
-  const looksLikeSingleName = tokens.length === 1 && /^[A-Za-z][A-Za-z'-]{3,}$/.test(first);
-  if (looksLikeSingleName && !hasBioKeyword(q)) {
+  const looksLikeSingleName = tokens.length === 1 && /^[A-Z][a-z'-]{2,}$/.test(first);
+  if (looksLikeSingleName) {
     return { author: first, topic: '' };
   }
 
