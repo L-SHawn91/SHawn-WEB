@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "market": "KR",
+    "date": "2026-03-02",
+    "time": "12-29",
+    "timestamp": "2026-03-02T12:29:57.266504+09:00",
+    "title": "KR Daily Strategic Report",
+    "avg_score": 89.0,
+    "buy_count": 3,
+    "sell_count": 1,
+    "high_growth_count": 3,
+    "top_alpha_ticker": "068270.KS"
+  },
+  "reports": [
+    {
+      "ticker": "068270.KS",
+      "name": "Celltrion, Inc.",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 238500.0,
+        "change_pct": -1.45,
+        "currency": "KRW"
+      },
+      "score": 100,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: 4.10% | MA20 vs MA60: 10.56% | RSI14: 71.1 / 20D momentum: 9.15%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=100 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: 4.10% | MA20 vs MA60: 10.56% | RSI14: 71.1 / 20D momentum: 9.15%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Overbought zone risk",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 225321.4286,
+      "short_term": {
+        "signal": "BUY",
+        "score": 100,
+        "details": [
+          "RSI14=71.05",
+          "ret20d=9.15%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 100,
+        "details": [
+          "MA20=229100.0",
+          "MA60=207218.3333"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "000100.KS",
+      "name": "Yuhan Corporation",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 110200.0,
+        "change_pct": -0.63,
+        "currency": "KRW"
+      },
+      "score": 96,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: 0.63% | MA20 vs MA60: -2.37% | RSI14: 53.6 / 20D momentum: 0.46%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=96 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: 0.63% | MA20 vs MA60: -2.37% | RSI14: 53.6 / 20D momentum: 0.46%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Macro/event risk not included in lightweight model",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 105539.2857,
+      "short_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "RSI14=53.57",
+          "ret20d=0.46%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "MA20=109510.0",
+          "MA60=112163.3333"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "128940.KS",
+      "name": "Hanmi Pharm. Co., Ltd.",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 593000.0,
+        "change_pct": -0.17,
+        "currency": "KRW"
+      },
+      "score": 96,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: 4.52% | MA20 vs MA60: 16.76% | RSI14: 65.0 / 20D momentum: 14.26%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=96 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: 4.52% | MA20 vs MA60: 16.76% | RSI14: 65.0 / 20D momentum: 14.26%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Macro/event risk not included in lightweight model",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 542107.1429,
+      "short_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "RSI14=64.97",
+          "ret20d=14.26%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "MA20=567350.0",
+          "MA60=485891.6667"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "047560.KS",
+      "name": "알 수 없음(요약 미제공)",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 15680.0,
+        "change_pct": -2.31,
+        "currency": "KRW"
+      },
+      "score": 64,
+      "future_value": {
+        "prediction": "SELL",
+        "rationale": "Price vs MA20: -8.71% | MA20 vs MA60: -1.61% | RSI14: 31.8 / 20D momentum: -17.47%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "SELL | score=64 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: -8.71% | MA20 vs MA60: -1.61% | RSI14: 31.8 / 20D momentum: -17.47%",
+            "color": "red"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Macro/event risk not included in lightweight model",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 14795.0,
+      "short_term": {
+        "signal": "SELL",
+        "score": 64,
+        "details": [
+          "RSI14=31.84",
+          "ret20d=-17.47%"
+        ]
+      },
+      "long_term": {
+        "signal": "SELL",
+        "score": 64,
+        "details": [
+          "MA20=17175.5",
+          "MA60=17457.0"
+        ]
+      },
+      "badges": [
+        "Watch"
+      ]
+    }
+  ]
+}
