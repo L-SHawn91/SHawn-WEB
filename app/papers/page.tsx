@@ -45,17 +45,40 @@ interface TrackStatus {
 
 interface SearchMeta {
   totalTime?: number;
+  mode?: 'broad' | 'precision' | 'author';
   intent?: 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'TOPIC';
   authorCandidates?: string[];
   trackResults?: {
     t1?: number;
     t2?: number;
     t3?: number;
+    t4?: number;
+    t5?: number;
     final?: number;
   };
+  homonymProfiles?: HomonymProfile[];
+}
+
+interface HomonymProfile {
+  profileId: string;
+  matchedAuthor: string;
+  topicBucket: string;
+  count: number;
+  avgRankScore: number;
+  avgEvidenceScore: number;
+  avgAuthorConfidence?: number;
+  yearMin: number;
+  yearMax: number;
+  sources: string[];
+  topAffiliations?: string[];
+  topCountries?: string[];
+  mergedFrom?: string[];
+  sampleTitles?: string[];
+  recommendationScore: number;
 }
 
 type SortMode = 'score' | 'recent' | 'citations' | 'source';
+type SearchMode = 'broad' | 'precision' | 'author';
 
 type RelatedItem = { id: string; title: string; year?: number; source: string; url: string };
 
@@ -64,18 +87,10 @@ type MergeSuggestion = { left: string; right: string; merged: string };
 const T_MERGE = 350;
 
 const SEARCH_GUIDE = {
-  quick: ['"Soohyung Lee" (정확 저자)', 'soohyung autophagy endometrium (주제+이름)', 'single-cell RNA-seq endometrium (토픽 검색)'],
+  quick: [],
   keyboard: ['Space/Tab: 블록(chip) 확정', 'Enter: 현재 입력 확정 후 검색', 'Backspace(빈 입력): 마지막 chip 제거'],
-  tips: ['따옴표(" ")를 쓰면 저자/구문 exact 매칭이 강화됩니다.', '이름 1단어만 입력하면 TOPIC으로 분류되어 노이즈가 늘 수 있습니다.', 'Bio Focus ON은 생물학 키워드를 자동 확장합니다.'],
+  tips: ['따옴표(" ")를 쓰면 저자/구문 exact 매칭이 강화됩니다.', '두 단어 이상으로 구체화할수록 결과 품질이 좋아집니다.', '추천어는 입력값/검색결과/최근 검색어를 기반으로 실시간 생성됩니다.'],
 };
-
-const SMART_SUGGESTIONS: Array<{ trigger: string; expansions: string[] }> = [
-  { trigger: 'soohyung', expansions: ['"Soohyung Lee" autophagy endometrium', '"Soohyung Lee" single-cell RNA-seq endometrium'] },
-  { trigger: 'autophagy', expansions: ['autophagy LC3 lysosome endometrium', 'autophagy flux organoid hormone signaling'] },
-  { trigger: 'endometrium', expansions: ['endometrium fibrosis single-cell RNA-seq', 'endometrium organoid hormone signaling'] },
-  { trigger: 'single-cell', expansions: ['single-cell RNA-seq endometrium atlas', 'single-cell transcriptomics uterus regeneration'] },
-  { trigger: 'organoid', expansions: ['endometrial organoid hormone signaling', 'organoid autophagy transcriptomics'] },
-];
 
 type SuggestionIntent = 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'TOPIC';
 
@@ -128,6 +143,50 @@ function buildQueryFromChips(chips: string[], buffer: string): string {
     .map((t) => (t.includes(' ') ? `"${t}"` : t))
     .join(' ')
     .trim();
+}
+
+const SUGGESTION_STOP_WORDS = new Set([
+  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'in', 'is', 'of', 'on', 'or', 'that', 'the', 'to', 'with',
+]);
+
+function tokenizeSuggestionSource(input: string): string[] {
+  return (input.match(/[A-Za-z][A-Za-z0-9-]{1,}/g) || []).map((token) => token.trim());
+}
+
+function collectSuggestionTerms(papers: Paper[], chips: string[], history: string[]): string[] {
+  const freq = new Map<string, { text: string; count: number }>();
+  const push = (token: string, weight = 1) => {
+    const cleaned = token.trim();
+    if (cleaned.length < 2) return;
+    const normalized = cleaned.toLowerCase();
+    if (SUGGESTION_STOP_WORDS.has(normalized)) return;
+    if (/^\d+$/.test(normalized)) return;
+    const existing = freq.get(normalized);
+    if (existing) {
+      existing.count += weight;
+      return;
+    }
+    freq.set(normalized, { text: cleaned, count: weight });
+  };
+
+  for (const chip of chips) {
+    for (const token of tokenizeInput(chip)) push(token, 3);
+  }
+
+  for (const q of history) {
+    for (const token of tokenizeInput(q)) push(token, 2);
+  }
+
+  for (const paper of papers) {
+    for (const token of tokenizeSuggestionSource(paper.title)) push(token, 2);
+    for (const token of paper.authors || []) push(token, 1);
+    for (const token of paper.meshTerms || []) push(token, 1);
+    for (const token of paper.techniques || []) push(token, 1);
+  }
+
+  return Array.from(freq.values())
+    .sort((a, b) => b.count - a.count || a.text.localeCompare(b.text))
+    .map((item) => item.text);
 }
 
 const trackNames: Record<keyof TrackStatus, string> = {
@@ -216,11 +275,16 @@ export default function PapersPage() {
   const [saveLoadingId, setSaveLoadingId] = useState<string | null>(null);
   const [hoverPaperId, setHoverPaperId] = useState<string | null>(null);
   const [relatedByPaper, setRelatedByPaper] = useState<Record<string, RelatedItem[]>>({});
-  const [bioFocus, setBioFocus] = useState(true);
+  const [queryHistory, setQueryHistory] = useState<string[]>([]);
   const [filters, setFilters] = useState({
+    mode: 'broad' as SearchMode,
     sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv'] as string[],
     yearFrom: '',
     yearTo: '',
+    authorNames: '',
+    firstAuthorOnly: false,
+    profileMergeThreshold: 0.5,
+    profileIds: [] as string[],
   });
 
   const sourceCounts = useMemo(() => {
@@ -335,39 +399,45 @@ export default function PapersPage() {
   };
 
   const effectiveInputQuery = useMemo(() => buildQueryFromChips(chips, query), [chips, query]);
+  const suggestionTerms = useMemo(
+    () => collectSuggestionTerms(papers, chips, queryHistory),
+    [papers, chips, queryHistory],
+  );
   const liveHint = useMemo(() => {
     const tokenCount = effectiveInputQuery.split(/\s+/).filter(Boolean).length;
-    if (!effectiveInputQuery) return '예: "Soohyung Lee" autophagy';
-    if (tokenCount === 1) return '단일 토큰은 TOPIC으로 해석될 수 있습니다. 저자 검색이면 따옴표/성+이름을 권장합니다.';
+    if (!effectiveInputQuery) return '키워드를 입력하면 실시간 추천어가 나타납니다.';
+    if (tokenCount === 1) return '단일 토큰은 범위가 넓을 수 있습니다. 두 단어 이상 조합을 권장합니다.';
     if (effectiveInputQuery.includes('"')) return '따옴표 기반 phrase 검색이 적용됩니다.';
     return '현재 입력은 다중 토큰 검색으로 실행됩니다.';
   }, [effectiveInputQuery]);
 
   const contextualSuggestions = useMemo(() => {
-    const q = effectiveInputQuery.toLowerCase();
-    let values: string[];
+    const raw = (effectiveInputQuery || query).trim();
+    const tokens = raw ? raw.split(/\s+/).filter(Boolean) : [];
+    const lastToken = tokens[tokens.length - 1] || '';
+    const lastLower = lastToken.toLowerCase();
+    const hasPartialToken = query.trim().length > 0 && !/\s$/.test(query) && !!lastToken;
+    const head = tokens.slice(0, -1).join(' ');
 
-    if (!q.trim()) {
-      values = SEARCH_GUIDE.quick.map((x) => x.replace(/\s*\(.+\)$/, ''));
-    } else {
-      const matched = SMART_SUGGESTIONS
-        .filter((item) => q.includes(item.trigger))
-        .flatMap((item) => item.expansions);
-
-      values = matched.length > 0
-        ? Array.from(new Set(matched)).slice(0, 4)
-        : [
-            `${effectiveInputQuery} endometrium`,
-            `${effectiveInputQuery} autophagy`,
-            `${effectiveInputQuery} single-cell RNA-seq`,
-          ].slice(0, 3);
-    }
+    const values = suggestionTerms
+      .filter((term) => {
+        const lower = term.toLowerCase();
+        if (raw.toLowerCase().includes(lower)) return false;
+        if (!hasPartialToken) return true;
+        return lower.startsWith(lastLower) || lower.includes(lastLower);
+      })
+      .slice(0, 6)
+      .map((term) => {
+        if (!raw) return term;
+        if (!hasPartialToken) return `${raw} ${term}`;
+        return [head, term].filter(Boolean).join(' ');
+      });
 
     return values.map((value) => ({
       value,
       intent: detectSuggestionIntent(value),
     }));
-  }, [effectiveInputQuery]);
+  }, [effectiveInputQuery, query, suggestionTerms]);
 
   const ghostTail = useMemo(() => {
     const top = contextualSuggestions[0]?.value || '';
@@ -381,8 +451,8 @@ export default function PapersPage() {
   }, [contextualSuggestions, effectiveInputQuery]);
 
   const quickQueries = useMemo(
-    () => SEARCH_GUIDE.quick.map((item) => item.replace(/\s*\(.+\)$/, '')),
-    [],
+    () => queryHistory.slice(0, 5),
+    [queryHistory],
   );
 
   const commitBufferToChip = (text: string) => {
@@ -400,24 +470,35 @@ export default function PapersPage() {
     setTrackStatus({ t1: 'loading', t2: 'loading', t3: 'loading', t4: 'idle' });
     setMeta(null);
 
+    const parsedAuthorNames = filters.authorNames
+      .split(',')
+      .map((x) => x.trim())
+      .filter(Boolean);
+    const requestFilters: Record<string, unknown> = {
+      sources: filters.sources,
+      yearFrom: filters.yearFrom,
+      yearTo: filters.yearTo,
+      firstAuthorOnly: filters.firstAuthorOnly,
+      profileMergeThreshold: filters.profileMergeThreshold,
+    };
+    if (parsedAuthorNames.length) requestFilters.authorNames = parsedAuthorNames;
+    if (filters.profileIds.length) requestFilters.profileIds = filters.profileIds;
+
     try {
       setTimeout(() => setTrackStatus((s) => ({ ...s, t1: 'done' })), 700);
       setTimeout(() => setTrackStatus((s) => ({ ...s, t2: 'done' })), 1100);
       setTimeout(() => setTrackStatus((s) => ({ ...s, t3: 'done' })), 1400);
 
-      const effectiveQuery = bioFocus
-        ? `${userQuery} AND (endometrium OR uterus OR ovarian OR embryo OR organoid OR autophagy OR transcriptomics)`
-        : userQuery;
-
       const response = await apiFetch('/api/papers/search-parallel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: effectiveQuery, filters }),
+        body: JSON.stringify({ query: userQuery, mode: filters.mode, filters: requestFilters }),
       });
       const data = await response.json();
 
       setPapers(data.papers || []);
       setMeta(data.meta || null);
+      setQueryHistory((prev) => [userQuery, ...prev.filter((item) => item !== userQuery)].slice(0, 10));
       setTrackStatus({ t1: 'done', t2: 'done', t3: 'done', t4: 'done' });
     } catch (error) {
       console.error('Search failed:', error);
@@ -440,6 +521,7 @@ export default function PapersPage() {
     if (!q) return;
     setChips([]);
     setQuery(q);
+    setQueryHistory((prev) => [q, ...prev.filter((item) => item !== q)].slice(0, 10));
   }, []);
 
   const exportBibTeX = () => {
@@ -498,7 +580,7 @@ export default function PapersPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
-                placeholder="예: endometriosis single-cell atlas"
+                placeholder="예: single-cell atlas"
                 className="w-full rounded-xl border border-blue-300 bg-white px-10 py-2.5 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-blue-700 dark:bg-slate-900 dark:text-slate-100 sm:py-3"
               />
             </div>
@@ -512,20 +594,22 @@ export default function PapersPage() {
               {loading ? '검색 중...' : '검색 실행'}
             </button>
           </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {quickQueries.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => {
-                  void runQuickQuery(item);
-                }}
-                className="rounded-full border border-slate-300 bg-white px-2.5 py-1 text-[11px] text-slate-700 transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-600 dark:hover:text-blue-300 sm:px-3 sm:py-1.5 sm:text-xs"
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+          {quickQueries.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {quickQueries.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => {
+                    void runQuickQuery(item);
+                  }}
+                  className="rounded-full border border-slate-300 bg-white px-2.5 py-1 text-[11px] text-slate-700 transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-600 dark:hover:text-blue-300 sm:px-3 sm:py-1.5 sm:text-xs"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
@@ -674,7 +758,9 @@ export default function PapersPage() {
                       <div>
                         <p className="mb-1 font-medium">빠른 예시</p>
                         <ul className="space-y-1">
-                          {SEARCH_GUIDE.quick.map((line) => (
+                          {SEARCH_GUIDE.quick.length === 0 ? (
+                            <li className="text-[11px]">• 최근 검색어가 자동으로 표시됩니다.</li>
+                          ) : SEARCH_GUIDE.quick.map((line) => (
                             <li key={line} className="text-[11px]">• {line}</li>
                           ))}
                         </ul>
@@ -992,6 +1078,50 @@ export default function PapersPage() {
                 <Filter className="h-4 w-4" /> Paper Filters
               </h3>
               <div className="grid grid-cols-2 gap-2">
+                <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+                  <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Search Mode</span>
+                  <select
+                    value={filters.mode}
+                    onChange={(e) => setFilters({ ...filters, mode: e.target.value as SearchMode, profileIds: [] })}
+                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
+                  >
+                    <option value="broad">Broad</option>
+                    <option value="precision">Precision</option>
+                    <option value="author">Author</option>
+                  </select>
+                </label>
+                {filters.mode === 'author' && (
+                  <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+                    <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Author Aliases (comma-separated)</span>
+                    <input
+                      type="text"
+                      value={filters.authorNames}
+                      onChange={(e) => setFilters({ ...filters, authorNames: e.target.value })}
+                      placeholder="Soohyung Lee, Lee SH, 이수형"
+                      className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
+                    />
+                  </label>
+                )}
+                {filters.mode === 'author' && (
+                  <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+                    <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">
+                      Profile Merge Strictness: {filters.profileMergeThreshold.toFixed(2)}
+                    </span>
+                    <input
+                      type="range"
+                      min={0.3}
+                      max={0.9}
+                      step={0.05}
+                      value={filters.profileMergeThreshold}
+                      onChange={(e) => setFilters({ ...filters, profileMergeThreshold: Number(e.target.value), profileIds: [] })}
+                      className="w-full"
+                    />
+                    <div className="mt-1 flex justify-between text-[10px] text-slate-400">
+                      <span>More merge</span>
+                      <span>More split</span>
+                    </div>
+                  </label>
+                )}
                 <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
                   <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Year From</span>
                   <input
@@ -1010,6 +1140,16 @@ export default function PapersPage() {
                     className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
                   />
                 </label>
+                {filters.mode === 'author' && (
+                  <label className="col-span-2 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800">
+                    <input
+                      type="checkbox"
+                      checked={filters.firstAuthorOnly}
+                      onChange={(e) => setFilters({ ...filters, firstAuthorOnly: e.target.checked })}
+                    />
+                    <span className="text-slate-600 dark:text-slate-300">First author only</span>
+                  </label>
+                )}
               </div>
               <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
                 <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Source Filters</div>
@@ -1038,23 +1178,71 @@ export default function PapersPage() {
                   })}
                 </div>
               </div>
-              <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800">
-                <div>
-                  <p className="font-medium text-slate-700 dark:text-slate-200">Bio Focus</p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">바이오 논문 키워드 자동 확장</p>
+              {filters.mode === 'author' && (meta?.homonymProfiles?.length || 0) > 0 && (
+                <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
+                  <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Recommended Author Profiles</div>
+                  <div className="space-y-2">
+                    {(meta?.homonymProfiles || []).slice(0, 5).map((profile) => {
+                      const active = filters.profileIds.includes(profile.profileId);
+                      return (
+                        <button
+                          key={profile.profileId}
+                          onClick={() => {
+                            const next = active
+                              ? filters.profileIds.filter((x) => x !== profile.profileId)
+                              : [profile.profileId];
+                            setFilters((prev) => ({ ...prev, profileIds: next }));
+                          }}
+                          className={`w-full rounded-lg border px-2 py-2 text-left text-[11px] ${
+                            active
+                              ? 'border-blue-600 bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200'
+                              : 'border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200'
+                          }`}
+                        >
+                          <div className="font-semibold">{profile.matchedAuthor} · {profile.topicBucket}</div>
+                          <div className="mt-1 text-[10px] opacity-80">
+                            score {profile.recommendationScore} · papers {profile.count} · {profile.yearMin}-{profile.yearMax}
+                          </div>
+                          {(profile.topAffiliations || []).length > 0 && (
+                            <div className="mt-1 line-clamp-1 text-[10px] opacity-80">
+                              {profile.topAffiliations?.slice(0, 2).join(' | ')}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const top = (meta?.homonymProfiles || [])[0];
+                        if (!top) return;
+                        setFilters((prev) => ({ ...prev, profileIds: [top.profileId] }));
+                      }}
+                      className="rounded-md border border-emerald-500 px-2 py-1 text-[11px] text-emerald-700 dark:text-emerald-300"
+                    >
+                      Use best profile
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void searchPapers()}
+                      className="rounded-md border border-blue-500 px-2 py-1 text-[11px] text-blue-700 dark:text-blue-300"
+                    >
+                      Apply profile filter
+                    </button>
+                    {filters.profileIds.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setFilters((prev) => ({ ...prev, profileIds: [] }))}
+                        className="rounded-md border border-slate-300 px-2 py-1 text-[11px]"
+                      >
+                        Clear profile
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <button
-                  onClick={() => setBioFocus((v) => !v)}
-                  className={`rounded-md border px-2 py-1 text-[11px] ${
-                    bioFocus
-                      ? 'border-blue-600 bg-blue-600 text-white'
-                      : 'border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300'
-                  }`}
-                  title="Bio Focus를 켜면 생물학/의생명 키워드를 자동 확장합니다"
-                >
-                  {bioFocus ? 'ON' : 'OFF'}
-                </button>
-              </div>
+              )}
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
