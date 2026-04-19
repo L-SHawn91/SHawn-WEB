@@ -1,0 +1,366 @@
+{
+  "meta": {
+    "market": "US",
+    "date": "2026-03-02",
+    "time": "12-30",
+    "timestamp": "2026-03-02T12:30:38.142255+09:00",
+    "title": "US Daily Strategic Report",
+    "avg_score": 92.0,
+    "buy_count": 6,
+    "sell_count": 1,
+    "high_growth_count": 6,
+    "top_alpha_ticker": "MRNA"
+  },
+  "reports": [
+    {
+      "ticker": "MRNA",
+      "name": "Moderna, Inc.",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 53.57,
+        "change_pct": 3.6,
+        "currency": "USD"
+      },
+      "score": 100,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: 18.02% | MA20 vs MA60: 17.96% | RSI14: 88.5 / 20D momentum: 21.56%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=100 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: 18.02% | MA20 vs MA60: 17.96% | RSI14: 88.5 / 20D momentum: 21.56%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Overbought zone risk",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 48.4634,
+      "short_term": {
+        "signal": "BUY",
+        "score": 100,
+        "details": [
+          "RSI14=88.46",
+          "ret20d=21.56%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 100,
+        "details": [
+          "MA20=45.3912",
+          "MA60=38.4797"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "AMGN",
+      "name": "Amgen Inc.",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 388.16,
+        "change_pct": 2.33,
+        "currency": "USD"
+      },
+      "score": 96,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: 4.86% | MA20 vs MA60: 7.52% | RSI14: 53.0 / 20D momentum: 13.54%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=96 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: 4.86% | MA20 vs MA60: 7.52% | RSI14: 53.0 / 20D momentum: 13.54%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Macro/event risk not included in lightweight model",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 375.7314,
+      "short_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "RSI14=53.0",
+          "ret20d=13.54%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "MA20=370.168",
+          "MA60=344.2708"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "BMRN",
+      "name": "BioMarin Pharmaceutical Inc.",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 61.73,
+        "change_pct": 1.01,
+        "currency": "USD"
+      },
+      "score": 96,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: 2.74% | MA20 vs MA60: 4.09% | RSI14: 66.3 / 20D momentum: 9.18%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=96 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: 2.74% | MA20 vs MA60: 4.09% | RSI14: 66.3 / 20D momentum: 9.18%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Macro/event risk not included in lightweight model",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 57.8846,
+      "short_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "RSI14=66.27",
+          "ret20d=9.18%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "MA20=60.0845",
+          "MA60=57.7225"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "BNTX",
+      "name": "BioNTech SE",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 110.23,
+        "change_pct": 1.31,
+        "currency": "USD"
+      },
+      "score": 96,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: 1.25% | MA20 vs MA60: 5.06% | RSI14: 59.6 / 20D momentum: -3.09%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=96 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: 1.25% | MA20 vs MA60: 5.06% | RSI14: 59.6 / 20D momentum: -3.09%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Macro/event risk not included in lightweight model",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 105.9111,
+      "short_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "RSI14=59.59",
+          "ret20d=-3.09%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "MA20=108.864",
+          "MA60=103.6239"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "GILD",
+      "name": "Gilead Sciences, Inc.",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 148.95,
+        "change_pct": 3.6,
+        "currency": "USD"
+      },
+      "score": 96,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: -0.22% | MA20 vs MA60: 12.23% | RSI14: 45.4 / 20D momentum: 4.93%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=96 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: -0.22% | MA20 vs MA60: 12.23% | RSI14: 45.4 / 20D momentum: 4.93%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Macro/event risk not included in lightweight model",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 142.4807,
+      "short_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "RSI14=45.39",
+          "ret20d=4.93%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "MA20=149.278",
+          "MA60=133.006"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "PFE",
+      "name": "Pfizer Inc.",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 27.65,
+        "change_pct": 2.03,
+        "currency": "USD"
+      },
+      "score": 96,
+      "future_value": {
+        "prediction": "BUY",
+        "rationale": "Price vs MA20: 2.20% | MA20 vs MA60: 3.97% | RSI14: 56.6 / 20D momentum: 4.58%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "BUY | score=96 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: 2.20% | MA20 vs MA60: 3.97% | RSI14: 56.6 / 20D momentum: 4.58%",
+            "color": "green"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Macro/event risk not included in lightweight model",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 26.8346,
+      "short_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "RSI14=56.62",
+          "ret20d=4.58%"
+        ]
+      },
+      "long_term": {
+        "signal": "BUY",
+        "score": 96,
+        "details": [
+          "MA20=27.0545",
+          "MA60=26.0212"
+        ]
+      },
+      "badges": [
+        "S-Tier Alpha"
+      ]
+    },
+    {
+      "ticker": "RGEN",
+      "name": "Repligen Corporation",
+      "sector": "Biotech",
+      "price_info": {
+        "current": 128.73,
+        "change_pct": -3.68,
+        "currency": "USD"
+      },
+      "score": 64,
+      "future_value": {
+        "prediction": "SELL",
+        "rationale": "Price vs MA20: -7.55% | MA20 vs MA60: -10.59% | RSI14: 29.2 / 20D momentum: -13.82%"
+      },
+      "enhanced_diagnosis": {
+        "primary": "SELL | score=64 | source=yahoo",
+        "layers": [
+          {
+            "diagnosis": "Technical",
+            "detail": "Price vs MA20: -7.55% | MA20 vs MA60: -10.59% | RSI14: 29.2 / 20D momentum: -13.82%",
+            "color": "red"
+          },
+          {
+            "diagnosis": "Risk",
+            "detail": "Falling-knife risk despite oversold",
+            "color": "amber"
+          }
+        ]
+      },
+      "stop_loss": 117.4864,
+      "short_term": {
+        "signal": "SELL",
+        "score": 64,
+        "details": [
+          "RSI14=29.17",
+          "ret20d=-13.82%"
+        ]
+      },
+      "long_term": {
+        "signal": "SELL",
+        "score": 64,
+        "details": [
+          "MA20=139.2395",
+          "MA60=155.7303"
+        ]
+      },
+      "badges": [
+        "Watch"
+      ]
+    }
+  ]
+}
