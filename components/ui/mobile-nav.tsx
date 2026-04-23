@@ -35,6 +35,7 @@ export function MobileNav() {
     const menuItems = [
         { href: "/about", label: t.nav.about },
         { href: "/blog", label: t.nav.blog },
+        { href: "/bio", label: t.nav.bio },
         { href: "/papers", label: t.nav.papers || 'Papers' },
         { href: "/datasets", label: t.nav.datasets || 'Datasets' },
         { href: "/invest/reports?tab=KR", label: t.nav.market_intelligence },
