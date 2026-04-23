@@ -12,9 +12,10 @@
 현재는 구조 정리와 향후 dashboard 연결 관점을 함께 고려한다.
 
 ## Next actions
-- [ ] dashboard 연동 가능 모듈을 정리한다.
+- [x] dashboard 연동 가능 모듈을 정리한다. (`/lab` 통합 허브 + `/api/lab/status`)
 - [ ] 로그인/권한 시스템 연계 지점을 검토한다.
 - [ ] public-facing integration 전략을 정리한다.
+- [ ] SHawn-BIO 업스트림 publisher(`tools/publish_bio_feed.py`)를 구현한다.
 
 ## Blockers / review points
 - dashboard를 독립 앱으로 둘지 웹 모듈로 통합할지 장기 결정 필요
@@ -24,11 +25,13 @@
 - README.md
 
 ## Recent updates
+- 2026-04-23: SHawn-BIO 파이프라인(`/api/bio/*`, `public/bio-data/`) + 통합 Lab 허브(`/lab`, `/api/lab/status`) 접목
 - 2026-03-16: dashboard summary extraction용 STATUS 템플릿 추가
 
 ## Checklist
 - [x] canonical repo path 확인
-- [ ] dashboard integration 검토
+- [x] dashboard integration 검토 (`/lab`)
+- [x] BIO 데이터 파이프라인 접목 (`public/bio-data/`, `/api/bio/*`)
 - [ ] auth integration 검토
 - [ ] public-facing plan 정리
 

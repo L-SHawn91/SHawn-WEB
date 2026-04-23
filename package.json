@@ -15,6 +15,7 @@
     "desktop:lint": "pnpm --dir apps/desktop-tauri lint",
     "sync": "python3 ../sync_to_web.py",
     "reports:sync-index": "node scripts/sync-reports-index.mjs",
+    "bio:sync-index": "node scripts/sync-bio-index.mjs",
     "test:search": "node scripts/test-search.mjs",
     "check:i18n": "node scripts/enforce-i18n.mjs",
     "check:forbidden-terms": "node scripts/enforce-forbidden-terms.mjs"
