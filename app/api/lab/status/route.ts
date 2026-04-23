@@ -83,6 +83,32 @@ async function bioStatus(): Promise<ModuleStatus> {
   };
 }
 
+const BOT_TIMEOUT_MS = 2500;
+const BOT_MAX_ATTEMPTS = 2;
+
+async function probeHealthz(
+  url: string
+): Promise<{ status: "ok" | "error" | "unknown"; detail: string }> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), BOT_TIMEOUT_MS);
+  const started = Date.now();
+  try {
+    const res = await fetch(url, { signal: controller.signal, cache: "no-store" });
+    const dur = Date.now() - started;
+    if (res.ok) return { status: "ok", detail: `HTTP ${res.status} in ${dur}ms` };
+    return { status: "error", detail: `HTTP ${res.status} in ${dur}ms` };
+  } catch (e) {
+    const dur = Date.now() - started;
+    const err = e as Error;
+    if (err?.name === "AbortError") {
+      return { status: "unknown", detail: `timeout after ${dur}ms` };
+    }
+    return { status: "unknown", detail: `${err?.message || "network error"} after ${dur}ms` };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function botStatus(): Promise<ModuleStatus> {
   const base = process.env.GCP_BRAIN_URL;
   if (!base) {
@@ -92,34 +118,23 @@ async function botStatus(): Promise<ModuleStatus> {
       detail: "GCP_BRAIN_URL not configured",
     };
   }
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 2500);
-    const res = await fetch(`${base.replace(/\/$/, "")}/healthz`, {
-      signal: controller.signal,
-      cache: "no-store",
-    });
-    clearTimeout(timer);
-    if (res.ok) {
-      return {
-        module: "bot",
-        status: "ok",
-        updatedAt: new Date().toISOString(),
-        detail: `HTTP ${res.status}`,
-      };
-    }
-    return {
-      module: "bot",
-      status: "error",
-      detail: `HTTP ${res.status}`,
-    };
-  } catch (e) {
-    return {
-      module: "bot",
-      status: "unknown",
-      detail: (e as Error).message || "healthz unreachable",
-    };
+  const target = `${base.replace(/\/$/, "")}/healthz`;
+  let attempts = 0;
+  let last: { status: "ok" | "error" | "unknown"; detail: string } = {
+    status: "unknown",
+    detail: "no attempts",
+  };
+  while (attempts < BOT_MAX_ATTEMPTS) {
+    attempts += 1;
+    last = await probeHealthz(target);
+    if (last.status === "ok" || last.status === "error") break;
   }
+  return {
+    module: "bot",
+    status: last.status,
+    updatedAt: new Date().toISOString(),
+    detail: `${last.detail} (attempt ${attempts}/${BOT_MAX_ATTEMPTS})`,
+  };
 }
 
 export async function GET() {
