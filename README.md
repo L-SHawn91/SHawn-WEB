@@ -8,6 +8,9 @@ SHawn Lab의 공식 홈페이지(`Lab-Homepage`)와 블로그, 디지털 디자�
 - **Lab-Homepage**: Next.js 기반의 고성능 웹 서비스.
 - **Posts**: MDX 기반의 블로그 및 기술 아티클.
 - **Sovereign Alpha Design**: 디자인 토큰 및 UI 컴포넌트 라이브러리.
+- **INV Feed**: SHawn-INV 리포트 파이프라인 (`public/reports/` ↔ `/invest/*`).
+- **BIO Feed**: SHawn-BIO 연구 노트 파이프라인 (`public/bio-data/` ↔ `/bio/*`).
+- **Lab Hub**: INV + BIO + BOT 상태를 집계하는 통합 허브 (`/lab`).
 
 ## 🚀 Development
 ```bash
@@ -28,6 +31,10 @@ npm run dev
   - `/invest/reports`
   - `/invest/archive`
   - `/invest/dashboard`
+  - `/bio`
+  - `/bio/research`
+  - `/bio/archive`
+  - `/lab`
 
 ## 📜 Governance
 - **Sovereign Alpha**: 네온 하이라이트와 다크 프리미엄 디자인 원칙 고수.

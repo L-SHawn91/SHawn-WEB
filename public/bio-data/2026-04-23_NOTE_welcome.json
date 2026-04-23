@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "title": "SHawn-BIO Feed Online",
+    "summary": "BIO 연구 피드가 SHawn-WEB으로 연결되었습니다. 오가노이드·줄기세포 관련 노트가 이 경로로 publish됩니다.",
+    "tags": ["meta", "launch"],
+    "type": "NOTE",
+    "slug": "welcome",
+    "date": "2026-04-23",
+    "timestamp": "2026-04-23T00:00:00+09:00"
+  },
+  "body": "This placeholder confirms the bio-data pipeline is wired. Replace via SHawn-BIO's publish_bio_feed.py."
+}
