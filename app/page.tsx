@@ -35,9 +35,9 @@ const quickLinks = [
 
 const laneLinks = [
   {
-    href: "/cartridges/bio",
+    href: "/bio",
     title: "Biology Lane",
-    desc: "오가노이드/세포 연구 및 바이오 분석",
+    desc: "숀바이오 생태계: 논문·데이터셋·바이오 사이언스 허브",
     emoji: "🧬",
     color: "text-emerald-300",
   },
