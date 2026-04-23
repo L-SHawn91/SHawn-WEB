@@ -18,12 +18,19 @@ function isPaper(paper: Paper | null): paper is Paper {
 }
 
 // Parallel search across multiple sources
-async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+async function searchPubMed(query: string, yearFrom?: string, yearTo?: string, author?: string): Promise<Paper[]> {
   try {
     const baseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
+    const normalizedQuery = query.trim();
+    let term = normalizedQuery;
+    
+    if (author?.trim()) {
+      term = `(${author.trim()}[Author]) AND (${normalizedQuery})`;
+    }
+
     const params = new URLSearchParams({
       db: 'pubmed',
-      term: query,
+      term: term,
       retmode: 'json',
       retmax: '10',
       sort: 'relevance',
@@ -63,7 +70,7 @@ async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): 
       papers.push({
         id: `pmid-${id}`,
         title: doc.title || 'No title',
-        authors: doc.authors?.map((a: any) => `${a.name}`) || [],
+        authors: doc.authors?.map((a: any) => a.name) || [],
         abstract: doc.abstract || 'No abstract available',
         year: parseInt(doc.pubdate?.substring(0, 4)) || new Date().getFullYear(),
         source: 'pubmed',
@@ -77,11 +84,19 @@ async function searchPubMed(query: string, yearFrom?: string, yearTo?: string): 
   }
 }
 
-async function searchArXiv(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+async function searchArXiv(query: string, yearFrom?: string, yearTo?: string, author?: string): Promise<Paper[]> {
   try {
     const baseUrl = 'http://export.arxiv.org/api/query';
+    const normalizedQuery = query.trim();
+    let searchQuery = `all:${normalizedQuery}`;
+    
+    if (author?.trim()) {
+      // Keep operators as plain text and let URLSearchParams encode safely.
+      searchQuery = `au:"${author.trim()}" AND all:${normalizedQuery}`;
+    }
+
     const params = new URLSearchParams({
-      search_query: `all:${query}`,
+      search_query: searchQuery,
       start: '0',
       max_results: '10',
       sortBy: 'relevance',
@@ -167,22 +182,31 @@ async function searchSemantic(query: string, yearFrom?: string, yearTo?: string)
 export async function POST(request: NextRequest) {
   try {
     const { query, filters } = await request.json();
+    const normalizedQuery = typeof query === 'string' ? query.trim() : '';
+
+    if (!normalizedQuery) {
+      return NextResponse.json(
+        { error: 'Query is required', papers: [] },
+        { status: 400 }
+      );
+    }
     
     const sources = filters?.sources || ['pubmed', 'arxiv', 'semantic'];
     const yearFrom = filters?.yearFrom;
     const yearTo = filters?.yearTo;
+    const author = typeof filters?.author === 'string' ? filters.author.trim() : undefined;
 
     // Run searches in parallel
     const searchPromises: Promise<Paper[]>[] = [];
     
     if (sources.includes('pubmed')) {
-      searchPromises.push(searchPubMed(query, yearFrom, yearTo));
+      searchPromises.push(searchPubMed(normalizedQuery, yearFrom, yearTo, author));
     }
     if (sources.includes('arxiv')) {
-      searchPromises.push(searchArXiv(query, yearFrom, yearTo));
+      searchPromises.push(searchArXiv(normalizedQuery, yearFrom, yearTo, author));
     }
     if (sources.includes('semantic')) {
-      searchPromises.push(searchSemantic(query, yearFrom, yearTo));
+      searchPromises.push(searchSemantic(normalizedQuery, yearFrom, yearTo));
     }
 
     const results = await Promise.all(searchPromises);

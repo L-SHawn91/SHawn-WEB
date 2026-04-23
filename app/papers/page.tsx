@@ -45,17 +45,40 @@ interface TrackStatus {
 
 interface SearchMeta {
   totalTime?: number;
+  mode?: 'broad' | 'precision' | 'author';
   intent?: 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'TOPIC';
   authorCandidates?: string[];
   trackResults?: {
     t1?: number;
     t2?: number;
     t3?: number;
+    t4?: number;
+    t5?: number;
     final?: number;
   };
+  homonymProfiles?: HomonymProfile[];
+}
+
+interface HomonymProfile {
+  profileId: string;
+  matchedAuthor: string;
+  topicBucket: string;
+  count: number;
+  avgRankScore: number;
+  avgEvidenceScore: number;
+  avgAuthorConfidence?: number;
+  yearMin: number;
+  yearMax: number;
+  sources: string[];
+  topAffiliations?: string[];
+  topCountries?: string[];
+  mergedFrom?: string[];
+  sampleTitles?: string[];
+  recommendationScore: number;
 }
 
 type SortMode = 'score' | 'recent' | 'citations' | 'source';
+type SearchMode = 'broad' | 'precision' | 'author';
 
 type RelatedItem = { id: string; title: string; year?: number; source: string; url: string };
 
@@ -254,9 +277,14 @@ export default function PapersPage() {
   const [relatedByPaper, setRelatedByPaper] = useState<Record<string, RelatedItem[]>>({});
   const [queryHistory, setQueryHistory] = useState<string[]>([]);
   const [filters, setFilters] = useState({
+    mode: 'broad' as SearchMode,
     sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv'] as string[],
     yearFrom: '',
     yearTo: '',
+    authorNames: '',
+    firstAuthorOnly: false,
+    profileMergeThreshold: 0.5,
+    profileIds: [] as string[],
   });
 
   const sourceCounts = useMemo(() => {
@@ -442,6 +470,20 @@ export default function PapersPage() {
     setTrackStatus({ t1: 'loading', t2: 'loading', t3: 'loading', t4: 'idle' });
     setMeta(null);
 
+    const parsedAuthorNames = filters.authorNames
+      .split(',')
+      .map((x) => x.trim())
+      .filter(Boolean);
+    const requestFilters: Record<string, unknown> = {
+      sources: filters.sources,
+      yearFrom: filters.yearFrom,
+      yearTo: filters.yearTo,
+      firstAuthorOnly: filters.firstAuthorOnly,
+      profileMergeThreshold: filters.profileMergeThreshold,
+    };
+    if (parsedAuthorNames.length) requestFilters.authorNames = parsedAuthorNames;
+    if (filters.profileIds.length) requestFilters.profileIds = filters.profileIds;
+
     try {
       setTimeout(() => setTrackStatus((s) => ({ ...s, t1: 'done' })), 700);
       setTimeout(() => setTrackStatus((s) => ({ ...s, t2: 'done' })), 1100);
@@ -450,7 +492,7 @@ export default function PapersPage() {
       const response = await apiFetch('/api/papers/search-parallel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: userQuery, filters }),
+        body: JSON.stringify({ query: userQuery, mode: filters.mode, filters: requestFilters }),
       });
       const data = await response.json();
 
@@ -1036,6 +1078,50 @@ export default function PapersPage() {
                 <Filter className="h-4 w-4" /> Paper Filters
               </h3>
               <div className="grid grid-cols-2 gap-2">
+                <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+                  <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Search Mode</span>
+                  <select
+                    value={filters.mode}
+                    onChange={(e) => setFilters({ ...filters, mode: e.target.value as SearchMode, profileIds: [] })}
+                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
+                  >
+                    <option value="broad">Broad</option>
+                    <option value="precision">Precision</option>
+                    <option value="author">Author</option>
+                  </select>
+                </label>
+                {filters.mode === 'author' && (
+                  <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+                    <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Author Aliases (comma-separated)</span>
+                    <input
+                      type="text"
+                      value={filters.authorNames}
+                      onChange={(e) => setFilters({ ...filters, authorNames: e.target.value })}
+                      placeholder="Soohyung Lee, Lee SH, 이수형"
+                      className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
+                    />
+                  </label>
+                )}
+                {filters.mode === 'author' && (
+                  <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+                    <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">
+                      Profile Merge Strictness: {filters.profileMergeThreshold.toFixed(2)}
+                    </span>
+                    <input
+                      type="range"
+                      min={0.3}
+                      max={0.9}
+                      step={0.05}
+                      value={filters.profileMergeThreshold}
+                      onChange={(e) => setFilters({ ...filters, profileMergeThreshold: Number(e.target.value), profileIds: [] })}
+                      className="w-full"
+                    />
+                    <div className="mt-1 flex justify-between text-[10px] text-slate-400">
+                      <span>More merge</span>
+                      <span>More split</span>
+                    </div>
+                  </label>
+                )}
                 <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
                   <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Year From</span>
                   <input
@@ -1054,6 +1140,16 @@ export default function PapersPage() {
                     className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
                   />
                 </label>
+                {filters.mode === 'author' && (
+                  <label className="col-span-2 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800">
+                    <input
+                      type="checkbox"
+                      checked={filters.firstAuthorOnly}
+                      onChange={(e) => setFilters({ ...filters, firstAuthorOnly: e.target.checked })}
+                    />
+                    <span className="text-slate-600 dark:text-slate-300">First author only</span>
+                  </label>
+                )}
               </div>
               <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
                 <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Source Filters</div>
@@ -1082,6 +1178,71 @@ export default function PapersPage() {
                   })}
                 </div>
               </div>
+              {filters.mode === 'author' && (meta?.homonymProfiles?.length || 0) > 0 && (
+                <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
+                  <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Recommended Author Profiles</div>
+                  <div className="space-y-2">
+                    {(meta?.homonymProfiles || []).slice(0, 5).map((profile) => {
+                      const active = filters.profileIds.includes(profile.profileId);
+                      return (
+                        <button
+                          key={profile.profileId}
+                          onClick={() => {
+                            const next = active
+                              ? filters.profileIds.filter((x) => x !== profile.profileId)
+                              : [profile.profileId];
+                            setFilters((prev) => ({ ...prev, profileIds: next }));
+                          }}
+                          className={`w-full rounded-lg border px-2 py-2 text-left text-[11px] ${
+                            active
+                              ? 'border-blue-600 bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200'
+                              : 'border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200'
+                          }`}
+                        >
+                          <div className="font-semibold">{profile.matchedAuthor} · {profile.topicBucket}</div>
+                          <div className="mt-1 text-[10px] opacity-80">
+                            score {profile.recommendationScore} · papers {profile.count} · {profile.yearMin}-{profile.yearMax}
+                          </div>
+                          {(profile.topAffiliations || []).length > 0 && (
+                            <div className="mt-1 line-clamp-1 text-[10px] opacity-80">
+                              {profile.topAffiliations?.slice(0, 2).join(' | ')}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const top = (meta?.homonymProfiles || [])[0];
+                        if (!top) return;
+                        setFilters((prev) => ({ ...prev, profileIds: [top.profileId] }));
+                      }}
+                      className="rounded-md border border-emerald-500 px-2 py-1 text-[11px] text-emerald-700 dark:text-emerald-300"
+                    >
+                      Use best profile
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void searchPapers()}
+                      className="rounded-md border border-blue-500 px-2 py-1 text-[11px] text-blue-700 dark:text-blue-300"
+                    >
+                      Apply profile filter
+                    </button>
+                    {filters.profileIds.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setFilters((prev) => ({ ...prev, profileIds: [] }))}
+                        className="rounded-md border border-slate-300 px-2 py-1 text-[11px]"
+                      >
+                        Clear profile
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
