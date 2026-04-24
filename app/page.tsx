@@ -41,7 +41,7 @@ const laneLinks = [
     color: "text-emerald-300",
   },
   {
-    href: "/invest/dashboard",
+    href: "/invest/reports?tab=KR",
     title: "Investment Side Lane",
     desc: "Secondary research lane with lower priority than the main bio lab workflow.",
     emoji: "💹",
@@ -80,12 +80,18 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
                 href="/dashboard"
                 className="inline-flex items-center rounded-full border border-cyan-400/40 bg-cyan-500/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20"
               >
                 Open main dashboard
+              </Link>
+              <Link
+                href="/bio"
+                className="inline-flex items-center rounded-full border border-emerald-400/40 bg-emerald-500/10 px-5 py-3 text-sm font-medium text-emerald-200 transition hover:bg-emerald-500/20"
+              >
+                Enter bio lane
               </Link>
             </div>
 

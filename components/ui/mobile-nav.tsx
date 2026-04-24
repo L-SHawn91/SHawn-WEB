@@ -15,7 +15,7 @@ export function MobileNav() {
     const [open, setOpen] = React.useState(false)
     const pathname = usePathname()
 
-    const { language } = useLanguage()
+    const { language, setLanguage } = useLanguage()
     const t = translations[language]
 
     // Prevent scrolling when menu is open
@@ -33,13 +33,13 @@ export function MobileNav() {
     }, [pathname])
 
     const menuItems = [
-        { href: "/about", label: t.nav.about },
-        { href: "/blog", label: t.nav.blog },
+        { href: "/dashboard", label: t.nav.dashboard || 'Dashboard' },
         { href: "/bio", label: t.nav.bio },
         { href: "/papers", label: t.nav.papers || 'Papers' },
         { href: "/datasets", label: t.nav.datasets || 'Datasets' },
+        { href: "/blog", label: t.nav.blog },
         { href: "/invest/reports?tab=KR", label: t.nav.market_intelligence },
-        { href: "/dashboard", label: t.nav.dashboard || 'Dashboard' },
+        { href: "/about", label: t.nav.about },
     ]
 
     const container = {
@@ -88,22 +88,43 @@ export function MobileNav() {
                                 animate="show"
                                 className="flex flex-col gap-6 items-center text-center"
                             >
-                                {menuItems.map((menu) => (
-                                    <motion.div key={menu.href} variants={item}>
-                                        <Link
-                                            href={menu.href}
-                                            className={cn(
-                                                "text-2xl font-medium transition-colors hover:text-primary",
-                                                pathname === menu.href
-                                                    ? "text-primary font-bold"
-                                                    : "text-muted-foreground"
-                                            )}
-                                        >
-                                            {menu.label}
-                                        </Link>
-                                    </motion.div>
-                                ))}
+                                {menuItems.map((menu) => {
+                                    const active = pathname === menu.href || pathname.startsWith(`${menu.href}/`)
+
+                                    return (
+                                        <motion.div key={menu.href} variants={item}>
+                                            <Link
+                                                href={menu.href}
+                                                className={cn(
+                                                    "text-2xl font-medium transition-colors hover:text-primary",
+                                                    active
+                                                        ? "text-primary font-bold"
+                                                        : "text-muted-foreground"
+                                                )}
+                                            >
+                                                {menu.label}
+                                            </Link>
+                                        </motion.div>
+                                    )
+                                })}
                             </motion.nav>
+
+                            <div className="mt-6 flex items-center gap-3">
+                                <Button
+                                    variant={language === "en" ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setLanguage("en")}
+                                >
+                                    EN
+                                </Button>
+                                <Button
+                                    variant={language === "ko" ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setLanguage("ko")}
+                                >
+                                    KO
+                                </Button>
+                            </div>
                         </div>
                     </motion.div>
                 )}

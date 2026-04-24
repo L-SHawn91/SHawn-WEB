@@ -50,13 +50,15 @@ export function Header() {
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-2">
-                    <div className="hidden md:flex items-center gap-2">
+                    <div className="hidden lg:flex items-center gap-2">
                         <div className="w-full flex-1 md:w-auto md:flex-none">
                             {/* Search will go here */}
                         </div>
-                        <Button variant="default" size="sm">
-                            {t.common.subscribe}
-                        </Button>
+                        <Link href="/dashboard">
+                            <Button variant="default" size="sm">
+                                Dashboard
+                            </Button>
+                        </Link>
                     </div>
                     <LanguageToggle />
                     <ModeToggle />
