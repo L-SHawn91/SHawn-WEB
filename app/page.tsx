@@ -5,9 +5,9 @@ const quickLinks = [
   {
     href: "/dashboard",
     title: "Dashboard",
-    desc: "Main entry for project status, work lanes, and canonical paths.",
+    desc: "Main control entry for project status, work lanes, and canonical paths.",
     emoji: "🧭",
-    color: "from-cyan-500/25 to-blue-500/25 border-cyan-300/60",
+    color: "from-cyan-500/30 to-blue-500/30 border-cyan-200/80 shadow-[0_0_28px_rgba(34,211,238,0.18)]",
   },
   {
     href: "/papers",
@@ -98,19 +98,37 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {quickLinks.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  <article
-                    className={`group h-full rounded-2xl border bg-gradient-to-br p-5 transition hover:scale-[1.02] hover:shadow-lg ${item.color}`}
-                    title={`${item.title}: ${item.desc}`}
-                  >
-                    <div className="text-3xl">{item.emoji}</div>
-                    <h2 className="mt-3 text-lg font-semibold">{item.title}</h2>
-                    <p className="mt-2 text-sm text-gray-300">{item.desc}</p>
-                  </article>
-                </Link>
-              ))}
+            <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-[1.35fr_1fr]">
+              <Link href="/dashboard">
+                <article
+                  className="group h-full rounded-3xl border border-cyan-200/80 bg-gradient-to-br from-cyan-500/25 to-blue-500/25 p-6 transition hover:scale-[1.01] hover:shadow-[0_0_36px_rgba(34,211,238,0.18)]"
+                  title="Dashboard: Main control entry for project status, work lanes, and canonical paths."
+                >
+                  <div className="text-4xl">🧭</div>
+                  <div className="mt-4 inline-flex rounded-full border border-cyan-200/60 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200">
+                    Main entry
+                  </div>
+                  <h2 className="mt-4 text-2xl font-semibold text-white sm:text-3xl">Dashboard</h2>
+                  <p className="mt-3 max-w-2xl text-sm text-gray-200 sm:text-base">
+                    Start here for project status, work lanes, canonical paths, and the fastest route into active work.
+                  </p>
+                </article>
+              </Link>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {quickLinks.filter((item) => item.href !== "/dashboard").map((item) => (
+                  <Link key={item.href} href={item.href}>
+                    <article
+                      className={`group h-full rounded-2xl border bg-gradient-to-br p-5 transition hover:scale-[1.02] hover:shadow-lg ${item.color}`}
+                      title={`${item.title}: ${item.desc}`}
+                    >
+                      <div className="text-3xl">{item.emoji}</div>
+                      <h2 className="mt-3 text-lg font-semibold">{item.title}</h2>
+                      <p className="mt-2 text-sm text-gray-300">{item.desc}</p>
+                    </article>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </section>
