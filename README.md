@@ -8,6 +8,13 @@ SHawn Lab의 공식 홈페이지(`Lab-Homepage`)와 블로그, 디지털 디자�
 - **Lab-Homepage**: Next.js 기반의 고성능 웹 서비스.
 - **Posts**: MDX 기반의 블로그 및 기술 아티클.
 - **Sovereign Alpha Design**: 디자인 토큰 및 UI 컴포넌트 라이브러리.
+- **Dashboard Route (`/dashboard`)**: SHawn ecosystem의 canonical user-facing dashboard entrypoint.
+
+## Dashboard governance
+- User-facing dashboard access must default to `SHawn-WEB` route `/dashboard`.
+- `SHawn-dashboard` repo is the prototype/incubation source for dashboard-specific experiments.
+- Validated dashboard behavior is promoted from `SHawn-dashboard` into this repo.
+- Standalone local Vite dashboard runs are for local experiment/validation only, not the default long-term operating surface.
 
 ## 🚀 Development
 ```bash

@@ -39,6 +39,7 @@ export function MobileNav() {
         { href: "/papers", label: t.nav.papers || 'Papers' },
         { href: "/datasets", label: t.nav.datasets || 'Datasets' },
         { href: "/invest/reports?tab=KR", label: t.nav.market_intelligence },
+        { href: "/dashboard", label: t.nav.dashboard || 'Dashboard' },
     ]
 
     const container = {

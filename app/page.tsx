@@ -1,33 +1,32 @@
 import { Footer } from "@/components/ui/footer";
 import Link from "next/link";
 
-// i18n-exempt: marketing homepage currently follows legacy copy system.
 const quickLinks = [
+  {
+    href: "/dashboard",
+    title: "Dashboard",
+    desc: "Main entry for project status, work lanes, and canonical paths.",
+    emoji: "🧭",
+    color: "from-cyan-500/20 to-blue-500/20 border-cyan-400/40",
+  },
   {
     href: "/papers",
     title: "Papers Search",
-    desc: "PubMed · arXiv · Semantic 통합 검색",
+    desc: "Integrated search across PubMed, arXiv, and Semantic Scholar.",
     emoji: "📚",
     color: "from-blue-500/20 to-cyan-500/20 border-blue-400/40",
   },
   {
     href: "/datasets",
     title: "Datasets Search",
-    desc: "NCBI · ENA · Europe PMC 외 다중 소스",
+    desc: "Multi-source dataset discovery across NCBI, ENA, and Europe PMC.",
     emoji: "🧪",
     color: "from-emerald-500/20 to-teal-500/20 border-emerald-400/40",
   },
   {
-    href: "/invest",
-    title: "Investment Hub",
-    desc: "리포트 허브 + 대시보드 + 아카이브",
-    emoji: "📈",
-    color: "from-amber-500/20 to-orange-500/20 border-amber-400/40",
-  },
-  {
     href: "/blog",
     title: "Blog",
-    desc: "연구/운영/자동화 기록 아카이브",
+    desc: "Archive for research, operations, and automation notes.",
     emoji: "📝",
     color: "from-violet-500/20 to-fuchsia-500/20 border-violet-400/40",
   },
@@ -36,15 +35,15 @@ const quickLinks = [
 const laneLinks = [
   {
     href: "/bio",
-    title: "Biology Lane",
-    desc: "숀바이오 생태계: 논문·데이터셋·바이오 사이언스 허브",
+    title: "Bio",
+    desc: "Main lane for organoids, cell research, and bio data analysis.",
     emoji: "🧬",
     color: "text-emerald-300",
   },
   {
     href: "/invest/dashboard",
-    title: "Investment Lane",
-    desc: "데이터 기반 투자 리서치 워크플로",
+    title: "Investment Side Lane",
+    desc: "Secondary research lane with lower priority than the main bio lab workflow.",
     emoji: "💹",
     color: "text-amber-300",
   },
@@ -72,13 +71,22 @@ export default function Home() {
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6 lg:px-8 lg:pt-20">
             <div className="text-center">
-              <h1 className="bg-gradient-to-r from-green-400 via-cyan-400 to-orange-400 bg-clip-text text-4xl font-bold text-transparent sm:text-6xl">
-                SHawn Lab
+              <h1 className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-4xl font-bold text-transparent sm:text-6xl">
+                Bio
               </h1>
-              <p className="mt-4 text-lg text-gray-300 sm:text-2xl">Bio + Investment + Monetization</p>
+              <p className="mt-4 text-lg text-gray-300 sm:text-2xl">Bio-first research and operating hub</p>
               <p className="mx-auto mt-4 max-w-3xl text-sm text-gray-400 sm:text-base">
-                연구 검색, 데이터셋 탐색, 시장 리포트를 하나의 화면에서 연결하는 운영 허브입니다.
+                A bio-centered operating hub for research, datasets, project workflow, and selective side-lane support.
               </p>
+            </div>
+
+            <div className="mt-8 flex justify-center">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center rounded-full border border-cyan-400/40 bg-cyan-500/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20"
+              >
+                Open main dashboard
+              </Link>
             </div>
 
             <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

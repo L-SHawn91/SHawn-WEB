@@ -98,6 +98,30 @@
     text-wrap: balance;
   }
 
+  .dashboard-shell {
+    @apply text-zinc-100;
+  }
+
+  .dashboard-panel {
+    @apply border-white/10 bg-white/[0.04];
+  }
+
+  .dashboard-card {
+    @apply border-white/10 bg-black/20;
+  }
+
+  .dashboard-section-title {
+    @apply text-lg font-semibold text-white tracking-tight;
+  }
+
+  .dashboard-list-item {
+    @apply rounded-2xl border border-white/10 bg-black/20 px-3 py-2 text-zinc-300;
+  }
+
+  .dashboard-tag {
+    @apply rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-zinc-300;
+  }
+
   /* Gradation Text Utility */
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r;

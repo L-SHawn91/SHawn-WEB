@@ -42,6 +42,9 @@ export function Header() {
                         <Link className="transition-colors hover:text-primary text-muted-foreground" href="/invest/archive">
                             {t.nav.reports}
                         </Link>
+                        <Link className="transition-colors hover:text-primary text-muted-foreground" href="/dashboard">
+                            {t.nav.dashboard || 'Dashboard'}
+                        </Link>
                     </nav>
                 </div>
 
