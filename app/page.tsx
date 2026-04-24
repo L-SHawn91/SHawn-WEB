@@ -7,7 +7,7 @@ const quickLinks = [
     title: "Dashboard",
     desc: "Main entry for project status, work lanes, and canonical paths.",
     emoji: "🧭",
-    color: "from-cyan-500/20 to-blue-500/20 border-cyan-400/40",
+    color: "from-cyan-500/25 to-blue-500/25 border-cyan-300/60",
   },
   {
     href: "/papers",
@@ -78,20 +78,23 @@ export default function Home() {
               <p className="mx-auto mt-4 max-w-3xl text-sm text-gray-400 sm:text-base">
                 A bio-centered operating hub for research, datasets, project workflow, and selective side-lane support.
               </p>
+              <p className="mt-3 text-sm font-medium text-cyan-300 sm:text-base">
+                Dashboard is the main control entry.
+              </p>
             </div>
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center rounded-full border border-cyan-400/40 bg-cyan-500/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20"
+                className="inline-flex items-center rounded-full border border-cyan-300/70 bg-cyan-500/20 px-6 py-3 text-sm font-semibold text-cyan-100 shadow-[0_0_24px_rgba(34,211,238,0.18)] transition hover:bg-cyan-500/30"
               >
-                Open main dashboard
+                Open Dashboard
               </Link>
               <Link
                 href="/bio"
                 className="inline-flex items-center rounded-full border border-emerald-400/40 bg-emerald-500/10 px-5 py-3 text-sm font-medium text-emerald-200 transition hover:bg-emerald-500/20"
               >
-                Enter bio lane
+                Enter Bio
               </Link>
             </div>
 
