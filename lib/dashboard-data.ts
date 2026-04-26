@@ -2,6 +2,7 @@ import { Dirent, promises as fs } from "fs";
 import path from "path";
 
 const githubRoot = "/home/mdge/github";
+const currentRepoRoot = process.cwd();
 const dashboardRepoRoot = "/home/mdge/github/SHawn-dashboard";
 const workspaceProjectsPath = path.join(dashboardRepoRoot, "workspace.projects.json");
 const obsidianVaultRoot = "/home/mdge/github/SHawn-Lab-Vault";
@@ -199,7 +200,26 @@ async function normalizeProject(metadata: RawProject, fallbackName: string): Pro
 }
 
 async function listGithubProjects(): Promise<DashboardProject[]> {
-  const entries = await fs.readdir(githubRoot, { withFileTypes: true });
+  let entries: Dirent[] = [];
+  try {
+    entries = await fs.readdir(githubRoot, { withFileTypes: true });
+  } catch {
+    const metadata =
+      (await readJsonSafe<RawProject>(path.join(currentRepoRoot, "project.json"))) ||
+      ({
+        project_slug: "shawn-web",
+        display_name: "SHawn-WEB",
+        status: "active-repo",
+        working_folder: currentRepoRoot,
+        repo_name: "SHawn-WEB",
+        kind: "repo-project",
+        axis: "github",
+        tags: ["web"],
+      } satisfies RawProject);
+
+    return [await normalizeProject({ ...metadata, working_folder: currentRepoRoot }, metadata.display_name || "SHawn-WEB")];
+  }
+
   const projects: DashboardProject[] = [];
 
   for (const entry of entries) {
