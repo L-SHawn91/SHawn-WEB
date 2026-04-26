@@ -17,19 +17,22 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "22"
+
+      - name: Enable pnpm
+        run: corepack enable
 
       - name: Install deps
-        run: npm install
+        run: corepack pnpm install --frozen-lockfile
 
       - name: Enforce i18n on changed pages
-        run: npm run check:i18n
+        run: corepack pnpm run check:i18n
 
       - name: Enforce forbidden terms
-        run: npm run check:forbidden-terms
+        run: corepack pnpm run check:forbidden-terms
 
       - name: Lint
-        run: npm run lint
+        run: corepack pnpm run lint
 
       - name: Build
-        run: npm run build
+        run: corepack pnpm run build

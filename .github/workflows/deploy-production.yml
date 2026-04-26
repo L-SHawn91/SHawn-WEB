@@ -21,34 +21,66 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify required secrets
+      - name: Preflight deployment secrets
+        id: preflight
         run: |
-          test -n "$VERCEL_TOKEN" || (echo "Missing secret: VERCEL_TOKEN" && exit 1)
-          test -n "$VERCEL_ORG_ID" || (echo "Missing secret: VERCEL_ORG_ID" && exit 1)
-          test -n "$VERCEL_PROJECT_ID" || (echo "Missing secret: VERCEL_PROJECT_ID" && exit 1)
+          missing=()
+          test -n "$VERCEL_TOKEN" || missing+=("VERCEL_TOKEN")
+          test -n "$VERCEL_ORG_ID" || missing+=("VERCEL_ORG_ID")
+          test -n "$VERCEL_PROJECT_ID" || missing+=("VERCEL_PROJECT_ID")
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Production deploy skipped. Missing GitHub Actions secrets: ${missing[*]}"
+            {
+              echo "## Production deploy skipped"
+              echo ""
+              echo "Required GitHub Actions secrets are missing: \`${missing[*]}\`."
+              echo ""
+              echo "The build gate can still pass, but the public site will not update until these secrets are configured and this workflow is rerun."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+          echo "Production deploy preflight passed."
 
       - name: Setup Node
+        if: steps.preflight.outputs.ready == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
+
+      - name: Enable pnpm
+        if: steps.preflight.outputs.ready == 'true'
+        run: corepack enable
 
       - name: Install Vercel CLI
+        if: steps.preflight.outputs.ready == 'true'
         run: npm install --global vercel@latest
 
       - name: Pull Vercel environment
+        if: steps.preflight.outputs.ready == 'true'
         run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
 
       - name: Build project artifacts
+        if: steps.preflight.outputs.ready == 'true'
         run: vercel build --prod --token="$VERCEL_TOKEN"
 
       - name: Deploy to production
+        if: steps.preflight.outputs.ready == 'true'
         run: |
           DEPLOY_URL="$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")"
           echo "DEPLOY_URL=$DEPLOY_URL" >> "$GITHUB_ENV"
           echo "Production deployment: $DEPLOY_URL"
+          {
+            echo "## Production deployed"
+            echo ""
+            echo "Deployment URL: $DEPLOY_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Smoke test production routes
-        if: env.PRODUCTION_URL != ''
+        if: steps.preflight.outputs.ready == 'true' && env.PRODUCTION_URL != ''
         run: |
           curl -fsSL "$PRODUCTION_URL/invest" > /dev/null
           curl -fsSL "$PRODUCTION_URL/invest/reports" > /dev/null
