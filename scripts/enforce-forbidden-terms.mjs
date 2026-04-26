@@ -1,50 +1,61 @@
 #!/usr/bin/env node
-import { execSync } from "node:child_process";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 
 const forbidden = ["gemini", "sonolbot"];
-const pattern = forbidden.join("|");
+const pattern = new RegExp(forbidden.join("|"), "i");
+const ignoredDirs = new Set([".git", "node_modules", ".next", "dist", "coverage", ".archive"]);
+const ignoredFiles = new Set(["scripts/enforce-forbidden-terms.mjs"]);
+const textExtensions = new Set([
+  ".css",
+  ".html",
+  ".js",
+  ".json",
+  ".jsx",
+  ".md",
+  ".mdx",
+  ".mjs",
+  ".ts",
+  ".tsx",
+  ".txt",
+  ".yml",
+  ".yaml",
+]);
 
-function run() {
-  const cmd = [
-    "rg",
-    "-n",
-    "-i",
-    `\"${pattern}\"`,
-    ".",
-    "--glob",
-    "!.git/**",
-    "--glob",
-    "!node_modules/**",
-    "--glob",
-    "!.next/**",
-    "--glob",
-    "!dist/**",
-    "--glob",
-    "!coverage/**",
-    "--glob",
-    "!scripts/enforce-forbidden-terms.mjs",
-  ].join(" ");
-
-  try {
-    const output = execSync(cmd, { encoding: "utf8" }).trim();
-    if (output) {
-      console.error("[forbidden-terms] blocked terms detected:");
-      console.error(output);
-      process.exit(1);
-    }
-  } catch (error) {
-    // rg exits 1 when no matches; that's the success path for this check.
-    const exitCode = error?.status;
-    if (exitCode === 1) {
-      console.log("[forbidden-terms] passed.");
-      process.exit(0);
-    }
-    console.error("[forbidden-terms] check failed unexpectedly.");
-    console.error(String(error?.message || error));
-    process.exit(1);
-  }
-
-  console.log("[forbidden-terms] passed.");
+function shouldScan(filePath) {
+  const normalized = filePath.replaceAll("\\", "/");
+  if (ignoredFiles.has(normalized)) return false;
+  const ext = normalized.includes(".") ? normalized.slice(normalized.lastIndexOf(".")) : "";
+  return textExtensions.has(ext);
 }
 
-run();
+function walk(dir, matches) {
+  for (const entry of readdirSync(dir)) {
+    if (ignoredDirs.has(entry)) continue;
+    const fullPath = join(dir, entry);
+    const stat = statSync(fullPath);
+    if (stat.isDirectory()) {
+      walk(fullPath, matches);
+      continue;
+    }
+    if (!stat.isFile()) continue;
+    const relPath = relative(process.cwd(), fullPath).replaceAll("\\", "/");
+    if (!shouldScan(relPath)) continue;
+
+    const content = readFileSync(fullPath, "utf8");
+    content.split(/\r?\n/).forEach((line, index) => {
+      if (pattern.test(line)) matches.push(`${relPath}:${index + 1}:${line}`);
+    });
+  }
+}
+
+const matches = [];
+walk(process.cwd(), matches);
+
+if (matches.length) {
+  console.error("[forbidden-terms] blocked terms detected:");
+  console.error(matches.join("\n"));
+  process.exit(1);
+}
+
+console.log("[forbidden-terms] passed.");
