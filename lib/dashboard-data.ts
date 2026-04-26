@@ -1,4 +1,4 @@
-import { promises as fs } from "fs";
+import { Dirent, promises as fs } from "fs";
 import path from "path";
 
 const githubRoot = "/home/mdge/github";
@@ -108,7 +108,7 @@ async function searchObsidianSignals(projectName: string, slug: string) {
 
   async function walk(dir: string, depth = 0): Promise<void> {
     if (depth > 3 || results.length >= 5) return;
-    let entries: fs.Dirent[] = [] as unknown as fs.Dirent[];
+    let entries: Dirent[] = [];
     try {
       entries = await fs.readdir(dir, { withFileTypes: true });
     } catch {
