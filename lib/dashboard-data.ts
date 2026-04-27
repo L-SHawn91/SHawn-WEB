@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import type { Dirent } from "fs";
 import path from "path";
 
 const githubRoot = "/home/mdge/github";
@@ -108,7 +109,7 @@ async function searchObsidianSignals(projectName: string, slug: string) {
 
   async function walk(dir: string, depth = 0): Promise<void> {
     if (depth > 3 || results.length >= 5) return;
-    let entries: fs.Dirent[] = [] as unknown as fs.Dirent[];
+    let entries: Dirent[] = [];
     try {
       entries = await fs.readdir(dir, { withFileTypes: true });
     } catch {
@@ -199,7 +200,13 @@ async function normalizeProject(metadata: RawProject, fallbackName: string): Pro
 }
 
 async function listGithubProjects(): Promise<DashboardProject[]> {
-  const entries = await fs.readdir(githubRoot, { withFileTypes: true });
+  let entries: Dirent[] = [];
+  try {
+    entries = await fs.readdir(githubRoot, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+
   const projects: DashboardProject[] = [];
 
   for (const entry of entries) {
