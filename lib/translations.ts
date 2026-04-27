@@ -64,7 +64,7 @@ export const translations = {
     footer: {
       builtBy: "Built by",
       author: "Dr.SHawn",
-      sourceCode: "소스 코드는 GitHub에서 확인 가능합니다.",
+      sourceCode: "GitHub 소스 보기",
     },
   },
   en: {
@@ -132,7 +132,7 @@ export const translations = {
     footer: {
       builtBy: "Built by",
       author: "Dr.SHawn",
-      sourceCode: "Source code available on GitHub.",
+      sourceCode: "View source on GitHub",
     },
   },
 } as const;
