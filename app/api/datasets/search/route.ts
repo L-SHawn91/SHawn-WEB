@@ -165,59 +165,81 @@ async function searchKaggle(query: string, yearFrom?: string, yearTo?: string): 
   }
 }
 
-async function searchNcbiEutils(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
-  try {
-    const searchParams = new URLSearchParams({
-      db: "gds",
-      term: query,
-      retmax: "20",
-      retmode: "json",
-      sort: "relevance",
-    });
-    if (yearFrom || yearTo) {
-      searchParams.set("mindate", `${yearFrom || "1900"}/01/01`);
-      searchParams.set("maxdate", `${yearTo || "2100"}/12/31`);
-      searchParams.set("datetype", "pdat");
-    }
-    const searchRes = await fetch(
-      `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?${searchParams.toString()}`,
-      { signal: AbortSignal.timeout(15000) },
-    );
-    const searchData = await searchRes.json();
-    const ids: string[] = searchData?.esearchresult?.idlist || [];
-    if (ids.length === 0) return [];
+function pickNcbiTitle(row: any, fallback: string): string {
+  return row?.title || row?.studytitle || row?.caption || row?.project_title || row?.project_name || row?.expname || fallback;
+}
 
-    const summaryParams = new URLSearchParams({
-      db: "gds",
-      id: ids.join(","),
-      retmode: "json",
-    });
-    const summaryRes = await fetch(
-      `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?${summaryParams.toString()}`,
-      { signal: AbortSignal.timeout(15000) },
-    );
-    const summaryData = await summaryRes.json();
+function pickNcbiSummary(row: any): string {
+  const text = row?.summary || row?.description || row?.project_description || row?.expxml || row?.runs || "";
+  return cleanText(String(text).slice(0, 1200));
+}
 
-    return ids
-      .map<DatasetItem | null>((id) => {
-        const row = summaryData?.result?.[id];
-        if (!row) return null;
-        const accession = row.accession || row.gse || row.gpl || id;
-        return {
-          id: `ncbi-${accession}`,
-          title: row.title || `NCBI dataset ${accession}`,
-          description: cleanText(row.summary || row.description),
-          source: "ncbi" as const,
-          url: `https://www.ncbi.nlm.nih.gov/gds/?term=${encodeURIComponent(accession)}`,
-          updatedAt: row.pdat || row.updatedate,
-          tags: Array.isArray(row.taxon) ? row.taxon : undefined,
-        };
-      })
-      .filter((item): item is DatasetItem => item !== null && inYearRange(item.updatedAt, yearFrom, yearTo));
-  } catch (error) {
-    console.error("[datasets] NCBI E-utilities search failed:", error);
-    return [];
+function pickNcbiAccession(row: any, id: string): string {
+  const raw = row?.accession || row?.gse || row?.gpl || row?.bioproject || row?.project_acc || row?.primary || row?.uid || id;
+  const text = Array.isArray(raw) ? raw[0] : String(raw || id);
+  const match = text.match(/\b(GSE\d+|GSM\d+|SRP\d+|SRS\d+|SRX\d+|SRR\d+|PRJNA\d+|PRJEB\d+|PRJCA\d+)\b/i);
+  return (match?.[1] || text).toUpperCase();
+}
+
+async function fetchNcbiDb(db: "gds" | "sra" | "bioproject", query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  const searchParams = new URLSearchParams({
+    db,
+    term: query,
+    retmax: "20",
+    retmode: "json",
+    sort: "relevance",
+  });
+  if (yearFrom || yearTo) {
+    searchParams.set("mindate", `${yearFrom || "1900"}/01/01`);
+    searchParams.set("maxdate", `${yearTo || "2100"}/12/31`);
+    searchParams.set("datetype", "pdat");
   }
+  const searchRes = await fetch(
+    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?${searchParams.toString()}`,
+    { signal: AbortSignal.timeout(15000) },
+  );
+  const searchData = await searchRes.json();
+  const ids: string[] = searchData?.esearchresult?.idlist || [];
+  if (ids.length === 0) return [];
+
+  const summaryParams = new URLSearchParams({ db, id: ids.join(","), retmode: "json" });
+  const summaryRes = await fetch(
+    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?${summaryParams.toString()}`,
+    { signal: AbortSignal.timeout(15000) },
+  );
+  const summaryData = await summaryRes.json();
+
+  return ids
+    .map<DatasetItem | null>((id) => {
+      const row = summaryData?.result?.[id];
+      if (!row) return null;
+      const accession = pickNcbiAccession(row, id);
+      const title = pickNcbiTitle(row, `${db.toUpperCase()} dataset ${accession}`);
+      const urlDb = db === "gds" ? "gds" : db;
+      return {
+        id: `ncbi-${db}-${accession}`,
+        title,
+        description: pickNcbiSummary(row),
+        source: "ncbi" as const,
+        url: `https://www.ncbi.nlm.nih.gov/${urlDb}/?term=${encodeURIComponent(accession)}`,
+        updatedAt: row.pdat || row.updatedate || row.sra_updated || row.submission_date,
+        accessionIds: extractAccessions(`${accession} ${title} ${pickNcbiSummary(row)}`),
+        tags: [db.toUpperCase(), row.organism || row.taxname || row.taxon || ""].filter(Boolean).map(String),
+      };
+    })
+    .filter((item): item is DatasetItem => item !== null && (item.updatedAt ? inYearRange(item.updatedAt, yearFrom, yearTo) : true));
+}
+
+async function searchNcbiEutils(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  const collected: DatasetItem[] = [];
+  for (const db of ["gds", "sra", "bioproject"] as const) {
+    try {
+      collected.push(...await fetchNcbiDb(db, query, yearFrom, yearTo));
+    } catch (error) {
+      console.warn(`[datasets] NCBI ${db} search skipped:`, error);
+    }
+  }
+  return collected;
 }
 
 async function searchEnaPortal(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {

@@ -1,4 +1,5 @@
 "use client";
+// i18n-exempt: legacy client page uses fixed bilingual/search UI copy; full i18n migration is separate.
 
 export const dynamic = 'force-dynamic';
 
