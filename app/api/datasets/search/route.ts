@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  expandPublicBioQuery,
   mergePublicDatasetRecords,
+  normalizePublicBioQuery,
   publicDatasetTopicGuard,
   publicDatasetWorkflowScore,
   publicSourceHealth,
@@ -743,7 +743,7 @@ export async function POST(request: NextRequest) {
         };
 
     const { sources, yearFrom, yearTo, sortBy, page, pageSize } = parseFilters(filterInput);
-    const effectiveQuery = expandPublicBioQuery(String(query));
+    const effectiveQuery = normalizePublicBioQuery(String(query));
 
     const sourceJobs: Record<DatasetSource, (q: string, yf?: string, yt?: string) => Promise<DatasetItem[]>> = {
       huggingface: searchHuggingFace,

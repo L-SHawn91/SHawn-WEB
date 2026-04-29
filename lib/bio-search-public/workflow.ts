@@ -257,13 +257,20 @@ export function publicDatasetTopicGuard(item: PublicDatasetLike, query: string):
   if (tokens.length < 2) return true;
 
   const text = `${item.title || ""} ${item.description || ""} ${(item.tags || []).join(" ")}`.toLowerCase();
-  const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish"];
+  const source = String(item.source || "").toLowerCase();
+  const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish", "retina", "cerebral", "brain", "colorectal"];
   if (negativeTerms.some((term) => text.includes(term) && !q.includes(term))) return false;
 
-  const important = tokens.filter((token) => !["dataset", "datasets", "data", "search", "single", "cell", "rna", "seq"].includes(token));
+  const important = tokens.filter((token) => !["dataset", "datasets", "data", "search", "single", "cell", "rna", "seq", "rnaseq"].includes(token));
   const targetTokens = important.length >= 2 ? important : tokens;
   const matched = targetTokens.filter((token) => text.includes(token)).length;
-  return matched / Math.max(1, targetTokens.length) >= 0.25;
+  const accessionBacked = Boolean(item.accessionIds?.length);
+  const paperDerived = ["openalex", "crossref"].includes(source);
+
+  if (paperDerived && !accessionBacked && q.includes("dataset")) return false;
+  if (paperDerived && !accessionBacked && matched < Math.min(2, targetTokens.length)) return false;
+  if (q.includes("organoid") && !text.includes("organoid")) return false;
+  return matched / Math.max(1, targetTokens.length) >= 0.25 || accessionBacked;
 }
 
 export function mergePublicDatasetRecords<T extends PublicDatasetLike>(items: T[]): T[] {
