@@ -8,6 +8,13 @@ import {
   splitAuthorAndTopic,
   type QueryIntent,
 } from '../../../../lib/search/queryPlanner';
+import {
+  buildPublicPubMedQuery,
+  expandPublicBioQuery,
+  publicDedupeKey,
+  publicTopicGuard,
+  publicWorkflowScore,
+} from '../../../../lib/bio-search-public/workflow';
 
 interface Paper {
   id: string;
@@ -776,10 +783,10 @@ function t6_integrateAndRank(
   // Merge all results
   const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results];
   
-  // Deduplication by DOI-like ID or title similarity
+  // Public-safe workflow dedupe: DOI first, then stable public IDs, then normalized title.
   const seen = new Set<string>();
   const uniquePapers = allPapers.filter(paper => {
-    const key = paper.title.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 50);
+    const key = publicDedupeKey(paper);
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -799,24 +806,8 @@ function t6_integrateAndRank(
       ? Number((0.45 * stage1Score + 0.55 * s2.stage2Score).toFixed(4))
       : stage1Score;
     
-    // Recency (max 30 points)
-    const currentYear = new Date().getFullYear();
-    const age = currentYear - paper.year;
-    score += Math.max(0, 30 - age * 2);
-    
-    // Citations (max 40 points)
-    if (paper.citations) {
-      score += Math.min(40, paper.citations / 10);
-    }
-    
-    // Influence score from T3 (max 20 points)
-    if (paper.influenceScore) {
-      score += paper.influenceScore / 5;
-    }
-    
-    // Source diversity bonus (max 10 points)
-    if (paper.meshTerms?.length) score += 5;
-    if (paper.techniques?.length) score += 5;
+    // Public-safe SHawn bio workflow score: recency + public citation signal + source reliability + metadata hints.
+    score += publicWorkflowScore(paper);
 
     // Author-first priority boost
     const authorBoost = getAuthorPriorityBoost(paper, authorCandidates, intent);
@@ -1267,7 +1258,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
         : (intent === 'TOPIC' ? [] : authorCandidatesRaw);
   const detectedTopic = (split.topic || extracted.cleanQuery || query).trim();
   const topicQuery = (!hasManualAuthor && mode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic) ? '' : detectedTopic;
-  const effectiveQuery = (topicQuery || authorCandidates[0] || query).trim();
+  const effectiveQuery = expandPublicBioQuery((topicQuery || authorCandidates[0] || query).trim());
 
   const defaultSourcesByMode: Record<SearchMode, TrackSource[]> = {
     broad: ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'],
@@ -1287,7 +1278,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
 
   const trackJobs: Array<{ source: TrackSource; promise: Promise<Paper[]> }> = [];
   if (sources.includes('pubmed')) {
-    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
+    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(buildPublicPubMedQuery(effectiveQuery), yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('arxiv')) {
     trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(topicQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
@@ -1362,6 +1353,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   if (mode === 'precision') {
     papers = papers.filter((paper) => (paper.evidenceScore || 0) >= 0.05);
   }
+  papers = papers.filter((paper) => publicTopicGuard(paper, nonAuthorQuery || effectiveQuery));
 
   return {
     query,
