@@ -413,6 +413,9 @@ export default function DatasetsPage() {
               {loading ? "Searching..." : "Search"}
             </button>
           </div>
+          <p className="mt-3 rounded-xl border border-indigo-200 bg-white/70 px-3 py-2 text-xs leading-5 text-indigo-900 dark:border-indigo-800 dark:bg-indigo-950/30 dark:text-indigo-100">
+            정밀 검색 팁: <strong>조직명 + modality + accession 힌트</strong>를 함께 넣으세요. 예: <code>endometrial organoid single-cell RNA-seq GSE</code>. 넓은 질의는 여러 조직의 organoid dataset이 섞일 수 있습니다.
+          </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {QUICK_DATASET_QUERIES.map((q) => (
               <button
@@ -492,7 +495,7 @@ export default function DatasetsPage() {
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Context:</span>
                 <input
                   type="text"
-                  placeholder="optional tissue/disease (e.g. endometrium)"
+                  placeholder="tissue/disease/accession hint (e.g. endometrium GSE)"
                   value={filters.context}
                   onChange={(e) => setFilters({ ...filters, context: e.target.value })}
                   className="w-64 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm"
