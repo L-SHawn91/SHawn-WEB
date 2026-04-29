@@ -33,8 +33,6 @@ export function MobileNav() {
     }, [pathname])
 
     const menuItems = [
-        { href: "/dashboard", label: t.nav.dashboard || 'Dashboard' },
-        { href: "/bio", label: t.nav.bio },
         { href: "/papers", label: t.nav.papers || 'Papers' },
         { href: "/datasets", label: t.nav.datasets || 'Datasets' },
         { href: "/blog", label: t.nav.blog },

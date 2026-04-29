@@ -17,12 +17,10 @@ export function Header() {
     const navItems = [
         { href: "/about", label: t.nav.about },
         { href: "/blog", label: t.nav.blog },
-        { href: "/bio", label: t.nav.bio },
         { href: "/papers", label: t.nav.papers || "Papers" },
         { href: "/datasets", label: t.nav.datasets || "Datasets" },
         { href: "/invest/reports?tab=KR", label: t.nav.market_intelligence },
         { href: "/invest/archive", label: t.nav.reports },
-        { href: "/dashboard", label: t.nav.dashboard || "Dashboard" },
     ];
 
     const isActive = (href: string) => {
@@ -58,8 +56,8 @@ export function Header() {
                 {/* Right Actions */}
                 <div className="flex items-center gap-2">
                     <div className="hidden lg:flex items-center gap-2">
-                        <Link href="/dashboard" className={buttonVariants({ size: "sm" })}>
-                            Dashboard
+                        <Link href="/papers" className={buttonVariants({ size: "sm" })}>
+                            Papers
                         </Link>
                     </div>
                     <LanguageToggle />
