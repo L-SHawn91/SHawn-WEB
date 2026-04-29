@@ -11,9 +11,11 @@ import {
 import {
   buildPublicPubMedQuery,
   expandPublicBioQuery,
-  publicDedupeKey,
+  mergePublicPaperRecords,
+  publicSourceHealth,
   publicTopicGuard,
   publicWorkflowScore,
+  type PublicSourceHealth,
 } from '../../../../lib/bio-search-public/workflow';
 
 interface Paper {
@@ -783,14 +785,8 @@ function t6_integrateAndRank(
   // Merge all results
   const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results];
   
-  // Public-safe workflow dedupe: DOI first, then stable public IDs, then normalized title.
-  const seen = new Set<string>();
-  const uniquePapers = allPapers.filter(paper => {
-    const key = publicDedupeKey(paper);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  // Public-safe workflow merge: DOI/public ID/title dedupe while preserving source hits and best metadata.
+  const uniquePapers = mergePublicPaperRecords(allPapers);
   
   // Ranking algorithm
   const hasEvidenceQuery = Boolean((claim || '').trim() || (hypothesis || '').trim());
@@ -866,6 +862,7 @@ type SearchAttemptResult = {
   intent: QueryIntent;
   authorCandidates: string[];
   trackResults: { t1: number; t2: number; t3: number; t4: number; t5: number; final: number };
+  sourceHealth?: PublicSourceHealth[];
   papers: Paper[];
   homonymProfiles?: Array<{
     profileId: string;
@@ -1293,6 +1290,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
 
+  const sourceStartedAt = new Map(trackJobs.map((job) => [job.source, Date.now()]));
   const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
   const bySource: Record<TrackSource, Paper[]> = {
     pubmed: [],
@@ -1306,6 +1304,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const source = trackJobs[index]?.source;
     if (!source) return;
     bySource[source] = result.status === 'fulfilled' ? result.value : [];
+  });
+
+  const sourceHealth = settled.map((result, index) => {
+    const source = trackJobs[index]?.source || 'unknown';
+    return publicSourceHealth(source, result, Date.now() - (sourceStartedAt.get(source as TrackSource) || Date.now()));
   });
 
   const papersRanked = t6_integrateAndRank(
@@ -1362,6 +1365,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     authorCandidates,
     papers,
     homonymProfiles,
+    sourceHealth,
     trackResults: {
       t1: bySource.pubmed.length,
       t2: bySource.arxiv.length,
@@ -1406,6 +1410,7 @@ export async function POST(request: NextRequest) {
       authorCandidates: [],
       papers: [],
       homonymProfiles: [],
+      sourceHealth: [],
       trackResults: { t1: 0, t2: 0, t3: 0, t4: 0, t5: 0, final: 0 },
     };
     
@@ -1420,6 +1425,7 @@ export async function POST(request: NextRequest) {
         attempts,
         authorCandidates: selected.authorCandidates,
         homonymProfiles: selected.homonymProfiles || [],
+        sourceHealth: selected.sourceHealth || [],
         trackResults: selected.trackResults,
       }
     });

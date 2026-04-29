@@ -12,6 +12,29 @@ export type PublicPaperLike = {
   influenceScore?: number;
 };
 
+export type PublicDatasetLike = {
+  id?: string;
+  title?: string;
+  description?: string;
+  source?: string;
+  url?: string;
+  accessionIds?: string[];
+  license?: string;
+  downloads?: number;
+  likes?: number;
+  updatedAt?: string;
+  tags?: string[];
+  rankScore?: number;
+};
+
+export type PublicSourceHealth = {
+  source: string;
+  ok: boolean;
+  count: number;
+  durationMs?: number;
+  warning?: string;
+};
+
 const PUBLIC_SOURCE_WEIGHT: Record<string, number> = {
   pubmed: 1.16,
   europepmc: 1.12,
@@ -21,6 +44,22 @@ const PUBLIC_SOURCE_WEIGHT: Record<string, number> = {
   arxiv: 0.94,
   biorxiv: 0.92,
   medrxiv: 0.92,
+};
+
+const PUBLIC_DATASET_SOURCE_WEIGHT: Record<string, number> = {
+  ncbi: 1.18,
+  ena: 1.16,
+  europepmc: 1.12,
+  zenodo: 1.08,
+  dryad: 1.07,
+  dataverse: 1.06,
+  figshare: 1.04,
+  openalex: 1.02,
+  crossref: 1.02,
+  huggingface: 0.98,
+  openml: 0.96,
+  kaggle: 0.94,
+  github: 0.9,
 };
 
 const STATIC_MESH_MAP: Array<[RegExp, string]> = [
@@ -112,14 +151,31 @@ export function publicSourceWeight(source?: string): number {
   return PUBLIC_SOURCE_WEIGHT[String(source || "").toLowerCase()] || 1;
 }
 
+function yearFromPublicDate(value?: string): number | null {
+  if (!value) return null;
+  const year = Number.parseInt(String(value).slice(0, 4), 10);
+  return Number.isFinite(year) ? year : null;
+}
+
+function citationVelocity(citations?: number, year?: number, currentYear = new Date().getFullYear()): number {
+  const count = Math.max(0, Number(citations || 0));
+  const y = Number(year || 0);
+  const age = y >= 1900 ? Math.max(1, currentYear - y + 1) : 20;
+  const absolute = Math.min(count, 500) / 500;
+  const velocity = Math.min(count / age, 50) / 50;
+  return 0.5 * absolute + 0.5 * velocity;
+}
+
 export function publicWorkflowScore(paper: PublicPaperLike, currentYear = new Date().getFullYear()): number {
   const year = Number(paper.year || 0);
   const age = year > 0 ? Math.max(0, currentYear - year) : 20;
   const recency = Math.max(0, 30 - age * 2);
-  const citations = Math.min(40, Number(paper.citations || 0) / 10);
+  const citations = citationVelocity(paper.citations, year, currentYear) * 40;
   const influence = Math.min(20, Number(paper.influenceScore || 0) / 5);
   const metadata = (paper.meshTerms?.length ? 5 : 0) + (paper.techniques?.length ? 5 : 0);
-  return (recency + citations + influence + metadata) * publicSourceWeight(paper.source);
+  const doiBonus = paper.doi ? 3 : 0;
+  const abstractBonus = paper.abstract && paper.abstract.length > 80 ? 4 : 0;
+  return (recency + citations + influence + metadata + doiBonus + abstractBonus) * publicSourceWeight(paper.source);
 }
 
 export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean {
@@ -127,6 +183,125 @@ export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean
   if (tokens.length < 2) return true;
 
   const text = `${paper.title || ""} ${paper.abstract || ""}`.toLowerCase();
+  const q = normalizePublicBioQuery(query).toLowerCase();
+  const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish"];
+  if (negativeTerms.some((term) => text.includes(term) && !q.includes(term))) return false;
   const matched = tokens.filter((token) => text.includes(token)).length;
   return matched / Math.max(1, tokens.length) >= 0.15;
+}
+
+export function mergePublicPaperRecords<T extends PublicPaperLike>(papers: T[]): T[] {
+  const byKey = new Map<string, T & { sourceHits?: string[]; sourceIds?: string[] }>();
+
+  for (const paper of papers) {
+    const key = publicDedupeKey(paper);
+    const prev = byKey.get(key);
+    if (!prev) {
+      byKey.set(key, {
+        ...paper,
+        sourceHits: paper.source ? [String(paper.source)] : [],
+        sourceIds: paper.id ? [String(paper.id)] : [],
+      });
+      continue;
+    }
+
+    const sourceHits = new Set([...(prev.sourceHits || []), paper.source].filter(Boolean).map(String));
+    const sourceIds = new Set([...(prev.sourceIds || []), paper.id].filter(Boolean).map(String));
+    byKey.set(key, {
+      ...prev,
+      ...paper,
+      title: prev.title || paper.title,
+      abstract: (paper.abstract || "").length > (prev.abstract || "").length ? paper.abstract : prev.abstract,
+      doi: prev.doi || paper.doi,
+      url: prev.url || paper.url,
+      citations: Math.max(Number(prev.citations || 0), Number(paper.citations || 0)),
+      meshTerms: Array.from(new Set([...(prev.meshTerms || []), ...(paper.meshTerms || [])])),
+      techniques: Array.from(new Set([...(prev.techniques || []), ...(paper.techniques || [])])),
+      sourceHits: Array.from(sourceHits),
+      sourceIds: Array.from(sourceIds),
+    });
+  }
+
+  return Array.from(byKey.values()) as T[];
+}
+
+export function publicDatasetDedupeKey(item: PublicDatasetLike): string {
+  const accessions = item.accessionIds || [];
+  if (accessions.length) return `accession:${accessions[0]}`;
+  const url = String(item.url || "").toLowerCase().trim();
+  if (url) return `url:${url.replace(/[?#].*$/, "")}`;
+  const title = String(item.title || "").toLowerCase().replace(/[^a-z0-9가-힣]/g, "").slice(0, 100);
+  return `title:${title}`;
+}
+
+export function publicDatasetSourceWeight(source?: string): number {
+  return PUBLIC_DATASET_SOURCE_WEIGHT[String(source || "").toLowerCase()] || 1;
+}
+
+export function publicDatasetWorkflowScore(item: PublicDatasetLike, currentYear = new Date().getFullYear()): number {
+  const year = yearFromPublicDate(item.updatedAt);
+  const age = year !== null ? Math.max(0, currentYear - year) : 20;
+  const recency = Math.max(0, 30 - age * 3);
+  const downloads = item.downloads ? Math.min(30, Math.log10(item.downloads + 1) * 10) : 0;
+  const likes = item.likes ? Math.min(25, Math.log10(item.likes + 1) * 10) : 0;
+  const accessions = item.accessionIds?.length ? 18 : 0;
+  const license = item.license ? 5 : 0;
+  const tags = item.tags?.length ? Math.min(10, item.tags.length) : 0;
+  const description = item.description && item.description.length > 80 ? 10 : 0;
+  return (recency + downloads + likes + accessions + license + tags + description) * publicDatasetSourceWeight(item.source);
+}
+
+export function publicDatasetTopicGuard(item: PublicDatasetLike, query: string): boolean {
+  const q = normalizePublicBioQuery(query).toLowerCase();
+  const tokens = q.match(/[a-z0-9가-힣]{3,}/g) || [];
+  if (tokens.length < 2) return true;
+
+  const text = `${item.title || ""} ${item.description || ""} ${(item.tags || []).join(" ")}`.toLowerCase();
+  const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish"];
+  if (negativeTerms.some((term) => text.includes(term) && !q.includes(term))) return false;
+
+  const important = tokens.filter((token) => !["dataset", "datasets", "data", "search", "single", "cell", "rna", "seq"].includes(token));
+  const targetTokens = important.length >= 2 ? important : tokens;
+  const matched = targetTokens.filter((token) => text.includes(token)).length;
+  return matched / Math.max(1, targetTokens.length) >= 0.25;
+}
+
+export function mergePublicDatasetRecords<T extends PublicDatasetLike>(items: T[]): T[] {
+  const byKey = new Map<string, T & { sourceHits?: string[] }>();
+
+  for (const item of items) {
+    const key = publicDatasetDedupeKey(item);
+    const prev = byKey.get(key);
+    if (!prev) {
+      byKey.set(key, { ...item, sourceHits: item.source ? [String(item.source)] : [] });
+      continue;
+    }
+    const sourceHits = new Set([...(prev.sourceHits || []), item.source].filter(Boolean).map(String));
+    byKey.set(key, {
+      ...prev,
+      ...item,
+      title: prev.title || item.title,
+      description: (item.description || "").length > (prev.description || "").length ? item.description : prev.description,
+      accessionIds: Array.from(new Set([...(prev.accessionIds || []), ...(item.accessionIds || [])])),
+      tags: Array.from(new Set([...(prev.tags || []), ...(item.tags || [])])),
+      downloads: Math.max(Number(prev.downloads || 0), Number(item.downloads || 0)) || undefined,
+      likes: Math.max(Number(prev.likes || 0), Number(item.likes || 0)) || undefined,
+      sourceHits: Array.from(sourceHits),
+    });
+  }
+
+  return Array.from(byKey.values()) as T[];
+}
+
+export function publicSourceHealth(source: string, result: PromiseSettledResult<unknown[]>, durationMs?: number): PublicSourceHealth {
+  if (result.status === "fulfilled") {
+    return { source, ok: true, count: Array.isArray(result.value) ? result.value.length : 0, durationMs };
+  }
+  return {
+    source,
+    ok: false,
+    count: 0,
+    durationMs,
+    warning: result.reason instanceof Error ? result.reason.message : String(result.reason || "source failed"),
+  };
 }

@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  expandPublicBioQuery,
+  mergePublicDatasetRecords,
+  publicDatasetTopicGuard,
+  publicDatasetWorkflowScore,
+  publicSourceHealth,
+} from "../../../../lib/bio-search-public/workflow";
 
 type DatasetSource =
   | "huggingface"
@@ -662,40 +669,18 @@ async function searchCngb(query: string, yearFrom?: string, yearTo?: string): Pr
 }
 
 function integrateAndRank(items: DatasetItem[]): DatasetItem[] {
-  const seen = new Set<string>();
-  const deduped = items.filter((item) => {
-    const key = item.title.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 100);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  const withAccessions = items.map((item) => ({
+    ...item,
+    accessionIds: item.accessionIds?.length
+      ? item.accessionIds
+      : extractAccessions(`${item.title} ${item.description} ${item.url}`),
+  }));
 
-  const currentYear = new Date().getFullYear();
-  return deduped.map((item) => {
-    let score = 0;
-    const year = yearFromDateString(item.updatedAt);
-    if (year !== null) {
-      const age = currentYear - year;
-      score += Math.max(0, 30 - age * 3);
-    }
-    if (item.downloads) {
-      score += Math.min(30, Math.log10(item.downloads + 1) * 10);
-    }
-    if (item.likes) {
-      score += Math.min(25, Math.log10(item.likes + 1) * 10);
-    }
-    if (item.license) score += 5;
-    if (item.tags?.length) score += Math.min(10, item.tags.length);
-    if (item.description && item.description.length > 80) score += 10;
-
-    const accessionIds = extractAccessions(`${item.title} ${item.description} ${item.url}`);
-
-    return {
-      ...item,
-      accessionIds,
-      rankScore: Math.round(score),
-    };
-  });
+  const deduped = mergePublicDatasetRecords(withAccessions);
+  return deduped.map((item) => ({
+    ...item,
+    rankScore: Math.round(publicDatasetWorkflowScore(item)),
+  }));
 }
 
 function popularityScore(item: DatasetItem): number {
@@ -758,6 +743,7 @@ export async function POST(request: NextRequest) {
         };
 
     const { sources, yearFrom, yearTo, sortBy, page, pageSize } = parseFilters(filterInput);
+    const effectiveQuery = expandPublicBioQuery(String(query));
 
     const sourceJobs: Record<DatasetSource, (q: string, yf?: string, yt?: string) => Promise<DatasetItem[]>> = {
       huggingface: searchHuggingFace,
@@ -778,7 +764,8 @@ export async function POST(request: NextRequest) {
       cngb: searchCngb,
     };
 
-    const jobs = sources.map((source) => ({ source, promise: sourceJobs[source](query, yearFrom, yearTo) }));
+    const jobs = sources.map((source) => ({ source, promise: sourceJobs[source](effectiveQuery, yearFrom, yearTo) }));
+    const sourceStartedAt = new Map(jobs.map((job) => [job.source, Date.now()]));
     const settled = await Promise.allSettled(jobs.map((job) => job.promise));
 
     const bySource: Record<DatasetSource, DatasetItem[]> = {
@@ -805,9 +792,14 @@ export async function POST(request: NextRequest) {
       if (!source) return;
       bySource[source] = result.status === "fulfilled" ? result.value : [];
     });
+    const sourceHealth = settled.map((result, index) => {
+      const source = jobs[index]?.source || "unknown";
+      return publicSourceHealth(source, result, Date.now() - (sourceStartedAt.get(source as DatasetSource) || Date.now()));
+    });
 
     const merged = ALL_SOURCES.flatMap((source) => bySource[source]);
-    const ranked = integrateAndRank(merged);
+    const guarded = merged.filter((item) => publicDatasetTopicGuard(item, String(query)));
+    const ranked = integrateAndRank(guarded);
     const sorted = sortDatasets(ranked, sortBy);
     const total = sorted.length;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -825,6 +817,8 @@ export async function POST(request: NextRequest) {
       datasets: paged,
       meta: {
         trackResults,
+        sourceHealth,
+        selectedQuery: effectiveQuery,
         pagination: { page: safePage, pageSize, total, totalPages },
         sort: { by: sortBy },
       },
