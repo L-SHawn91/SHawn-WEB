@@ -15,12 +15,8 @@ export function Header() {
     const pathname = usePathname();
 
     const navItems = [
-        { href: "/about", label: t.nav.about },
-        { href: "/blog", label: t.nav.blog },
         { href: "/papers", label: t.nav.papers || "Papers" },
         { href: "/datasets", label: t.nav.datasets || "Datasets" },
-        { href: "/invest/reports?tab=KR", label: t.nav.market_intelligence },
-        { href: "/invest/archive", label: t.nav.reports },
     ];
 
     const isActive = (href: string) => {

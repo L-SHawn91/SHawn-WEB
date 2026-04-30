@@ -17,23 +17,6 @@ const quickLinks = [
     emoji: "🧪",
     accentColor: "#7B6BA8",
   },
-  {
-    href: "/blog",
-    title: "Blog",
-    desc: "Archive for research, operations, and automation notes.",
-    emoji: "📝",
-    accentColor: "#10243A",
-  },
-];
-
-const laneLinks = [
-  {
-    href: "/invest/reports?tab=KR",
-    title: "Investment Side Lane",
-    desc: "Secondary research lane with lower priority than the main bio lab workflow.",
-    emoji: "💹",
-    accentColor: "#E76F51",
-  },
 ];
 
 export default function Home() {
@@ -103,21 +86,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 pb-16 sm:px-6 lg:grid-cols-2 lg:px-8">
-          {laneLinks.map((lane) => (
-            <Link key={lane.href} href={lane.href}>
-              <article
-                className="sketch-card border-2 border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 p-6 transition hover:border-[#E76F51]/40"
-                style={{ borderLeftWidth: '3px', borderLeftColor: lane.accentColor }}
-                title={`${lane.title}: ${lane.desc}`}
-              >
-                <div className="text-3xl">{lane.emoji}</div>
-                <h3 className="mt-3 text-xl font-bold text-[#10243A] dark:text-slate-100">{lane.title}</h3>
-                <p className="mt-2 text-sm text-[#263238]/70 dark:text-slate-400 leading-relaxed">{lane.desc}</p>
-              </article>
-            </Link>
-          ))}
-        </section>
       </main>
 
       <Footer />
