@@ -426,18 +426,33 @@ function findMatchedAuthor(authors: string[] = [], candidates: string[], minOver
   return '';
 }
 
-function matchedAuthorConfidence(authors: string[] = [], candidates: string[]): number {
-  if (!authors.length || !candidates.length) return 0;
+function authorPositionWeight(index: number, total: number): number {
+  // Treat first author and last/corresponding-author proxy as equivalent.
+  // Most public APIs do not expose corresponding-author flags consistently, so
+  // last author is the safest cross-source proxy for senior/corresponding author.
+  if (index === 0 || (total > 1 && index === total - 1)) return 1.25;
+  if (index === 1) return 1.1;
+  if (index <= 3) return 1.0;
+  if (index <= 8) return 0.82;
+  return 0.68;
+}
+
+function matchedAuthorPosition(authors: string[] = [], candidates: string[]): { index: number; confidence: number } | null {
+  if (!authors.length || !candidates.length) return null;
   const normalizedCandidates = candidates.map((c) => normalizeName(c)).filter(Boolean);
-  let best = 0;
+  let best: { index: number; confidence: number } | null = null;
   for (let i = 0; i < authors.length; i += 1) {
     const author = normalizeName(authors[i] || '');
     if (!author) continue;
     const overlap = normalizedCandidates.reduce((m, c) => Math.max(m, tokenOverlapRatio(c, author)), 0);
-    const positionWeight = i === 0 ? 1.25 : i === 1 ? 1.1 : i <= 3 ? 1.0 : i <= 8 ? 0.82 : 0.68;
-    best = Math.max(best, Math.min(1.25, overlap * positionWeight));
+    const confidence = Math.min(1.25, overlap * authorPositionWeight(i, authors.length));
+    if (!best || confidence > best.confidence) best = { index: i, confidence };
   }
-  return Number(best.toFixed(4));
+  return best;
+}
+
+function matchedAuthorConfidence(authors: string[] = [], candidates: string[]): number {
+  return Number((matchedAuthorPosition(authors, candidates)?.confidence || 0).toFixed(4));
 }
 
 
@@ -446,9 +461,13 @@ function getAuthorPriorityBoost(paper: Paper, authorCandidates: string[], intent
   const isMatched = matchByAuthor(paper.authors || [], authorCandidates, intent === 'AUTHOR_WEAK' ? 0.9 : 0.8);
   if (!isMatched) return intent === 'AUTHOR_STRONG' ? -25 : -10;
 
-  if (paper.matchType === 'author-exact') return 35;
-  if (paper.matchType === 'author-weak') return 22;
-  return 15;
+  const matchedPosition = matchedAuthorPosition(paper.authors || [], authorCandidates);
+  const total = paper.authors?.length || 0;
+  const firstOrLast = matchedPosition && (matchedPosition.index === 0 || (total > 1 && matchedPosition.index === total - 1));
+  const positionBoost = firstOrLast ? 12 : matchedPosition && matchedPosition.index <= 3 ? 6 : 0;
+  if (paper.matchType === 'author-exact') return 35 + positionBoost;
+  if (paper.matchType === 'author-weak') return 22 + positionBoost;
+  return 15 + positionBoost;
 }
 
 // T1: PubMed track - clinical metadata
