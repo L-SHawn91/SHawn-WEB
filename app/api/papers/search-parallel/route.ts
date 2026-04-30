@@ -390,7 +390,35 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
     const topicTerm = query ? `(${query})` : '';
     const termParts: string[] = [];
 
-    if (authorTerm) {
+    if (intent === 'INSTITUTION') {
+      // Split off institution prefix from topic suffix.
+      // Use only the unique institution word (before "university/institute/...") for
+      // [Affiliation] — PubMed stores affiliations in many formats, partial match is safer.
+      const instKeywordPos = query.search(/\b(?:university|univ|institute|hospital|college|center|centre|laboratory|lab)\b/i);
+      let instCore: string;
+      let topicPart: string;
+      if (instKeywordPos > 0) {
+        // Include up to and including the keyword
+        const afterKeyword = query.slice(instKeywordPos).match(/\b(?:university|univ|institute|hospital|college|center|centre|laboratory|lab)\b/i);
+        const keywordEnd = instKeywordPos + (afterKeyword?.[0]?.length ?? 0);
+        instCore = query.slice(0, keywordEnd).trim();
+        topicPart = query.slice(keywordEnd).trim();
+      } else {
+        instCore = query;
+        topicPart = '';
+      }
+      // Use first distinctive word of institution for broader affiliation match
+      const distinctWord = instCore.split(/\s+/)[0] || instCore;
+      termParts.push(`("${distinctWord}"[Affiliation])`);
+      if (topicPart) {
+        // OR-join so partial matches still retrieve results (strict AND may give 0 hits)
+        const topicTokens = topicPart.trim().split(/\s+/).filter(Boolean);
+        const topicOr = topicTokens.length > 1
+          ? `(${topicTokens.join(' OR ')})`
+          : `(${topicPart})`;
+        termParts.push(topicOr);
+      }
+    } else if (authorTerm) {
       termParts.push(`(${authorTerm})`);
       if (intent === 'AUTHOR_WEAK' && topicTerm) {
         termParts.push(topicTerm);
@@ -1329,7 +1357,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       ? authorCandidatesMerged
       : hasManualAuthor
         ? authorCandidatesMerged
-        : (intent === 'TOPIC' ? [] : authorCandidatesRaw);
+        : (intent === 'TOPIC' || intent === 'INSTITUTION' ? [] : authorCandidatesRaw);
   const detectedTopic = (split.topic || extracted.cleanQuery || query).trim();
   const topicQuery = (!hasManualAuthor && mode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic) ? '' : detectedTopic;
   const effectiveQuery = expandPublicBioQuery((topicQuery || authorCandidates[0] || query).trim());
@@ -1352,10 +1380,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
 
   const trackJobs: Array<{ source: TrackSource; promise: Promise<Paper[]> }> = [];
   if (sources.includes('pubmed')) {
-    // Use raw topicQuery for PubMed — synonym expansion adds implicit AND terms
-    // which cause zero results for specific gene queries (e.g. DHCR24).
-    // SHawn-bio-search approach: plain query, let PubMed relevance ranking handle it.
-    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(topicQuery || query, yearFrom, yearTo, authorCandidates, intent) });
+    // INSTITUTION: pass full original query so T1 can extract affiliation name.
+    // TOPIC/AUTHOR: pass raw topicQuery — synonym expansion causes zero results for
+    // specific gene queries (e.g. DHCR24 endometrium → adds "uterine lining" AND).
+    const pubmedQuery = intent === 'INSTITUTION' ? query : (topicQuery || query);
+    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(pubmedQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('arxiv')) {
     trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(topicQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
@@ -1439,7 +1468,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   if (authorCandidates.length && intent !== 'TOPIC') {
     papers = papers.filter((paper) => strictAuthorWordMatch(paper.authors || [], authorCandidates));
   }
-  papers = papers.filter((paper) => publicTopicGuard(paper, nonAuthorQuery || effectiveQuery));
+  // INSTITUTION: affiliation filter in PubMed already constrains results; skip topic guard.
+  if (intent !== 'INSTITUTION') {
+    papers = papers.filter((paper) => publicTopicGuard(paper, nonAuthorQuery || effectiveQuery));
+  }
 
   return {
     query,
@@ -1482,6 +1514,7 @@ export async function POST(request: NextRequest) {
       if (!best || attemptScore(attempt) > attemptScore(best)) {
         best = attempt;
       }
+      if (primaryIntent === 'INSTITUTION') break;
       if (primaryIntent !== 'TOPIC' && attempt.intent !== 'TOPIC' && attempt.authorCandidates.length) break;
       if (shouldStopRetry(attempt)) break;
     }

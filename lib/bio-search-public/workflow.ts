@@ -186,8 +186,16 @@ export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean
   const q = normalizePublicBioQuery(query).toLowerCase();
   const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish"];
   if (negativeTerms.some((term) => text.includes(term) && !q.includes(term))) return false;
-  const matched = tokens.filter((token) => text.includes(token)).length;
-  return matched / Math.max(1, tokens.length) >= 0.15;
+  // Prefix match (first 6 chars min) handles stemming: "endometrium" matches "endometrial"
+  const matched = tokens.filter((token) => {
+    const prefix = token.slice(0, Math.max(5, token.length - 2));
+    return text.includes(prefix);
+  }).length;
+  // Short queries (≤3 tokens): require all tokens — prevents e.g. cow uterine paper
+  // passing on "endometrium" alone for "DHCR24 endometrium" query.
+  // Longer queries: require ≥50%.
+  const threshold = tokens.length <= 3 ? 1.0 : 0.5;
+  return matched / Math.max(1, tokens.length) >= threshold;
 }
 
 export function mergePublicPaperRecords<T extends PublicPaperLike>(papers: T[]): T[] {

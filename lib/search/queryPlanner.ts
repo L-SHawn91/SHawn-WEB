@@ -1,4 +1,6 @@
-export type QueryIntent = 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'TOPIC';
+export type QueryIntent = 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'INSTITUTION' | 'TOPIC';
+
+const INSTITUTION_KEYWORDS = /\b(university|univ|institute|hospital|college|school|center|centre|lab|laboratory|department|dept)\b/i;
 
 function isNameWord(token: string): boolean {
   return /^[A-Z][A-Za-z'-]{1,}$/.test(token || '');
@@ -35,6 +37,7 @@ export function classifyIntent(query: string): QueryIntent {
   const looksLikeSingleName =
     tokens.length === 1 && /^[A-Z][a-z'-]{2,}$/.test(tokens[0] || '');
 
+  if (INSTITUTION_KEYWORDS.test(q)) return 'INSTITUTION';
   if (hasQuotes || hasCommaName || looksLikeName2Strict || looksLikeNameWithMiddleInitial) return 'AUTHOR_STRONG';
 
   // 저자 우선 정책: 이름처럼 보이면 AUTHOR_WEAK로 취급
