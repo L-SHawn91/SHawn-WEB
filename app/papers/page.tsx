@@ -26,7 +26,7 @@ interface Paper {
   authors: string[];
   abstract: string;
   year: number;
-  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex';
+  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc';
   url: string;
   pdfUrl?: string;
   citations?: number;
@@ -35,6 +35,13 @@ interface Paper {
   influenceScore?: number;
   rankScore?: number;
   matchType?: 'author-exact' | 'author-weak' | 'topic';
+  doi?: string;
+  evidenceLabel?: string;
+  evidenceScore?: number;
+  supportScore?: number;
+  contradictionScore?: number;
+  bestSupportSentence?: string;
+  bestContradictSentence?: string;
 }
 
 interface TrackStatus {
@@ -58,6 +65,7 @@ interface SearchMeta {
     final?: number;
   };
   homonymProfiles?: HomonymProfile[];
+  suggestedTopics?: Array<{ type: string; label: string; query: string; count: number; filter?: { yearFrom?: string; yearTo?: string } }>;
 }
 
 interface HomonymProfile {
@@ -191,10 +199,10 @@ function collectSuggestionTerms(papers: Paper[], chips: string[], history: strin
 }
 
 const trackNames: Record<keyof TrackStatus, string> = {
-  t1: 'PubMed Track',
-  t2: 'arXiv Track',
-  t3: 'Semantic Track',
-  t4: 'Ranker Track',
+  t1: 'PubMed / Europe PMC',
+  t2: 'arXiv / Semantic',
+  t3: 'OpenAlex / Crossref',
+  t4: 'Ranking',
 };
 
 const sourceLabel: Record<Paper['source'], string> = {
@@ -203,6 +211,7 @@ const sourceLabel: Record<Paper['source'], string> = {
   semantic: 'Semantic',
   crossref: 'Crossref',
   openalex: 'OpenAlex',
+  europepmc: 'EuropePMC',
 };
 
 const sourceBadge: Record<Paper['source'], string> = {
@@ -211,10 +220,10 @@ const sourceBadge: Record<Paper['source'], string> = {
   semantic: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-200',
   crossref: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200',
   openalex: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-200',
+  europepmc: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-200',
 };
 
-const scoreTooltip =
-  'Score는 통합 랭킹 점수입니다. 최신성(최대 30) + 인용수(최대 40) + 영향도(최대 20) + 메타정보 보너스(최대 10)로 계산됩니다.';
+const scoreTooltip = 'Score는 통합 랭킹 점수입니다. 최신성(최대 30) + 주제 연관도(최대 25) + 영향도(최대 20) + 메타정보 보너스(최대 10)로 계산됩니다. 인용수는 Sort에서만 사용됩니다.';
 const citationTooltip = 'Citations는 원본 소스가 제공한 누적 인용 횟수입니다.';
 const yearTooltip = '발행 연도입니다. 최신 논문일수록 랭킹 점수에서 유리합니다.';
 const journalMetricHint: Record<Paper['source'], { if: string; q: string; note: string }> = {
@@ -223,6 +232,7 @@ const journalMetricHint: Record<Paper['source'], { if: string; q: string; note: 
   semantic: { if: 'N/A (source-dependent)', q: 'N/A', note: 'Semantic Scholar는 통합 메타데이터이며 저널 지표는 별도 소스 필요.' },
   crossref: { if: 'N/A (publisher metadata)', q: 'N/A', note: 'Crossref는 DOI 메타데이터 중심으로 IF/Q는 직접 제공하지 않습니다.' },
   openalex: { if: 'N/A (venue-dependent)', q: 'N/A', note: 'OpenAlex는 venue 정보 기반으로 추정 가능하나 별도 매핑이 필요합니다.' },
+  europepmc: { if: 'N/A', q: 'N/A', note: 'EuropePMC는 통합 오픈 액세스 인덱스입니다.' },
 };
 const sourceTooltip: Record<Paper['source'], string> = {
   pubmed: 'PubMed: 의생명/임상 중심의 NCBI 논문 데이터베이스',
@@ -230,6 +240,20 @@ const sourceTooltip: Record<Paper['source'], string> = {
   semantic: 'Semantic Scholar: 인용/영향도 메타데이터 제공',
   crossref: 'Crossref: DOI/서지 메타데이터 중심 학술 인덱스',
   openalex: 'OpenAlex: 글로벌 오픈 학술 그래프 메타데이터',
+  europepmc: 'EuropePMC: PubMed + 유럽 연구 + bioRxiv/medRxiv 통합 인덱스',
+};
+
+const evidenceLabelBadge: Record<string, string> = {
+  'support': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+  'contradict': 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
+  'uncertain': 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+  'mention-only': 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400',
+};
+const evidenceLabelText: Record<string, string> = {
+  'support': '지지',
+  'contradict': '반박',
+  'uncertain': '불확실',
+  'mention-only': '언급',
 };
 
 function trackCardClass(status: TrackStatus[keyof TrackStatus]): string {
@@ -279,9 +303,11 @@ export default function PapersPage() {
   const [queryHistory, setQueryHistory] = useState<string[]>([]);
   const [filters, setFilters] = useState({
     mode: 'broad' as SearchMode,
-    sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv'] as string[],
+    sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv', 'europepmc'] as string[],
     yearFrom: '',
     yearTo: '',
+    claim: '',
+    hypothesis: '',
     authorNames: '',
     firstAuthorOnly: false,
     profileMergeThreshold: 0.5,
@@ -291,10 +317,10 @@ export default function PapersPage() {
   const sourceCounts = useMemo(() => {
     return papers.reduce(
       (acc, paper) => {
-        acc[paper.source] += 1;
+        acc[paper.source] = (acc[paper.source] || 0) + 1;
         return acc;
       },
-      { pubmed: 0, arxiv: 0, semantic: 0, crossref: 0, openalex: 0 },
+      { pubmed: 0, arxiv: 0, semantic: 0, crossref: 0, openalex: 0, europepmc: 0 } as Record<string, number>,
     );
   }, [papers]);
 
@@ -479,6 +505,8 @@ export default function PapersPage() {
       sources: filters.sources,
       yearFrom: filters.yearFrom,
       yearTo: filters.yearTo,
+      claim: filters.claim,
+      hypothesis: filters.hypothesis,
       firstAuthorOnly: filters.firstAuthorOnly,
       profileMergeThreshold: filters.profileMergeThreshold,
     };
@@ -493,7 +521,7 @@ export default function PapersPage() {
       const response = await apiFetch('/api/papers/search-parallel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: userQuery, mode: filters.mode, filters: requestFilters }),
+        body: JSON.stringify({ query: userQuery, mode: filters.mode, filters: requestFilters, claim: filters.claim }),
       });
       const data = await response.json();
 
@@ -555,10 +583,10 @@ export default function PapersPage() {
             <div>
               <h1 className="flex items-center gap-3 text-2xl font-bold text-slate-900 dark:text-white">
                 <span title="논문 통합 검색 대시보드"><BookOpen className="h-7 w-7 text-blue-600" /></span>
-                Research Search Dashboard
+                SHawn Bio Search
               </h1>
               <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                PubMed, arXiv, Semantic Scholar를 병렬로 검색하는 분석형 워크보드
+                6개 소스 티어드 병렬 검색 · Evidence 분류 · 가설 검증 지원
               </p>
             </div>
             <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
@@ -583,6 +611,18 @@ export default function PapersPage() {
                 onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
                 placeholder="예: single-cell atlas"
                 className="w-full rounded-xl border border-blue-300 bg-white px-10 py-2.5 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-blue-700 dark:bg-slate-900 dark:text-slate-100 sm:py-3"
+              />
+            </div>
+            {/* Claim input — collapses when empty */}
+            <div className="relative flex-1 lg:flex-none lg:w-80">
+              <Sparkles className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-violet-400" />
+              <input
+                type="text"
+                value={filters.claim}
+                onChange={(e) => setFilters({ ...filters, claim: e.target.value })}
+                onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
+                placeholder="검증할 주장 (선택): organoids recapitulate endometrial function"
+                className="w-full rounded-xl border border-violet-300 bg-white px-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none ring-violet-400 transition focus:ring-2 dark:border-violet-700 dark:bg-slate-900 dark:text-slate-100 sm:py-3"
               />
             </div>
             <button
@@ -877,7 +917,7 @@ export default function PapersPage() {
                     Search Results
                   </h2>
                   <p className="mt-1 text-xs text-slate-500 dark:text-slate-400" title={scoreTooltip}>
-                    Score = 최신성 + 인용수 + 영향도 + 메타정보 보너스
+                    Score = 최신성 + 주제 연관도 + 영향도 + 메타정보 보너스
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -958,6 +998,19 @@ export default function PapersPage() {
                             Citations {paper.citations}
                           </span>
                         )}
+                        {paper.evidenceLabel && (
+                          <span
+                            className={`rounded-full px-2 py-1 font-semibold ${evidenceLabelBadge[paper.evidenceLabel] || 'bg-slate-100 text-slate-500'}`}
+                            title={paper.evidenceScore !== undefined ? `Evidence score: ${paper.evidenceScore.toFixed(3)}` : ''}
+                          >
+                            {evidenceLabelText[paper.evidenceLabel] || paper.evidenceLabel}
+                          </span>
+                        )}
+                        {paper.evidenceScore !== undefined && paper.evidenceScore > 0 && (
+                          <span className="text-[11px] text-slate-400 dark:text-slate-500">
+                            ev {paper.evidenceScore.toFixed(2)}
+                          </span>
+                        )}
                       </div>
 
                       <div className="absolute right-3 top-3">
@@ -1002,6 +1055,11 @@ export default function PapersPage() {
                       <p className="mt-2 line-clamp-3 text-sm text-slate-700 dark:text-slate-200">
                         {paper.abstract}
                       </p>
+                      {(paper.evidenceLabel === 'support' || paper.evidenceLabel === 'contradict') && paper.bestSupportSentence && (
+                        <p className={`mt-1.5 rounded-lg px-3 py-1.5 text-xs italic ${paper.evidenceLabel === 'support' ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300' : 'bg-rose-50 text-rose-800 dark:bg-rose-950/30 dark:text-rose-300'}`}>
+                          "{paper.bestSupportSentence.slice(0, 160)}{paper.bestSupportSentence.length > 160 ? '…' : ''}"
+                        </p>
+                      )}
 
                       {(paper.meshTerms?.length || paper.techniques?.length) && (
                         <div className="mt-2 flex flex-wrap gap-2">
@@ -1132,6 +1190,16 @@ export default function PapersPage() {
                     </div>
                   </label>
                 )}
+                <label className="col-span-2 rounded-xl border border-violet-200 bg-violet-50/60 px-3 py-2 text-sm dark:border-violet-900/50 dark:bg-slate-800">
+                  <span className="mb-1 block text-[11px] text-violet-600 dark:text-violet-400">Claim (가설 검증)</span>
+                  <input
+                    type="text"
+                    value={filters.claim}
+                    onChange={(e) => setFilters({ ...filters, claim: e.target.value })}
+                    placeholder="e.g. progesterone drives organoid differentiation"
+                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
+                  />
+                </label>
                 <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
                   <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Year From</span>
                   <input
@@ -1164,7 +1232,7 @@ export default function PapersPage() {
               <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
                 <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Source Filters</div>
                 <div className="flex flex-wrap gap-1.5 text-xs">
-                  {(['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'] as const).map((source) => {
+                  {(['pubmed', 'europepmc', 'semantic', 'openalex', 'crossref', 'arxiv'] as const).map((source) => {
                     const active = filters.sources.includes(source);
                     return (
                       <button
@@ -1285,6 +1353,30 @@ export default function PapersPage() {
                 Final integrated: <span className="font-semibold">{meta?.trackResults?.final ?? papers.length}</span>
               </div>
             </div>
+
+            {(meta?.suggestedTopics || []).length > 0 && (
+              <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+                <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white">Suggested Topics</h3>
+                <div className="flex flex-wrap gap-2">
+                  {(meta?.suggestedTopics || []).slice(0, 8).map((topic) => (
+                    <button
+                      key={topic.label}
+                      type="button"
+                      onClick={() => {
+                        setChips([]);
+                        setQuery(topic.query);
+                        if (topic.filter?.yearFrom) setFilters((f) => ({ ...f, yearFrom: topic.filter!.yearFrom! }));
+                        if (topic.filter?.yearTo) setFilters((f) => ({ ...f, yearTo: topic.filter!.yearTo! }));
+                      }}
+                      className="rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-700 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 transition"
+                      title={`${topic.type} · ${topic.count}건`}
+                    >
+                      {topic.label} <span className="opacity-50">{topic.count}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
               <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">Top Signals</h3>
