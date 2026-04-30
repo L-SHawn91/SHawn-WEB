@@ -50,12 +50,10 @@ class TTLCache<T> {
 }
 
 // Papers search: 5 min TTL (academic search results change slowly)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const papersCache = new TTLCache<any>(300, 150);
+export const papersCache = new TTLCache<Record<string, unknown>>(300, 150);
 
 // Datasets search: 10 min TTL
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const datasetsCache = new TTLCache<any>(600, 100);
+export const datasetsCache = new TTLCache<Record<string, unknown>>(600, 100);
 
 // Journal metrics: 24h TTL (IF/quartile changes annually)
 export const journalMetricsCache = new TTLCache<{

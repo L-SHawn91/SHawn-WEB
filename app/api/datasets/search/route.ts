@@ -869,7 +869,7 @@ export async function POST(request: NextRequest) {
     // Cache lookup
     const cacheKey = makeCacheKey({ q: effectiveQuery, sources: [...sources].sort(), yearFrom, yearTo, sortBy, page, pageSize });
     const cached = datasetsCache.get(cacheKey);
-    if (cached) return NextResponse.json({ ...cached, meta: { ...cached.meta, cached: true } });
+    if (cached) { const c = cached as Record<string, unknown>; return NextResponse.json({ ...c, meta: { ...(c.meta as Record<string, unknown>), cached: true } }); }
 
     const sourceJobs: Record<DatasetSource, (q: string, yf?: string, yt?: string) => Promise<DatasetItem[]>> = {
       huggingface: searchHuggingFace,

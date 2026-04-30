@@ -1955,7 +1955,8 @@ export async function POST(request: NextRequest) {
       const cacheKey = makeCacheKey({ q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       const cached = papersCache.get(cacheKey);
       if (cached) {
-        return NextResponse.json({ ...cached, meta: { ...cached.meta, cached: true, totalTime: Date.now() - overallStart } });
+        const c = cached as Record<string, unknown>;
+        return NextResponse.json({ ...c, meta: { ...(c.meta as Record<string, unknown>), cached: true, totalTime: Date.now() - overallStart } });
       }
     }
 
