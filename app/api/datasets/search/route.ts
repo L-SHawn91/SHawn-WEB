@@ -182,12 +182,14 @@ function pickNcbiAccession(row: any, id: string): string {
 }
 
 async function fetchNcbiDb(db: "gds" | "sra" | "bioproject", query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  const ncbiKey = process.env.NCBI_API_KEY || '';
   const searchParams = new URLSearchParams({
     db,
     term: query,
     retmax: "20",
     retmode: "json",
     sort: "relevance",
+    ...(ncbiKey ? { api_key: ncbiKey } : {}),
   });
   if (yearFrom || yearTo) {
     searchParams.set("mindate", `${yearFrom || "1900"}/01/01`);
@@ -202,7 +204,12 @@ async function fetchNcbiDb(db: "gds" | "sra" | "bioproject", query: string, year
   const ids: string[] = searchData?.esearchresult?.idlist || [];
   if (ids.length === 0) return [];
 
-  const summaryParams = new URLSearchParams({ db, id: ids.join(","), retmode: "json" });
+  const summaryParams = new URLSearchParams({
+    db,
+    id: ids.join(","),
+    retmode: "json",
+    ...(ncbiKey ? { api_key: ncbiKey } : {}),
+  });
   const summaryRes = await fetch(
     `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?${summaryParams.toString()}`,
     { signal: AbortSignal.timeout(15000) },

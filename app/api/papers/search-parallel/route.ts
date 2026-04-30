@@ -642,7 +642,9 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
       fields: 'title,authors,year,abstract,url,citationCount,referenceCount,influentialCitationCount,openAccessPdf,fieldsOfStudy',
     });
 
+    const s2Key = process.env.S2_API_KEY || process.env.SEMANTIC_SCHOLAR_API_KEY || '';
     const res = await fetch(`${baseUrl}?${params.toString()}`, {
+      headers: s2Key ? { 'x-api-key': s2Key } : {},
       signal: AbortSignal.timeout(15000)
     });
     const data = await res.json();
