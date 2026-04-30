@@ -56,7 +56,10 @@ interface Paper {
   authorCountries?: string[];
   matchType?: 'author-exact' | 'author-weak' | 'topic';
   journal?: string;
+  journalIssn?: string;
   impactFactor?: number;
+  journalQuartile?: string;
+  journalHIndex?: number;
 }
 
 function isPaper(paper: Paper | null): paper is Paper {
@@ -567,6 +570,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
         techniques: studyType ? [studyType] : [],
         matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
         journal: doc.fulljournalname || doc.source || undefined,
+        journalIssn: doc.issn || doc.essn || undefined,
       };
     }).filter(isPaper)
       .filter((paper: Paper) => {
@@ -745,7 +749,8 @@ async function t3_semanticAuthorSearch(
         pdfUrl: p.openAccessPdf?.url,
         citations: typeof p.citationCount === 'number' ? p.citationCount : undefined,
         matchType: 'author-exact' as const,
-        journal: (p.venue as string | undefined) || undefined,
+        journal: (p.venue as string | undefined) || (p.journal?.name as string | undefined) || undefined,
+        journalIssn: (p.journal?.issn as string | undefined) || undefined,
       }));
   } catch {
     return [];
@@ -816,7 +821,8 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
           influenceScore,
           authorAffiliations,
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
-          journal: (paper.venue as string | undefined) || undefined,
+          journal: (paper.venue as string | undefined) || (paper.journal?.name as string | undefined) || undefined,
+          journalIssn: (paper.journal?.issn as string | undefined) || undefined,
         };
       });
 
@@ -975,6 +981,7 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
                     authorCountries,
                     matchType: 'author-exact' as const,
                     journal: (row.primary_location?.source?.display_name as string | undefined) || undefined,
+                    journalIssn: (row.primary_location?.source?.issn_l as string | undefined) || undefined,
                     impactFactor: typeof row.primary_location?.source?.impact_factor === 'number' ? row.primary_location.source.impact_factor : undefined,
                   } as Paper;
                 })
@@ -1038,6 +1045,7 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
           authorCountries,
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
           journal: (row.primary_location?.source?.display_name as string | undefined) || undefined,
+          journalIssn: (row.primary_location?.source?.issn_l as string | undefined) || undefined,
           impactFactor: typeof row.primary_location?.source?.impact_factor === 'number' ? row.primary_location.source.impact_factor : undefined,
         } as Paper;
       })
@@ -1125,6 +1133,7 @@ async function t6_europePmcEnhanced(
           citations: parseInt(r.citedByCount || '0') || undefined,
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
           journal: r.journalTitle || r.journal || undefined,
+          journalIssn: r.journalInfo?.issn || r.journalInfo?.journal?.issn || undefined,
         } as Paper;
       })
       .filter((p: Paper | null): p is Paper => p !== null)
