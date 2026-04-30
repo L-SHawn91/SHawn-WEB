@@ -122,6 +122,7 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
   }
 
   const explicitPatterns = [
+    /\b([A-Z][A-Za-z'\-]+\s+[A-Z](?:\.)?\s+[A-Z][A-Za-z'\-]+)\b/g,
     /\b([A-Z][A-Za-z'\-]+\s+[A-Z][a-z](?:\.|)\b)/g,
     /\b([A-Za-z]{1,}\s+[A-Za-z]{1,}\s*[A-Za-z]{0,})\b/g,
   ];
@@ -290,8 +291,17 @@ function matchByAuthor(authors: string[] = [], candidates: string[], minOverlap 
     const target = normalizeName(author);
     const targetToken = normalizeAuthorToken(author);
 
-    const exactOrContained = normalizedCandidates.some((candidate) => candidate === target || target.includes(candidate) || candidate.includes(target))
-      || normalizedTokens.some((token) => token === targetToken || targetToken.includes(token) || token.includes(targetToken));
+    const exactOrContained = normalizedCandidates.some((candidate) => {
+      if (candidate === target) return true;
+      const candidateParts = candidate.split(/\s+/).filter(Boolean);
+      if (candidateParts.length === 1) return target.split(/\s+/).includes(candidate);
+      return target.includes(candidate) || candidate.includes(target);
+    }) || normalizedTokens.some((token) => {
+      if (token === targetToken) return true;
+      const candidateParts = normalizedCandidates.find((candidate) => normalizeAuthorToken(candidate) === token)?.split(/\s+/).filter(Boolean) || [];
+      if (candidateParts.length <= 1) return false;
+      return targetToken.includes(token) || token.includes(targetToken);
+    });
 
     if (exactOrContained) return true;
 
@@ -305,6 +315,20 @@ function matchByFirstAuthor(authors: string[] = [], candidates: string[], minOve
   return matchByAuthor([authors[0]], candidates, minOverlap);
 }
 
+function strictAuthorWordMatch(authors: string[] = [], candidates: string[]): boolean {
+  if (!candidates.length) return true;
+  const authorText = ` ${authors.map((author) => normalizeName(author)).join(" ")} `;
+  return candidates.some((candidate) => {
+    const clean = normalizeName(candidate);
+    if (!clean) return false;
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return authorText.includes(` ${parts[0]} `);
+    const first = parts[0];
+    const last = parts[parts.length - 1];
+    return authorText.includes(` ${clean} `) || (Boolean(first && last) && authorText.includes(` ${first} `) && authorText.includes(` ${last} `));
+  });
+}
+
 function findMatchedAuthor(authors: string[] = [], candidates: string[], minOverlap = 0.85): string {
   if (!authors.length || !candidates.length) return '';
   const normalizedCandidates = candidates.map((c) => normalizeName(c)).filter(Boolean);
@@ -312,8 +336,17 @@ function findMatchedAuthor(authors: string[] = [], candidates: string[], minOver
   for (const author of authors) {
     const target = normalizeName(author);
     const targetToken = normalizeAuthorToken(author);
-    const exactOrContained = normalizedCandidates.some((candidate) => candidate === target || target.includes(candidate) || candidate.includes(target))
-      || normalizedTokens.some((token) => token === targetToken || targetToken.includes(token) || token.includes(targetToken));
+    const exactOrContained = normalizedCandidates.some((candidate) => {
+      if (candidate === target) return true;
+      const candidateParts = candidate.split(/\s+/).filter(Boolean);
+      if (candidateParts.length === 1) return target.split(/\s+/).includes(candidate);
+      return target.includes(candidate) || candidate.includes(target);
+    }) || normalizedTokens.some((token) => {
+      if (token === targetToken) return true;
+      const candidateParts = normalizedCandidates.find((candidate) => normalizeAuthorToken(candidate) === token)?.split(/\s+/).filter(Boolean) || [];
+      if (candidateParts.length <= 1) return false;
+      return targetToken.includes(token) || token.includes(targetToken);
+    });
     if (exactOrContained) return author;
     const fuzzy = normalizedCandidates.some((candidate) => tokenOverlapRatio(candidate, target) >= minOverlap);
     if (fuzzy) return author;
@@ -434,7 +467,12 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
         techniques: studyType ? [studyType] : [],
         matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
       };
-    }).filter(isPaper);
+    }).filter(isPaper)
+      .filter((paper: Paper) => {
+        if (!authorCandidates.length || intent === 'TOPIC') return true;
+        const minOverlap = intent === 'AUTHOR_WEAK' ? 0.92 : 0.8;
+        return matchByAuthor(paper.authors || [], authorCandidates, minOverlap);
+      });
 
     console.log(`[T1:PubMed] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
     return papers;
@@ -1356,6 +1394,9 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   if (mode === 'precision') {
     papers = papers.filter((paper) => (paper.evidenceScore || 0) >= 0.05);
   }
+  if (authorCandidates.length && intent !== 'TOPIC') {
+    papers = papers.filter((paper) => strictAuthorWordMatch(paper.authors || [], authorCandidates));
+  }
   papers = papers.filter((paper) => publicTopicGuard(paper, nonAuthorQuery || effectiveQuery));
 
   return {
@@ -1391,6 +1432,7 @@ export async function POST(request: NextRequest) {
     const variants = buildQueryVariants(rawQuery, normalizedQuery);
     const attempts: Array<{ query: string; intent: QueryIntent; count: number }> = [];
 
+    const primaryIntent = classifyIntent(normalizedQuery);
     let best: SearchAttemptResult | null = null;
     for (const candidate of variants) {
       const attempt = await runSingleSearchAttempt(candidate, filters, mode);
@@ -1398,6 +1440,7 @@ export async function POST(request: NextRequest) {
       if (!best || attemptScore(attempt) > attemptScore(best)) {
         best = attempt;
       }
+      if (primaryIntent !== 'TOPIC' && attempt.intent !== 'TOPIC' && attempt.authorCandidates.length) break;
       if (shouldStopRetry(attempt)) break;
     }
     

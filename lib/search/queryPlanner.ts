@@ -21,6 +21,12 @@ export function classifyIntent(query: string): QueryIntent {
     /^[A-Z][a-z'-]+$/.test(tokens[0] || '') &&
     /^[A-Z][a-z'-]+$/.test(tokens[1] || '');
 
+  const looksLikeNameWithMiddleInitial =
+    tokens.length >= 3 &&
+    isNameWord(tokens[0] || '') &&
+    isInitialToken(tokens[1] || '') &&
+    isNameWord(tokens[2] || '');
+
   const looksLikeName2Loose =
     tokens.length >= 2 &&
     isNameWord(tokens[0] || '') &&
@@ -29,7 +35,7 @@ export function classifyIntent(query: string): QueryIntent {
   const looksLikeSingleName =
     tokens.length === 1 && /^[A-Z][a-z'-]{2,}$/.test(tokens[0] || '');
 
-  if (hasQuotes || hasCommaName || looksLikeName2Strict) return 'AUTHOR_STRONG';
+  if (hasQuotes || hasCommaName || looksLikeName2Strict || looksLikeNameWithMiddleInitial) return 'AUTHOR_STRONG';
 
   // 저자 우선 정책: 이름처럼 보이면 AUTHOR_WEAK로 취급
   if (looksLikeName2Loose) return 'AUTHOR_WEAK';
@@ -55,8 +61,18 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
   const tokens = q.split(/\s+/).filter(Boolean);
   const first = tokens[0] || '';
   const second = tokens[1] || '';
+  const third = tokens[2] || '';
+  const looksLikeThreeTokenName =
+    tokens.length >= 3 && isNameWord(first) && isInitialToken(second) && isNameWord(third);
   const looksLikeTwoTokenName =
     tokens.length >= 2 && isNameWord(first) && (isNameWord(second) || isInitialToken(second));
+
+  if (looksLikeThreeTokenName) {
+    return {
+      author: `${first} ${second} ${third}`,
+      topic: tokens.slice(3).join(' ').trim(),
+    };
+  }
 
   if (looksLikeTwoTokenName) {
     return {

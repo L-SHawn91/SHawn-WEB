@@ -258,19 +258,28 @@ export function publicDatasetTopicGuard(item: PublicDatasetLike, query: string):
 
   const text = `${item.title || ""} ${item.description || ""} ${(item.tags || []).join(" ")}`.toLowerCase();
   const source = String(item.source || "").toLowerCase();
-  const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish", "retina", "cerebral", "brain", "colorectal"];
+  const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish", "retina", "retinal", "cerebral", "brain", "colorectal", "pancreatic", "pancreas", "cardioid", "cardiac", "colonic"];
   if (negativeTerms.some((term) => text.includes(term) && !q.includes(term))) return false;
 
-  const important = tokens.filter((token) => !["dataset", "datasets", "data", "search", "single", "cell", "rna", "seq", "rnaseq"].includes(token));
+  const generic = ["dataset", "datasets", "data", "search", "single", "cell", "cells", "rna", "seq", "rnaseq", "sequencing", "transcriptomic", "transcriptomics"];
+  const important = tokens.filter((token) => !generic.includes(token));
   const targetTokens = important.length >= 2 ? important : tokens;
   const matched = targetTokens.filter((token) => text.includes(token)).length;
   const accessionBacked = Boolean(item.accessionIds?.length);
   const paperDerived = ["openalex", "crossref"].includes(source);
+  const tissueTerms = ["endometrial", "endometrium", "uterine", "uterus", "decidual", "decidua"];
+  const requestedTissue = tissueTerms.filter((term) => q.includes(term));
+  const hasRequestedTissue = requestedTissue.length === 0 || requestedTissue.some((term) => text.includes(term));
+  const requestedSingleCell = q.includes("single cell") || q.includes("single-cell") || q.includes("scrna");
+  const hasSingleCellSignal = !requestedSingleCell || /single[-\s]?cell|scrna|single cell rna|single-cell transcript/i.test(text);
+  const requestedRnaSeq = /rna[-\s]?seq|rnaseq|transcriptom/i.test(q);
+  const hasRnaSeqSignal = !requestedRnaSeq || /rna[-\s]?seq|rnaseq|transcriptom|gene expression/i.test(text);
 
   if (paperDerived && !accessionBacked && q.includes("dataset")) return false;
   if (paperDerived && !accessionBacked && matched < Math.min(2, targetTokens.length)) return false;
   if (q.includes("organoid") && !text.includes("organoid")) return false;
-  return matched / Math.max(1, targetTokens.length) >= 0.25 || accessionBacked;
+  if (!hasRequestedTissue || !hasSingleCellSignal || !hasRnaSeqSignal) return false;
+  return matched / Math.max(1, targetTokens.length) >= 0.25 || (accessionBacked && matched >= 1);
 }
 
 export function mergePublicDatasetRecords<T extends PublicDatasetLike>(items: T[]): T[] {

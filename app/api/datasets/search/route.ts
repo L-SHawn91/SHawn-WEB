@@ -690,7 +690,24 @@ async function searchCngb(query: string, yearFrom?: string, yearTo?: string): Pr
   }
 }
 
-function integrateAndRank(items: DatasetItem[]): DatasetItem[] {
+function datasetQueryRelevance(item: DatasetItem, query: string): number {
+  const q = normalizePublicBioQuery(query).toLowerCase();
+  const text = `${item.title || ""} ${item.description || ""} ${(item.tags || []).join(" ")} ${(item.accessionIds || []).join(" ")}`.toLowerCase();
+  const tokens = q.match(/[a-z0-9가-힣]{3,}/g) || [];
+  const generic = new Set(["dataset", "datasets", "data", "search", "single", "cell", "cells", "rna", "seq", "rnaseq", "sequencing", "transcriptomic", "transcriptomics"]);
+  const important = tokens.filter((token) => !generic.has(token));
+  const targetTokens = important.length ? important : tokens;
+  if (!targetTokens.length) return 0;
+
+  const matched = targetTokens.filter((token) => text.includes(token)).length;
+  const phraseBonus = q && text.includes(q) ? 35 : 0;
+  const title = (item.title || "").toLowerCase();
+  const titleMatches = targetTokens.filter((token) => title.includes(token)).length;
+  const accessionBonus = item.accessionIds?.length ? 12 : 0;
+  return Math.round((matched / targetTokens.length) * 100 + titleMatches * 12 + phraseBonus + accessionBonus);
+}
+
+function integrateAndRank(items: DatasetItem[], query: string): DatasetItem[] {
   const withAccessions = items.map((item) => ({
     ...item,
     accessionIds: item.accessionIds?.length
@@ -701,7 +718,7 @@ function integrateAndRank(items: DatasetItem[]): DatasetItem[] {
   const deduped = mergePublicDatasetRecords(withAccessions);
   return deduped.map((item) => ({
     ...item,
-    rankScore: Math.round(publicDatasetWorkflowScore(item)),
+    rankScore: Math.round(datasetQueryRelevance(item, query) * 3 + publicDatasetWorkflowScore(item)),
   }));
 }
 
@@ -821,7 +838,7 @@ export async function POST(request: NextRequest) {
 
     const merged = ALL_SOURCES.flatMap((source) => bySource[source]);
     const guarded = merged.filter((item) => publicDatasetTopicGuard(item, String(query)));
-    const ranked = integrateAndRank(guarded);
+    const ranked = integrateAndRank(guarded, String(query));
     const sorted = sortDatasets(ranked, sortBy);
     const total = sorted.length;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
