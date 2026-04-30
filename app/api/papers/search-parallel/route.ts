@@ -2068,6 +2068,8 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     }
   }
 
+  papers = papers.sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
+
   // Per-source view: topic-guarded raw results scored lightly (no cross-source dedup)
   const bySourceScored: Record<string, Paper[]> = {};
   const activeSrcs: TrackSource[] = ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'];
@@ -2076,7 +2078,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     if (!srcPapers?.length) continue;
     const guardFilter = intent === 'INSTITUTION'
       ? srcPapers
-      : srcPapers.filter((p) => publicTopicGuard(p, effectiveQuery || nonAuthorQuery));
+      : srcPapers.filter((p) => {
+          if (parsedPublicQuery.species.length > 0 && speciesTopicMatches(parsedPublicQuery.species, `${p.title || ''} ${p.abstract || ''}`)) return true;
+          return publicTopicGuard(p, nonAuthorQuery || effectiveQuery);
+        });
     if (guardFilter.length) {
       bySourceScored[src] = guardFilter
         .map((p) => ({ ...p, rankScore: Math.round(publicWorkflowScore(p, effectiveQuery || nonAuthorQuery)) }))
