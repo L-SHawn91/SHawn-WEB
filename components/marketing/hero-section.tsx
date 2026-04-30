@@ -14,10 +14,10 @@ export function HeroSection() {
 
     return (
         <section className="relative overflow-hidden py-20 md:py-32 lg:py-40">
-            {/* Background Blobs */}
-            <div className="absolute top-0 left-1/2 -ml-[50%] -translate-x-1/2 w-[200%] h-full z-0 opacity-30 dark:opacity-20 pointer-events-none">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/40 rounded-full blur-3xl" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/40 rounded-full blur-3xl" />
+            {/* SABS background — teal + coral soft blobs */}
+            <div className="absolute top-0 left-1/2 -ml-[50%] -translate-x-1/2 w-[200%] h-full z-0 opacity-25 dark:opacity-15 pointer-events-none">
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2A9D8F]/40 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#7B6BA8]/35 rounded-full blur-3xl" />
             </div>
 
             <div className="container relative z-10 flex flex-col items-center text-center gap-8 mx-auto px-4">
@@ -27,7 +27,7 @@ export function HeroSection() {
                     transition={{ duration: 0.5 }}
                 >
                     <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 mb-6">
-                        <Sparkles className="w-3 h-3 mr-1 text-yellow-500" />
+                        <Sparkles className="w-3 h-3 mr-1 text-[#E76F51]" />
                         <span className="text-muted-foreground">{t.hero.badge}</span>
                     </div>
                 </motion.div>

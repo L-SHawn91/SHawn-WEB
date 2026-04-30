@@ -462,7 +462,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
       db: 'pubmed',
       term: termParts.join(' AND '),
       retmode: 'json',
-      retmax: '15',
+      retmax: (authorCandidates.length > 0 && intent !== 'TOPIC') ? '50' : '15',
       sort: 'relevance',
       ...(ncbiKeyEarly ? { api_key: ncbiKeyEarly } : {}),
     });
@@ -684,12 +684,78 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
   }
 }
 
+async function t3_semanticAuthorSearch(
+  authorName: string,
+  yearFrom?: string,
+  yearTo?: string,
+): Promise<Paper[]> {
+  const s2Key = process.env.S2_API_KEY || process.env.SEMANTIC_SCHOLAR_API_KEY || '';
+  const headers: Record<string, string> = s2Key ? { 'x-api-key': s2Key } : {};
+  try {
+    const authorRes = await fetch(
+      `https://api.semanticscholar.org/graph/v1/author/search?query=${encodeURIComponent(authorName)}&fields=authorId,name,paperCount,affiliations&limit=5`,
+      { headers, signal: AbortSignal.timeout(10000) },
+    );
+    if (!authorRes.ok) return [];
+    const authorData = await authorRes.json();
+    const candidates: any[] = authorData.data || [];
+    if (!candidates.length) return [];
+    const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    const qNorm = norm(authorName);
+    const best = candidates.find((a: any) => {
+      const n = norm(a.name || '');
+      return n === qNorm || n.includes(qNorm) || qNorm.includes(n);
+    }) ?? candidates[0];
+    if (!best?.authorId) return [];
+    const papersRes = await fetch(
+      `https://api.semanticscholar.org/graph/v1/author/${best.authorId}/papers?fields=paperId,title,authors,year,abstract,citationCount,openAccessPdf,url,publicationTypes&limit=100&sort=year`,
+      { headers, signal: AbortSignal.timeout(15000) },
+    );
+    if (!papersRes.ok) return [];
+    const papersData = await papersRes.json();
+    // S2 publicationTypes that are NOT primary research outputs
+    const NON_PAPER_TYPES = new Set(['LettersAndComments', 'Editorial', 'News', 'Dataset']);
+    const NON_PAPER_TITLE = /^(comment(ed)?|letter|response|reply|erratum|correction|retraction|editorial)\b/i;
+    return ((papersData.data as any[]) || [])
+      .filter((p: any) => {
+        if (yearFrom && (p.year || 0) < parseInt(yearFrom)) return false;
+        if (yearTo && (p.year || 0) > parseInt(yearTo)) return false;
+        // Exclude non-paper publication types
+        const types: string[] = p.publicationTypes || [];
+        if (types.length && types.every((t: string) => NON_PAPER_TYPES.has(t))) return false;
+        // Exclude by title pattern as fallback
+        const title: string = p.title || '';
+        if (title && NON_PAPER_TITLE.test(title.trim())) return false;
+        return true;
+      })
+      .map((p: any) => ({
+        id: `semantic-${p.paperId}`,
+        title: p.title || 'No title',
+        authors: (p.authors || []).map((a: any) => a.name).filter(Boolean),
+        abstract: p.abstract || 'No abstract available',
+        year: p.year || new Date().getFullYear(),
+        source: 'semantic' as const,
+        url: p.url || `https://www.semanticscholar.org/paper/${p.paperId}`,
+        pdfUrl: p.openAccessPdf?.url,
+        citations: typeof p.citationCount === 'number' ? p.citationCount : undefined,
+        matchType: 'author-exact' as const,
+      }));
+  } catch {
+    return [];
+  }
+}
+
 // T3: Semantic Scholar track - influence analysis
 async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC'): Promise<Paper[]> {
   console.log('[T3:Semantic] Search starting...');
   const startTime = Date.now();
   
   try {
+    if (authorCandidates.length > 0 && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
+      const results = await t3_semanticAuthorSearch(authorCandidates[0]!, yearFrom, yearTo);
+      if (results.length > 0) return results;
+    }
+
     const baseUrl = 'https://api.semanticscholar.org/graph/v1/paper/search';
     const params = new URLSearchParams({
       query,
@@ -839,9 +905,85 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
     return seq.join(' ').trim() || 'No abstract available';
   };
   try {
+    if (authorCandidates.length > 0 && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
+      try {
+        const authorSearchRes = await fetch(
+          `https://api.openalex.org/authors?search=${encodeURIComponent(authorCandidates[0]!)}&select=id,display_name&per_page=5`,
+          { signal: AbortSignal.timeout(10000), headers: { Accept: 'application/json' } },
+        );
+        if (authorSearchRes.ok) {
+          const authorData = await authorSearchRes.json();
+          const authorResults: any[] = authorData?.results || [];
+          const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+          const qNorm = norm(authorCandidates[0]!);
+          const bestAuthor = authorResults.find((a: any) => {
+            const n = norm(a.display_name || '');
+            return n === qNorm || n.includes(qNorm) || qNorm.includes(n);
+          }) ?? authorResults[0];
+          if (bestAuthor?.id) {
+            const worksParams = new URLSearchParams({
+              filter: `author.id:${bestAuthor.id}`,
+              per_page: '50',
+              select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count',
+            });
+            const worksRes = await fetch(`https://api.openalex.org/works?${worksParams.toString()}`, {
+              signal: AbortSignal.timeout(15000),
+              headers: { Accept: 'application/json' },
+            });
+            if (worksRes.ok) {
+              const worksData = await worksRes.json();
+              const rows: any[] = worksData?.results || [];
+              const authorPapers = rows
+                .map((row: any) => {
+                  const year = row?.publication_year || new Date().getFullYear();
+                  if (yearFrom && year < parseInt(yearFrom)) return null;
+                  if (yearTo && year > parseInt(yearTo)) return null;
+                  const authorAffiliations = Array.isArray(row.authorships)
+                    ? row.authorships.flatMap((a: any) =>
+                        Array.isArray(a?.institutions)
+                          ? a.institutions.map((ins: any) => ins?.display_name).filter((x: unknown): x is string => typeof x === 'string' && x.trim().length > 0)
+                          : [],
+                      )
+                    : [];
+                  const authorCountries = Array.isArray(row.authorships)
+                    ? row.authorships.flatMap((a: any) =>
+                        Array.isArray(a?.institutions)
+                          ? a.institutions.map((ins: any) => ins?.country_code).filter((x: unknown): x is string => typeof x === 'string' && x.trim().length > 0)
+                          : [],
+                      )
+                    : [];
+                  return {
+                    id: `openalex-${row.id || Math.random().toString(36).slice(2)}`,
+                    title: row.display_name || 'No title',
+                    authors: Array.isArray(row.authorships)
+                      ? row.authorships.map((a: any) => a?.author?.display_name).filter((x: unknown): x is string => typeof x === 'string')
+                      : [],
+                    abstract: openAlexAbstract(row.abstract_inverted_index),
+                    year,
+                    source: 'openalex' as const,
+                    url: row?.primary_location?.landing_page_url || row?.id || 'https://openalex.org',
+                    citations: typeof row?.cited_by_count === 'number' ? row.cited_by_count : undefined,
+                    authorAffiliations,
+                    authorCountries,
+                    matchType: 'author-exact' as const,
+                  } as Paper;
+                })
+                .filter((p: Paper | null): p is Paper => p !== null);
+              if (authorPapers.length > 0) {
+                console.log(`[T5:OpenAlex] Author API found ${authorPapers.length} papers in ${Date.now() - startTime}ms`);
+                return authorPapers;
+              }
+            }
+          }
+        }
+      } catch {
+        // fall through to text search
+      }
+    }
+
     const params = new URLSearchParams({
       search: query,
-      per_page: '15',
+      per_page: authorCandidates.length > 0 && intent !== 'TOPIC' ? '50' : '15',
       select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count',
     });
     const res = await fetch(`https://api.openalex.org/works?${params.toString()}`, {
@@ -925,7 +1067,10 @@ async function t6_europePmcEnhanced(
       }
     } else if (authorCandidates.length && intent !== 'TOPIC') {
       const authorPart = authorCandidates.slice(0, 2).map((a) => `AUTH:"${a}"`).join(' OR ');
-      searchQuery = `(${authorPart}) AND (${query})`;
+      const queryTokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+      const nameTokens = new Set(authorCandidates.flatMap((a) => a.toLowerCase().split(/\s+/).filter(Boolean)));
+      const isJustName = queryTokens.length > 0 && queryTokens.every((t) => nameTokens.has(t));
+      searchQuery = isJustName ? `(${authorPart})` : `(${authorPart}) AND (${query})`;
     }
     if (yearFrom || yearTo) {
       const from = yearFrom || '1900';
@@ -1172,6 +1317,7 @@ type SearchAttemptResult = {
   trackResults: { t1: number; t2: number; t3: number; t4: number; t5: number; t6: number; final: number };
   sourceHealth?: PublicSourceHealth[];
   papers: Paper[];
+  bySource?: Record<string, Paper[]>;
   homonymProfiles?: Array<{
     profileId: string;
     matchedAuthor: string;
@@ -1555,26 +1701,36 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const authorCandidatesRaw = uniqueList(baseCandidates.filter(Boolean))
     .filter((name) => String(name || '').trim().split(/\s+/).filter(Boolean).length <= 4);
   const authorCandidatesMerged = uniqueList([...authorCandidatesRaw, ...manualAuthorNames]);
+  // AUTO-PROMOTE: name-like query → author mode
+  const effectiveMode: SearchMode = (mode === 'broad' && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK'))
+    ? 'author'
+    : mode;
+
   const authorCandidates =
-    mode === 'author'
+    effectiveMode === 'author'
       ? authorCandidatesMerged
       : hasManualAuthor
         ? authorCandidatesMerged
         : (intent === 'TOPIC' || intent === 'INSTITUTION' ? [] : authorCandidatesRaw);
   const detectedTopic = (split.topic || extracted.cleanQuery || query).trim();
-  const topicQuery = (!hasManualAuthor && mode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic) ? '' : detectedTopic;
-  const effectiveQuery = expandPublicBioQuery((topicQuery || authorCandidates[0] || query).trim());
+  const pureAuthorSearch = effectiveMode === 'author' && !split.topic;
+  const topicQuery = pureAuthorSearch
+    ? ''
+    : ((!hasManualAuthor && effectiveMode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic) ? '' : detectedTopic);
+  const effectiveQuery = pureAuthorSearch
+    ? (authorCandidates[0] || query).trim()
+    : expandPublicBioQuery((topicQuery || authorCandidates[0] || query).trim());
 
   const defaultSourcesByMode: Record<SearchMode, TrackSource[]> = {
-    broad: ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex', 'europepmc', 'biorxiv'],
-    precision: ['pubmed', 'semantic', 'crossref', 'openalex', 'europepmc'],
-    author: ['pubmed', 'semantic', 'crossref', 'openalex', 'europepmc'],
+    broad: ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'],
+    precision: ['pubmed', 'semantic', 'openalex', 'europepmc'],
+    author: ['pubmed', 'semantic', 'openalex', 'europepmc'],
   };
-  const sources: TrackSource[] = filters?.sources || defaultSourcesByMode[mode];
+  const sources: TrackSource[] = filters?.sources || defaultSourcesByMode[effectiveMode];
   const yearFrom = filters?.yearFrom;
   const yearTo = filters?.yearTo;
   const claimRaw = typeof filters?.claim === 'string' ? filters.claim.trim() : '';
-  const claim = mode === 'precision' && !claimRaw ? query : claimRaw;
+  const claim = effectiveMode === 'precision' && !claimRaw ? query : claimRaw;
   const hypothesis = typeof filters?.hypothesis === 'string' ? filters.hypothesis.trim() : '';
   const profileMergeThreshold = typeof filters?.profileMergeThreshold === 'number'
     ? filters.profileMergeThreshold
@@ -1589,14 +1745,8 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const pubmedQuery = intent === 'INSTITUTION' ? query : (topicQuery || query);
     trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(pubmedQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
-  if (sources.includes('arxiv')) {
-    trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(topicQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
-  }
   if (sources.includes('semantic')) {
     trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
-  }
-  if (sources.includes('crossref')) {
-    trackJobs.push({ source: 'crossref', promise: t4_crossrefEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('openalex')) {
     trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
@@ -1672,7 +1822,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     : papersRanked;
   let homonymProfiles: SearchAttemptResult['homonymProfiles'] = undefined;
 
-  if (mode === 'author' && authorCandidates.length) {
+  if (effectiveMode === 'author' && authorCandidates.length) {
     papers = papers.filter((paper) => matchByAuthor(paper.authors || [], authorCandidates, hasManualAuthor ? 0.85 : 0.9));
     // Reduce obvious noise in author-mode when topic terms exist.
     const topicText = (nonAuthorQuery || '').trim();
@@ -1698,7 +1848,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       papers = papers.filter((p) => p.homonymProfileId && allowed.has(p.homonymProfileId));
     }
   }
-  if (mode === 'precision') {
+  if (effectiveMode === 'precision') {
     papers = papers.filter((paper) => (paper.evidenceScore || 0) >= 0.05);
   }
   if (authorCandidates.length && intent !== 'TOPIC') {
@@ -1709,19 +1859,36 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     papers = papers.filter((paper) => publicTopicGuard(paper, nonAuthorQuery || effectiveQuery));
   }
 
+  // Per-source view: topic-guarded raw results scored lightly (no cross-source dedup)
+  const bySourceScored: Record<string, Paper[]> = {};
+  const activeSrcs: TrackSource[] = ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'];
+  for (const src of activeSrcs) {
+    const srcPapers = bySource[src];
+    if (!srcPapers?.length) continue;
+    const guardFilter = intent === 'INSTITUTION'
+      ? srcPapers
+      : srcPapers.filter((p) => publicTopicGuard(p, nonAuthorQuery || effectiveQuery));
+    if (guardFilter.length) {
+      bySourceScored[src] = guardFilter
+        .map((p) => ({ ...p, rankScore: Math.round(publicWorkflowScore(p, nonAuthorQuery || effectiveQuery)) }))
+        .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
+    }
+  }
+
   return {
     query,
-    mode,
+    mode: effectiveMode,
     intent,
     authorCandidates,
     papers,
+    bySource: bySourceScored,
     homonymProfiles,
     sourceHealth,
     trackResults: {
       t1: bySource.pubmed.length,
-      t2: bySource.arxiv.length,
+      t2: 0,
       t3: bySource.semantic.length,
-      t4: bySource.crossref.length,
+      t4: 0,
       t5: bySource.openalex.length,
       t6: bySource.europepmc.length,
       final: papers.length,
@@ -1783,6 +1950,7 @@ export async function POST(request: NextRequest) {
       intent: 'TOPIC' as QueryIntent,
       authorCandidates: [],
       papers: [],
+      bySource: {},
       homonymProfiles: [],
       sourceHealth: [],
       trackResults: { t1: 0, t2: 0, t3: 0, t4: 0, t5: 0, final: 0 },
@@ -1792,6 +1960,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       papers: sortedPapers,
+      bySource: selected.bySource || {},
       suggestedTopics: buildPublicSuggestedTopics(selected.papers, normalizePublicBioQuery(normalizedQuery)),
       meta: {
         totalTime,

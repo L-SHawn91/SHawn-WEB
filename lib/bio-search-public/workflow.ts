@@ -288,9 +288,9 @@ export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean
     const prefix = token.slice(0, Math.max(5, token.length - 2));
     return text.includes(prefix);
   }).length;
-  // Short queries (≤3 tokens): require all tokens
-  // Longer queries: require ≥50%
-  const threshold = tokens.length <= 3 ? 1.0 : 0.5;
+  // Require ≥50% of tokens to match — author-name tokens in mixed queries won't appear
+  // in paper abstracts, so threshold=1.0 would drop all results for "name + topic" queries.
+  const threshold = 0.5;
   return matched / Math.max(1, tokens.length) >= threshold;
 }
 

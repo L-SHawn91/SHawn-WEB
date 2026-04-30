@@ -9,22 +9,16 @@ import { ChevronLeft, ChevronRight, Database, ExternalLink, Filter, Search, Spar
 import { apiFetch } from "@/lib/data-source/client";
 
 type DatasetSource =
-  | "huggingface"
-  | "kaggle"
   | "ncbi"
   | "ena"
   | "europepmc"
-  | "datagov"
-  | "dataeu"
   | "zenodo"
   | "dryad"
   | "dataverse"
   | "figshare"
-  | "github"
-  | "openml"
-  | "crossref"
-  | "openalex"
-  | "cngb";
+  | "cngb"
+  | "arrayexpress"
+  | "cellxgene";
 
 interface DatasetItem {
   id: string;
@@ -89,25 +83,19 @@ interface BioPreset {
 }
 
 const SOURCE_OPTIONS: DatasetSource[] = [
-  "huggingface",
-  "kaggle",
   "ncbi",
   "ena",
   "europepmc",
-  "datagov",
-  "dataeu",
   "zenodo",
   "dryad",
   "dataverse",
   "figshare",
-  "github",
-  "openml",
-  "crossref",
-  "openalex",
   "cngb",
+  "arrayexpress",
+  "cellxgene",
 ];
 
-const BIO_CORE_SOURCES: DatasetSource[] = ["ncbi", "ena", "europepmc", "dryad", "zenodo", "dataverse", "openalex", "crossref", "cngb"];
+const BIO_CORE_SOURCES: DatasetSource[] = ["ncbi", "ena", "dryad", "zenodo", "dataverse", "cngb", "arrayexpress", "cellxgene"];
 
 const BIO_PRESETS: BioPreset[] = [
   {
@@ -180,41 +168,29 @@ const QUICK_DATASET_QUERIES = [
 ];
 
 const SOURCE_LABELS: Record<DatasetSource, string> = {
-  huggingface: "Hugging Face",
-  kaggle: "Kaggle",
-  ncbi: "NCBI E-utilities",
-  ena: "ENA Portal",
+  ncbi: "NCBI",
+  ena: "ENA",
   europepmc: "Europe PMC",
-  datagov: "Data.gov",
-  dataeu: "data.europa.eu",
   zenodo: "Zenodo",
   dryad: "Dryad",
   dataverse: "Dataverse",
   figshare: "Figshare",
-  github: "GitHub",
-  openml: "OpenML",
-  crossref: "Crossref",
-  openalex: "OpenAlex",
-  cngb: "CNGBdb (China)",
+  cngb: "CNGBdb",
+  arrayexpress: "ArrayExpress",
+  cellxgene: "CellxGene",
 };
 
 const SOURCE_TOOLTIPS: Record<DatasetSource, string> = {
-  huggingface: "Hugging Face Datasets: ML/AI 중심 공개 데이터셋 허브",
-  kaggle: "Kaggle: 커뮤니티 기반 데이터셋 + 경쟁 플랫폼",
   ncbi: "NCBI: GEO/SRA 등 생물학 데이터 인덱스",
   ena: "ENA: 유럽 시퀀싱 아카이브",
   europepmc: "Europe PMC: 문헌에서 accession 신호를 추출",
-  datagov: "미국 공공 데이터 카탈로그",
-  dataeu: "EU 공공 데이터 포털",
   zenodo: "Zenodo 리서치 아카이브",
   dryad: "Dryad 연구 데이터 저장소",
   dataverse: "Dataverse 학술 데이터 저장소",
   figshare: "Figshare 연구 산출물 저장소",
-  github: "GitHub 공개 저장소 기반 데이터셋",
-  openml: "OpenML 머신러닝 데이터셋",
-  crossref: "Crossref DOI/서지 메타데이터",
-  openalex: "OpenAlex 오픈 학술 그래프",
   cngb: "CNGBdb 중국 유전체/바이오 데이터베이스",
+  arrayexpress: "ArrayExpress: EBI 전사체/기능유전체 실험 데이터",
+  cellxgene: "CellxGene: Chan Zuckerberg 단일세포 아틀라스",
 };
 
 const DATASET_SCORE_TOOLTIP = "Dataset score는 최신성, 활용도(download/like), 메타데이터 품질로 계산됩니다.\nDataset는 저널 논문이 아니므로 IF/Q 지표가 직접 적용되지 않습니다.";

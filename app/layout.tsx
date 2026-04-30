@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@/components/seo/analytics";
@@ -10,8 +10,12 @@ import { ShawnChatUI } from "@/components/marketing/shawn-chat-ui";
 import { Header } from "@/components/ui/header";
 import { SuppressTitleTooltips } from "@/components/ui/suppress-title-tooltips";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
+const notoSansKR = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  variable: "--font-inter",
+});
+const inter = Inter({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
@@ -42,8 +46,8 @@ export default function RootLayout({
     <html lang="ko" className="scroll-smooth" suppressHydrationWarning>
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased",
-        inter.variable,
-        outfit.variable
+        notoSansKR.variable,
+        inter.variable
       )}>
         <ThemeProvider
           attribute="class"

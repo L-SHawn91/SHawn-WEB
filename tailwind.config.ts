@@ -21,14 +21,26 @@ const config = {
   		fontFamily: {
   			sans: [
   				'var(--font-inter)',
+  				'var(--font-heading)',
+  				'Noto Sans KR',
   				'sans-serif'
   			],
   			heading: [
+  				'var(--font-inter)',
   				'var(--font-heading)',
+  				'Noto Sans KR',
   				'sans-serif'
   			]
   		},
   		colors: {
+  			/* SABS v0.1 named tokens */
+  			'shawn-navy': '#10243A',
+  			'lab-teal': '#2A9D8F',
+  			'warm-coral': '#E76F51',
+  			'paper-cream': '#F7F3EA',
+  			'organoid-purple': '#7B6BA8',
+  			'graphite': '#263238',
+  			'mist-gray': '#D8DEE6',
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',

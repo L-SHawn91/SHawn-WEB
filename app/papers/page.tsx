@@ -26,7 +26,7 @@ interface Paper {
   authors: string[];
   abstract: string;
   year: number;
-  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc' | 'biorxiv';
+  source: 'pubmed' | 'semantic' | 'openalex' | 'europepmc' | 'biorxiv';
   url: string;
   pdfUrl?: string;
   citations?: number;
@@ -199,17 +199,15 @@ function collectSuggestionTerms(papers: Paper[], chips: string[], history: strin
 }
 
 const trackNames: Record<keyof TrackStatus, string> = {
-  t1: 'PubMed / Europe PMC',
-  t2: 'arXiv / Semantic',
-  t3: 'OpenAlex / Crossref',
+  t1: 'PubMed / EuropePMC',
+  t2: 'Semantic Scholar',
+  t3: 'OpenAlex / bioRxiv',
   t4: 'Ranking',
 };
 
 const sourceLabel: Record<Paper['source'], string> = {
   pubmed: 'PubMed',
-  arxiv: 'arXiv',
   semantic: 'Semantic',
-  crossref: 'Crossref',
   openalex: 'OpenAlex',
   europepmc: 'EuropePMC',
   biorxiv: 'bioRxiv',
@@ -217,9 +215,7 @@ const sourceLabel: Record<Paper['source'], string> = {
 
 const sourceBadge: Record<Paper['source'], string> = {
   pubmed: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200',
-  arxiv: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200',
   semantic: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-200',
-  crossref: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200',
   openalex: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-200',
   europepmc: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-200',
   biorxiv: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200',
@@ -230,18 +226,14 @@ const citationTooltip = 'Citations는 원본 소스가 제공한 누적 인용 �
 const yearTooltip = '발행 연도입니다. 최신 논문일수록 랭킹 점수에서 유리합니다.';
 const journalMetricHint: Record<Paper['source'], { if: string; q: string; note: string }> = {
   pubmed: { if: 'N/A (journal별 상이)', q: 'Q1~Q4', note: 'PubMed는 저널 인덱스이며 개별 논문의 저널 메타데이터 추가 연동이 필요합니다.' },
-  arxiv: { if: 'N/A', q: 'N/A', note: 'arXiv는 프리프린트 서버로 IF/Q 지표가 직접 적용되지 않습니다.' },
   semantic: { if: 'N/A (source-dependent)', q: 'N/A', note: 'Semantic Scholar는 통합 메타데이터이며 저널 지표는 별도 소스 필요.' },
-  crossref: { if: 'N/A (publisher metadata)', q: 'N/A', note: 'Crossref는 DOI 메타데이터 중심으로 IF/Q는 직접 제공하지 않습니다.' },
   openalex: { if: 'N/A (venue-dependent)', q: 'N/A', note: 'OpenAlex는 venue 정보 기반으로 추정 가능하나 별도 매핑이 필요합니다.' },
   europepmc: { if: 'N/A', q: 'N/A', note: 'EuropePMC는 통합 오픈 액세스 인덱스입니다.' },
   biorxiv: { if: 'N/A', q: 'N/A', note: 'bioRxiv는 프리프린트 서버로 동료심사 전 논문을 제공합니다.' },
 };
 const sourceTooltip: Record<Paper['source'], string> = {
   pubmed: 'PubMed: 의생명/임상 중심의 NCBI 논문 데이터베이스',
-  arxiv: 'arXiv: 프리프린트 중심의 공개 연구 저장소',
   semantic: 'Semantic Scholar: 인용/영향도 메타데이터 제공',
-  crossref: 'Crossref: DOI/서지 메타데이터 중심 학술 인덱스',
   openalex: 'OpenAlex: 글로벌 오픈 학술 그래프 메타데이터',
   europepmc: 'EuropePMC: PubMed + 유럽 연구 + bioRxiv/medRxiv 통합 인덱스',
   biorxiv: 'bioRxiv: 생명과학 분야 프리프린트 서버 (동료심사 전)',
@@ -289,6 +281,8 @@ export default function PapersPage() {
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(true);
   const lastChipCommitAtRef = useRef<number | null>(null);
   const [papers, setPapers] = useState<Paper[]>([]);
+  const [bySource, setBySource] = useState<Record<string, Paper[]>>({});
+  const [activeSourceTab, setActiveSourceTab] = useState<string>('all');
   const [loading, setLoading] = useState(false);
   const [trackStatus, setTrackStatus] = useState<TrackStatus>({
     t1: 'idle',
@@ -307,7 +301,7 @@ export default function PapersPage() {
   const [queryHistory, setQueryHistory] = useState<string[]>([]);
   const [filters, setFilters] = useState({
     mode: 'broad' as SearchMode,
-    sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv', 'europepmc', 'biorxiv'] as string[],
+    sources: ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'] as string[],
     yearFrom: '',
     yearTo: '',
     claim: '',
@@ -324,7 +318,7 @@ export default function PapersPage() {
         acc[paper.source] = (acc[paper.source] || 0) + 1;
         return acc;
       },
-      { pubmed: 0, arxiv: 0, semantic: 0, crossref: 0, openalex: 0, europepmc: 0, biorxiv: 0 } as Record<string, number>,
+      { pubmed: 0, semantic: 0, openalex: 0, europepmc: 0, biorxiv: 0 } as Record<string, number>,
     );
   }, [papers]);
 
@@ -354,8 +348,13 @@ export default function PapersPage() {
   }, []);
 
   const displayedPapers = useMemo(() => {
-    const filtered = showSavedOnly ? papers.filter((p) => savedIds.has(p.id)) : papers;
-    const sorted = [...filtered];
+    let base: Paper[];
+    if (activeSourceTab !== 'all' && bySource[activeSourceTab]?.length) {
+      base = bySource[activeSourceTab];
+    } else {
+      base = showSavedOnly ? papers.filter((p) => savedIds.has(p.id)) : papers;
+    }
+    const sorted = [...base];
     if (sortMode === 'recent') {
       sorted.sort((a, b) => b.year - a.year);
     } else if (sortMode === 'citations') {
@@ -366,7 +365,7 @@ export default function PapersPage() {
       sorted.sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
     }
     return sorted;
-  }, [papers, savedIds, showSavedOnly, sortMode]);
+  }, [papers, bySource, activeSourceTab, savedIds, showSavedOnly, sortMode]);
 
   const topSignals = useMemo(() => {
     return [...displayedPapers]
@@ -500,6 +499,7 @@ export default function PapersPage() {
     setLoading(true);
     setTrackStatus({ t1: 'loading', t2: 'loading', t3: 'loading', t4: 'idle' });
     setMeta(null);
+    setActiveSourceTab('all');
 
     const parsedAuthorNames = filters.authorNames
       .split(',')
@@ -530,6 +530,7 @@ export default function PapersPage() {
       const data = await response.json();
 
       setPapers(data.papers || []);
+      setBySource(data.bySource || {});
       setMeta(data.meta || null);
       setQueryHistory((prev) => [userQuery, ...prev.filter((item) => item !== userQuery)].slice(0, 10));
       setTrackStatus({ t1: 'done', t2: 'done', t3: 'done', t4: 'done' });
@@ -593,10 +594,10 @@ export default function PapersPage() {
                 SHawn Bio Search
               </h1>
               <p className="mt-2 text-sm text-blue-200/80">
-                7개 소스 · 티어드 병렬 검색 · Evidence 분류 · 가설 검증
+                5개 소스 · 티어드 병렬 검색 · Evidence 분류 · 가설 검증
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
-                {(['pubmed', 'europepmc', 'biorxiv', 'semantic', 'openalex', 'crossref', 'arxiv'] as const).map((src) => (
+                {(['pubmed', 'europepmc', 'biorxiv', 'semantic', 'openalex'] as const).map((src) => (
                   <span key={src} className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${sourceBadge[src]}`}>
                     {sourceLabel[src]}
                   </span>
@@ -833,6 +834,32 @@ export default function PapersPage() {
               </div>
             </div>
 
+            {/* Source tabs — per-source view */}
+            {(papers.length > 0 || Object.keys(bySource).length > 0) && (
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  onClick={() => setActiveSourceTab('all')}
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition ${activeSourceTab === 'all' ? 'bg-slate-600 text-white shadow' : 'border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-slate-200'}`}
+                >
+                  All ({papers.length})
+                </button>
+                {(['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'] as const).map((src) => {
+                  const count = (bySource[src] || []).length;
+                  if (!count) return null;
+                  const isActive = activeSourceTab === src;
+                  return (
+                    <button
+                      key={src}
+                      onClick={() => setActiveSourceTab(src)}
+                      className={`rounded-full px-3 py-1 text-xs font-medium transition ${isActive ? `${sourceBadge[src]} shadow` : 'border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-slate-200'}`}
+                    >
+                      {sourceLabel[src]} ({count})
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
             {/* Paper list */}
             {loading ? (
               <div className="space-y-3">
@@ -1014,7 +1041,7 @@ export default function PapersPage() {
                 <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5">
                   <span className="mb-2 block text-[11px] text-slate-500">Sources</span>
                   <div className="flex flex-wrap gap-1.5">
-                    {(['pubmed', 'europepmc', 'biorxiv', 'semantic', 'openalex', 'crossref', 'arxiv'] as const).map((source) => {
+                    {(['pubmed', 'europepmc', 'biorxiv', 'semantic', 'openalex'] as const).map((source) => {
                       const active = filters.sources.includes(source);
                       return (
                         <button key={source} title={sourceTooltip[source]} onClick={() => { const next = active ? filters.sources.filter((s) => s !== source) : [...filters.sources, source]; setFilters({ ...filters, sources: next }); }} className={`rounded-full border px-2 py-0.5 text-[11px] transition ${active ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-700 bg-slate-900 text-slate-400 hover:border-slate-500 hover:text-slate-200'}`}>
@@ -1075,7 +1102,7 @@ export default function PapersPage() {
                 </div>
               </div>
               <div className="mt-2 rounded-xl bg-slate-950 px-3 py-2.5 text-[11px] text-slate-500">
-                <span className="text-indigo-400">{sourceCounts.semantic}</span> Semantic · <span className="text-orange-400">{sourceCounts.crossref}</span> Crossref · <span className="text-cyan-400">{sourceCounts.openalex}</span> OpenAlex
+                <span className="text-indigo-400">{sourceCounts.semantic}</span> Semantic · <span className="text-cyan-400">{sourceCounts.openalex}</span> OpenAlex
                 <br /><span className="text-teal-400">{sourceCounts.europepmc}</span> EuropePMC · <span className="text-purple-400">{sourceCounts.biorxiv}</span> bioRxiv
                 <br /><span className="text-slate-400 font-medium">{meta?.trackResults?.final ?? papers.length}</span> integrated
               </div>
