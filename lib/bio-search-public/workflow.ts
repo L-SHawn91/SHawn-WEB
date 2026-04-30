@@ -149,25 +149,41 @@ export function correctPublicBioQueryTypos(query: string): string {
 }
 
 const EXPANSION_SYNONYMS: Array<[RegExp, string[]]> = [
-  [/\borganoid(s)?\b/i, ["3D culture", "organotypic culture"]],
+  // General assay / modality expansion
+  [/\borganoid(s)?\b/i, ["3D culture", "organotypic culture", "spheroid"]],
+  [/\bscrna\b|single[-\s]?cell/i, ["single cell RNA sequencing", "single-cell transcriptomics", "scRNA-seq"]],
+  [/\brna[-\s]?seq\b|\brnaseq\b/i, ["transcriptomics", "gene expression profiling", "RNA sequencing"]],
+  [/\bfish\b/i, ["fluorescence in situ hybridization"]],
+  [/\batac[-\s]?seq\b/i, ["chromatin accessibility", "open chromatin"]],
+  [/\bchip[-\s]?seq\b/i, ["chromatin immunoprecipitation", "histone modification"]],
+  [/\bspatial\s+transcriptom/i, ["spatial RNA-seq", "visium", "spatial gene expression"]],
+  [/\bepigeneti/i, ["DNA methylation", "histone modification", "chromatin remodeling"]],
+  [/\bproteom/i, ["mass spectrometry", "protein expression"]],
+  [/\bmetabolom/i, ["metabolite profiling", "LC-MS"]],
+
+  // Tissue / disease expansion. These are symmetric helpers, not ranking preferences.
   [/\buterus\b|\buteri\b/i, ["endometrium", "endometrial", "uterine"]],
   [/\buterine\b/i, ["uterus", "endometrium", "endometrial"]],
   [/\bendometr/i, ["uterus", "uterine", "uterine lining", "endometrium"]],
-  [/\bscrna\b|single[-\s]?cell/i, ["single cell RNA sequencing", "single-cell transcriptomics"]],
-  [/\brna[-\s]?seq\b/i, ["transcriptomics", "gene expression profiling"]],
-  [/\bfish\b/i, ["fluorescence in situ hybridization"]],
-  [/\bdecidualiz/i, ["decidualization", "stromal decidualization"]],
+  [/\bliver\b|\bhepatic\b/i, ["hepatocyte", "hepatic", "liver tissue"]],
+  [/\bkidney\b|\brenal\b/i, ["renal", "nephron", "kidney tissue"]],
+  [/\bbrain\b|\bcerebral\b|\bneural\b/i, ["neuron", "cerebral", "neural tissue"]],
+  [/\bheart\b|\bcardiac\b/i, ["cardiac", "cardiomyocyte", "myocardium"]],
+  [/\blung\b|\bpulmonary\b/i, ["pulmonary", "airway", "alveolar"]],
+  [/\bcolon\b|\bcolorectal\b|\bintestinal\b/i, ["intestinal", "colorectal", "gut"]],
+  [/\bpancreas\b|\bpancreatic\b/i, ["pancreatic", "islet", "ductal"]],
+  [/\bovary\b|\bovarian\b/i, ["ovarian", "follicle", "oocyte"]],
+  [/\bcancer\b|\btumou?r\b|\bcarcinoma\b/i, ["neoplasm", "malignancy", "tumor"]],
+  [/\bfibrosis\b|\bfibrotic\b/i, ["fibrotic", "extracellular matrix", "collagen"]],
+  [/\binflamm/i, ["immune response", "cytokine", "inflammation"]],
+
+  // Specific aliases
   [/\bdhcr24\b/i, ["seladin-1", "24-dehydrocholesterol reductase"]],
   [/\bseladin/i, ["DHCR24", "24-dehydrocholesterol reductase"]],
-  [/\batac[-\s]?seq\b/i, ["chromatin accessibility", "open chromatin"]],
-  [/\bchip[-\s]?seq\b/i, ["chromatin immunoprecipitation", "histone modification"]],
-  [/\bspatial\s+transcriptom/i, ["spatial RNA-seq", "visium"]],
-  [/\bepigeneti/i, ["DNA methylation", "histone modification", "chromatin remodeling"]],
-  [/\bimplantation/i, ["embryo implantation", "endometrial receptivity"]],
+  [/\bdecidualiz/i, ["decidualization", "stromal decidualization"]],
+  [/\bimplantation/i, ["embryo implantation", "receptivity"]],
   [/\btrophoblast/i, ["placentation", "extravillous trophoblast"]],
   [/\bblastocyst/i, ["embryo implantation", "hatching blastocyst"]],
-  [/\bproteom/i, ["mass spectrometry", "protein expression"]],
-  [/\bmetabolom/i, ["metabolite profiling", "LC-MS"]],
   [/\bendometrios/i, ["ectopic endometrium", "endometriosis lesion"]],
 ];
 
@@ -311,6 +327,10 @@ export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean
     const prefix = token.slice(0, Math.max(5, token.length - 2));
     return text.includes(prefix);
   }).length;
+  if (/\bor\b/i.test(query)) {
+    return matched >= 1;
+  }
+
   // Require ≥50% of tokens to match — author-name tokens in mixed queries won't appear
   // in paper abstracts, so threshold=1.0 would drop all results for "name + topic" queries.
   const threshold = 0.5;
@@ -398,12 +418,10 @@ export function publicDatasetTopicGuard(item: PublicDatasetLike, query: string):
   const isExpandedOrQuery = /\bor\b/i.test(query);
   const matched = targetTokens.filter((token) => text.includes(token)).length;
   if (isExpandedOrQuery) {
-    const needsOrganoid = q.includes("organoid");
-    const hasOrganoid = !needsOrganoid || text.includes("organoid");
-    const tissueTerms = ["uterus", "uterine", "endometrium", "endometrial"];
-    const asksTissue = tissueTerms.some((term) => q.includes(term));
-    const hasTissue = !asksTissue || tissueTerms.some((term) => text.includes(term));
-    return hasOrganoid && hasTissue && (matched >= 1 || accessionBacked);
+    const assayTerms = ["organoid", "scrna", "single", "rna", "seq", "rnaseq", "transcriptomics", "atac", "chip", "spatial", "proteomics", "metabolomics"];
+    const requestedAssayTerms = targetTokens.filter((token) => assayTerms.includes(token));
+    const assayOk = requestedAssayTerms.length === 0 || requestedAssayTerms.some((token) => text.includes(token));
+    return assayOk && (matched >= 1 || accessionBacked);
   }
 
   // Enforce all query-specific tokens (length ≥5 are specific enough)
