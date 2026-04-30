@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { datasetsCache, makeCacheKey } from "../../../../lib/server-cache";
 import {
   buildPublicDatasetSuggestedTopics,
   mergePublicDatasetRecords,
@@ -865,6 +866,11 @@ export async function POST(request: NextRequest) {
     const { sources, yearFrom, yearTo, sortBy, page, pageSize } = parseFilters(filterInput);
     const effectiveQuery = normalizePublicBioQuery(String(query));
 
+    // Cache lookup
+    const cacheKey = makeCacheKey({ q: effectiveQuery, sources: [...sources].sort(), yearFrom, yearTo, sortBy, page, pageSize });
+    const cached = datasetsCache.get(cacheKey);
+    if (cached) return NextResponse.json({ ...cached, meta: { ...cached.meta, cached: true } });
+
     const sourceJobs: Record<DatasetSource, (q: string, yf?: string, yt?: string) => Promise<DatasetItem[]>> = {
       huggingface: searchHuggingFace,
       kaggle: searchKaggle,
@@ -937,7 +943,7 @@ export async function POST(request: NextRequest) {
     }, {});
     trackResults.final = total;
 
-    return NextResponse.json({
+    const responseBody = {
       datasets: paged,
       suggestedTopics: buildPublicDatasetSuggestedTopics(sorted, effectiveQuery),
       meta: {
@@ -946,8 +952,15 @@ export async function POST(request: NextRequest) {
         selectedQuery: effectiveQuery,
         pagination: { page: safePage, pageSize, total, totalPages },
         sort: { by: sortBy },
+        cached: false,
       },
-    });
+    };
+
+    if (paged.length > 0) {
+      datasetsCache.set(cacheKey, responseBody);
+    }
+
+    return NextResponse.json(responseBody);
   } catch (error) {
     console.error("[datasets] Search failed:", error);
     return NextResponse.json({ error: "Search failed", datasets: [] }, { status: 500 });

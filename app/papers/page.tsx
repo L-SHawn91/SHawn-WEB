@@ -44,6 +44,8 @@ interface Paper {
   bestContradictSentence?: string;
   journal?: string;
   impactFactor?: number;
+  journalQuartile?: string;
+  journalHIndex?: number;
 }
 
 interface TrackStatus {
@@ -921,12 +923,20 @@ export default function PapersPage() {
                             <span className="text-[11px] text-[#263238]/40">ev {paper.evidenceScore.toFixed(2)}</span>
                           )}
                           {paper.journal && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F7F3EA] border border-[#D8DEE6] px-2 py-0.5 text-[11px] text-[#10243A]/70" title={paper.journal}>
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F7F3EA] border border-[#D8DEE6] px-2 py-0.5 text-[11px] text-[#10243A]/70" title={`${paper.journal}${paper.journalHIndex ? ` · h-index ${paper.journalHIndex}` : ''}`}>
                               <span>📖</span>
                               <span className="max-w-[180px] truncate">{paper.journal}</span>
-                              {paper.impactFactor && (
+                              {paper.impactFactor ? (
                                 <span className="ml-1 font-semibold text-[#2A9D8F]">IF {paper.impactFactor.toFixed(1)}</span>
-                              )}
+                              ) : null}
+                              {paper.journalQuartile ? (
+                                <span className={`ml-0.5 font-bold text-[10px] px-1 py-0.5 rounded ${
+                                  paper.journalQuartile === 'Q1' ? 'bg-emerald-100 text-emerald-700' :
+                                  paper.journalQuartile === 'Q2' ? 'bg-blue-100 text-blue-700' :
+                                  paper.journalQuartile === 'Q3' ? 'bg-amber-100 text-amber-700' :
+                                  'bg-[#D8DEE6] text-[#263238]/60'
+                                }`}>{paper.journalQuartile}</span>
+                              ) : null}
                             </span>
                           )}
                           {/* Related hover button — right-aligned via ml-auto */}

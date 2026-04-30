@@ -2,6 +2,9 @@
 // 4-Track Parallel Search Implementation
 
 import { NextRequest, NextResponse } from 'next/server';
+import { correctBioTypos } from '../../../../lib/bio-typo';
+import { enrichPapersWithJournalMetrics } from '../../../../lib/journal-metrics';
+import { makeCacheKey, papersCache } from '../../../../lib/server-cache';
 import {
   buildArxivQuery,
   classifyIntent,
@@ -1930,12 +1933,23 @@ export async function POST(request: NextRequest) {
   try {
     const payload = await request.json();
     const rawQuery = typeof payload?.query === 'string' ? String(payload.query).trim() : '';
-    const normalizedQuery = preprocessUserQuery(rawQuery);
+    const correctedQuery = correctBioTypos(rawQuery);
+    const normalizedQuery = preprocessUserQuery(correctedQuery);
     const filters = payload?.filters || {};
     const mode = normalizeSearchMode(payload?.mode || filters?.mode);
     const sortBy = normalizeSortBy(payload?.sortBy ?? filters?.sortBy);
     if (typeof payload?.claim === 'string' && !filters.claim) filters.claim = payload.claim;
     if (typeof payload?.hypothesis === 'string' && !filters.hypothesis) filters.hypothesis = payload.hypothesis;
+
+    // Cache lookup — skip for author mode to always return fresh profile data
+    if (mode !== 'author') {
+      const cacheKey = makeCacheKey({ q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cached = papersCache.get(cacheKey);
+      if (cached) {
+        return NextResponse.json({ ...cached, meta: { ...cached.meta, cached: true, totalTime: Date.now() - overallStart } });
+      }
+    }
+
     const variants = buildQueryVariants(rawQuery, normalizedQuery);
     const attempts: Array<{ query: string; intent: QueryIntent; count: number }> = [];
 
@@ -1968,8 +1982,11 @@ export async function POST(request: NextRequest) {
 
     const sortedPapers = applySortBy(selected.papers, sortBy);
 
-    return NextResponse.json({
-      papers: sortedPapers,
+    // Enrich papers with journal quartile (non-blocking, best-effort)
+    const enrichedPapers = await enrichPapersWithJournalMetrics(sortedPapers).catch(() => sortedPapers);
+
+    const responseBody = {
+      papers: enrichedPapers,
       bySource: selected.bySource || {},
       suggestedTopics: buildPublicSuggestedTopics(selected.papers, normalizePublicBioQuery(normalizedQuery)),
       meta: {
@@ -1984,8 +2001,17 @@ export async function POST(request: NextRequest) {
         homonymProfiles: selected.homonymProfiles || [],
         sourceHealth: selected.sourceHealth || [],
         trackResults: selected.trackResults,
+        cached: false,
       }
-    });
+    };
+
+    // Store in cache (skip author mode — profile results are user-specific)
+    if (mode !== 'author' && sortedPapers.length > 0) {
+      const cacheKey = makeCacheKey({ q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      papersCache.set(cacheKey, responseBody);
+    }
+
+    return NextResponse.json(responseBody);
   } catch (error) {
     console.error('[Parallel Search] Error:', error);
     return NextResponse.json(
