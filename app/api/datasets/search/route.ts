@@ -113,7 +113,7 @@ function extractAccessions(text: string): string[] {
 
 async function searchHuggingFace(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
   try {
-    const url = `https://huggingface.co/api/datasets?search=${encodeURIComponent(query)}&limit=20`;
+    const url = `https://huggingface.co/api/datasets?search=${encodeURIComponent(query)}&limit=50`;
     const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
     const data = await res.json();
     if (!Array.isArray(data)) return [];
@@ -263,7 +263,7 @@ async function searchEnaPortal(query: string, yearFrom?: string, yearTo?: string
       query: enaQuery,
       fields: "study_accession,study_title,study_description,last_updated,center_name",
       format: "json",
-      limit: "20",
+      limit: "50",
     });
     const res = await fetch(`https://www.ebi.ac.uk/ena/portal/api/search?${params.toString()}`, {
       signal: AbortSignal.timeout(15000),
@@ -374,7 +374,7 @@ async function searchDataGov(query: string, yearFrom?: string, yearTo?: string):
 
 async function searchDataEu(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
   try {
-    const params = new URLSearchParams({ q: query, limit: "20" });
+    const params = new URLSearchParams({ q: query, limit: "50" });
     const res = await fetch(`https://data.europa.eu/api/hub/search/search?${params.toString()}`, {
       signal: AbortSignal.timeout(15000),
     });
@@ -475,7 +475,7 @@ async function searchDryad(query: string, yearFrom?: string, yearTo?: string): P
 
 async function searchDataverse(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
   try {
-    const params = new URLSearchParams({ q: query, type: "dataset", per_page: "20" });
+    const params = new URLSearchParams({ q: query, type: "dataset", per_page: "50" });
     const res = await fetch(`https://dataverse.harvard.edu/api/search?${params.toString()}`, {
       signal: AbortSignal.timeout(15000),
     });
@@ -630,7 +630,7 @@ async function searchOpenAlex(query: string, yearFrom?: string, yearTo?: string)
   try {
     const params = new URLSearchParams({
       search: query,
-      per_page: "20",
+      per_page: "50",
       select: "id,display_name,publication_year,primary_location,open_access,concepts,cited_by_count",
     });
     const res = await fetch(`https://api.openalex.org/works?${params.toString()}`, {
@@ -761,7 +761,7 @@ function sortDatasets(items: DatasetItem[], sortBy: SortBy): DatasetItem[] {
 
 async function searchArrayExpress(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
   try {
-    const params = new URLSearchParams({ query, page: "1", pageSize: "20" });
+    const params = new URLSearchParams({ query, page: "1", pageSize: "50" });
     const res = await fetch(
       `https://www.ebi.ac.uk/biostudies/api/v1/search?${params.toString()}`,
       { signal: AbortSignal.timeout(15000) },
@@ -837,8 +837,8 @@ function parseFilters(input: FiltersInput | undefined) {
     ? (input?.sortBy as SortBy)
     : "rank";
   const page = Math.max(1, Number.parseInt(String(input?.page || "1"), 10) || 1);
-  const pageSizeRaw = Number.parseInt(String(input?.pageSize || "10"), 10) || 10;
-  const pageSize = Math.min(50, Math.max(1, pageSizeRaw));
+  const pageSizeRaw = Number.parseInt(String(input?.pageSize || "25"), 10) || 25;
+  const pageSize = Math.min(200, Math.max(1, pageSizeRaw));
   return { sources: sources.length > 0 ? sources : ALL_SOURCES, yearFrom, yearTo, sortBy, page, pageSize };
 }
 

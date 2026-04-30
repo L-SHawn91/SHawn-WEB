@@ -297,6 +297,7 @@ export default function PapersPage() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [showSavedOnly, setShowSavedOnly] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(25);
   const [saveLoadingId, setSaveLoadingId] = useState<string | null>(null);
   const [hoverPaperId, setHoverPaperId] = useState<string | null>(null);
   const [relatedByPaper, setRelatedByPaper] = useState<Record<string, RelatedItem[]>>({});
@@ -533,6 +534,7 @@ export default function PapersPage() {
 
       setPapers(data.papers || []);
       setBySource(data.bySource || {});
+      setVisibleCount(25);
       setMeta(data.meta || null);
       setQueryHistory((prev) => [userQuery, ...prev.filter((item) => item !== userQuery)].slice(0, 10));
       setTrackStatus({ t1: 'done', t2: 'done', t3: 'done', t4: 'done' });

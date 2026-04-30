@@ -52,6 +52,8 @@ interface Paper {
   authorAffiliations?: string[];
   authorCountries?: string[];
   matchType?: 'author-exact' | 'author-weak' | 'topic';
+  journal?: string;
+  impactFactor?: number;
 }
 
 function isPaper(paper: Paper | null): paper is Paper {
@@ -561,6 +563,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
         meshTerms,
         techniques: studyType ? [studyType] : [],
         matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
+        journal: doc.fulljournalname || doc.source || undefined,
       };
     }).filter(isPaper)
       .filter((paper: Paper) => {
@@ -708,7 +711,7 @@ async function t3_semanticAuthorSearch(
     }) ?? candidates[0];
     if (!best?.authorId) return [];
     const papersRes = await fetch(
-      `https://api.semanticscholar.org/graph/v1/author/${best.authorId}/papers?fields=paperId,title,authors,year,abstract,citationCount,openAccessPdf,url,publicationTypes&limit=100&sort=year`,
+      `https://api.semanticscholar.org/graph/v1/author/${best.authorId}/papers?fields=paperId,title,authors,year,abstract,citationCount,openAccessPdf,url,publicationTypes,venue,journal&limit=100&sort=year`,
       { headers, signal: AbortSignal.timeout(15000) },
     );
     if (!papersRes.ok) return [];
@@ -739,6 +742,7 @@ async function t3_semanticAuthorSearch(
         pdfUrl: p.openAccessPdf?.url,
         citations: typeof p.citationCount === 'number' ? p.citationCount : undefined,
         matchType: 'author-exact' as const,
+        journal: (p.venue as string | undefined) || undefined,
       }));
   } catch {
     return [];
@@ -760,7 +764,7 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
     const params = new URLSearchParams({
       query,
       limit: '15',
-      fields: 'title,authors,year,abstract,url,citationCount,referenceCount,influentialCitationCount,openAccessPdf,fieldsOfStudy',
+      fields: 'title,authors,year,abstract,url,citationCount,referenceCount,influentialCitationCount,openAccessPdf,fieldsOfStudy,venue,journal',
     });
 
     const s2Key = process.env.S2_API_KEY || process.env.SEMANTIC_SCHOLAR_API_KEY || '';
@@ -809,6 +813,7 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
           influenceScore,
           authorAffiliations,
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
+          journal: (paper.venue as string | undefined) || undefined,
         };
       });
 
@@ -966,6 +971,8 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
                     authorAffiliations,
                     authorCountries,
                     matchType: 'author-exact' as const,
+                    journal: (row.primary_location?.source?.display_name as string | undefined) || undefined,
+                    impactFactor: typeof row.primary_location?.source?.impact_factor === 'number' ? row.primary_location.source.impact_factor : undefined,
                   } as Paper;
                 })
                 .filter((p: Paper | null): p is Paper => p !== null);
@@ -1027,6 +1034,8 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
           authorAffiliations,
           authorCountries,
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
+          journal: (row.primary_location?.source?.display_name as string | undefined) || undefined,
+          impactFactor: typeof row.primary_location?.source?.impact_factor === 'number' ? row.primary_location.source.impact_factor : undefined,
         } as Paper;
       })
       .filter((p: Paper | null): p is Paper => p !== null)
@@ -1112,6 +1121,7 @@ async function t6_europePmcEnhanced(
           doi,
           citations: parseInt(r.citedByCount || '0') || undefined,
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
+          journal: r.journalTitle || r.journal || undefined,
         } as Paper;
       })
       .filter((p: Paper | null): p is Paper => p !== null)
