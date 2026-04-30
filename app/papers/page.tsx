@@ -1061,7 +1061,7 @@ export default function PapersPage() {
                       </p>
                       {(paper.evidenceLabel === 'support' || paper.evidenceLabel === 'contradict') && paper.bestSupportSentence && (
                         <p className={`mt-1.5 rounded-lg px-3 py-1.5 text-xs italic ${paper.evidenceLabel === 'support' ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300' : 'bg-rose-50 text-rose-800 dark:bg-rose-950/30 dark:text-rose-300'}`}>
-                          "{paper.bestSupportSentence.slice(0, 160)}{paper.bestSupportSentence.length > 160 ? '…' : ''}"
+                          &ldquo;{paper.bestSupportSentence.slice(0, 160)}{paper.bestSupportSentence.length > 160 ? '…' : ''}&rdquo;
                         </p>
                       )}
 
