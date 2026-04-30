@@ -4,7 +4,7 @@
 export const dynamic = 'force-dynamic';
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Database, ExternalLink, Filter, Search, Sparkles } from "lucide-react";
 import { apiFetch } from "@/lib/data-source/client";
 
@@ -125,7 +125,10 @@ const DATASET_SCORE_TOOLTIP = "Dataset score는 최신성, 활용도(download/li
 export default function DatasetsPage() {
   const [query, setQuery] = useState("");
   const [datasets, setDatasets] = useState<DatasetItem[]>([]);
+  const [bySource, setBySource] = useState<Record<string, DatasetItem[]>>({});
+  const [activeSourceTab, setActiveSourceTab] = useState<string>("all");
   const [loading, setLoading] = useState(false);
+  const resultsTopRef = useRef<HTMLDivElement | null>(null);
   const [meta, setMeta] = useState<DatasetMeta | null>(null);
   const [sortBy, setSortBy] = useState<SortBy>("rank");
   const [page, setPage] = useState(1);
@@ -175,13 +178,17 @@ export default function DatasetsPage() {
       });
       const data = await response.json();
       setDatasets(data.datasets || []);
+      setBySource(data.bySource || {});
+      setActiveSourceTab("all");
       setMeta(data.meta || null);
       setHasSearched(true);
+      window.setTimeout(() => resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
       const serverPage = data?.meta?.pagination?.page;
       if (typeof serverPage === "number") setPage(serverPage);
     } catch (error) {
       console.error("Dataset search failed:", error);
       setDatasets([]);
+      setBySource({});
       setHasSearched(true);
     } finally {
       setLoading(false);
@@ -189,6 +196,28 @@ export default function DatasetsPage() {
   };
 
   const searchDatasets = async (options?: SearchOptions) => executeSearch(query, filters, options);
+
+  const sourceOrder = useMemo(() => {
+    const extras = Object.keys(bySource).filter((source) => !SOURCE_OPTIONS.includes(source as DatasetSource));
+    return [...SOURCE_OPTIONS, ...extras];
+  }, [bySource]);
+
+  const allSourceDatasets = useMemo(() => {
+    const map = new Map<string, DatasetItem>();
+    for (const source of sourceOrder) {
+      for (const item of bySource[source] || []) {
+        if (!map.has(item.id)) map.set(item.id, item);
+      }
+    }
+    return map.size ? Array.from(map.values()) : datasets;
+  }, [bySource, datasets, sourceOrder]);
+
+  const displayedDatasets = useMemo(() => {
+    if (activeSourceTab !== "all") return bySource[activeSourceTab] || [];
+    return allSourceDatasets;
+  }, [activeSourceTab, allSourceDatasets, bySource]);
+
+  const hasSourceView = Object.keys(bySource).some((source) => (bySource[source] || []).length > 0);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -217,6 +246,15 @@ export default function DatasetsPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F3EA] dark:bg-slate-950 text-[#263238] dark:text-slate-200 paper-ruled py-12">
+      {loading && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#10243A]/25 backdrop-blur-md" aria-live="polite" aria-busy="true">
+          <div className="sketch-card border border-white/40 bg-white/90 px-8 py-7 text-center shadow-2xl dark:border-slate-700 dark:bg-slate-900/90">
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[#7B6BA8]/20 border-t-[#7B6BA8]" />
+            <p className="text-lg font-bold text-[#10243A] dark:text-slate-100">검색중입니다</p>
+            <p className="mt-1 text-sm text-[#263238]/60 dark:text-slate-400">여러 데이터셋 소스를 동시에 확인하는 중입니다.</p>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="mb-4 flex items-center gap-1 rounded-2xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA]/90 dark:bg-slate-950/90 px-3 py-2 text-sm backdrop-blur">
           <Link href="/" className="rounded-lg px-3 py-1.5 text-[#263238]/60 dark:text-slate-400 transition hover:bg-[#2A9D8F]/10 dark:hover:bg-teal-900/30 hover:text-[#10243A] dark:text-slate-100">Home</Link>
@@ -377,19 +415,46 @@ export default function DatasetsPage() {
           )}
         </div>
 
-        {datasets.length > 0 && (
+        <div ref={resultsTopRef} className="scroll-mt-28" />
+        {displayedDatasets.length > 0 && (
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-lg font-semibold text-[#10243A] dark:text-slate-100">
-                {meta?.pagination?.total || datasets.length} datasets found
+                {displayedDatasets.length} datasets found
               </h2>
-              {pagination && (
+              {pagination && !hasSourceView && (
                 <p className="text-sm text-[#263238]/50 dark:text-slate-500">
                   Page {pagination.page} / {pagination.totalPages}
                 </p>
               )}
             </div>
-            {datasets.map((dataset) => (
+            {hasSourceView && (
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setActiveSourceTab("all")}
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition ${activeSourceTab === "all" ? "bg-[#10243A] text-white shadow" : "border border-[#D8DEE6] dark:border-slate-700 text-[#263238]/60 dark:text-slate-400 hover:border-[#7B6BA8] hover:text-[#7B6BA8]"}`}
+                >
+                  All ({allSourceDatasets.length})
+                </button>
+                {sourceOrder.map((source) => {
+                  const count = (bySource[source] || []).length;
+                  if (!count) return null;
+                  const label = SOURCE_LABELS[source as DatasetSource] || source;
+                  return (
+                    <button
+                      key={source}
+                      type="button"
+                      onClick={() => setActiveSourceTab(source)}
+                      className={`rounded-full px-3 py-1 text-xs font-medium transition ${activeSourceTab === source ? "bg-[#7B6BA8] text-white shadow" : "border border-[#D8DEE6] dark:border-slate-700 text-[#263238]/60 dark:text-slate-400 hover:border-[#7B6BA8] hover:text-[#7B6BA8]"}`}
+                    >
+                      {label} ({count})
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {displayedDatasets.map((dataset) => (
               <div key={dataset.id} className="sketch-card relative bg-white dark:bg-slate-900 border border-[#D8DEE6] dark:border-slate-700 hover:border-[#7B6BA8]/40 transition-all p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
@@ -489,7 +554,7 @@ export default function DatasetsPage() {
                 </div>
               </div>
             ))}
-            {pagination && pagination.totalPages > 1 && (
+            {!hasSourceView && pagination && pagination.totalPages > 1 && (
               <div className="flex items-center justify-center gap-3 pt-2">
                 <button
                   type="button"
@@ -525,7 +590,7 @@ export default function DatasetsPage() {
           </div>
         )}
 
-        {datasets.length === 0 && !loading && hasSearched && (
+        {displayedDatasets.length === 0 && !loading && hasSearched && (
           <div className="text-center py-12 text-[#263238]/50 dark:text-slate-500">No datasets found. Try different keywords or adjust filters.</div>
         )}
       </div>

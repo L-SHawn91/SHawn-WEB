@@ -4,7 +4,7 @@ import { join, relative } from "node:path";
 
 const forbidden = ["gemini", "sonolbot"];
 const pattern = new RegExp(forbidden.join("|"), "i");
-const ignoredDirs = new Set([".git", "node_modules", ".next", "dist", "coverage", ".archive"]);
+const ignoredDirs = new Set([".git", "node_modules", ".next", "dist", "coverage", ".archive", ".claude"]);
 const ignoredFiles = new Set(["scripts/enforce-forbidden-terms.mjs"]);
 const textExtensions = new Set([
   ".css",

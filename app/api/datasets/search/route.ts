@@ -927,9 +927,15 @@ export async function POST(request: NextRequest) {
       return publicSourceHealth(source, result, Date.now() - (sourceStartedAt.get(source as DatasetSource) || Date.now()));
     });
 
-    const merged = ALL_SOURCES.flatMap((source) => bySource[source]);
-    const guarded = merged.filter((item) => publicDatasetTopicGuard(item, String(query)));
-    const ranked = integrateAndRank(guarded, String(query));
+    const guardedBySource = ALL_SOURCES.reduce<Record<string, DatasetItem[]>>((acc, source) => {
+      const guardedItems = bySource[source].filter((item) => publicDatasetTopicGuard(item, String(query)));
+      const rankedItems = integrateAndRank(guardedItems, String(query));
+      acc[source] = sortDatasets(rankedItems, sortBy);
+      return acc;
+    }, {});
+
+    const merged = ALL_SOURCES.flatMap((source) => guardedBySource[source] || []);
+    const ranked = integrateAndRank(merged, String(query));
     const sorted = sortDatasets(ranked, sortBy);
     const total = sorted.length;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -945,6 +951,7 @@ export async function POST(request: NextRequest) {
 
     const responseBody = {
       datasets: paged,
+      bySource: guardedBySource,
       suggestedTopics: buildPublicDatasetSuggestedTopics(sorted, effectiveQuery),
       meta: {
         trackResults,

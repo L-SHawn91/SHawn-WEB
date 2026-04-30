@@ -285,6 +285,7 @@ export default function PapersPage() {
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(true);
   const lastChipCommitAtRef = useRef<number | null>(null);
   const [papers, setPapers] = useState<Paper[]>([]);
+  const resultsTopRef = useRef<HTMLDivElement | null>(null);
   const [bySource, setBySource] = useState<Record<string, Paper[]>>({});
   const [activeSourceTab, setActiveSourceTab] = useState<string>('all');
   const [loading, setLoading] = useState(false);
@@ -547,6 +548,7 @@ export default function PapersPage() {
       setMeta(data.meta || null);
       setQueryHistory((prev) => [userQuery, ...prev.filter((item) => item !== userQuery)].slice(0, 10));
       setTrackStatus({ t1: 'done', t2: 'done', t3: 'done', t4: 'done' });
+      window.setTimeout(() => resultsTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
     } catch (error) {
       console.error('Search failed:', error);
       setTrackStatus({ t1: 'error', t2: 'error', t3: 'error', t4: 'error' });
@@ -590,6 +592,15 @@ export default function PapersPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F3EA] dark:bg-slate-950 text-[#263238] dark:text-slate-200 paper-ruled">
+      {loading && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#10243A]/25 backdrop-blur-md" aria-live="polite" aria-busy="true">
+          <div className="sketch-card border border-white/40 bg-white/90 px-8 py-7 text-center shadow-2xl dark:border-slate-700 dark:bg-slate-900/90">
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[#2A9D8F]/20 border-t-[#2A9D8F]" />
+            <p className="text-lg font-bold text-[#10243A] dark:text-slate-100">검색중입니다</p>
+            <p className="mt-1 text-sm text-[#263238]/60 dark:text-slate-400">여러 논문 소스를 동시에 확인하는 중입니다.</p>
+          </div>
+        </div>
+      )}
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-4">
         {/* Navigation */}
         <nav className="mb-5 flex items-center gap-1 rounded-2xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA]/90 dark:bg-slate-950/90 px-3 py-2 text-sm backdrop-blur">
@@ -815,6 +826,7 @@ export default function PapersPage() {
               )}
             </div>
 
+            <div ref={resultsTopRef} className="scroll-mt-28" />
             {/* Results header: sort bar */}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-1.5 rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 p-1">
