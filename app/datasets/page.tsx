@@ -66,22 +66,6 @@ interface SearchOptions {
   pageSize?: number;
 }
 
-type SavedPresetState = {
-  query: string;
-  filters: FiltersState;
-  sortBy: SortBy;
-};
-
-interface BioPreset {
-  id: string;
-  label: string;
-  query: string;
-  yearFrom?: string;
-  yearTo?: string;
-  sortBy?: SortBy;
-  sources?: DatasetSource[];
-}
-
 const SOURCE_OPTIONS: DatasetSource[] = [
   "ncbi",
   "ena",
@@ -95,58 +79,6 @@ const SOURCE_OPTIONS: DatasetSource[] = [
   "cellxgene",
 ];
 
-const BIO_CORE_SOURCES: DatasetSource[] = ["ncbi", "ena", "dryad", "zenodo", "dataverse", "cngb", "arrayexpress", "cellxgene"];
-
-const BIO_PRESETS: BioPreset[] = [
-  {
-    id: "single-cell",
-    label: "Single-cell RNA-seq",
-    query: "single-cell RNA-seq",
-    yearFrom: "2018",
-    sortBy: "recent",
-    sources: BIO_CORE_SOURCES,
-  },
-  {
-    id: "differential-expression",
-    label: "Differential Expression",
-    query: "bulk RNA-seq differential expression",
-    yearFrom: "2015",
-    sortBy: "recent",
-    sources: BIO_CORE_SOURCES,
-  },
-  {
-    id: "spatial-transcriptomics",
-    label: "Spatial Transcriptomics",
-    query: "spatial transcriptomics",
-    yearFrom: "2019",
-    sortBy: "recent",
-    sources: BIO_CORE_SOURCES,
-  },
-  {
-    id: "atac-seq",
-    label: "ATAC-seq",
-    query: "ATAC-seq chromatin accessibility",
-    yearFrom: "2016",
-    sortBy: "recent",
-    sources: BIO_CORE_SOURCES,
-  },
-  {
-    id: "chip-seq",
-    label: "ChIP-seq",
-    query: "ChIP-seq transcription factor",
-    yearFrom: "2012",
-    sortBy: "recent",
-    sources: BIO_CORE_SOURCES,
-  },
-  {
-    id: "alternative-splicing",
-    label: "Alternative Splicing",
-    query: "alternative splicing RNA-seq",
-    yearFrom: "2014",
-    sortBy: "recent",
-    sources: BIO_CORE_SOURCES,
-  },
-];
 
 const MODALITY_CONFIG = [
   { id: "", label: "전체", icon: "🔍", active: "bg-[#10243A] text-white border-[#10243A]", inactive: "bg-white dark:bg-slate-900 border-[#D8DEE6] dark:border-slate-700 text-[#263238]/70 dark:text-slate-400 hover:border-[#10243A]/50 hover:bg-[#F7F3EA] dark:hover:bg-slate-800" },
@@ -161,21 +93,6 @@ const MODALITY_CONFIG = [
   { id: "epigenomics", label: "Epigenomics", icon: "🧩", active: "bg-cyan-600 text-white border-cyan-600", inactive: "bg-cyan-50 border-cyan-200 text-cyan-700 hover:bg-cyan-100" },
 ];
 
-const PRESET_STYLE: Record<string, { active: string; inactive: string }> = {
-  "single-cell":            { active: "bg-teal-600 text-white border-teal-600",   inactive: "bg-teal-50 border-teal-200 text-teal-700 hover:bg-teal-100" },
-  "differential-expression":{ active: "bg-blue-600 text-white border-blue-600",   inactive: "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100" },
-  "spatial-transcriptomics":{ active: "bg-purple-600 text-white border-purple-600", inactive: "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100" },
-  "atac-seq":               { active: "bg-orange-500 text-white border-orange-500", inactive: "bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100" },
-  "chip-seq":               { active: "bg-rose-500 text-white border-rose-500",   inactive: "bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100" },
-  "alternative-splicing":   { active: "bg-emerald-600 text-white border-emerald-600", inactive: "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100" },
-};
-const QUICK_DATASET_QUERIES = [
-  "endometrium single-cell atlas",
-  "ovarian cancer organoid",
-  "autophagy transcriptomics",
-  "uterus microenvironment",
-  "embryo implantation",
-];
 
 const SOURCE_LABELS: Record<DatasetSource, string> = {
   ncbi: "NCBI",
@@ -216,11 +133,9 @@ export default function DatasetsPage() {
   const [hoverDatasetId, setHoverDatasetId] = useState<string | null>(null);
   const [relatedByDataset, setRelatedByDataset] = useState<Record<string, RelatedItem[]>>({});
   const [relatedLoadingByDataset, setRelatedLoadingByDataset] = useState<Record<string, boolean>>({});
-  const [activePresetId, setActivePresetId] = useState<string | null>(null);
-  const [presetRestore, setPresetRestore] = useState<SavedPresetState | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [filters, setFilters] = useState({
-    sources: [...BIO_CORE_SOURCES] as string[],
+    sources: [...SOURCE_OPTIONS] as string[],
     yearFrom: "",
     yearTo: "",
     modality: "",
@@ -274,11 +189,6 @@ export default function DatasetsPage() {
   };
 
   const searchDatasets = async (options?: SearchOptions) => executeSearch(query, filters, options);
-  const runQuickQuery = async (presetQuery: string) => {
-    setQuery(presetQuery);
-    setPage(1);
-    await executeSearch(presetQuery, filters, { page: 1 });
-  };
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -286,59 +196,6 @@ export default function DatasetsPage() {
     if (!q) return;
     setQuery(q);
   }, []);
-
-  const applyBioPreset = async (preset: BioPreset) => {
-    const isActive = activePresetId === preset.id;
-
-    if (isActive) {
-      if (presetRestore) {
-        setActivePresetId(null);
-        setQuery(presetRestore.query);
-        setFilters(presetRestore.filters);
-        setSortBy(presetRestore.sortBy);
-        setPage(1);
-        await executeSearch(presetRestore.query, presetRestore.filters, { page: 1, sortBy: presetRestore.sortBy });
-        setPresetRestore(null);
-        return;
-      }
-
-      setActivePresetId(null);
-      setQuery("");
-      setFilters({
-        sources: [...BIO_CORE_SOURCES] as string[],
-        yearFrom: "",
-        yearTo: "",
-        modality: "single-cell RNA-seq",
-        context: "",
-      });
-      setSortBy("rank");
-      setPage(1);
-      return;
-    }
-
-    setPresetRestore({
-      query,
-      filters,
-      sortBy,
-    });
-
-    const nextFilters: FiltersState = {
-      sources: preset.sources ? [...preset.sources] : [...BIO_CORE_SOURCES],
-      yearFrom: preset.yearFrom || "",
-      yearTo: preset.yearTo || "",
-      modality: preset.query,
-      context: "",
-    };
-    const nextSort = preset.sortBy || "recent";
-
-    setQuery("");
-    setFilters(nextFilters);
-    setSortBy(nextSort);
-    setPage(1);
-    setActivePresetId(preset.id);
-
-    await executeSearch(preset.query, nextFilters, { page: 1, sortBy: nextSort });
-  };
 
   const loadRelatedForDataset = async (dataset: DatasetItem) => {
     if (relatedByDataset[dataset.id] || relatedLoadingByDataset[dataset.id]) return;
@@ -403,49 +260,10 @@ export default function DatasetsPage() {
           <p className="mt-3 rounded-xl border border-[#7B6BA8]/20 bg-[#7B6BA8]/5 dark:bg-purple-900/10 px-3 py-2 text-xs leading-5 text-[#263238]/70 dark:text-slate-400">
             정밀 검색 팁: <strong>조직명 + modality + accession 힌트</strong>를 함께 넣으세요. 예: <code>endometrial organoid single-cell RNA-seq GSE</code>. 넓은 질의는 여러 조직의 organoid dataset이 섞일 수 있습니다.
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {QUICK_DATASET_QUERIES.map((q) => (
-              <button
-                key={q}
-                type="button"
-                onClick={() => {
-                  void runQuickQuery(q);
-                }}
-                className="rounded-full border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-[#263238]/60 dark:text-slate-400 transition hover:border-[#7B6BA8] hover:text-[#7B6BA8]"
-              >
-                {q}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div className="sketch-card border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 p-6 mb-8">
-          <p className="rounded-lg border border-[#7B6BA8]/20 bg-[#7B6BA8]/5 dark:bg-purple-900/10 px-3 py-2 text-xs text-[#7B6BA8]">
-            검색 입력은 상단 고정 패널에서 진행하고, 이 섹션에서는 프리셋과 상세 필터를 조정합니다.
-          </p>
-          <div className="mt-4">
-            <p className="text-xs font-medium text-[#263238]/50 dark:text-slate-500 mb-2">Bio Presets</p>
-            <div className="flex flex-wrap gap-2">
-              {BIO_PRESETS.map((preset) => {
-                const style = PRESET_STYLE[preset.id] ?? { active: "bg-[#10243A] text-white border-[#10243A]", inactive: "bg-white dark:bg-slate-900 border-[#D8DEE6] dark:border-slate-700 text-[#263238]/70 dark:text-slate-400 hover:bg-[#F7F3EA] dark:hover:bg-slate-800" };
-                return (
-                  <button
-                    key={preset.id}
-                    type="button"
-                    onClick={() => applyBioPreset(preset)}
-                    disabled={loading}
-                    className={`sketch-btn px-3 py-1.5 text-xs border font-medium transition ${
-                      activePresetId === preset.id ? style.active : style.inactive
-                    } disabled:opacity-50`}
-                  >
-                    {preset.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="mt-6 pt-6 border-t border-[#D8DEE6] dark:border-slate-700">
+          <div>
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
                 <Filter className="w-4 h-4 text-[#263238]/40 dark:text-slate-600" />
