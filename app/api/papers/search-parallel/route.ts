@@ -1995,9 +1995,16 @@ export async function POST(request: NextRequest) {
     // Enrich papers with journal quartile (non-blocking, best-effort)
     const enrichedPapers = await enrichPapersWithJournalMetrics(sortedPapers).catch(() => sortedPapers);
 
+    // Propagate enrichment to bySource so all tabs show IF/quartile
+    const enrichedById = new Map(enrichedPapers.map((p) => [p.id, p]));
+    const enrichedBySource: Record<string, Paper[]> = {};
+    for (const [src, srcPapers] of Object.entries(selected.bySource || {})) {
+      enrichedBySource[src] = (srcPapers as Paper[]).map((p) => enrichedById.get(p.id) || p);
+    }
+
     const responseBody = {
       papers: enrichedPapers,
-      bySource: selected.bySource || {},
+      bySource: enrichedBySource,
       suggestedTopics: buildPublicSuggestedTopics(selected.papers, normalizePublicBioQuery(normalizedQuery)),
       meta: {
         totalTime,

@@ -901,7 +901,7 @@ export default function PapersPage() {
                     paper.evidenceLabel === 'contradict' ? 'bg-rose-500' :
                     paper.evidenceLabel === 'uncertain' ? 'bg-amber-500' : 'bg-slate-700';
                   return (
-                    <article key={paper.id} className="sketch-card overflow-hidden border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 transition-all duration-200 hover:border-[#2A9D8F]/40">
+                    <article key={paper.id} className="sketch-card border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 transition-all duration-200 hover:border-[#2A9D8F]/40">
                       {/* Top accent bar */}
                       <div className={`h-0.5 w-full ${evAccent}`} />
                       <div className="p-5">
