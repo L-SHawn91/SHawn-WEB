@@ -26,7 +26,7 @@ interface Paper {
   authors: string[];
   abstract: string;
   year: number;
-  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc';
+  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc' | 'biorxiv';
   url: string;
   pdfUrl?: string;
   citations?: number;
@@ -212,6 +212,7 @@ const sourceLabel: Record<Paper['source'], string> = {
   crossref: 'Crossref',
   openalex: 'OpenAlex',
   europepmc: 'EuropePMC',
+  biorxiv: 'bioRxiv',
 };
 
 const sourceBadge: Record<Paper['source'], string> = {
@@ -221,6 +222,7 @@ const sourceBadge: Record<Paper['source'], string> = {
   crossref: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200',
   openalex: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-200',
   europepmc: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-200',
+  biorxiv: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200',
 };
 
 const scoreTooltip = 'Score는 통합 랭킹 점수입니다. 최신성(최대 30) + 주제 연관도(최대 25) + 영향도(최대 20) + 메타정보 보너스(최대 10)로 계산됩니다. 인용수는 Sort에서만 사용됩니다.';
@@ -233,6 +235,7 @@ const journalMetricHint: Record<Paper['source'], { if: string; q: string; note: 
   crossref: { if: 'N/A (publisher metadata)', q: 'N/A', note: 'Crossref는 DOI 메타데이터 중심으로 IF/Q는 직접 제공하지 않습니다.' },
   openalex: { if: 'N/A (venue-dependent)', q: 'N/A', note: 'OpenAlex는 venue 정보 기반으로 추정 가능하나 별도 매핑이 필요합니다.' },
   europepmc: { if: 'N/A', q: 'N/A', note: 'EuropePMC는 통합 오픈 액세스 인덱스입니다.' },
+  biorxiv: { if: 'N/A', q: 'N/A', note: 'bioRxiv는 프리프린트 서버로 동료심사 전 논문을 제공합니다.' },
 };
 const sourceTooltip: Record<Paper['source'], string> = {
   pubmed: 'PubMed: 의생명/임상 중심의 NCBI 논문 데이터베이스',
@@ -241,6 +244,7 @@ const sourceTooltip: Record<Paper['source'], string> = {
   crossref: 'Crossref: DOI/서지 메타데이터 중심 학술 인덱스',
   openalex: 'OpenAlex: 글로벌 오픈 학술 그래프 메타데이터',
   europepmc: 'EuropePMC: PubMed + 유럽 연구 + bioRxiv/medRxiv 통합 인덱스',
+  biorxiv: 'bioRxiv: 생명과학 분야 프리프린트 서버 (동료심사 전)',
 };
 
 const evidenceLabelBadge: Record<string, string> = {
@@ -303,7 +307,7 @@ export default function PapersPage() {
   const [queryHistory, setQueryHistory] = useState<string[]>([]);
   const [filters, setFilters] = useState({
     mode: 'broad' as SearchMode,
-    sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv', 'europepmc'] as string[],
+    sources: ['pubmed', 'semantic', 'crossref', 'openalex', 'arxiv', 'europepmc', 'biorxiv'] as string[],
     yearFrom: '',
     yearTo: '',
     claim: '',
@@ -320,7 +324,7 @@ export default function PapersPage() {
         acc[paper.source] = (acc[paper.source] || 0) + 1;
         return acc;
       },
-      { pubmed: 0, arxiv: 0, semantic: 0, crossref: 0, openalex: 0, europepmc: 0 } as Record<string, number>,
+      { pubmed: 0, arxiv: 0, semantic: 0, crossref: 0, openalex: 0, europepmc: 0, biorxiv: 0 } as Record<string, number>,
     );
   }, [papers]);
 
@@ -1232,7 +1236,7 @@ export default function PapersPage() {
               <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
                 <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Source Filters</div>
                 <div className="flex flex-wrap gap-1.5 text-xs">
-                  {(['pubmed', 'europepmc', 'semantic', 'openalex', 'crossref', 'arxiv'] as const).map((source) => {
+                  {(['pubmed', 'europepmc', 'biorxiv', 'semantic', 'openalex', 'crossref', 'arxiv'] as const).map((source) => {
                     const active = filters.sources.includes(source);
                     return (
                       <button

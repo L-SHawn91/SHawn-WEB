@@ -106,6 +106,48 @@ const STATIC_MESH_MAP: Array<[RegExp, string]> = [
   [/menstrual/i, "Menstrual Cycle"],
 ];
 
+// ---------------------------------------------------------------------------
+// Biomedical typo correction — mirrors Python correct_query_typos()
+// ---------------------------------------------------------------------------
+const _TYPO_MAP: Readonly<Record<string, string>> = {
+  organiod: 'organoid',    organiods: 'organoids',   organid: 'organoid',
+  endometiral: 'endometrial', endometrail: 'endometrial',
+  endometirum: 'endometrium', endomerium: 'endometrium', endometrim: 'endometrium',
+  uterin: 'uterine',
+  transcriptomcis: 'transcriptomics', trancriptomics: 'transcriptomics',
+  transcritomics: 'transcriptomics', transcriptomis: 'transcriptomics',
+  sequncing: 'sequencing', seqeuncing: 'sequencing',
+  scrna_seq: 'scrna', scrnaseq: 'scrna',
+  genmoic: 'genomic', genomcis: 'genomics', genmoics: 'genomics',
+  epigenitics: 'epigenetics', epigentics: 'epigenetics', epigeneics: 'epigenetics',
+  implantaion: 'implantation', implanation: 'implantation',
+  receptiviy: 'receptivity', recepivity: 'receptivity',
+  decidualizaiton: 'decidualization', decidulaization: 'decidualization',
+  progesteron: 'progesterone', progestrone: 'progesterone',
+  estrgen: 'estrogen', estradoil: 'estradiol', estradiole: 'estradiol',
+  apopstosis: 'apoptosis', apoptoiss: 'apoptosis',
+  prolifeartion: 'proliferation', prolfieration: 'proliferation', proliferaton: 'proliferation',
+  carcnioma: 'carcinoma', carcionma: 'carcinoma',
+  tumorigenisis: 'tumorigenesis', tumorigeniss: 'tumorigenesis',
+  methylaiton: 'methylation', methlation: 'methylation',
+  chrmoatin: 'chromatin', chromatn: 'chromatin',
+  differenciation: 'differentiation', differentation: 'differentiation', differntiation: 'differentiation',
+  infertiliy: 'infertility', infertlity: 'infertility',
+  fertilizaiton: 'fertilization', fertilzation: 'fertilization',
+};
+
+export function correctPublicBioQueryTypos(query: string): string {
+  if (!query) return query;
+  // Split on whitespace boundaries, apply correction per token, rejoin
+  return query.replace(/[^\s]+/g, (token) => {
+    const stripped = token.replace(/^[()[\]{}"'.,:;?!]+|[()[\]{}"'.,:;?!]+$/g, '');
+    const pre = token.slice(0, token.indexOf(stripped));
+    const post = token.slice(pre.length + stripped.length);
+    const corrected = _TYPO_MAP[stripped.toLowerCase()];
+    return corrected ? `${pre}${corrected}${post}` : token;
+  });
+}
+
 const EXPANSION_SYNONYMS: Array<[RegExp, string[]]> = [
   [/\borganoid(s)?\b/i, ["3D culture", "organotypic culture"]],
   [/\bendometr/i, ["uterine lining", "endometrium"]],
@@ -128,7 +170,8 @@ const EXPANSION_SYNONYMS: Array<[RegExp, string[]]> = [
 ];
 
 export function normalizePublicBioQuery(query: string): string {
-  return (query || "")
+  const typoFixed = correctPublicBioQueryTypos(query || "");
+  return typoFixed
     .normalize("NFKC")
     .replace(/([A-Za-z0-9])([가-힣])/g, "$1 $2")
     .replace(/([가-힣])([A-Za-z0-9])/g, "$1 $2")

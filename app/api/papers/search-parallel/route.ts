@@ -27,7 +27,7 @@ interface Paper {
   authors: string[];
   abstract: string;
   year: number;
-  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc';
+  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc' | 'biorxiv';
   url: string;
   doi?: string;
   pdfUrl?: string;
@@ -984,7 +984,75 @@ async function t6_europePmcEnhanced(
   }
 }
 
-// T7: Ranker - Integration & ranking
+// T7: bioRxiv — direct preprint search via NCBI Entrez (biorxiv[TA] filter)
+async function t7_biorxivEnhanced(
+  query: string,
+  yearFrom?: string,
+  yearTo?: string,
+  _authorCandidates: string[] = [],
+  intent: QueryIntent = 'TOPIC',
+): Promise<Paper[]> {
+  if (!query || intent === 'INSTITUTION') return [];
+  console.log('[T7:bioRxiv] Search starting...');
+  const startTime = Date.now();
+  try {
+    const apiKey = process.env.NCBI_API_KEY ? `&api_key=${process.env.NCBI_API_KEY}` : '';
+    const datePart = yearFrom
+      ? `&mindate=${yearFrom}&maxdate=${yearTo || new Date().getFullYear()}&datetype=pdat`
+      : '';
+    const searchQ = encodeURIComponent(`(${query}) AND biorxiv[TA]`);
+    const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term=${searchQ}&retmax=20&retmode=json${datePart}${apiKey}`;
+    const searchResp = await fetch(searchUrl, { signal: AbortSignal.timeout(8000) });
+    if (!searchResp.ok) return [];
+    const searchData = await searchResp.json() as { esearchresult?: { idlist?: string[] } };
+    const ids: string[] = searchData?.esearchresult?.idlist || [];
+    if (!ids.length) return [];
+
+    const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=${ids.join(',')}&retmode=xml${apiKey}`;
+    const fetchResp = await fetch(fetchUrl, { signal: AbortSignal.timeout(8000) });
+    if (!fetchResp.ok) return [];
+    const xml = await fetchResp.text();
+
+    // Lightweight XML extraction — no DOM parser needed for this structure
+    const papers: Paper[] = [];
+    const articleRx = /<article[\s>][\s\S]*?<\/article>/gi;
+    let match: RegExpExecArray | null;
+    while ((match = articleRx.exec(xml)) !== null && papers.length < 20) {
+      const block = match[0];
+      const getText = (tag: string) => {
+        const m = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i').exec(block);
+        return m ? m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+      };
+      const title = getText('article-title');
+      const abstract = getText('abstract');
+      const doiMatch = /<article-id pub-id-type="doi">(.*?)<\/article-id>/i.exec(block);
+      const doi = doiMatch ? doiMatch[1].trim() : '';
+      const yearMatch = /<pub-date[^>]*>[\s\S]*?<year>(\d{4})<\/year>/i.exec(block);
+      const year = yearMatch ? parseInt(yearMatch[1]) : 0;
+      const authorsBlock = block.match(/<surname>(.*?)<\/surname>/gi) || [];
+      const firstAuthor = authorsBlock[0]?.replace(/<[^>]+>/g, '').trim() || '';
+      if (!title) continue;
+      papers.push({
+        id: doi || title.slice(0, 40),
+        title,
+        abstract,
+        authors: firstAuthor ? [firstAuthor] : [],
+        year,
+        source: 'biorxiv',
+        doi,
+        url: doi ? `https://www.biorxiv.org/content/${doi}` : '',
+        citations: 0,
+      });
+    }
+    console.log(`[T7:bioRxiv] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
+    return papers;
+  } catch (error) {
+    console.error('[T7:bioRxiv] Error:', error);
+    return [];
+  }
+}
+
+// T_Ranker: Integration & ranking
 function t6_integrateAndRank(
   t1Results: Paper[],
   t2Results: Paper[],
@@ -996,13 +1064,14 @@ function t6_integrateAndRank(
   authorCandidates: string[] = [],
   claim: string = '',
   hypothesis: string = '',
-  query: string = ''
+  query: string = '',
+  t7Results: Paper[] = [],
 ): Paper[] {
   console.log('[T6:Ranker] Integration and ranking starting...');
   const startTime = Date.now();
   
   // Merge all results
-  const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results, ...t6Results];
+  const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results, ...t6Results, ...t7Results];
   
   // Public-safe workflow merge: DOI/public ID/title dedupe while preserving source hits and best metadata.
   const uniquePapers = mergePublicPaperRecords(allPapers);
@@ -1067,7 +1136,7 @@ function t6_integrateAndRank(
   return rankedPapers;
 }
 
-type TrackSource = 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc';
+type TrackSource = 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc' | 'biorxiv';
 type SearchMode = 'broad' | 'precision' | 'author';
 
 // Tiered parallel fetch constants
@@ -1497,7 +1566,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const effectiveQuery = expandPublicBioQuery((topicQuery || authorCandidates[0] || query).trim());
 
   const defaultSourcesByMode: Record<SearchMode, TrackSource[]> = {
-    broad: ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex', 'europepmc'],
+    broad: ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex', 'europepmc', 'biorxiv'],
     precision: ['pubmed', 'semantic', 'crossref', 'openalex', 'europepmc'],
     author: ['pubmed', 'semantic', 'crossref', 'openalex', 'europepmc'],
   };
@@ -1536,6 +1605,9 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const epmcQuery = intent === 'INSTITUTION' ? query : (topicQuery || query);
     trackJobs.push({ source: 'europepmc', promise: t6_europePmcEnhanced(epmcQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
+  if (sources.includes('biorxiv')) {
+    trackJobs.push({ source: 'biorxiv', promise: t7_biorxivEnhanced(topicQuery || query, yearFrom, yearTo, authorCandidates, intent) });
+  }
 
   const sourceStartedAt = new Map(trackJobs.map((job) => [job.source, Date.now()]));
 
@@ -1567,6 +1639,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     crossref: [],
     openalex: [],
     europepmc: [],
+    biorxiv: [],
   };
 
   settled.forEach((result, index) => {
@@ -1592,6 +1665,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     claim,
     hypothesis,
     nonAuthorQuery,
+    bySource.biorxiv,
   );
   let papers = firstAuthorOnly
     ? papersRanked.filter((paper) => matchByFirstAuthor(paper.authors || [], authorCandidates, hasManualAuthor ? 0.85 : 0.9))
