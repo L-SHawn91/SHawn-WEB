@@ -183,10 +183,13 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
       const last = words[words.length - 1] || "";
       const lastInitial = last ? `${last[0]}.` : "";
       const firstInitial = first ? `${first[0]}.` : "";
+      const firstInitialBare = first ? first[0] : "";
       return uniqueList([
         candidate,
         flatName,
         `${last} ${first}`,
+        `${last} ${firstInitialBare}`,
+        `${last} ${firstInitial}`,
         `${firstInitial} ${last}`,
         `${lastInitial} ${first}`,
       ]);
@@ -199,6 +202,17 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
     cleanQuery,
     authorCandidates,
   };
+}
+
+function extractExplicitAuthorLabels(query: string): string[] {
+  const q = normalizePublicBioQuery(query || '');
+  const values: string[] = [];
+  const regex = /(?:^|\s)(?:author|authors|by|저자)\s*[:=：]?\s*([\s\S]*?)(?=\s+(?:species|organism|종|동물종|keyword|keywords|title|topic|키워드|제목)\s*[:=：]?|$)/gi;
+  for (const match of q.matchAll(regex)) {
+    const clean = String(match[1] || '').trim().replace(/\s+/g, ' ');
+    if (clean) values.push(clean);
+  }
+  return uniqueList(values);
 }
 
 function buildAuthorTermForPubMed(authors: string[]): string {
@@ -245,11 +259,28 @@ function overlapRatio(base: string, target: string): number {
 }
 
 function titleKeywordTokens(query: string): string[] {
-  const stop = new Set(['and', 'or', 'the', 'with', 'from', 'into', 'human', 'mouse', 'mice', 'pig', 'porcine', 'species', 'keyword', 'author']);
+  // Keep species terms as real title/topic anchors. For author+species searches,
+  // removing species made the query collapse into an author-only search and let
+  // unrelated homonym papers through.
+  const stop = new Set(['and', 'or', 'the', 'with', 'from', 'into', 'species', 'organism', 'keyword', 'keywords', 'author', 'authors']);
   return Array.from(new Set(((query || '').toLowerCase().match(/[a-z0-9-]{3,}/g) || [])
     .map((t) => t === 'rnaseq' ? 'rna-seq' : t)
     .filter((t) => !stop.has(t))))
     .slice(0, 6);
+}
+
+function speciesTopicMatches(speciesTerms: string[], text: string): boolean {
+  if (!speciesTerms.length) return false;
+  const t = (text || '').toLowerCase();
+  return speciesTerms.some((raw) => {
+    const s = normalizeName(raw);
+    if (!s) return false;
+    if (s === 'pig' || s === 'porcine' || s === 'sus scrofa') return /\b(pig|pigs|porcine|swine|sus\s+scrofa)\b/i.test(t);
+    if (s === 'human' || s === 'homo sapiens') return /\b(human|humans|patient|patients|homo\s+sapiens)\b/i.test(t);
+    if (s === 'mouse' || s === 'mus musculus') return /\b(mouse|mice|murine|mus\s+musculus)\b/i.test(t);
+    if (s === 'rat' || s === 'rattus norvegicus') return /\b(rat|rats|rattus)\b/i.test(t);
+    return t.includes(s);
+  });
 }
 
 function queryWeightedOverlap(query: string, title: string, abstract = ''): number {
@@ -478,7 +509,17 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
   try {
     const baseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
     const authorTerm = buildAuthorTermForPubMed(authorCandidates);
-    const topicTerm = query ? `(${query})` : '';
+    const pubmedParts = parsePublicBioQuery(query);
+    const speciesOrTerm = pubmedParts.species.length
+      ? `(${pubmedParts.species.slice(0, 4).map((s) => `"${s.replace(/"/g, '')}"[Title/Abstract]`).join(' OR ')})`
+      : '';
+    const speciesOnlyKeyword = pubmedParts.species.length > 0
+      && pubmedParts.keywords
+      && pubmedParts.species.some((s) => normalizeName(s) === normalizeName(pubmedParts.keywords));
+    const keywordTerm = pubmedParts.keywords && !speciesOnlyKeyword ? `(${pubmedParts.keywords})` : '';
+    const topicTerm = speciesOrTerm && keywordTerm
+      ? `${keywordTerm} AND ${speciesOrTerm}`
+      : (speciesOrTerm || (query ? `(${query})` : ''));
     const termParts: string[] = [];
 
     if (intent === 'INSTITUTION') {
@@ -1809,6 +1850,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const intent = classifyIntent(query);
   const split = splitAuthorAndTopic(query);
   const parsedPublicQuery = parsePublicBioQuery(query);
+  const explicitAuthorLabels = extractExplicitAuthorLabels(query);
   const extracted = extractAuthorCandidates(query);
   const manualAuthorNames: string[] = [];
   if (typeof filters?.authorName === 'string' && filters.authorName.trim()) {
@@ -1821,28 +1863,31 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   }
   const hasManualAuthor = manualAuthorNames.length > 0;
   const firstAuthorOnly = Boolean(filters?.firstAuthorOnly);
-  const baseCandidates = split.author ? [split.author] : [split.author, ...parsedPublicQuery.authors, ...extracted.authorCandidates];
+  const labeledAuthorAliases = uniqueList([...explicitAuthorLabels, ...parsedPublicQuery.authors].flatMap((name) => [name, ...extractAuthorCandidates(name).authorCandidates]));
+  const baseCandidates = split.author ? [split.author, ...extractAuthorCandidates(split.author).authorCandidates] : [split.author, ...labeledAuthorAliases, ...extracted.authorCandidates];
   const authorCandidatesRaw = uniqueList(baseCandidates.filter(Boolean))
     .filter((name) => String(name || '').trim().split(/\s+/).filter(Boolean).length <= 4);
   const authorCandidatesMerged = uniqueList([...authorCandidatesRaw, ...manualAuthorNames]);
-  // AUTO-PROMOTE: name-like query → author mode
-  const effectiveMode: SearchMode = (mode === 'broad' && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK'))
+  const hasStructuredAuthor = explicitAuthorLabels.length > 0 || parsedPublicQuery.authors.length > 0;
+  // AUTO-PROMOTE: name-like query or explicit author-labeled query → author mode
+  const effectiveMode: SearchMode = (mode === 'broad' && (hasStructuredAuthor || intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK'))
     ? 'author'
     : mode;
 
   const authorCandidates =
-    effectiveMode === 'author'
+    effectiveMode === 'author' || hasStructuredAuthor
       ? authorCandidatesMerged
       : hasManualAuthor
         ? authorCandidatesMerged
         : (intent === 'TOPIC' || intent === 'INSTITUTION' ? [] : authorCandidatesRaw);
-  const detectedTopic = (parsedPublicQuery.authors.length || parsedPublicQuery.species.length || parsedPublicQuery.keywords !== parsedPublicQuery.normalized)
-    ? (parsedPublicQuery.keywords || extracted.cleanQuery || query).trim()
+  const hasStructuredTopic = parsedPublicQuery.species.length > 0 || parsedPublicQuery.keywords !== parsedPublicQuery.normalized;
+  const detectedTopic = (parsedPublicQuery.authors.length || hasStructuredTopic)
+    ? (parsedPublicQuery.keywords || parsedPublicQuery.species.join(' ') || extracted.cleanQuery || query).trim()
     : (split.topic || parsedPublicQuery.keywords || extracted.cleanQuery || query).trim();
-  const pureAuthorSearch = effectiveMode === 'author' && !split.topic;
+  const pureAuthorSearch = effectiveMode === 'author' && !split.topic && !hasStructuredTopic;
   const topicQuery = pureAuthorSearch
     ? ''
-    : ((!hasManualAuthor && effectiveMode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic) ? '' : detectedTopic);
+    : ((!hasManualAuthor && effectiveMode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic && !hasStructuredTopic) ? '' : detectedTopic);
   const effectiveQuery = pureAuthorSearch
     ? (authorCandidates[0] || query).trim()
     : expandPublicBioQueryLoose((topicQuery || authorCandidates[0] || query).trim());
@@ -1962,7 +2007,13 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     // Reduce obvious noise in author-mode when topic terms exist.
     const topicText = (nonAuthorQuery || '').trim();
     const topicTokenCount = (topicText.match(/[a-z0-9가-힣]{3,}/gi) || []).length;
-    if (topicTokenCount >= 2) {
+    if (topicTokenCount >= 1 && parsedPublicQuery.species.length > 0) {
+      papers = papers.filter((paper) => {
+        const merged = `${paper.title || ''} ${paper.abstract || ''}`;
+        const rel = overlapRatio(topicText, merged);
+        return rel >= 0.03 || speciesTopicMatches(parsedPublicQuery.species, merged);
+      });
+    } else if (topicTokenCount >= 2) {
       papers = papers.filter((paper) => {
         const merged = `${paper.title || ''} ${paper.abstract || ''}`;
         const rel = overlapRatio(topicText, merged);
@@ -1992,14 +2043,17 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   // INSTITUTION: affiliation filter in PubMed already constrains results; skip topic guard.
   if (intent !== 'INSTITUTION') {
     const beforeTopicGuard = papers;
-    papers = papers.filter((paper) => publicTopicGuard(paper, effectiveQuery || nonAuthorQuery));
+    papers = papers.filter((paper) => {
+      if (parsedPublicQuery.species.length > 0 && speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`)) return true;
+      return publicTopicGuard(paper, nonAuthorQuery || effectiveQuery);
+    });
     if (papers.length === 0 && beforeTopicGuard.length > 0) {
       const relaxedTopic = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true });
       papers = beforeTopicGuard
         .filter((paper) => overlapRatio(relaxedTopic, `${paper.title || ''} ${paper.abstract || ''}`) >= 0.12)
         .slice(0, 50);
     }
-    if (papers.length === 0 && topicQuery) {
+    if (papers.length === 0 && topicQuery && !(effectiveMode === 'author' && authorCandidates.length)) {
       const titleFallback = await Promise.allSettled([
         t1_pubmedEnhanced(buildPubMedTitleQuery(topicQuery), yearFrom, yearTo, [], 'TOPIC'),
         t5_openalexTitleFallback(topicQuery, yearFrom, yearTo),

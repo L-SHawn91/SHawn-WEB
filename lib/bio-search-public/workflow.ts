@@ -259,13 +259,18 @@ export function parsePublicBioQuery(query: string): PublicQueryParts {
     const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     keywords = keywords.replace(new RegExp(`\\b${escaped}\\b`, 'gi'), ' ');
   }
+  const speciesUnique = uniquePublicList(species);
   keywords = keywords.replace(/\s+/g, ' ').trim();
   if (!keywords && keyword.values.length) keywords = keyword.values.join(' ');
+  // If the user provides only author + species, the species itself must become
+  // the keyword/title anchor. Otherwise author-mode backends can return the
+  // right name from the wrong field entirely.
+  if (!keywords && speciesUnique.length) keywords = speciesUnique.slice(0, 3).join(' ');
 
   return {
     normalized,
     authors: author.values,
-    species: uniquePublicList(species),
+    species: speciesUnique,
     keywords: keywords || normalized,
   };
 }
