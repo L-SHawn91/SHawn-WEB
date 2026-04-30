@@ -6,6 +6,9 @@ export type PublicPaperLike = {
   source?: string;
   doi?: string;
   url?: string;
+  authors?: string[];
+  journal?: string;
+  journalIssn?: string;
   citations?: number;
   meshTerms?: string[];
   techniques?: string[];
@@ -337,6 +340,30 @@ export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean
   return matched / Math.max(1, tokens.length) >= threshold;
 }
 
+const BIBLIOGRAPHIC_SOURCE_PRIORITY: Record<string, number> = {
+  pubmed: 100,
+  europepmc: 95,
+  crossref: 90,
+  openalex: 75,
+  semantic: 65,
+  biorxiv: 60,
+  arxiv: 55,
+};
+
+function bibliographicSourcePriority(source?: string): number {
+  return BIBLIOGRAPHIC_SOURCE_PRIORITY[String(source || '').toLowerCase()] || 50;
+}
+
+function preferBibliographicValue<TValue>(prev: PublicPaperLike, next: PublicPaperLike, field: keyof PublicPaperLike): TValue | undefined {
+  const prevValue = prev[field] as TValue | undefined;
+  const nextValue = next[field] as TValue | undefined;
+  const prevHasValue = Array.isArray(prevValue) ? prevValue.length > 0 : Boolean(prevValue);
+  const nextHasValue = Array.isArray(nextValue) ? nextValue.length > 0 : Boolean(nextValue);
+  if (!nextHasValue) return prevValue;
+  if (!prevHasValue) return nextValue;
+  return bibliographicSourcePriority(next.source) > bibliographicSourcePriority(prev.source) ? nextValue : prevValue;
+}
+
 export function mergePublicPaperRecords<T extends PublicPaperLike>(papers: T[]): T[] {
   const byKey = new Map<string, T & { sourceHits?: string[]; sourceIds?: string[] }>();
 
@@ -354,13 +381,23 @@ export function mergePublicPaperRecords<T extends PublicPaperLike>(papers: T[]):
 
     const sourceHits = new Set([...(prev.sourceHits || []), paper.source].filter(Boolean).map(String));
     const sourceIds = new Set([...(prev.sourceIds || []), paper.id].filter(Boolean).map(String));
+    const preferredSource = bibliographicSourcePriority(paper.source) > bibliographicSourcePriority(prev.source) ? paper : prev;
     byKey.set(key, {
       ...prev,
       ...paper,
-      title: prev.title || paper.title,
-      abstract: (paper.abstract || "").length > (prev.abstract || "").length ? paper.abstract : prev.abstract,
+      // Bibliographic metadata must stay anchored to the most trusted source DB.
+      // Enrichment/secondary APIs may add metrics, citations, abstracts, etc., but
+      // must not silently rewrite title/authors/journal/year/source identity.
+      id: preferredSource.id || prev.id || paper.id,
+      source: preferredSource.source || prev.source || paper.source,
+      title: preferBibliographicValue<string>(prev, paper, 'title'),
+      authors: preferBibliographicValue<string[]>(prev, paper, 'authors'),
+      year: preferBibliographicValue<number>(prev, paper, 'year'),
+      journal: preferBibliographicValue<string>(prev, paper, 'journal'),
+      journalIssn: preferBibliographicValue<string>(prev, paper, 'journalIssn'),
       doi: prev.doi || paper.doi,
-      url: prev.url || paper.url,
+      url: preferBibliographicValue<string>(prev, paper, 'url') || prev.url || paper.url,
+      abstract: (paper.abstract || "").length > (prev.abstract || "").length ? paper.abstract : prev.abstract,
       citations: Math.max(Number(prev.citations || 0), Number(paper.citations || 0)),
       meshTerms: Array.from(new Set([...(prev.meshTerms || []), ...(paper.meshTerms || [])])),
       techniques: Array.from(new Set([...(prev.techniques || []), ...(paper.techniques || [])])),
