@@ -113,28 +113,28 @@ const STATIC_MESH_MAP: Array<[RegExp, string]> = [
 // Biomedical typo correction — mirrors Python correct_query_typos()
 // ---------------------------------------------------------------------------
 const _TYPO_MAP: Readonly<Record<string, string>> = {
-  organiod: 'organoid',    organiods: 'organoids',   organid: 'organoid',
+  organiod: 'organoid', organiods: 'organoids', organid: 'organoid', organoidd: 'organoid',
   endometiral: 'endometrial', endometrail: 'endometrial',
   endometirum: 'endometrium', endomerium: 'endometrium', endometrim: 'endometrium',
-  uterin: 'uterine',
+  uterin: 'uterine', uterins: 'uterine',
   transcriptomcis: 'transcriptomics', trancriptomics: 'transcriptomics',
   transcritomics: 'transcriptomics', transcriptomis: 'transcriptomics',
   sequncing: 'sequencing', seqeuncing: 'sequencing',
-  scrna_seq: 'scrna', scrnaseq: 'scrna',
+  scrna_seq: 'scrna', 'scrna-seq': 'scrna', scrnaseq: 'scrna', 'rna-seq': 'rnaseq',
   genmoic: 'genomic', genomcis: 'genomics', genmoics: 'genomics',
   epigenitics: 'epigenetics', epigentics: 'epigenetics', epigeneics: 'epigenetics',
   implantaion: 'implantation', implanation: 'implantation',
   receptiviy: 'receptivity', recepivity: 'receptivity',
-  decidualizaiton: 'decidualization', decidulaization: 'decidualization',
+  decidualizaiton: 'decidualization', decidulaization: 'decidualization', decidualziation: 'decidualization',
   progesteron: 'progesterone', progestrone: 'progesterone',
-  estrgen: 'estrogen', estradoil: 'estradiol', estradiole: 'estradiol',
+  estrgen: 'estrogen', oestrogen: 'estrogen', estradoil: 'estradiol', estradiole: 'estradiol',
   apopstosis: 'apoptosis', apoptoiss: 'apoptosis',
   prolifeartion: 'proliferation', prolfieration: 'proliferation', proliferaton: 'proliferation',
   carcnioma: 'carcinoma', carcionma: 'carcinoma',
   tumorigenisis: 'tumorigenesis', tumorigeniss: 'tumorigenesis',
   methylaiton: 'methylation', methlation: 'methylation',
   chrmoatin: 'chromatin', chromatn: 'chromatin',
-  differenciation: 'differentiation', differentation: 'differentiation', differntiation: 'differentiation',
+  stemcell: 'stem cell', differenciation: 'differentiation', differentation: 'differentiation', differntiation: 'differentiation',
   infertiliy: 'infertility', infertlity: 'infertility',
   fertilizaiton: 'fertilization', fertilzation: 'fertilization',
 };
@@ -189,6 +189,101 @@ const EXPANSION_SYNONYMS: Array<[RegExp, string[]]> = [
   [/\bblastocyst/i, ["embryo implantation", "hatching blastocyst"]],
   [/\bendometrios/i, ["ectopic endometrium", "endometriosis lesion"]],
 ];
+
+
+export type PublicQueryParts = {
+  normalized: string;
+  authors: string[];
+  species: string[];
+  keywords: string;
+};
+
+const SPECIES_ALIASES: Array<[RegExp, string[]]> = [
+  [/\b(human|humans|patient|patients|homo\s+sapiens)\b/i, ["human", "Homo sapiens"]],
+  [/\b(mouse|mice|murine|mus\s+musculus)\b/i, ["mouse", "Mus musculus"]],
+  [/\b(rat|rats|rattus)\b/i, ["rat", "Rattus norvegicus"]],
+  [/\b(pig|pigs|porcine|swine|sus\s+scrofa)\b/i, ["pig", "porcine", "Sus scrofa"]],
+  [/\b(cow|cattle|bovine|bos\s+taurus)\b/i, ["bovine", "Bos taurus"]],
+  [/\b(sheep|ovine|ovis\s+aries)\b/i, ["ovine", "Ovis aries"]],
+  [/\b(chicken|avian|gallus\s+gallus)\b/i, ["chicken", "Gallus gallus"]],
+  [/\b(zebrafish|danio\s+rerio)\b/i, ["zebrafish", "Danio rerio"]],
+];
+
+function uniquePublicList(values: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const value of values) {
+    const clean = value.trim().replace(/\s+/g, " ");
+    if (!clean) continue;
+    const key = clean.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(clean);
+  }
+  return out;
+}
+
+function extractLabeledValues(text: string, labels: string[], allLabels: string[]): { values: string[]; rest: string } {
+  let rest = text;
+  const values: string[] = [];
+  const labelPattern = labels.map((l) => l.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const boundaryPattern = allLabels.map((l) => l.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const regex = new RegExp(`(?:^|\\s)(?:${labelPattern})\\s*[:=：]?\\s*([\\s\\S]*?)(?=\\s+(?:${boundaryPattern})\\s*[:=：]?|$)`, 'gi');
+  rest = rest.replace(regex, (_m, value) => {
+    const clean = String(value || '').trim().replace(/\s+/g, ' ');
+    if (clean) values.push(clean);
+    return ' ';
+  });
+  return { values: uniquePublicList(values), rest: rest.replace(/\s+/g, ' ').trim() };
+}
+
+export function parsePublicBioQuery(query: string): PublicQueryParts {
+  const normalized = normalizePublicBioQuery(query);
+  let rest = normalized;
+  const allLabels = ['author', 'authors', 'by', '저자', 'species', 'organism', '종', '동물종', 'keyword', 'keywords', 'title', 'topic', '키워드', '제목'];
+  const author = extractLabeledValues(rest, ['author', 'authors', 'by', '저자'], allLabels);
+  rest = author.rest;
+  const speciesLabeled = extractLabeledValues(rest, ['species', 'organism', '종', '동물종'], allLabels);
+  rest = speciesLabeled.rest;
+  const keyword = extractLabeledValues(rest, ['keyword', 'keywords', 'title', 'topic', '키워드', '제목'], allLabels);
+  rest = keyword.rest;
+
+  const species = [...speciesLabeled.values];
+  for (const [pattern, aliases] of SPECIES_ALIASES) {
+    if (pattern.test(normalized)) species.push(...aliases);
+  }
+
+  // Remove only species aliases from keyword text; author removal is explicit-label only.
+  let keywords = keyword.values.length ? keyword.values.join(' ') : rest;
+  for (const term of uniquePublicList(species)) {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    keywords = keywords.replace(new RegExp(`\\b${escaped}\\b`, 'gi'), ' ');
+  }
+  keywords = keywords.replace(/\s+/g, ' ').trim();
+  if (!keywords && keyword.values.length) keywords = keyword.values.join(' ');
+
+  return {
+    normalized,
+    authors: author.values,
+    species: uniquePublicList(species),
+    keywords: keywords || normalized,
+  };
+}
+
+export function buildPublicKeywordSpeciesQuery(query: string, opts: { expand?: boolean; titleOnly?: boolean } = {}): string {
+  const parts = parsePublicBioQuery(query);
+  const keywordBase = parts.keywords || parts.normalized;
+  const keywordQuery = opts.expand ? expandPublicBioQueryLoose(keywordBase) : keywordBase;
+  const speciesTerms = parts.species.slice(0, 3);
+  const joined = [keywordQuery, ...speciesTerms].filter(Boolean).join(' ');
+  if (!opts.titleOnly) return joined || parts.normalized;
+  const titleTerms = keywordBase
+    .split(/\s+/)
+    .filter((t) => t.length >= 3)
+    .slice(0, 8)
+    .join(' ');
+  return [titleTerms || keywordQuery, ...speciesTerms].filter(Boolean).join(' ') || parts.normalized;
+}
 
 export function normalizePublicBioQuery(query: string): string {
   const typoFixed = correctPublicBioQueryTypos(query || "");

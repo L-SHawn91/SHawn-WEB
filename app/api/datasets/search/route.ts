@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { datasetsCache, makeCacheKey } from "../../../../lib/server-cache";
 import {
   buildPublicDatasetSuggestedTopics,
+  buildPublicKeywordSpeciesQuery,
   mergePublicDatasetRecords,
-  expandPublicBioQueryLoose,
   normalizePublicBioQuery,
   publicDatasetTopicGuard,
   publicDatasetWorkflowScore,
@@ -866,10 +866,10 @@ export async function POST(request: NextRequest) {
 
     const { sources, yearFrom, yearTo, sortBy, page, pageSize } = parseFilters(filterInput);
     const normalizedQuery = normalizePublicBioQuery(String(query));
-    const effectiveQuery = expandPublicBioQueryLoose(normalizedQuery);
+    const effectiveQuery = buildPublicKeywordSpeciesQuery(normalizedQuery, { expand: true, titleOnly: false });
 
     // Cache lookup
-    const cacheKey = makeCacheKey({ q: effectiveQuery, sources: [...sources].sort(), yearFrom, yearTo, sortBy, page, pageSize });
+    const cacheKey = makeCacheKey({ v: 'query-parts-1', q: effectiveQuery, sources: [...sources].sort(), yearFrom, yearTo, sortBy, page, pageSize });
     const cached = datasetsCache.get(cacheKey);
     if (cached) { const c = cached as Record<string, unknown>; return NextResponse.json({ ...c, meta: { ...(c.meta as Record<string, unknown>), cached: true } }); }
 

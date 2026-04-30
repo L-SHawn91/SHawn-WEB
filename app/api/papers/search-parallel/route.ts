@@ -12,10 +12,12 @@ import {
   type QueryIntent,
 } from '../../../../lib/search/queryPlanner';
 import {
+  buildPublicKeywordSpeciesQuery,
   buildPublicSuggestedTopics,
   expandPublicBioQueryLoose,
   mergePublicPaperRecords,
   normalizePublicBioQuery,
+  parsePublicBioQuery,
   publicSourceHealth,
   publicTopicGuard,
   publicWorkflowScore,
@@ -1711,6 +1713,7 @@ function buildQueryVariants(rawQuery: string, normalizedQuery: string): string[]
 async function runSingleSearchAttempt(query: string, filters: any, mode: SearchMode = 'broad'): Promise<SearchAttemptResult> {
   const intent = classifyIntent(query);
   const split = splitAuthorAndTopic(query);
+  const parsedPublicQuery = parsePublicBioQuery(query);
   const extracted = extractAuthorCandidates(query);
   const manualAuthorNames: string[] = [];
   if (typeof filters?.authorName === 'string' && filters.authorName.trim()) {
@@ -1723,7 +1726,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   }
   const hasManualAuthor = manualAuthorNames.length > 0;
   const firstAuthorOnly = Boolean(filters?.firstAuthorOnly);
-  const baseCandidates = split.author ? [split.author] : [split.author, ...extracted.authorCandidates];
+  const baseCandidates = split.author ? [split.author] : [split.author, ...parsedPublicQuery.authors, ...extracted.authorCandidates];
   const authorCandidatesRaw = uniqueList(baseCandidates.filter(Boolean))
     .filter((name) => String(name || '').trim().split(/\s+/).filter(Boolean).length <= 4);
   const authorCandidatesMerged = uniqueList([...authorCandidatesRaw, ...manualAuthorNames]);
@@ -1738,7 +1741,9 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       : hasManualAuthor
         ? authorCandidatesMerged
         : (intent === 'TOPIC' || intent === 'INSTITUTION' ? [] : authorCandidatesRaw);
-  const detectedTopic = (split.topic || extracted.cleanQuery || query).trim();
+  const detectedTopic = (parsedPublicQuery.authors.length || parsedPublicQuery.species.length || parsedPublicQuery.keywords !== parsedPublicQuery.normalized)
+    ? (parsedPublicQuery.keywords || extracted.cleanQuery || query).trim()
+    : (split.topic || parsedPublicQuery.keywords || extracted.cleanQuery || query).trim();
   const pureAuthorSearch = effectiveMode === 'author' && !split.topic;
   const topicQuery = pureAuthorSearch
     ? ''
@@ -1761,14 +1766,14 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const profileMergeThreshold = typeof filters?.profileMergeThreshold === 'number'
     ? filters.profileMergeThreshold
     : Number(filters?.profileMergeThreshold);
-  const nonAuthorQuery = topicQuery || query;
+  const nonAuthorQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true });
 
   const trackJobs: Array<{ source: TrackSource; promise: Promise<Paper[]> }> = [];
   if (sources.includes('pubmed')) {
     // INSTITUTION: pass full original query so T1 can extract affiliation name.
     // TOPIC/AUTHOR: pass raw topicQuery — synonym expansion causes zero results for
     // specific gene queries (e.g. DHCR24 endometrium → adds "uterine lining" AND).
-    const pubmedQuery = intent === 'INSTITUTION' ? query : expandPublicBioQueryLoose(topicQuery || query);
+    const pubmedQuery = intent === 'INSTITUTION' ? query : buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true });
     trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(pubmedQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('semantic')) {
@@ -1778,11 +1783,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('europepmc')) {
-    const epmcQuery = intent === 'INSTITUTION' ? query : expandPublicBioQueryLoose(topicQuery || query);
+    const epmcQuery = intent === 'INSTITUTION' ? query : buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true });
     trackJobs.push({ source: 'europepmc', promise: t6_europePmcEnhanced(epmcQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('biorxiv')) {
-    trackJobs.push({ source: 'biorxiv', promise: t7_biorxivEnhanced(expandPublicBioQueryLoose(topicQuery || query), yearFrom, yearTo, authorCandidates, intent) });
+    trackJobs.push({ source: 'biorxiv', promise: t7_biorxivEnhanced(buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true }), yearFrom, yearTo, authorCandidates, intent) });
   }
 
   const sourceStartedAt = new Map(trackJobs.map((job) => [job.source, Date.now()]));
@@ -1843,9 +1848,18 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     nonAuthorQuery,
     bySource.biorxiv,
   );
+  const fallbackRawPapers = papersRanked.length
+    ? papersRanked
+    : mergePublicPaperRecords([
+        ...bySource.pubmed,
+        ...bySource.semantic,
+        ...bySource.openalex,
+        ...bySource.europepmc,
+        ...bySource.biorxiv,
+      ]).map((p) => ({ ...p, rankScore: Math.round(publicWorkflowScore(p, effectiveQuery || nonAuthorQuery)) }));
   let papers = firstAuthorOnly
-    ? papersRanked.filter((paper) => matchByFirstAuthor(paper.authors || [], authorCandidates, hasManualAuthor ? 0.85 : 0.9))
-    : papersRanked;
+    ? fallbackRawPapers.filter((paper) => matchByFirstAuthor(paper.authors || [], authorCandidates, hasManualAuthor ? 0.85 : 0.9))
+    : fallbackRawPapers;
   let homonymProfiles: SearchAttemptResult['homonymProfiles'] = undefined;
 
   if (effectiveMode === 'author' && authorCandidates.length) {
@@ -1882,7 +1896,14 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   }
   // INSTITUTION: affiliation filter in PubMed already constrains results; skip topic guard.
   if (intent !== 'INSTITUTION') {
+    const beforeTopicGuard = papers;
     papers = papers.filter((paper) => publicTopicGuard(paper, effectiveQuery || nonAuthorQuery));
+    if (papers.length === 0 && beforeTopicGuard.length > 0) {
+      const relaxedTopic = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true });
+      papers = beforeTopicGuard
+        .filter((paper) => overlapRatio(relaxedTopic, `${paper.title || ''} ${paper.abstract || ''}`) >= 0.12)
+        .slice(0, 50);
+    }
   }
 
   // Per-source view: topic-guarded raw results scored lightly (no cross-source dedup)
@@ -1956,7 +1977,7 @@ export async function POST(request: NextRequest) {
 
     // Cache lookup — skip for author mode to always return fresh profile data
     if (mode !== 'author') {
-      const cacheKey = makeCacheKey({ v: 'ifq4', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'query-parts-1', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       const cached = papersCache.get(cacheKey);
       if (cached) {
         const c = cached as Record<string, unknown>;
@@ -2032,7 +2053,7 @@ export async function POST(request: NextRequest) {
 
     // Store in cache (skip author mode — profile results are user-specific)
     if (mode !== 'author' && sortedPapers.length > 0) {
-      const cacheKey = makeCacheKey({ v: 'ifq4', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'query-parts-1', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       papersCache.set(cacheKey, responseBody);
     }
 

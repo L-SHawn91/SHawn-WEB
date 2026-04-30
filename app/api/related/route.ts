@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { buildPublicKeywordSpeciesQuery, expandPublicBioQueryLoose } from "../../../lib/bio-search-public/workflow";
 
 type RelatedItem = {
   id: string;
@@ -116,16 +117,8 @@ async function searchEuropePmc(query: string): Promise<RelatedItem[]> {
 }
 
 function buildDatasetQueryFromPaperTitle(title: string): string {
-  const t = String(title || "").toLowerCase();
-  const terms: string[] = [];
-  if (/endometr|uterus|uterine/.test(t)) terms.push("endometrial", "endometrium", "uterus");
-  if (/organoid|3d culture|organotypic/.test(t)) terms.push("organoid");
-  if (/single[-\s]?cell|scrna/.test(t)) terms.push("single cell RNA-seq");
-  if (/rna[-\s]?seq|transcriptom|gene expression/.test(t)) terms.push("RNA-seq");
-  if (/implantation|receptiv/.test(t)) terms.push("implantation", "receptivity");
-  const unique = Array.from(new Set(terms));
-  if (unique.length >= 2) return unique.join(" OR ");
-  return title;
+  const titleFocused = buildPublicKeywordSpeciesQuery(title, { expand: true, titleOnly: true });
+  return expandPublicBioQueryLoose(titleFocused || title, 5);
 }
 
 async function searchNcbiDatasets(query: string): Promise<RelatedDatasetItem[]> {
