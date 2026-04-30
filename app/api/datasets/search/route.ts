@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  buildPublicDatasetSuggestedTopics,
   mergePublicDatasetRecords,
   normalizePublicBioQuery,
   publicDatasetTopicGuard,
   publicDatasetWorkflowScore,
   publicSourceHealth,
+  type SuggestedTopic,
 } from "../../../../lib/bio-search-public/workflow";
 
 type DatasetSource =
@@ -937,6 +939,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       datasets: paged,
+      suggestedTopics: buildPublicDatasetSuggestedTopics(sorted, effectiveQuery),
       meta: {
         trackResults,
         sourceHealth,

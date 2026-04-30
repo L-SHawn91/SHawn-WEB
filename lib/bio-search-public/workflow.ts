@@ -35,15 +35,23 @@ export type PublicSourceHealth = {
   warning?: string;
 };
 
+export type SuggestedTopic = {
+  type: string;
+  label: string;
+  query: string;
+  count: number;
+};
+
+// Aligned with bio-search _SOURCE_WEIGHTS
 const PUBLIC_SOURCE_WEIGHT: Record<string, number> = {
-  pubmed: 1.16,
-  europepmc: 1.12,
-  crossref: 1.06,
-  openalex: 1.04,
-  semantic: 1.0,
-  arxiv: 0.94,
-  biorxiv: 0.92,
-  medrxiv: 0.92,
+  pubmed: 1.0,
+  europepmc: 0.98,
+  crossref: 0.95,
+  openalex: 0.94,
+  semantic: 0.92,
+  arxiv: 0.82,
+  biorxiv: 0.84,
+  medrxiv: 0.84,
 };
 
 
@@ -79,6 +87,23 @@ const STATIC_MESH_MAP: Array<[RegExp, string]> = [
   [/estrogen|estradiol/i, "Estrogens"],
   [/progesterone/i, "Progesterone"],
   [/crispr/i, "CRISPR-Cas Systems"],
+  [/blastocyst/i, "Blastocyst"],
+  [/trophoblast/i, "Trophoblasts"],
+  [/placenta/i, "Placenta"],
+  [/epigeneti/i, "Epigenesis, Genetic"],
+  [/methylat/i, "DNA Methylation"],
+  [/chromatin/i, "Chromatin"],
+  [/histone/i, "Histones"],
+  [/proteom/i, "Proteomics"],
+  [/metabolom/i, "Metabolomics"],
+  [/spatial\s+transcriptom/i, "Spatial Transcriptomics"],
+  [/atac[-\s]?seq/i, "Chromatin Accessibility"],
+  [/chip[-\s]?seq/i, "ChIP-Sequencing"],
+  [/dhcr24|seladin/i, "Cholesterol Biosynthesis"],
+  [/decidualiz/i, "Decidualization"],
+  [/endometrios/i, "Endometriosis"],
+  [/leiomyoma|fibroid/i, "Leiomyoma"],
+  [/menstrual/i, "Menstrual Cycle"],
 ];
 
 const EXPANSION_SYNONYMS: Array<[RegExp, string[]]> = [
@@ -87,13 +112,26 @@ const EXPANSION_SYNONYMS: Array<[RegExp, string[]]> = [
   [/\bscrna\b|single[-\s]?cell/i, ["single cell RNA sequencing", "single-cell transcriptomics"]],
   [/\brna[-\s]?seq\b/i, ["transcriptomics", "gene expression profiling"]],
   [/\bfish\b/i, ["fluorescence in situ hybridization"]],
+  [/\bdecidualiz/i, ["decidualization", "stromal decidualization"]],
+  [/\bdhcr24\b/i, ["seladin-1", "24-dehydrocholesterol reductase"]],
+  [/\bseladin/i, ["DHCR24", "24-dehydrocholesterol reductase"]],
+  [/\batac[-\s]?seq\b/i, ["chromatin accessibility", "open chromatin"]],
+  [/\bchip[-\s]?seq\b/i, ["chromatin immunoprecipitation", "histone modification"]],
+  [/\bspatial\s+transcriptom/i, ["spatial RNA-seq", "visium"]],
+  [/\bepigeneti/i, ["DNA methylation", "histone modification", "chromatin remodeling"]],
+  [/\bimplantation/i, ["embryo implantation", "endometrial receptivity"]],
+  [/\btrophoblast/i, ["placentation", "extravillous trophoblast"]],
+  [/\bblastocyst/i, ["embryo implantation", "hatching blastocyst"]],
+  [/\bproteom/i, ["mass spectrometry", "protein expression"]],
+  [/\bmetabolom/i, ["metabolite profiling", "LC-MS"]],
+  [/\bendometrios/i, ["ectopic endometrium", "endometriosis lesion"]],
 ];
 
 export function normalizePublicBioQuery(query: string): string {
   return (query || "")
     .normalize("NFKC")
-    .replace(/([A-Za-z])([가-힣])/g, "$1 $2")
-    .replace(/([가-힣])([A-Za-z])/g, "$1 $2")
+    .replace(/([A-Za-z0-9])([가-힣])/g, "$1 $2")
+    .replace(/([가-힣])([A-Za-z0-9])/g, "$1 $2")
     .replace(/논문(의|들|을|에)?|관련(된)?|검색(해줘)?|찾아줘|알려줘|보여줘/g, " ")
     .replace(/[^\p{L}\p{N}"'\-.\s]/gu, " ")
     .replace(/\s+/g, " ")
@@ -169,7 +207,19 @@ function citationVelocity(citations?: number, year?: number, currentYear = new D
   return 0.5 * absolute + 0.5 * velocity;
 }
 
-export function publicWorkflowScore(paper: PublicPaperLike, currentYear = new Date().getFullYear()): number {
+function topicOverlap(text: string, query: string): number {
+  if (!query || !text) return 0;
+  const qTokens = query.toLowerCase().match(/[a-z0-9가-힣]{3,}/g) || [];
+  if (!qTokens.length) return 0;
+  const t = text.toLowerCase();
+  const matched = qTokens.filter((tok) => {
+    const prefix = tok.slice(0, Math.max(5, tok.length - 2));
+    return t.includes(prefix);
+  }).length;
+  return matched / qTokens.length;
+}
+
+export function publicWorkflowScore(paper: PublicPaperLike, query = "", currentYear = new Date().getFullYear()): number {
   const year = Number(paper.year || 0);
   const age = year > 0 ? Math.max(0, currentYear - year) : 20;
   const recency = Math.max(0, 30 - age * 2);
@@ -178,7 +228,9 @@ export function publicWorkflowScore(paper: PublicPaperLike, currentYear = new Da
   const metadata = (paper.meshTerms?.length ? 5 : 0) + (paper.techniques?.length ? 5 : 0);
   const doiBonus = paper.doi ? 3 : 0;
   const abstractBonus = paper.abstract && paper.abstract.length > 80 ? 4 : 0;
-  return (recency + citations + influence + metadata + doiBonus + abstractBonus) * publicSourceWeight(paper.source);
+  const text = `${paper.title || ""} ${paper.abstract || ""}`;
+  const topicBonus = query ? Math.round(topicOverlap(text, normalizePublicBioQuery(query)) * 15) : 0;
+  return (recency + citations + influence + metadata + doiBonus + abstractBonus + topicBonus) * publicSourceWeight(paper.source);
 }
 
 export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean {
@@ -186,17 +238,13 @@ export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean
   if (tokens.length < 2) return true;
 
   const text = `${paper.title || ""} ${paper.abstract || ""}`.toLowerCase();
-  const q = normalizePublicBioQuery(query).toLowerCase();
-  const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish"];
-  if (negativeTerms.some((term) => text.includes(term) && !q.includes(term))) return false;
   // Prefix match (first 6 chars min) handles stemming: "endometrium" matches "endometrial"
   const matched = tokens.filter((token) => {
     const prefix = token.slice(0, Math.max(5, token.length - 2));
     return text.includes(prefix);
   }).length;
-  // Short queries (≤3 tokens): require all tokens — prevents e.g. cow uterine paper
-  // passing on "endometrium" alone for "DHCR24 endometrium" query.
-  // Longer queries: require ≥50%.
+  // Short queries (≤3 tokens): require all tokens
+  // Longer queries: require ≥50%
   const threshold = tokens.length <= 3 ? 1.0 : 0.5;
   return matched / Math.max(1, tokens.length) >= threshold;
 }
@@ -269,27 +317,24 @@ export function publicDatasetTopicGuard(item: PublicDatasetLike, query: string):
 
   const text = `${item.title || ""} ${item.description || ""} ${(item.tags || []).join(" ")}`.toLowerCase();
   const source = String(item.source || "").toLowerCase();
-  const negativeTerms = ["prostate", "hepatic", "renal", "cervical", "arabidopsis", "plant", "zebrafish", "retina", "retinal", "cerebral", "brain", "colorectal", "pancreatic", "pancreas", "cardioid", "cardiac", "colonic"];
-  if (negativeTerms.some((term) => text.includes(term) && !q.includes(term))) return false;
 
   const generic = ["dataset", "datasets", "data", "search", "single", "cell", "cells", "rna", "seq", "rnaseq", "sequencing", "transcriptomic", "transcriptomics"];
   const important = tokens.filter((token) => !generic.includes(token));
   const targetTokens = important.length >= 2 ? important : tokens;
-  const matched = targetTokens.filter((token) => text.includes(token)).length;
+
   const accessionBacked = Boolean(item.accessionIds?.length);
   const paperDerived = ["openalex", "crossref"].includes(source);
-  const tissueTerms = ["endometrial", "endometrium", "uterine", "uterus", "decidual", "decidua"];
-  const requestedTissue = tissueTerms.filter((term) => q.includes(term));
-  const hasRequestedTissue = requestedTissue.length === 0 || requestedTissue.some((term) => text.includes(term));
-  const requestedSingleCell = q.includes("single cell") || q.includes("single-cell") || q.includes("scrna");
-  const hasSingleCellSignal = !requestedSingleCell || /single[-\s]?cell|scrna|single cell rna|single-cell transcript/i.test(text);
-  const requestedRnaSeq = /rna[-\s]?seq|rnaseq|transcriptom/i.test(q);
-  const hasRnaSeqSignal = !requestedRnaSeq || /rna[-\s]?seq|rnaseq|transcriptom|gene expression/i.test(text);
 
   if (paperDerived && !accessionBacked && q.includes("dataset")) return false;
+
+  // Enforce all query-specific tokens (length ≥5 are specific enough)
+  for (const token of targetTokens) {
+    if (token.length >= 5 && !text.includes(token)) return false;
+  }
+
+  const matched = targetTokens.filter((token) => text.includes(token)).length;
   if (paperDerived && !accessionBacked && matched < Math.min(2, targetTokens.length)) return false;
-  if (q.includes("organoid") && !text.includes("organoid")) return false;
-  if (!hasRequestedTissue || !hasSingleCellSignal || !hasRnaSeqSignal) return false;
+
   return matched / Math.max(1, targetTokens.length) >= 0.25 || (accessionBacked && matched >= 1);
 }
 
@@ -331,4 +376,120 @@ export function publicSourceHealth(source: string, result: PromiseSettledResult<
     durationMs,
     warning: result.reason instanceof Error ? result.reason.message : String(result.reason || "source failed"),
   };
+}
+
+const SPECIES_PATTERNS: Array<[RegExp, string]> = [
+  [/\bhuman\b|homo sapiens/i, "human"],
+  [/\bmouse\b|\bmurine\b|mus musculus/i, "mouse"],
+  [/\bbovine\b|\bcow\b|\bcattle\b|bos taurus/i, "bovine"],
+  [/\bequine\b|\bhorse\b|equus caballus/i, "equine"],
+  [/\bporcine\b|\bpig\b|sus scrofa/i, "porcine"],
+  [/\bcanine\b|\bdog\b|canis familiaris/i, "canine"],
+  [/\bzebrafish\b|danio rerio/i, "zebrafish"],
+  [/\brat\b|\brattu/i, "rat"],
+];
+
+const TECHNIQUE_PATTERNS: Array<[RegExp, string]> = [
+  [/single[-\s]?cell|scrna[-\s]?seq/i, "single-cell RNA-seq"],
+  [/rna[-\s]?seq(?!\w)/i, "RNA-seq"],
+  [/\borganoid/i, "organoid"],
+  [/\bcrispr/i, "CRISPR"],
+  [/atac[-\s]?seq/i, "ATAC-seq"],
+  [/chip[-\s]?seq/i, "ChIP-seq"],
+  [/spatial\s+transcriptom/i, "spatial transcriptomics"],
+  [/\bproteom/i, "proteomics"],
+  [/\bmetabolom/i, "metabolomics"],
+];
+
+export function buildPublicSuggestedTopics(papers: PublicPaperLike[], query: string): SuggestedTopic[] {
+  if (!papers.length) return [];
+  const suggestions: SuggestedTopic[] = [];
+  const q = normalizePublicBioQuery(query).toLowerCase();
+
+  // Species facets
+  for (const [pattern, label] of SPECIES_PATTERNS) {
+    if (q.includes(label)) continue;
+    const count = papers.filter((p) => pattern.test(`${p.title || ""} ${p.abstract || ""}`)).length;
+    if (count >= 2) {
+      suggestions.push({ type: "species", label: `${label.charAt(0).toUpperCase() + label.slice(1)} papers`, query: `${query} ${label}`, count });
+    }
+  }
+
+  // Technique facets
+  for (const [pattern, label] of TECHNIQUE_PATTERNS) {
+    if (pattern.test(q)) continue;
+    const count = papers.filter((p) => pattern.test(`${p.title || ""} ${p.abstract || ""}`)).length;
+    if (count >= 2) {
+      suggestions.push({ type: "technique", label, query: `${query} ${label}`, count });
+    }
+  }
+
+  // Year facets
+  const currentYear = new Date().getFullYear();
+  const recentCount = papers.filter((p) => Number(p.year || 0) >= currentYear - 3).length;
+  if (recentCount >= 2 && recentCount < papers.length) {
+    suggestions.push({ type: "year", label: `${currentYear - 3}+ (recent)`, query: `${query} after:${currentYear - 3}`, count: recentCount });
+  }
+  const foundationalCount = papers.filter((p) => Number(p.year || 0) > 0 && Number(p.year || 0) < 2020).length;
+  if (foundationalCount >= 2) {
+    suggestions.push({ type: "year", label: "Before 2020 (foundational)", query: `${query} before:2020`, count: foundationalCount });
+  }
+
+  // MeSH facets from aggregated paper meshTerms
+  const meshCounts = new Map<string, number>();
+  for (const p of papers) {
+    for (const term of p.meshTerms || []) {
+      meshCounts.set(term, (meshCounts.get(term) || 0) + 1);
+    }
+  }
+  for (const [term, count] of meshCounts) {
+    if (count >= 3 && !q.includes(term.toLowerCase())) {
+      suggestions.push({ type: "mesh", label: term, query: `${query} "${term}"[MeSH Terms]`, count });
+    }
+  }
+
+  return suggestions.sort((a, b) => b.count - a.count).slice(0, 8);
+}
+
+export function buildPublicDatasetSuggestedTopics(items: PublicDatasetLike[], query: string): SuggestedTopic[] {
+  if (!items.length) return [];
+  const suggestions: SuggestedTopic[] = [];
+  const q = normalizePublicBioQuery(query).toLowerCase();
+
+  // Species facets
+  for (const [pattern, label] of SPECIES_PATTERNS) {
+    if (q.includes(label)) continue;
+    const count = items.filter((d) => pattern.test(`${d.title || ""} ${d.description || ""} ${(d.tags || []).join(" ")}`)).length;
+    if (count >= 2) {
+      suggestions.push({ type: "species", label: `${label.charAt(0).toUpperCase() + label.slice(1)} datasets`, query: `${query} ${label}`, count });
+    }
+  }
+
+  // Technique facets
+  for (const [pattern, label] of TECHNIQUE_PATTERNS) {
+    if (pattern.test(q)) continue;
+    const count = items.filter((d) => pattern.test(`${d.title || ""} ${d.description || ""} ${(d.tags || []).join(" ")}`)).length;
+    if (count >= 2) {
+      suggestions.push({ type: "technique", label, query: `${query} ${label}`, count });
+    }
+  }
+
+  // Source facets
+  const sourceCounts = new Map<string, number>();
+  for (const d of items) {
+    if (d.source) sourceCounts.set(d.source, (sourceCounts.get(d.source) || 0) + 1);
+  }
+  for (const [src, count] of sourceCounts) {
+    if (count >= 2) {
+      suggestions.push({ type: "source", label: src.toUpperCase(), query: `${query} source:${src}`, count });
+    }
+  }
+
+  // Accession-backed only
+  const accessionCount = items.filter((d) => d.accessionIds?.length).length;
+  if (accessionCount >= 2 && accessionCount < items.length) {
+    suggestions.push({ type: "filter", label: "Accession-backed only", query: `${query} has:accession`, count: accessionCount });
+  }
+
+  return suggestions.sort((a, b) => b.count - a.count).slice(0, 8);
 }

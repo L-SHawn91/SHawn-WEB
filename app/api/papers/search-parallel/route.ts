@@ -10,12 +10,15 @@ import {
 } from '../../../../lib/search/queryPlanner';
 import {
   buildPublicPubMedQuery,
+  buildPublicSuggestedTopics,
   expandPublicBioQuery,
   mergePublicPaperRecords,
+  normalizePublicBioQuery,
   publicSourceHealth,
   publicTopicGuard,
   publicWorkflowScore,
   type PublicSourceHealth,
+  type SuggestedTopic,
 } from '../../../../lib/bio-search-public/workflow';
 
 interface Paper {
@@ -965,7 +968,8 @@ function t6_integrateAndRank(
   intent: QueryIntent,
   authorCandidates: string[] = [],
   claim: string = '',
-  hypothesis: string = ''
+  hypothesis: string = '',
+  query: string = ''
 ): Paper[] {
   console.log('[T6:Ranker] Integration and ranking starting...');
   const startTime = Date.now();
@@ -990,8 +994,8 @@ function t6_integrateAndRank(
       ? Number((0.45 * stage1Score + 0.55 * s2.stage2Score).toFixed(4))
       : stage1Score;
     
-    // Public-safe SHawn bio workflow score: recency + public citation signal + source reliability + metadata hints.
-    score += publicWorkflowScore(paper);
+    // Public-safe SHawn bio workflow score: recency + citation signal + topic overlap + source reliability + metadata hints.
+    score += publicWorkflowScore(paper, query);
 
     // Author-first priority boost
     const authorBoost = getAuthorPriorityBoost(paper, authorCandidates, intent);
@@ -1519,6 +1523,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     authorCandidates,
     claim,
     hypothesis,
+    nonAuthorQuery,
   );
   let papers = firstAuthorOnly
     ? papersRanked.filter((paper) => matchByFirstAuthor(paper.authors || [], authorCandidates, hasManualAuthor ? 0.85 : 0.9))
@@ -1622,8 +1627,9 @@ export async function POST(request: NextRequest) {
       trackResults: { t1: 0, t2: 0, t3: 0, t4: 0, t5: 0, final: 0 },
     };
     
-    return NextResponse.json({ 
+    return NextResponse.json({
       papers: selected.papers,
+      suggestedTopics: buildPublicSuggestedTopics(selected.papers, normalizePublicBioQuery(normalizedQuery)),
       meta: {
         totalTime,
         mode: selected.mode,
