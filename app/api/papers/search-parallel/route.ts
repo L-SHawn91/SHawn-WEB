@@ -402,14 +402,16 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
 
     termParts.push(publicationTerm);
 
+    const ncbiKeyEarly = process.env.NCBI_API_KEY || '';
     const params = new URLSearchParams({
       db: 'pubmed',
       term: termParts.join(' AND '),
       retmode: 'json',
       retmax: '15',
       sort: 'relevance',
+      ...(ncbiKeyEarly ? { api_key: ncbiKeyEarly } : {}),
     });
-    
+
     if (yearFrom || yearTo) {
       const minDate = yearFrom || '1900';
       const maxDate = yearTo || '2100';
@@ -418,8 +420,8 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
       params.set('datetype', 'pdat');
     }
 
-    const searchRes = await fetch(`${baseUrl}?${params.toString()}`, { 
-      signal: AbortSignal.timeout(15000) 
+    const searchRes = await fetch(`${baseUrl}?${params.toString()}`, {
+      signal: AbortSignal.timeout(15000)
     });
     const searchData = await searchRes.json();
     
@@ -429,12 +431,15 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
       return [];
     }
 
-    // Fetch detailed info including MeSH terms
+    const ncbiKey = process.env.NCBI_API_KEY || '';
+
+    // esummary: title, authors, pubdate, pubtype, meshterms
     const summaryUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi';
     const summaryParams = new URLSearchParams({
       db: 'pubmed',
       id: ids.join(','),
       retmode: 'json',
+      ...(ncbiKey ? { api_key: ncbiKey } : {}),
     });
 
     const summaryRes = await fetch(`${summaryUrl}?${summaryParams.toString()}`, {
@@ -442,24 +447,59 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
     });
     const summaryData = await summaryRes.json();
 
+    // efetch: real abstracts + DOI + MeSH (esummary never returns abstract text)
+    const fetchUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi';
+    const fetchParams = new URLSearchParams({
+      db: 'pubmed',
+      id: ids.join(','),
+      retmode: 'xml',
+      ...(ncbiKey ? { api_key: ncbiKey } : {}),
+    });
+    const abstractMap: Record<string, string> = {};
+    const meshMapFromFetch: Record<string, string[]> = {};
+    try {
+      const fetchRes = await fetch(`${fetchUrl}?${fetchParams.toString()}`, {
+        signal: AbortSignal.timeout(20000),
+      });
+      const xmlText = await fetchRes.text();
+      const articleBlocks = xmlText.match(/<PubmedArticle[\s\S]*?<\/PubmedArticle>/g) || [];
+      for (const block of articleBlocks) {
+        const pmidMatch = block.match(/<PMID[^>]*>(\d+)<\/PMID>/);
+        const pmid = pmidMatch?.[1];
+        if (!pmid) continue;
+        // abstract
+        const parts: string[] = [];
+        const abMatches = block.matchAll(/<AbstractText[^>]*>([\s\S]*?)<\/AbstractText>/g);
+        for (const m of abMatches) {
+          const txt = (m[1] || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+          if (txt) parts.push(txt);
+        }
+        if (parts.length) abstractMap[pmid] = parts.join(' ');
+        // MeSH
+        const meshMatches = block.matchAll(/<DescriptorName[^>]*>([\s\S]*?)<\/DescriptorName>/g);
+        const mesh: string[] = [];
+        for (const m of meshMatches) mesh.push((m[1] || '').trim());
+        if (mesh.length) meshMapFromFetch[pmid] = mesh;
+      }
+    } catch {
+      // efetch failure is non-fatal — fall back to no-abstract
+    }
+
     const papers = ids.map((id: string) => {
       const doc = summaryData.result?.[id];
       if (!doc) return null;
-      
-      // Extract MeSH terms if available
-      const meshTerms = doc.meshterms?.map((t: any) => t.name) || [];
-      
-      // Determine study type
+
+      const meshTerms = meshMapFromFetch[id] || doc.meshterms?.map((t: any) => t.name) || [];
       const pubTypes = doc.pubtype || [];
-      const studyType = pubTypes.find((t: string) => 
+      const studyType = pubTypes.find((t: string) =>
         t.includes('Clinical Trial') || t.includes('Meta-Analysis') || t.includes('Review')
       );
-      
+
       return {
         id: `pmid-${id}`,
         title: doc.title || 'No title',
         authors: doc.authors?.map((a: any) => `${a.name}`) || [],
-        abstract: doc.abstract || 'No abstract available',
+        abstract: abstractMap[id] || 'No abstract available',
         year: parseInt(doc.pubdate?.substring(0, 4)) || new Date().getFullYear(),
         source: 'pubmed' as const,
         url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`,
