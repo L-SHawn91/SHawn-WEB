@@ -59,13 +59,13 @@ export function HeroSection() {
                     className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4"
                 >
                     <Link href="/blog">
-                        <Button size="lg" className="w-full sm:w-auto h-12 text-base px-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
+                        <Button size="lg" className="sketch-btn w-full sm:w-auto h-12 text-base px-8 bg-primary hover:bg-primary/90">
                             {t.hero.readBlog}
                             <ArrowRight className="ml-2 w-4 h-4" />
                         </Button>
                     </Link>
                     <Link href="/about">
-                        <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 text-base px-8">
+                        <Button variant="outline" size="lg" className="sketch-btn w-full sm:w-auto h-12 text-base px-8">
                             {t.hero.aboutMe}
                         </Button>
                     </Link>

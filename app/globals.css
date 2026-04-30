@@ -203,3 +203,67 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ── Sketch / Drawing aesthetic utilities ───────────────────────────── */
+@layer utilities {
+  /* 연필 스케치 느낌의 유기적 border-radius + 오프셋 그림자 */
+  .sketch-card {
+    border-radius: 6px 11px 8px 10px / 8px 6px 11px 8px;
+    box-shadow: 2px 3px 0 rgba(38, 50, 56, 0.10), 1px 1px 0 rgba(38, 50, 56, 0.05);
+    transition: box-shadow 0.15s ease, transform 0.18s ease;
+  }
+  .sketch-card:hover {
+    box-shadow: 4px 5px 0 rgba(38, 50, 56, 0.16), 1px 2px 0 rgba(38, 50, 56, 0.07);
+    transform: translate(-1px, -1px);
+  }
+  .dark .sketch-card {
+    box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.35), 1px 1px 0 rgba(0, 0, 0, 0.18);
+  }
+  .dark .sketch-card:hover {
+    box-shadow: 4px 5px 0 rgba(0, 0, 0, 0.48), 1px 2px 0 rgba(0, 0, 0, 0.24);
+  }
+
+  /* 노트 용지 줄 배경 (Paper Cream 위에서 사용) */
+  .paper-ruled {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      rgba(38, 50, 56, 0.045) 27px,
+      rgba(38, 50, 56, 0.045) 28px
+    );
+  }
+
+  /* 스케치 스타일 섹션 구분선 */
+  .sketch-divider {
+    border: none;
+    height: 2px;
+    background: repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent 4px,
+      rgba(38, 50, 56, 0.18) 4px,
+      rgba(38, 50, 56, 0.18) 8px
+    );
+  }
+
+  /* 스케치 버튼 */
+  .sketch-btn {
+    border-radius: 4px 9px 6px 8px / 7px 4px 9px 6px;
+    box-shadow: 2px 2px 0 rgba(38, 50, 56, 0.18);
+    transition: box-shadow 0.12s ease, transform 0.12s ease;
+  }
+  .sketch-btn:hover {
+    box-shadow: 3px 3px 0 rgba(38, 50, 56, 0.24);
+    transform: translate(-0.5px, -0.5px);
+  }
+  .sketch-btn:active {
+    box-shadow: 1px 1px 0 rgba(38, 50, 56, 0.18);
+    transform: translate(0.5px, 0.5px);
+  }
+
+  /* 스케치 배지 */
+  .sketch-badge {
+    border-radius: 3px 8px 5px 7px / 6px 3px 8px 5px;
+  }
+}

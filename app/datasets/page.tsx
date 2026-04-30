@@ -555,7 +555,7 @@ export default function DatasetsPage() {
               )}
             </div>
             {datasets.map((dataset) => (
-              <div key={dataset.id} className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+              <div key={dataset.id} className="sketch-card relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="absolute right-4 top-4">

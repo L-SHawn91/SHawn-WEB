@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F7F3EA] text-[#263238] overflow-x-hidden">
       <main className="flex-1">
-        <section className="relative">
+        <section className="relative paper-ruled">
           {/* SABS flow lines — teal / navy / coral */}
           <div className="absolute inset-0 pointer-events-none opacity-20">
             <svg className="h-full w-full" viewBox="0 0 1200 800" aria-hidden>
@@ -71,13 +71,13 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
                 href="/papers"
-                className="inline-flex items-center rounded-full border border-[#2A9D8F] bg-[#2A9D8F] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#238a7e]"
+                className="sketch-btn inline-flex items-center border border-[#2A9D8F] bg-[#2A9D8F] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#238a7e]"
               >
                 Search Papers
               </Link>
               <Link
                 href="/datasets"
-                className="inline-flex items-center rounded-full border border-[#10243A]/40 bg-white px-5 py-3 text-sm font-medium text-[#10243A] transition hover:bg-[#10243A]/5"
+                className="sketch-btn inline-flex items-center border border-[#10243A]/40 bg-white px-5 py-3 text-sm font-medium text-[#10243A] transition hover:bg-[#10243A]/5"
               >
                 Search Datasets
               </Link>
@@ -88,7 +88,7 @@ export default function Home() {
                 {quickLinks.map((item) => (
                   <Link key={item.href} href={item.href}>
                     <article
-                      className="group h-full rounded-xl border border-[#D8DEE6] bg-white p-5 transition hover:border-[#2A9D8F]/50 hover:shadow-md"
+                      className="sketch-card group h-full border-2 border-[#D8DEE6] bg-white p-5 transition hover:border-[#2A9D8F]/50"
                       style={{ borderLeftWidth: '3px', borderLeftColor: item.accentColor }}
                       title={`${item.title}: ${item.desc}`}
                     >
@@ -107,7 +107,7 @@ export default function Home() {
           {laneLinks.map((lane) => (
             <Link key={lane.href} href={lane.href}>
               <article
-                className="rounded-xl border border-[#D8DEE6] bg-white p-6 transition hover:border-[#E76F51]/40 hover:shadow-md"
+                className="sketch-card border-2 border-[#D8DEE6] bg-white p-6 transition hover:border-[#E76F51]/40"
                 style={{ borderLeftWidth: '3px', borderLeftColor: lane.accentColor }}
                 title={`${lane.title}: ${lane.desc}`}
               >

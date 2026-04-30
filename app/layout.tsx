@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Sans_KR } from "next/font/google";
+import { Nunito, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@/components/seo/analytics";
@@ -15,7 +15,11 @@ const notoSansKR = Noto_Sans_KR({
   weight: ["400", "500", "700", "900"],
   variable: "--font-inter",
 });
-const inter = Inter({ subsets: ["latin"], variable: "--font-heading" });
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-heading",
+});
 
 export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
@@ -47,7 +51,7 @@ export default function RootLayout({
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased",
         notoSansKR.variable,
-        inter.variable
+        nunito.variable
       )}>
         <ThemeProvider
           attribute="class"
