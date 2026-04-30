@@ -283,16 +283,45 @@ function speciesTopicMatches(speciesTerms: string[], text: string): boolean {
   });
 }
 
+function tokenFrequency(text: string, token: string): number {
+  const normalized = (text || '').toLowerCase();
+  const prefix = token.slice(0, Math.max(5, token.length - 2));
+  const terms = normalized.match(/[a-z0-9가-힣-]{3,}/g) || [];
+  return terms.filter((term) => term === token || term.startsWith(prefix)).length;
+}
+
+function bm25LikeFieldScore(text: string, token: string, boost: number, avgLen: number): number {
+  const terms = (text || '').toLowerCase().match(/[a-z0-9가-힣-]{3,}/g) || [];
+  const tf = tokenFrequency(text, token);
+  if (!tf) return 0;
+  const k1 = 1.2;
+  const b = 0.72;
+  const dl = Math.max(1, terms.length);
+  const rarityProxy = Math.min(2.4, 0.8 + token.length / 9);
+  return boost * rarityProxy * ((tf * (k1 + 1)) / (tf + k1 * (1 - b + b * (dl / avgLen))));
+}
+
 function queryWeightedOverlap(query: string, title: string, abstract = ''): number {
   const tokens = titleKeywordTokens(query);
   if (!tokens.length) return 0;
   const t = (title || '').toLowerCase();
   const a = (abstract || '').toLowerCase();
-  const titleHits = tokens.filter((tok) => t.includes(tok) || t.includes(tok.slice(0, Math.max(5, tok.length - 2)))).length;
-  const abstractHits = tokens.filter((tok) => a.includes(tok) || a.includes(tok.slice(0, Math.max(5, tok.length - 2)))).length;
-  const andBonus = titleHits === tokens.length || titleHits + abstractHits >= tokens.length ? 0.45 : 0;
-  const orScore = (titleHits * 1.0 + Math.max(0, abstractHits - titleHits) * 0.35) / tokens.length;
-  return Math.min(1.8, orScore + andBonus);
+  const hit = (text: string, tok: string) => text.includes(tok) || text.includes(tok.slice(0, Math.max(5, tok.length - 2)));
+  const titleHits = tokens.filter((tok) => hit(t, tok)).length;
+  const abstractHits = tokens.filter((tok) => hit(a, tok)).length;
+  const uniqueHits = tokens.filter((tok) => hit(t, tok) || hit(a, tok)).length;
+  const bm25 = tokens.reduce((sum, tok) => sum
+    + bm25LikeFieldScore(title, tok, 3.1, 12)
+    + bm25LikeFieldScore(abstract, tok, 1.0, 160), 0) / Math.max(1, tokens.length);
+  const normalizedQuery = normalizePublicBioQuery(query).toLowerCase();
+  const phraseBonus = normalizedQuery.length >= 5 && t.includes(normalizedQuery)
+    ? 0.75
+    : normalizedQuery.length >= 5 && a.includes(normalizedQuery) ? 0.35 : 0;
+  const adjacency = tokens.length >= 2 && t.includes(tokens.join(' ')) ? 0.45 : tokens.length >= 2 && a.includes(tokens.join(' ')) ? 0.2 : 0;
+  const andBonus = uniqueHits === tokens.length ? 0.7 : uniqueHits / tokens.length >= 0.67 ? 0.35 : 0;
+  const titleCoverage = titleHits / tokens.length;
+  const orCoverage = uniqueHits / tokens.length;
+  return Math.min(3.2, bm25 * 0.42 + titleCoverage * 0.8 + orCoverage * 0.55 + andBonus + phraseBonus + adjacency);
 }
 
 function buildPubMedTitleQuery(query: string): string {
@@ -2043,14 +2072,20 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   // INSTITUTION: affiliation filter in PubMed already constrains results; skip topic guard.
   if (intent !== 'INSTITUTION') {
     const beforeTopicGuard = papers;
+    const guardQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
     papers = papers.filter((paper) => {
       if (parsedPublicQuery.species.length > 0 && speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`)) return true;
-      return publicTopicGuard(paper, nonAuthorQuery || effectiveQuery);
+      return publicTopicGuard(paper, guardQuery);
     });
     if (papers.length === 0 && beforeTopicGuard.length > 0) {
       const relaxedTopic = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true });
       papers = beforeTopicGuard
-        .filter((paper) => overlapRatio(relaxedTopic, `${paper.title || ''} ${paper.abstract || ''}`) >= 0.12)
+        .filter((paper) => {
+          const merged = `${paper.title || ''} ${paper.abstract || ''}`;
+          return overlapRatio(relaxedTopic, merged) >= 0.08 || queryWeightedOverlap(relaxedTopic, paper.title || '', paper.abstract || '') >= 0.28;
+        })
+        .map((paper) => ({ ...paper, rankScore: Math.max(paper.rankScore || 0, Math.round(publicWorkflowScore(paper, relaxedTopic) + queryWeightedOverlap(relaxedTopic, paper.title || '', paper.abstract || '') * 35)) }))
+        .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0))
         .slice(0, 50);
     }
     if (papers.length === 0 && topicQuery && !(effectiveMode === 'author' && authorCandidates.length)) {
@@ -2080,7 +2115,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       ? srcPapers
       : srcPapers.filter((p) => {
           if (parsedPublicQuery.species.length > 0 && speciesTopicMatches(parsedPublicQuery.species, `${p.title || ''} ${p.abstract || ''}`)) return true;
-          return publicTopicGuard(p, nonAuthorQuery || effectiveQuery);
+          return publicTopicGuard(p, buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery);
         });
     if (guardFilter.length) {
       bySourceScored[src] = guardFilter

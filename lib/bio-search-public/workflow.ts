@@ -404,6 +404,44 @@ function tokenHit(text: string, token: string): boolean {
   return text.includes(token) || text.includes(prefix);
 }
 
+function tokenFrequency(text: string, token: string): number {
+  const normalized = (text || '').toLowerCase();
+  if (!normalized || !token) return 0;
+  const prefix = token.slice(0, Math.max(5, token.length - 2));
+  const terms = normalized.match(/[a-z0-9가-힣-]{3,}/g) || [];
+  return terms.filter((term) => term === token || term.startsWith(prefix)).length;
+}
+
+function bm25LikeFieldScore(text: string, token: string, boost: number, avgLen: number): number {
+  const terms = (text || '').toLowerCase().match(/[a-z0-9가-힣-]{3,}/g) || [];
+  const tf = tokenFrequency(text, token);
+  if (!tf) return 0;
+  const k1 = 1.2;
+  const b = 0.72;
+  const dl = Math.max(1, terms.length);
+  const lengthNorm = k1 * (1 - b + b * (dl / avgLen));
+  // Collection-wide IDF is unavailable in this federated API path, so use a
+  // stable rarity proxy: longer/specific biomedical terms get more weight than
+  // generic short tokens while still allowing OR-style partial matches.
+  const rarityProxy = Math.min(2.4, 0.8 + token.length / 9);
+  return boost * rarityProxy * ((tf * (k1 + 1)) / (tf + lengthNorm));
+}
+
+function phraseProximityBonus(title: string, body: string, query: string, tokens: string[]): number {
+  const normalizedQuery = normalizePublicBioQuery(query).toLowerCase();
+  const t = (title || '').toLowerCase();
+  const b = (body || '').toLowerCase();
+  let score = 0;
+  if (normalizedQuery.length >= 5 && t.includes(normalizedQuery)) score += 0.75;
+  else if (normalizedQuery.length >= 5 && b.includes(normalizedQuery)) score += 0.35;
+  if (tokens.length >= 2) {
+    const joined = tokens.join(' ');
+    if (t.includes(joined)) score += 0.45;
+    else if (b.includes(joined)) score += 0.2;
+  }
+  return score;
+}
+
 function weightedQueryScore(title: string, body: string, query: string): number {
   const tokens = queryTokens(normalizePublicBioQuery(query));
   if (!tokens.length) return 0;
@@ -411,10 +449,15 @@ function weightedQueryScore(title: string, body: string, query: string): number 
   const b = (body || '').toLowerCase();
   const titleHits = tokens.filter((tok) => tokenHit(t, tok)).length;
   const bodyHits = tokens.filter((tok) => tokenHit(b, tok)).length;
-  const andCoverage = titleHits === tokens.length || (titleHits + bodyHits) >= tokens.length ? 1 : 0;
-  const orCoverage = Math.max(titleHits, titleHits + bodyHits * 0.45) / tokens.length;
-  const exactPhrase = t.includes(query.toLowerCase()) ? 1 : 0;
-  return Math.min(1.8, 1.05 * orCoverage + 0.45 * andCoverage + 0.3 * exactPhrase);
+  const uniqueHits = tokens.filter((tok) => tokenHit(t, tok) || tokenHit(b, tok)).length;
+  const bm25 = tokens.reduce((sum, tok) => sum
+    + bm25LikeFieldScore(title, tok, 2.9, 12)
+    + bm25LikeFieldScore(body, tok, 1.0, 160), 0) / Math.max(1, tokens.length);
+  const andCoverage = uniqueHits === tokens.length ? 0.7 : uniqueHits / tokens.length >= 0.67 ? 0.35 : 0;
+  const titleCoverage = titleHits / tokens.length;
+  const orCoverage = uniqueHits / tokens.length;
+  const phraseBonus = phraseProximityBonus(title, body, query, tokens);
+  return Math.min(3.2, bm25 * 0.42 + titleCoverage * 0.8 + orCoverage * 0.55 + andCoverage + phraseBonus);
 }
 
 function topicOverlap(text: string, query: string): number {
