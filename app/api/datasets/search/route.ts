@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  mergePublicDatasetRecords,
+  normalizePublicBioQuery,
+  publicDatasetTopicGuard,
+  publicDatasetWorkflowScore,
+  publicSourceHealth,
+} from "../../../../lib/bio-search-public/workflow";
 
 type DatasetSource =
   | "huggingface"
@@ -158,59 +165,81 @@ async function searchKaggle(query: string, yearFrom?: string, yearTo?: string): 
   }
 }
 
-async function searchNcbiEutils(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
-  try {
-    const searchParams = new URLSearchParams({
-      db: "gds",
-      term: query,
-      retmax: "20",
-      retmode: "json",
-      sort: "relevance",
-    });
-    if (yearFrom || yearTo) {
-      searchParams.set("mindate", `${yearFrom || "1900"}/01/01`);
-      searchParams.set("maxdate", `${yearTo || "2100"}/12/31`);
-      searchParams.set("datetype", "pdat");
-    }
-    const searchRes = await fetch(
-      `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?${searchParams.toString()}`,
-      { signal: AbortSignal.timeout(15000) },
-    );
-    const searchData = await searchRes.json();
-    const ids: string[] = searchData?.esearchresult?.idlist || [];
-    if (ids.length === 0) return [];
+function pickNcbiTitle(row: any, fallback: string): string {
+  return row?.title || row?.studytitle || row?.caption || row?.project_title || row?.project_name || row?.expname || fallback;
+}
 
-    const summaryParams = new URLSearchParams({
-      db: "gds",
-      id: ids.join(","),
-      retmode: "json",
-    });
-    const summaryRes = await fetch(
-      `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?${summaryParams.toString()}`,
-      { signal: AbortSignal.timeout(15000) },
-    );
-    const summaryData = await summaryRes.json();
+function pickNcbiSummary(row: any): string {
+  const text = row?.summary || row?.description || row?.project_description || row?.expxml || row?.runs || "";
+  return cleanText(String(text).slice(0, 1200));
+}
 
-    return ids
-      .map<DatasetItem | null>((id) => {
-        const row = summaryData?.result?.[id];
-        if (!row) return null;
-        const accession = row.accession || row.gse || row.gpl || id;
-        return {
-          id: `ncbi-${accession}`,
-          title: row.title || `NCBI dataset ${accession}`,
-          description: cleanText(row.summary || row.description),
-          source: "ncbi" as const,
-          url: `https://www.ncbi.nlm.nih.gov/gds/?term=${encodeURIComponent(accession)}`,
-          updatedAt: row.pdat || row.updatedate,
-          tags: Array.isArray(row.taxon) ? row.taxon : undefined,
-        };
-      })
-      .filter((item): item is DatasetItem => item !== null && inYearRange(item.updatedAt, yearFrom, yearTo));
-  } catch (error) {
-    console.error("[datasets] NCBI E-utilities search failed:", error);
-    return [];
+function pickNcbiAccession(row: any, id: string): string {
+  const raw = row?.accession || row?.gse || row?.gpl || row?.bioproject || row?.project_acc || row?.primary || row?.uid || id;
+  const text = Array.isArray(raw) ? raw[0] : String(raw || id);
+  const match = text.match(/\b(GSE\d+|GSM\d+|SRP\d+|SRS\d+|SRX\d+|SRR\d+|PRJNA\d+|PRJEB\d+|PRJCA\d+)\b/i);
+  return (match?.[1] || text).toUpperCase();
+}
+
+async function fetchNcbiDb(db: "gds" | "sra" | "bioproject", query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  const searchParams = new URLSearchParams({
+    db,
+    term: query,
+    retmax: "20",
+    retmode: "json",
+    sort: "relevance",
+  });
+  if (yearFrom || yearTo) {
+    searchParams.set("mindate", `${yearFrom || "1900"}/01/01`);
+    searchParams.set("maxdate", `${yearTo || "2100"}/12/31`);
+    searchParams.set("datetype", "pdat");
   }
+  const searchRes = await fetch(
+    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?${searchParams.toString()}`,
+    { signal: AbortSignal.timeout(15000) },
+  );
+  const searchData = await searchRes.json();
+  const ids: string[] = searchData?.esearchresult?.idlist || [];
+  if (ids.length === 0) return [];
+
+  const summaryParams = new URLSearchParams({ db, id: ids.join(","), retmode: "json" });
+  const summaryRes = await fetch(
+    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?${summaryParams.toString()}`,
+    { signal: AbortSignal.timeout(15000) },
+  );
+  const summaryData = await summaryRes.json();
+
+  return ids
+    .map<DatasetItem | null>((id) => {
+      const row = summaryData?.result?.[id];
+      if (!row) return null;
+      const accession = pickNcbiAccession(row, id);
+      const title = pickNcbiTitle(row, `${db.toUpperCase()} dataset ${accession}`);
+      const urlDb = db === "gds" ? "gds" : db;
+      return {
+        id: `ncbi-${db}-${accession}`,
+        title,
+        description: pickNcbiSummary(row),
+        source: "ncbi" as const,
+        url: `https://www.ncbi.nlm.nih.gov/${urlDb}/?term=${encodeURIComponent(accession)}`,
+        updatedAt: row.pdat || row.updatedate || row.sra_updated || row.submission_date,
+        accessionIds: extractAccessions(`${accession} ${title} ${pickNcbiSummary(row)}`),
+        tags: [db.toUpperCase(), row.organism || row.taxname || row.taxon || ""].filter(Boolean).map(String),
+      };
+    })
+    .filter((item): item is DatasetItem => item !== null && (item.updatedAt ? inYearRange(item.updatedAt, yearFrom, yearTo) : true));
+}
+
+async function searchNcbiEutils(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  const collected: DatasetItem[] = [];
+  for (const db of ["gds", "sra", "bioproject"] as const) {
+    try {
+      collected.push(...await fetchNcbiDb(db, query, yearFrom, yearTo));
+    } catch (error) {
+      console.warn(`[datasets] NCBI ${db} search skipped:`, error);
+    }
+  }
+  return collected;
 }
 
 async function searchEnaPortal(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
@@ -662,40 +691,18 @@ async function searchCngb(query: string, yearFrom?: string, yearTo?: string): Pr
 }
 
 function integrateAndRank(items: DatasetItem[]): DatasetItem[] {
-  const seen = new Set<string>();
-  const deduped = items.filter((item) => {
-    const key = item.title.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 100);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  const withAccessions = items.map((item) => ({
+    ...item,
+    accessionIds: item.accessionIds?.length
+      ? item.accessionIds
+      : extractAccessions(`${item.title} ${item.description} ${item.url}`),
+  }));
 
-  const currentYear = new Date().getFullYear();
-  return deduped.map((item) => {
-    let score = 0;
-    const year = yearFromDateString(item.updatedAt);
-    if (year !== null) {
-      const age = currentYear - year;
-      score += Math.max(0, 30 - age * 3);
-    }
-    if (item.downloads) {
-      score += Math.min(30, Math.log10(item.downloads + 1) * 10);
-    }
-    if (item.likes) {
-      score += Math.min(25, Math.log10(item.likes + 1) * 10);
-    }
-    if (item.license) score += 5;
-    if (item.tags?.length) score += Math.min(10, item.tags.length);
-    if (item.description && item.description.length > 80) score += 10;
-
-    const accessionIds = extractAccessions(`${item.title} ${item.description} ${item.url}`);
-
-    return {
-      ...item,
-      accessionIds,
-      rankScore: Math.round(score),
-    };
-  });
+  const deduped = mergePublicDatasetRecords(withAccessions);
+  return deduped.map((item) => ({
+    ...item,
+    rankScore: Math.round(publicDatasetWorkflowScore(item)),
+  }));
 }
 
 function popularityScore(item: DatasetItem): number {
@@ -758,6 +765,7 @@ export async function POST(request: NextRequest) {
         };
 
     const { sources, yearFrom, yearTo, sortBy, page, pageSize } = parseFilters(filterInput);
+    const effectiveQuery = normalizePublicBioQuery(String(query));
 
     const sourceJobs: Record<DatasetSource, (q: string, yf?: string, yt?: string) => Promise<DatasetItem[]>> = {
       huggingface: searchHuggingFace,
@@ -778,7 +786,8 @@ export async function POST(request: NextRequest) {
       cngb: searchCngb,
     };
 
-    const jobs = sources.map((source) => ({ source, promise: sourceJobs[source](query, yearFrom, yearTo) }));
+    const jobs = sources.map((source) => ({ source, promise: sourceJobs[source](effectiveQuery, yearFrom, yearTo) }));
+    const sourceStartedAt = new Map(jobs.map((job) => [job.source, Date.now()]));
     const settled = await Promise.allSettled(jobs.map((job) => job.promise));
 
     const bySource: Record<DatasetSource, DatasetItem[]> = {
@@ -805,9 +814,14 @@ export async function POST(request: NextRequest) {
       if (!source) return;
       bySource[source] = result.status === "fulfilled" ? result.value : [];
     });
+    const sourceHealth = settled.map((result, index) => {
+      const source = jobs[index]?.source || "unknown";
+      return publicSourceHealth(source, result, Date.now() - (sourceStartedAt.get(source as DatasetSource) || Date.now()));
+    });
 
     const merged = ALL_SOURCES.flatMap((source) => bySource[source]);
-    const ranked = integrateAndRank(merged);
+    const guarded = merged.filter((item) => publicDatasetTopicGuard(item, String(query)));
+    const ranked = integrateAndRank(guarded);
     const sorted = sortDatasets(ranked, sortBy);
     const total = sorted.length;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -825,6 +839,8 @@ export async function POST(request: NextRequest) {
       datasets: paged,
       meta: {
         trackResults,
+        sourceHealth,
+        selectedQuery: effectiveQuery,
         pagination: { page: safePage, pageSize, total, totalPages },
         sort: { by: sortBy },
       },

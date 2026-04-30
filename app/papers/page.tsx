@@ -1,4 +1,5 @@
 'use client';
+// i18n-exempt: legacy client page uses fixed bilingual/search UI copy; full i18n migration is separate.
 
 export const dynamic = 'force-dynamic';
 
@@ -1080,13 +1081,22 @@ export default function PapersPage() {
               <div className="grid grid-cols-2 gap-2">
                 <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
                   <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Search Mode</span>
+                  {filters.mode !== 'precision' ? (
+                    <p className="mb-2 rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-[11px] leading-4 text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
+                      Citation-critical 검색은 Precision 모드를 권장합니다.
+                    </p>
+                  ) : (
+                    <p className="mb-2 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1 text-[11px] leading-4 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-200">
+                      Precision: claim/evidence 정합성 우선 필터를 적용합니다.
+                    </p>
+                  )}
                   <select
                     value={filters.mode}
                     onChange={(e) => setFilters({ ...filters, mode: e.target.value as SearchMode, profileIds: [] })}
                     className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
                   >
                     <option value="broad">Broad</option>
-                    <option value="precision">Precision</option>
+                    <option value="precision">Precision · citation-critical</option>
                     <option value="author">Author</option>
                   </select>
                 </label>
@@ -1097,7 +1107,7 @@ export default function PapersPage() {
                       type="text"
                       value={filters.authorNames}
                       onChange={(e) => setFilters({ ...filters, authorNames: e.target.value })}
-                      placeholder="Soohyung Lee, Lee SH, 이수형"
+                      placeholder="Author Name, Name Initials"
                       className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
                     />
                   </label>

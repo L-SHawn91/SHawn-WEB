@@ -1,14 +1,8 @@
+// i18n-exempt: public landing copy is fixed marketing/search entry copy for now.
 import { Footer } from "@/components/ui/footer";
 import Link from "next/link";
 
 const quickLinks = [
-  {
-    href: "/dashboard",
-    title: "Dashboard",
-    desc: "Main control entry for project status, work lanes, and canonical paths.",
-    emoji: "🧭",
-    color: "from-cyan-500/30 to-blue-500/30 border-cyan-200/80 shadow-[0_0_28px_rgba(34,211,238,0.18)]",
-  },
   {
     href: "/papers",
     title: "Papers Search",
@@ -33,13 +27,6 @@ const quickLinks = [
 ];
 
 const laneLinks = [
-  {
-    href: "/bio",
-    title: "Bio",
-    desc: "Main lane for organoids, cell research, and bio data analysis.",
-    emoji: "🧬",
-    color: "text-emerald-300",
-  },
   {
     href: "/invest/reports?tab=KR",
     title: "Investment Side Lane",
@@ -78,45 +65,26 @@ export default function Home() {
               <p className="mx-auto mt-4 max-w-3xl text-sm text-gray-400 sm:text-base">
                 A bio-centered operating hub for research, datasets, project workflow, and selective side-lane support.
               </p>
-              <p className="mt-3 text-sm font-medium text-cyan-300 sm:text-base">
-                Dashboard is the main control entry.
-              </p>
             </div>
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
-                href="/dashboard"
+                href="/papers"
                 className="inline-flex items-center rounded-full border border-cyan-300/70 bg-cyan-500/20 px-6 py-3 text-sm font-semibold text-cyan-100 shadow-[0_0_24px_rgba(34,211,238,0.18)] transition hover:bg-cyan-500/30"
               >
-                Open Dashboard
+                Search Papers
               </Link>
               <Link
-                href="/bio"
+                href="/datasets"
                 className="inline-flex items-center rounded-full border border-emerald-400/40 bg-emerald-500/10 px-5 py-3 text-sm font-medium text-emerald-200 transition hover:bg-emerald-500/20"
               >
-                Enter Bio
+                Search Datasets
               </Link>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-[1.35fr_1fr]">
-              <Link href="/dashboard">
-                <article
-                  className="group h-full rounded-3xl border border-cyan-200/80 bg-gradient-to-br from-cyan-500/25 to-blue-500/25 p-6 transition hover:scale-[1.01] hover:shadow-[0_0_36px_rgba(34,211,238,0.18)]"
-                  title="Dashboard: Main control entry for project status, work lanes, and canonical paths."
-                >
-                  <div className="text-4xl">🧭</div>
-                  <div className="mt-4 inline-flex rounded-full border border-cyan-200/60 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200">
-                    Main entry
-                  </div>
-                  <h2 className="mt-4 text-2xl font-semibold text-white sm:text-3xl">Dashboard</h2>
-                  <p className="mt-3 max-w-2xl text-sm text-gray-200 sm:text-base">
-                    Start here for project status, work lanes, canonical paths, and the fastest route into active work.
-                  </p>
-                </article>
-              </Link>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {quickLinks.filter((item) => item.href !== "/dashboard").map((item) => (
+            <div className="mt-10">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {quickLinks.map((item) => (
                   <Link key={item.href} href={item.href}>
                     <article
                       className={`group h-full rounded-2xl border bg-gradient-to-br p-5 transition hover:scale-[1.02] hover:shadow-lg ${item.color}`}

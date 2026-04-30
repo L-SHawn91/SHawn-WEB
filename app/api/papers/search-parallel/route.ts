@@ -8,6 +8,15 @@ import {
   splitAuthorAndTopic,
   type QueryIntent,
 } from '../../../../lib/search/queryPlanner';
+import {
+  buildPublicPubMedQuery,
+  expandPublicBioQuery,
+  mergePublicPaperRecords,
+  publicSourceHealth,
+  publicTopicGuard,
+  publicWorkflowScore,
+  type PublicSourceHealth,
+} from '../../../../lib/bio-search-public/workflow';
 
 interface Paper {
   id: string;
@@ -776,14 +785,8 @@ function t6_integrateAndRank(
   // Merge all results
   const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results];
   
-  // Deduplication by DOI-like ID or title similarity
-  const seen = new Set<string>();
-  const uniquePapers = allPapers.filter(paper => {
-    const key = paper.title.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 50);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  // Public-safe workflow merge: DOI/public ID/title dedupe while preserving source hits and best metadata.
+  const uniquePapers = mergePublicPaperRecords(allPapers);
   
   // Ranking algorithm
   const hasEvidenceQuery = Boolean((claim || '').trim() || (hypothesis || '').trim());
@@ -799,24 +802,8 @@ function t6_integrateAndRank(
       ? Number((0.45 * stage1Score + 0.55 * s2.stage2Score).toFixed(4))
       : stage1Score;
     
-    // Recency (max 30 points)
-    const currentYear = new Date().getFullYear();
-    const age = currentYear - paper.year;
-    score += Math.max(0, 30 - age * 2);
-    
-    // Citations (max 40 points)
-    if (paper.citations) {
-      score += Math.min(40, paper.citations / 10);
-    }
-    
-    // Influence score from T3 (max 20 points)
-    if (paper.influenceScore) {
-      score += paper.influenceScore / 5;
-    }
-    
-    // Source diversity bonus (max 10 points)
-    if (paper.meshTerms?.length) score += 5;
-    if (paper.techniques?.length) score += 5;
+    // Public-safe SHawn bio workflow score: recency + public citation signal + source reliability + metadata hints.
+    score += publicWorkflowScore(paper);
 
     // Author-first priority boost
     const authorBoost = getAuthorPriorityBoost(paper, authorCandidates, intent);
@@ -875,6 +862,7 @@ type SearchAttemptResult = {
   intent: QueryIntent;
   authorCandidates: string[];
   trackResults: { t1: number; t2: number; t3: number; t4: number; t5: number; final: number };
+  sourceHealth?: PublicSourceHealth[];
   papers: Paper[];
   homonymProfiles?: Array<{
     profileId: string;
@@ -1267,7 +1255,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
         : (intent === 'TOPIC' ? [] : authorCandidatesRaw);
   const detectedTopic = (split.topic || extracted.cleanQuery || query).trim();
   const topicQuery = (!hasManualAuthor && mode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic) ? '' : detectedTopic;
-  const effectiveQuery = (topicQuery || authorCandidates[0] || query).trim();
+  const effectiveQuery = expandPublicBioQuery((topicQuery || authorCandidates[0] || query).trim());
 
   const defaultSourcesByMode: Record<SearchMode, TrackSource[]> = {
     broad: ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'],
@@ -1287,7 +1275,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
 
   const trackJobs: Array<{ source: TrackSource; promise: Promise<Paper[]> }> = [];
   if (sources.includes('pubmed')) {
-    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
+    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(buildPublicPubMedQuery(effectiveQuery), yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('arxiv')) {
     trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(topicQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
@@ -1302,6 +1290,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
 
+  const sourceStartedAt = new Map(trackJobs.map((job) => [job.source, Date.now()]));
   const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
   const bySource: Record<TrackSource, Paper[]> = {
     pubmed: [],
@@ -1315,6 +1304,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const source = trackJobs[index]?.source;
     if (!source) return;
     bySource[source] = result.status === 'fulfilled' ? result.value : [];
+  });
+
+  const sourceHealth = settled.map((result, index) => {
+    const source = trackJobs[index]?.source || 'unknown';
+    return publicSourceHealth(source, result, Date.now() - (sourceStartedAt.get(source as TrackSource) || Date.now()));
   });
 
   const papersRanked = t6_integrateAndRank(
@@ -1362,6 +1356,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   if (mode === 'precision') {
     papers = papers.filter((paper) => (paper.evidenceScore || 0) >= 0.05);
   }
+  papers = papers.filter((paper) => publicTopicGuard(paper, nonAuthorQuery || effectiveQuery));
 
   return {
     query,
@@ -1370,6 +1365,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     authorCandidates,
     papers,
     homonymProfiles,
+    sourceHealth,
     trackResults: {
       t1: bySource.pubmed.length,
       t2: bySource.arxiv.length,
@@ -1414,6 +1410,7 @@ export async function POST(request: NextRequest) {
       authorCandidates: [],
       papers: [],
       homonymProfiles: [],
+      sourceHealth: [],
       trackResults: { t1: 0, t2: 0, t3: 0, t4: 0, t5: 0, final: 0 },
     };
     
@@ -1428,6 +1425,7 @@ export async function POST(request: NextRequest) {
         attempts,
         authorCandidates: selected.authorCandidates,
         homonymProfiles: selected.homonymProfiles || [],
+        sourceHealth: selected.sourceHealth || [],
         trackResults: selected.trackResults,
       }
     });
