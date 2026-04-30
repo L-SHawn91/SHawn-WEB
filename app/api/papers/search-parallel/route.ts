@@ -615,7 +615,7 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
 
     const baseUrl = 'http://export.arxiv.org/api/query';
 
-    const primaryQuery = `${planned} AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)`;
+    const primaryQuery = `${planned} AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV OR cat:q-bio.GN OR cat:q-bio.CB OR cat:q-bio.MN OR cat:q-bio.TO OR cat:q-bio.BM)`;
     const params = new URLSearchParams({
       search_query: primaryQuery,
       start: '0',
@@ -632,7 +632,7 @@ async function t2_arxivEnhanced(query: string, yearFrom?: string, yearTo?: strin
     let papers = parseArxivEntries(xml, chosenAuthor ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic');
 
     if (papers.length === 0 && intent === 'AUTHOR_WEAK' && query) {
-      const fallbackQuery = `(${query}) AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV)`;
+      const fallbackQuery = `(${query}) AND (cat:cs.LG OR cat:cs.AI OR cat:cs.CL OR cat:cs.CV OR cat:q-bio.GN OR cat:q-bio.CB OR cat:q-bio.MN OR cat:q-bio.TO OR cat:q-bio.BM)`;
       const fallbackParams = new URLSearchParams({
         search_query: fallbackQuery,
         start: '0',
