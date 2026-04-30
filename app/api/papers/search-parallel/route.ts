@@ -2074,7 +2074,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const beforeTopicGuard = papers;
     const guardQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
     papers = papers.filter((paper) => {
-      if (parsedPublicQuery.species.length > 0 && speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`)) return true;
+      if (parsedPublicQuery.species.length > 0) return speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`);
       return publicTopicGuard(paper, guardQuery);
     });
     if (papers.length === 0 && beforeTopicGuard.length > 0) {
@@ -2114,7 +2114,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const guardFilter = intent === 'INSTITUTION'
       ? srcPapers
       : srcPapers.filter((p) => {
-          if (parsedPublicQuery.species.length > 0 && speciesTopicMatches(parsedPublicQuery.species, `${p.title || ''} ${p.abstract || ''}`)) return true;
+          if (parsedPublicQuery.species.length > 0) return speciesTopicMatches(parsedPublicQuery.species, `${p.title || ''} ${p.abstract || ''}`);
           return publicTopicGuard(p, buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery);
         });
     if (guardFilter.length) {
