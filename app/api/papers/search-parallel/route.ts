@@ -29,6 +29,7 @@ interface Paper {
   year: number;
   source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc';
   url: string;
+  doi?: string;
   pdfUrl?: string;
   citations?: number;
   meshTerms?: string[];
@@ -40,6 +41,7 @@ interface Paper {
   stage1Score?: number;
   stage2Score?: number;
   evidenceScore?: number;
+  evidenceLabel?: string;
   supportScore?: number;
   contradictionScore?: number;
   bestSupportSentence?: string;
@@ -242,9 +244,34 @@ const NEG_TERMS = new Set([
   'reduced', 'decrease', 'decreased', 'lower', 'suppressed', 'inhibit', 'inhibited', 'inhibits'
 ]);
 
+const NEG_PHRASES = [
+  'no significant', 'not significant', 'not significantly',
+  'did not', 'does not', 'do not', 'was not', 'were not', 'is not',
+  'had no', 'have no', 'has no',
+  'showed no', 'shows no', 'demonstrated no',
+  'failed to', 'unable to',
+  'no effect', 'no association', 'no difference', 'no change',
+  'no increase', 'no decrease', 'no expression', 'no evidence',
+  'not associated', 'not detected', 'not expressed', 'not observed',
+  'not found', 'not identified', 'not correlated',
+  'no correlation', 'no relationship', 'no improvement',
+  'did not show', 'did not demonstrate', 'did not affect',
+  'does not affect', 'does not support',
+];
+
 function hasNegation(text: string): boolean {
-  const toks = (text || '').toLowerCase().match(/[a-z0-9]{3,}/g) || [];
-  return toks.some((t) => NEG_TERMS.has(t));
+  const lower = (text || '').toLowerCase();
+  const toks = lower.match(/[a-z0-9]{3,}/g) || [];
+  if (toks.some((t) => NEG_TERMS.has(t))) return true;
+  return NEG_PHRASES.some((phrase) => lower.includes(phrase));
+}
+
+function classifyEvidenceLabel(supportScore: number, contradictionScore: number, evidenceScore: number, hasClaim: boolean): string {
+  if (!hasClaim) return 'mention-only';
+  if (supportScore >= 0.18 && supportScore > contradictionScore * 1.15) return 'support';
+  if (contradictionScore >= 0.18 && contradictionScore > supportScore * 1.15) return 'contradict';
+  if (evidenceScore >= 0.12 || supportScore >= 0.08 || contradictionScore >= 0.08) return 'uncertain';
+  return 'mention-only';
 }
 
 function sentenceEvidence(claim: string, hypothesis: string, abstract: string) {
@@ -987,10 +1014,11 @@ function t6_integrateAndRank(
     const mergedText = `${paper.title || ''} ${paper.abstract || ''}`.trim();
     const claimOverlap = claim ? overlapRatio(claim, mergedText) : 0;
     const hypothesisOverlap = hypothesis ? overlapRatio(hypothesis, mergedText) : 0;
-    const citeComponent = Math.min((paper.citations || 0), 500) / 500;
-    const stage1Score = Number((0.55 * claimOverlap + 0.25 * hypothesisOverlap + 0.2 * citeComponent).toFixed(4));
+    // citations excluded from relevance — used only for user-facing sort
+    const stage1Score = Number((0.75 * claimOverlap + 0.25 * hypothesisOverlap).toFixed(4));
     const s2 = sentenceEvidence(claim, hypothesis, paper.abstract || '');
-    const evidenceScore = claim && (paper.abstract || '').trim().length > 0
+    const hasAbstract = (paper.abstract || '').trim().length > 0 && !(paper.abstract || '').startsWith('No abstract');
+    const evidenceScore = claim && hasAbstract
       ? Number((0.45 * stage1Score + 0.55 * s2.stage2Score).toFixed(4))
       : stage1Score;
     
@@ -1016,6 +1044,7 @@ function t6_integrateAndRank(
       stage1Score,
       stage2Score: s2.stage2Score,
       evidenceScore,
+      evidenceLabel: classifyEvidenceLabel(s2.supportScore, s2.contradictionScore, evidenceScore, Boolean(claim)),
       supportScore: s2.supportScore,
       contradictionScore: s2.contradictionScore,
       bestSupportSentence: s2.bestSupportSentence,
@@ -1040,6 +1069,24 @@ function t6_integrateAndRank(
 
 type TrackSource = 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc';
 type SearchMode = 'broad' | 'precision' | 'author';
+
+// Tiered parallel fetch constants
+// Tier 1 (fast/reliable): 12s deadline; Tier 2 (slower/optional): +8s
+const TIER1_SOURCES_WEB = new Set<TrackSource>(['pubmed', 'semantic', 'openalex', 'europepmc']);
+const TIER1_DEADLINE_MS = 12_000;
+const TIER2_DEADLINE_MS = 8_000;
+// Skip Tier 2 when Tier 1 already returned this many raw papers
+const TIER1_EARLY_STOP = 30;
+
+async function tieredSettle(promises: Promise<Paper[]>[], deadlineMs: number): Promise<PromiseSettledResult<Paper[]>[]> {
+  if (!promises.length) return [];
+  return Promise.race([
+    Promise.allSettled(promises),
+    new Promise<PromiseSettledResult<Paper[]>[]>((resolve) =>
+      setTimeout(() => resolve(promises.map(() => ({ status: 'fulfilled' as const, value: [] }))), deadlineMs)
+    ),
+  ]);
+}
 
 function normalizeSearchMode(value: unknown): SearchMode {
   const v = typeof value === 'string' ? value.toLowerCase().trim() : '';
@@ -1491,7 +1538,28 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   }
 
   const sourceStartedAt = new Map(trackJobs.map((job) => [job.source, Date.now()]));
-  const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
+
+  // Tiered parallel fetch: Tier 1 (fast) → Tier 2 (supplemental, skipped on early-stop)
+  const tier1Jobs = trackJobs.filter((j) => TIER1_SOURCES_WEB.has(j.source));
+  const tier2Jobs = trackJobs.filter((j) => !TIER1_SOURCES_WEB.has(j.source));
+
+  const tier1Settled = await tieredSettle(tier1Jobs.map((j) => j.promise), TIER1_DEADLINE_MS);
+  const tier1Count = tier1Settled.reduce(
+    (sum, r) => sum + (r.status === 'fulfilled' ? r.value.length : 0), 0
+  );
+  const skipTier2 = tier1Count >= TIER1_EARLY_STOP;
+
+  const tier2Settled = skipTier2
+    ? tier2Jobs.map((): PromiseSettledResult<Paper[]> => ({ status: 'fulfilled', value: [] }))
+    : await tieredSettle(tier2Jobs.map((j) => j.promise), TIER2_DEADLINE_MS);
+
+  const t1Map = new Map(tier1Jobs.map((j, i) => [j.source, tier1Settled[i]!]));
+  const t2Map = new Map(tier2Jobs.map((j, i) => [j.source, tier2Settled[i]!]));
+  const settled = trackJobs.map(
+    (j): PromiseSettledResult<Paper[]> =>
+      t1Map.get(j.source) ?? t2Map.get(j.source) ?? { status: 'fulfilled', value: [] }
+  );
+
   const bySource: Record<TrackSource, Paper[]> = {
     pubmed: [],
     arxiv: [],
