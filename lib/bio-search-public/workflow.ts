@@ -46,10 +46,13 @@ const PUBLIC_SOURCE_WEIGHT: Record<string, number> = {
   medrxiv: 0.92,
 };
 
+
 const PUBLIC_DATASET_SOURCE_WEIGHT: Record<string, number> = {
   ncbi: 1.18,
   ena: 1.16,
   europepmc: 1.12,
+  arrayexpress: 1.15,
+  cellxgene: 1.14,
   zenodo: 1.08,
   dryad: 1.07,
   dataverse: 1.06,

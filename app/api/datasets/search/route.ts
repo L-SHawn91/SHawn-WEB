@@ -13,6 +13,8 @@ type DatasetSource =
   | "ncbi"
   | "ena"
   | "europepmc"
+  | "arrayexpress"
+  | "cellxgene"
   | "datagov"
   | "dataeu"
   | "zenodo"
@@ -57,6 +59,8 @@ const ALL_SOURCES: DatasetSource[] = [
   "ncbi",
   "ena",
   "europepmc",
+  "arrayexpress",
+  "cellxgene",
   "datagov",
   "dataeu",
   "zenodo",
@@ -753,6 +757,74 @@ function sortDatasets(items: DatasetItem[], sortBy: SortBy): DatasetItem[] {
   return sorted.sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
 }
 
+async function searchArrayExpress(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
+  try {
+    const params = new URLSearchParams({ query, page: "1", pageSize: "20" });
+    const res = await fetch(
+      `https://www.ebi.ac.uk/biostudies/api/v1/search?${params.toString()}`,
+      { signal: AbortSignal.timeout(15000) },
+    );
+    const data = await res.json();
+    const hits: any[] = data?.hits || [];
+    return hits
+      .map((hit: any) => {
+        const accession: string = hit.accession || hit.accno || "";
+        const releaseDate: string = hit.release_date || hit.releaseDate || "";
+        const releaseYear = releaseDate ? parseInt(releaseDate.slice(0, 4)) : 0;
+        if (yearFrom && releaseYear && releaseYear < parseInt(yearFrom)) return null;
+        if (yearTo && releaseYear && releaseYear > parseInt(yearTo)) return null;
+        const description = (hit.content || "").replace(new RegExp(`^${accession}\\s*`, "i"), "").slice(0, 300);
+        return {
+          id: `arrayexpress-${accession || Math.random().toString(36).slice(2)}`,
+          title: hit.title || accession || "No title",
+          description,
+          source: "arrayexpress" as const,
+          url: accession
+            ? `https://www.ebi.ac.uk/biostudies/studies/${accession}`
+            : "https://www.ebi.ac.uk/biostudies",
+          accessionIds: accession ? [accession] : [],
+          updatedAt: releaseDate || undefined,
+          tags: [],
+        } as DatasetItem;
+      })
+      .filter((x): x is DatasetItem => x !== null);
+  } catch {
+    return [];
+  }
+}
+
+async function searchCellxGene(query: string): Promise<DatasetItem[]> {
+  try {
+    const res = await fetch(
+      "https://api.cellxgene.cziscience.com/curation/v1/collections?is_published=true",
+      { signal: AbortSignal.timeout(15000), headers: { Accept: "application/json" } },
+    );
+    const data = await res.json();
+    const collections: any[] = Array.isArray(data) ? data : (data?.collections || []);
+    const tokens = query.toLowerCase().match(/[a-z0-9]{3,}/g) || [];
+    return collections
+      .filter((col: any) => {
+        const text = `${col.name || ""} ${col.description || ""}`.toLowerCase();
+        return tokens.some((t) => text.includes(t));
+      })
+      .slice(0, 15)
+      .map((col: any) => ({
+        id: `cellxgene-${col.collection_id || Math.random().toString(36).slice(2)}`,
+        title: col.name || "No title",
+        description: col.description || "",
+        source: "cellxgene" as const,
+        url: col.collection_id
+          ? `https://cellxgene.cziscience.com/collections/${col.collection_id}`
+          : "https://cellxgene.cziscience.com",
+        accessionIds: col.collection_id ? [col.collection_id] : [],
+        updatedAt: col.published_at || col.revised_at || undefined,
+        tags: ["single-cell", "scRNA-seq"],
+      } as DatasetItem));
+  } catch {
+    return [];
+  }
+}
+
 function parseFilters(input: FiltersInput | undefined) {
   const sources = Array.isArray(input?.sources)
     ? input.sources.filter((source): source is DatasetSource => isDatasetSource(source))
@@ -797,6 +869,8 @@ export async function POST(request: NextRequest) {
       ncbi: searchNcbiEutils,
       ena: searchEnaPortal,
       europepmc: searchEuropePmcAccessions,
+      arrayexpress: searchArrayExpress,
+      cellxgene: (q) => searchCellxGene(q),
       datagov: searchDataGov,
       dataeu: searchDataEu,
       zenodo: searchZenodo,
@@ -820,6 +894,8 @@ export async function POST(request: NextRequest) {
       ncbi: [],
       ena: [],
       europepmc: [],
+      arrayexpress: [],
+      cellxgene: [],
       datagov: [],
       dataeu: [],
       zenodo: [],

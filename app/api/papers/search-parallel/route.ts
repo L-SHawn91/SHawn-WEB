@@ -24,7 +24,7 @@ interface Paper {
   authors: string[];
   abstract: string;
   year: number;
-  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex';
+  source: 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc';
   url: string;
   pdfUrl?: string;
   citations?: number;
@@ -872,13 +872,96 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
   }
 }
 
-// T6: Ranker - Integration & ranking
+// T6: Europe PMC - free, indexes PubMed + European research + bioRxiv/medRxiv preprints
+async function t6_europePmcEnhanced(
+  query: string,
+  yearFrom?: string,
+  yearTo?: string,
+  authorCandidates: string[] = [],
+  intent: QueryIntent = 'TOPIC',
+): Promise<Paper[]> {
+  console.log('[T6:EuropePMC] Search starting...');
+  const startTime = Date.now();
+  try {
+    let searchQuery = query;
+    if (intent === 'INSTITUTION') {
+      const instKeywordPos = query.search(/\b(?:university|univ|institute|hospital|college|center|centre|laboratory|lab)\b/i);
+      if (instKeywordPos > 0) {
+        const afterKeyword = query.slice(instKeywordPos).match(/\b(?:university|univ|institute|hospital|college|center|centre|laboratory|lab)\b/i);
+        const keywordEnd = instKeywordPos + (afterKeyword?.[0]?.length ?? 0);
+        const distinctWord = query.slice(0, keywordEnd).trim().split(/\s+/)[0] || '';
+        const topicPart = query.slice(keywordEnd).trim();
+        searchQuery = topicPart ? `AFF:"${distinctWord}" AND (${topicPart})` : `AFF:"${distinctWord}"`;
+      }
+    } else if (authorCandidates.length && intent !== 'TOPIC') {
+      const authorPart = authorCandidates.slice(0, 2).map((a) => `AUTH:"${a}"`).join(' OR ');
+      searchQuery = `(${authorPart}) AND (${query})`;
+    }
+    if (yearFrom || yearTo) {
+      const from = yearFrom || '1900';
+      const to = yearTo || String(new Date().getFullYear());
+      searchQuery += ` AND FIRST_PDATE:[${from}-01-01 TO ${to}-12-31]`;
+    }
+    const params = new URLSearchParams({
+      query: searchQuery,
+      format: 'json',
+      pageSize: '15',
+      resulttype: 'core',
+    });
+    const res = await fetch(
+      `https://www.ebi.ac.uk/europepmc/webservices/rest/search?${params.toString()}`,
+      { signal: AbortSignal.timeout(15000) },
+    );
+    const data = await res.json();
+    const rows = data?.resultList?.result;
+    if (!Array.isArray(rows)) return [];
+
+    const papers = rows
+      .map((r: any) => {
+        const year = parseInt(r.pubYear || '0') || new Date().getFullYear();
+        if (yearFrom && year < parseInt(yearFrom)) return null;
+        if (yearTo && year > parseInt(yearTo)) return null;
+        const authorStr: string = r.authorString || '';
+        const authors = authorStr.split(',').map((a: string) => a.trim()).filter(Boolean).slice(0, 10);
+        const src = (r.source || '').toLowerCase();
+        const pid = r.pmid || r.id || '';
+        const doi = r.doi || undefined;
+        return {
+          id: `europepmc-${r.id || Math.random().toString(36).slice(2)}`,
+          title: r.title || 'No title',
+          authors,
+          abstract: r.abstractText || 'No abstract available',
+          year,
+          source: 'europepmc' as const,
+          url: doi ? `https://doi.org/${doi}` : pid ? `https://europepmc.org/article/${src}/${pid}` : 'https://europepmc.org',
+          doi,
+          citations: parseInt(r.citedByCount || '0') || undefined,
+          matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
+        } as Paper;
+      })
+      .filter((p: Paper | null): p is Paper => p !== null)
+      .filter((paper) => {
+        if (!authorCandidates.length || intent === 'TOPIC') return true;
+        const minOverlap = intent === 'AUTHOR_WEAK' ? 0.92 : 0.8;
+        return matchByAuthor(paper.authors || [], authorCandidates, minOverlap);
+      });
+
+    console.log(`[T6:EuropePMC] Completed in ${Date.now() - startTime}ms, found ${papers.length} papers`);
+    return papers;
+  } catch (error) {
+    console.error('[T6:EuropePMC] Error:', error);
+    return [];
+  }
+}
+
+// T7: Ranker - Integration & ranking
 function t6_integrateAndRank(
   t1Results: Paper[],
   t2Results: Paper[],
   t3Results: Paper[],
   t4Results: Paper[],
   t5Results: Paper[],
+  t6Results: Paper[],
   intent: QueryIntent,
   authorCandidates: string[] = [],
   claim: string = '',
@@ -888,7 +971,7 @@ function t6_integrateAndRank(
   const startTime = Date.now();
   
   // Merge all results
-  const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results];
+  const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results, ...t6Results];
   
   // Public-safe workflow merge: DOI/public ID/title dedupe while preserving source hits and best metadata.
   const uniquePapers = mergePublicPaperRecords(allPapers);
@@ -951,7 +1034,7 @@ function t6_integrateAndRank(
   return rankedPapers;
 }
 
-type TrackSource = 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex';
+type TrackSource = 'pubmed' | 'arxiv' | 'semantic' | 'crossref' | 'openalex' | 'europepmc';
 type SearchMode = 'broad' | 'precision' | 'author';
 
 function normalizeSearchMode(value: unknown): SearchMode {
@@ -966,7 +1049,7 @@ type SearchAttemptResult = {
   mode: SearchMode;
   intent: QueryIntent;
   authorCandidates: string[];
-  trackResults: { t1: number; t2: number; t3: number; t4: number; t5: number; final: number };
+  trackResults: { t1: number; t2: number; t3: number; t4: number; t5: number; t6: number; final: number };
   sourceHealth?: PublicSourceHealth[];
   papers: Paper[];
   homonymProfiles?: Array<{
@@ -1363,9 +1446,9 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const effectiveQuery = expandPublicBioQuery((topicQuery || authorCandidates[0] || query).trim());
 
   const defaultSourcesByMode: Record<SearchMode, TrackSource[]> = {
-    broad: ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex'],
-    precision: ['pubmed', 'semantic', 'crossref', 'openalex'],
-    author: ['pubmed', 'semantic', 'crossref', 'openalex'],
+    broad: ['pubmed', 'arxiv', 'semantic', 'crossref', 'openalex', 'europepmc'],
+    precision: ['pubmed', 'semantic', 'crossref', 'openalex', 'europepmc'],
+    author: ['pubmed', 'semantic', 'crossref', 'openalex', 'europepmc'],
   };
   const sources: TrackSource[] = filters?.sources || defaultSourcesByMode[mode];
   const yearFrom = filters?.yearFrom;
@@ -1398,6 +1481,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   if (sources.includes('openalex')) {
     trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
+  if (sources.includes('europepmc')) {
+    const epmcQuery = intent === 'INSTITUTION' ? query : (topicQuery || query);
+    trackJobs.push({ source: 'europepmc', promise: t6_europePmcEnhanced(epmcQuery, yearFrom, yearTo, authorCandidates, intent) });
+  }
 
   const sourceStartedAt = new Map(trackJobs.map((job) => [job.source, Date.now()]));
   const settled = await Promise.allSettled(trackJobs.map((job) => job.promise));
@@ -1407,6 +1494,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     semantic: [],
     crossref: [],
     openalex: [],
+    europepmc: [],
   };
 
   settled.forEach((result, index) => {
@@ -1426,6 +1514,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     bySource.semantic,
     bySource.crossref,
     bySource.openalex,
+    bySource.europepmc,
     intent,
     authorCandidates,
     claim,
@@ -1487,6 +1576,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       t3: bySource.semantic.length,
       t4: bySource.crossref.length,
       t5: bySource.openalex.length,
+      t6: bySource.europepmc.length,
       final: papers.length,
     },
   };
