@@ -223,14 +223,16 @@ export function publicWorkflowScore(paper: PublicPaperLike, query = "", currentY
   const year = Number(paper.year || 0);
   const age = year > 0 ? Math.max(0, currentYear - year) : 20;
   const recency = Math.max(0, 30 - age * 2);
-  const citations = citationVelocity(paper.citations, year, currentYear) * 40;
+  // Citations excluded from relevance score — surfaced as user-facing sort option only.
+  // cite velocity × 40 previously dominated topicBonus × 15, causing high-citation
+  // off-topic papers (e.g. COVID papers) to outrank genuinely relevant results.
   const influence = Math.min(20, Number(paper.influenceScore || 0) / 5);
   const metadata = (paper.meshTerms?.length ? 5 : 0) + (paper.techniques?.length ? 5 : 0);
   const doiBonus = paper.doi ? 3 : 0;
   const abstractBonus = paper.abstract && paper.abstract.length > 80 ? 4 : 0;
   const text = `${paper.title || ""} ${paper.abstract || ""}`;
-  const topicBonus = query ? Math.round(topicOverlap(text, normalizePublicBioQuery(query)) * 15) : 0;
-  return (recency + citations + influence + metadata + doiBonus + abstractBonus + topicBonus) * publicSourceWeight(paper.source);
+  const topicBonus = query ? Math.round(topicOverlap(text, normalizePublicBioQuery(query)) * 25) : 0;
+  return (recency + influence + metadata + doiBonus + abstractBonus + topicBonus) * publicSourceWeight(paper.source);
 }
 
 export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean {

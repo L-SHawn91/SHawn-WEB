@@ -1587,15 +1587,34 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   };
 }
 
+type SortBy = 'relevance' | 'citations' | 'year';
+
+function normalizeSortBy(value: unknown): SortBy {
+  if (value === 'citations') return 'citations';
+  if (value === 'year') return 'year';
+  return 'relevance';
+}
+
+function applySortBy(papers: Paper[], sortBy: SortBy): Paper[] {
+  if (sortBy === 'citations') {
+    return [...papers].sort((a, b) => (b.citations || 0) - (a.citations || 0));
+  }
+  if (sortBy === 'year') {
+    return [...papers].sort((a, b) => (b.year || 0) - (a.year || 0));
+  }
+  return papers; // 'relevance' — already sorted by rankScore
+}
+
 export async function POST(request: NextRequest) {
   const overallStart = Date.now();
-  
+
   try {
     const payload = await request.json();
     const rawQuery = typeof payload?.query === 'string' ? String(payload.query).trim() : '';
     const normalizedQuery = preprocessUserQuery(rawQuery);
     const filters = payload?.filters || {};
     const mode = normalizeSearchMode(payload?.mode || filters?.mode);
+    const sortBy = normalizeSortBy(payload?.sortBy ?? filters?.sortBy);
     if (typeof payload?.claim === 'string' && !filters.claim) filters.claim = payload.claim;
     if (typeof payload?.hypothesis === 'string' && !filters.hypothesis) filters.hypothesis = payload.hypothesis;
     const variants = buildQueryVariants(rawQuery, normalizedQuery);
@@ -1613,7 +1632,7 @@ export async function POST(request: NextRequest) {
       if (primaryIntent !== 'TOPIC' && attempt.intent !== 'TOPIC' && attempt.authorCandidates.length) break;
       if (shouldStopRetry(attempt)) break;
     }
-    
+
     const totalTime = Date.now() - overallStart;
     console.log(`[Parallel Search] Total time: ${totalTime}ms`);
     const selected = best || {
@@ -1626,9 +1645,11 @@ export async function POST(request: NextRequest) {
       sourceHealth: [],
       trackResults: { t1: 0, t2: 0, t3: 0, t4: 0, t5: 0, final: 0 },
     };
-    
+
+    const sortedPapers = applySortBy(selected.papers, sortBy);
+
     return NextResponse.json({
-      papers: selected.papers,
+      papers: sortedPapers,
       suggestedTopics: buildPublicSuggestedTopics(selected.papers, normalizePublicBioQuery(normalizedQuery)),
       meta: {
         totalTime,
@@ -1636,6 +1657,7 @@ export async function POST(request: NextRequest) {
         intent: selected.intent,
         normalizedQuery,
         selectedQuery: selected.query,
+        sortBy,
         attempts,
         authorCandidates: selected.authorCandidates,
         homonymProfiles: selected.homonymProfiles || [],
