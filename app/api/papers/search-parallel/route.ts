@@ -244,6 +244,21 @@ function overlapRatio(base: string, target: string): number {
   return overlap / ta.size;
 }
 
+function titleKeywordTokens(query: string): string[] {
+  const stop = new Set(['and', 'or', 'the', 'with', 'from', 'into', 'human', 'mouse', 'mice', 'pig', 'porcine', 'species', 'keyword', 'author']);
+  return Array.from(new Set(((query || '').toLowerCase().match(/[a-z0-9-]{3,}/g) || [])
+    .map((t) => t === 'rnaseq' ? 'rna-seq' : t)
+    .filter((t) => !stop.has(t))))
+    .slice(0, 6);
+}
+
+function buildPubMedTitleQuery(query: string): string {
+  const tokens = titleKeywordTokens(query);
+  if (!tokens.length) return query;
+  const titleOr = tokens.map((t) => `"${t.replace(/"/g, '')}"[Title]`).join(' OR ');
+  return `(${titleOr})`;
+}
+
 function splitSentences(text: string): string[] {
   if (!text) return [];
   return text
@@ -1066,6 +1081,52 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
     return papers;
   } catch (error) {
     console.error('[T5:OpenAlex] Error:', error);
+    return [];
+  }
+}
+
+async function t5_openalexTitleFallback(query: string, yearFrom?: string, yearTo?: string): Promise<Paper[]> {
+  const clean = buildPublicKeywordSpeciesQuery(query, { expand: false, titleOnly: true });
+  const params = new URLSearchParams({
+    filter: `title.search:${clean}`,
+    per_page: '25',
+    select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count',
+  });
+  try {
+    const res = await fetch(`https://api.openalex.org/works?${params.toString()}`, {
+      signal: AbortSignal.timeout(15000),
+      headers: { Accept: 'application/json' },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const rows: any[] = Array.isArray(data?.results) ? data.results : [];
+    return rows.map((row: any) => {
+      const year = row?.publication_year || new Date().getFullYear();
+      if (yearFrom && year < parseInt(yearFrom)) return null;
+      if (yearTo && year > parseInt(yearTo)) return null;
+      const inv = row.abstract_inverted_index;
+      const words: Record<number, string> = {};
+      if (inv && typeof inv === 'object') {
+        for (const [word, positions] of Object.entries(inv)) {
+          if (Array.isArray(positions)) positions.forEach((p) => { if (typeof p === 'number') words[p] = String(word); });
+        }
+      }
+      const abstract = Object.keys(words).map(Number).sort((a, b) => a - b).map((i) => words[i]).filter(Boolean).join(' ') || 'No abstract available';
+      return {
+        id: `openalex-${row.id || Math.random().toString(36).slice(2)}`,
+        title: row.display_name || 'No title',
+        authors: Array.isArray(row.authorships) ? row.authorships.map((a: any) => a?.author?.display_name).filter((x: unknown): x is string => typeof x === 'string') : [],
+        abstract,
+        year,
+        source: 'openalex' as const,
+        url: row?.primary_location?.landing_page_url || row?.id || 'https://openalex.org',
+        citations: typeof row?.cited_by_count === 'number' ? row.cited_by_count : undefined,
+        matchType: 'topic' as const,
+        journal: (row.primary_location?.source?.display_name as string | undefined) || undefined,
+        journalIssn: (row.primary_location?.source?.issn_l as string | undefined) || undefined,
+      } as Paper;
+    }).filter((p: Paper | null): p is Paper => p !== null);
+  } catch {
     return [];
   }
 }
@@ -1902,6 +1963,19 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       const relaxedTopic = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true });
       papers = beforeTopicGuard
         .filter((paper) => overlapRatio(relaxedTopic, `${paper.title || ''} ${paper.abstract || ''}`) >= 0.12)
+        .slice(0, 50);
+    }
+    if (papers.length === 0 && topicQuery) {
+      const titleFallback = await Promise.allSettled([
+        t1_pubmedEnhanced(buildPubMedTitleQuery(topicQuery), yearFrom, yearTo, [], 'TOPIC'),
+        t5_openalexTitleFallback(topicQuery, yearFrom, yearTo),
+        t3_semanticEnhanced(buildPublicKeywordSpeciesQuery(topicQuery, { expand: false, titleOnly: true }), yearFrom, yearTo, [], 'TOPIC'),
+      ]);
+      const fallbackRows = titleFallback.flatMap((r) => r.status === 'fulfilled' ? r.value : []);
+      papers = mergePublicPaperRecords(fallbackRows)
+        .filter((paper) => overlapRatio(buildPublicKeywordSpeciesQuery(topicQuery, { expand: false, titleOnly: true }), `${paper.title || ''} ${paper.abstract || ''}`) >= 0.08)
+        .map((paper) => ({ ...paper, rankScore: Math.round(publicWorkflowScore(paper, topicQuery)) }))
+        .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0))
         .slice(0, 50);
     }
   }
