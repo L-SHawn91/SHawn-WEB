@@ -150,7 +150,9 @@ export function correctPublicBioQueryTypos(query: string): string {
 
 const EXPANSION_SYNONYMS: Array<[RegExp, string[]]> = [
   [/\borganoid(s)?\b/i, ["3D culture", "organotypic culture"]],
-  [/\bendometr/i, ["uterine lining", "endometrium"]],
+  [/\buterus\b|\buteri\b/i, ["endometrium", "endometrial", "uterine"]],
+  [/\buterine\b/i, ["uterus", "endometrium", "endometrial"]],
+  [/\bendometr/i, ["uterus", "uterine", "uterine lining", "endometrium"]],
   [/\bscrna\b|single[-\s]?cell/i, ["single cell RNA sequencing", "single-cell transcriptomics"]],
   [/\brna[-\s]?seq\b/i, ["transcriptomics", "gene expression profiling"]],
   [/\bfish\b/i, ["fluorescence in situ hybridization"]],
@@ -198,6 +200,27 @@ export function expandPublicBioQuery(query: string, maxTerms = 3): string {
 
   if (!additions.length) return clean;
   return `${clean} (${additions.map((term) => `"${term}"`).join(" OR ")})`;
+}
+
+export function expandPublicBioQueryLoose(query: string, maxTerms = 4): string {
+  const clean = normalizePublicBioQuery(query);
+  if (!clean) return "";
+
+  const baseTokens = clean.match(/[\p{L}\p{N}-]{3,}/gu) || [];
+  const terms = new Set<string>(baseTokens.length > 1 ? baseTokens : [clean]);
+  for (const [pattern, synonyms] of EXPANSION_SYNONYMS) {
+    if (terms.size >= maxTerms + 1) break;
+    if (!pattern.test(clean)) continue;
+    for (const synonym of synonyms) {
+      if (terms.size >= maxTerms + 1) break;
+      if (synonym && !clean.toLowerCase().includes(synonym.toLowerCase())) terms.add(synonym);
+    }
+  }
+
+  if (terms.size <= 1) return clean;
+  return Array.from(terms)
+    .map((term) => term.includes(" ") ? `"${term}"` : term)
+    .join(" OR ");
 }
 
 export function buildPublicPubMedQuery(query: string): string {
@@ -372,12 +395,22 @@ export function publicDatasetTopicGuard(item: PublicDatasetLike, query: string):
 
   if (paperDerived && !accessionBacked && q.includes("dataset")) return false;
 
+  const isExpandedOrQuery = /\bor\b/i.test(query);
+  const matched = targetTokens.filter((token) => text.includes(token)).length;
+  if (isExpandedOrQuery) {
+    const needsOrganoid = q.includes("organoid");
+    const hasOrganoid = !needsOrganoid || text.includes("organoid");
+    const tissueTerms = ["uterus", "uterine", "endometrium", "endometrial"];
+    const asksTissue = tissueTerms.some((term) => q.includes(term));
+    const hasTissue = !asksTissue || tissueTerms.some((term) => text.includes(term));
+    return hasOrganoid && hasTissue && (matched >= 1 || accessionBacked);
+  }
+
   // Enforce all query-specific tokens (length ≥5 are specific enough)
   for (const token of targetTokens) {
     if (token.length >= 5 && !text.includes(token)) return false;
   }
 
-  const matched = targetTokens.filter((token) => text.includes(token)).length;
   if (paperDerived && !accessionBacked && matched < Math.min(2, targetTokens.length)) return false;
 
   return matched / Math.max(1, targetTokens.length) >= 0.25 || (accessionBacked && matched >= 1);

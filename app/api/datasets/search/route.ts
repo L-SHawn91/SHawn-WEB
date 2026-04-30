@@ -3,6 +3,7 @@ import { datasetsCache, makeCacheKey } from "../../../../lib/server-cache";
 import {
   buildPublicDatasetSuggestedTopics,
   mergePublicDatasetRecords,
+  expandPublicBioQueryLoose,
   normalizePublicBioQuery,
   publicDatasetTopicGuard,
   publicDatasetWorkflowScore,
@@ -864,7 +865,8 @@ export async function POST(request: NextRequest) {
         };
 
     const { sources, yearFrom, yearTo, sortBy, page, pageSize } = parseFilters(filterInput);
-    const effectiveQuery = normalizePublicBioQuery(String(query));
+    const normalizedQuery = normalizePublicBioQuery(String(query));
+    const effectiveQuery = expandPublicBioQueryLoose(normalizedQuery);
 
     // Cache lookup
     const cacheKey = makeCacheKey({ q: effectiveQuery, sources: [...sources].sort(), yearFrom, yearTo, sortBy, page, pageSize });
@@ -928,14 +930,14 @@ export async function POST(request: NextRequest) {
     });
 
     const guardedBySource = ALL_SOURCES.reduce<Record<string, DatasetItem[]>>((acc, source) => {
-      const guardedItems = bySource[source].filter((item) => publicDatasetTopicGuard(item, String(query)));
-      const rankedItems = integrateAndRank(guardedItems, String(query));
+      const guardedItems = bySource[source].filter((item) => publicDatasetTopicGuard(item, effectiveQuery));
+      const rankedItems = integrateAndRank(guardedItems, effectiveQuery);
       acc[source] = sortDatasets(rankedItems, sortBy);
       return acc;
     }, {});
 
     const merged = ALL_SOURCES.flatMap((source) => guardedBySource[source] || []);
-    const ranked = integrateAndRank(merged, String(query));
+    const ranked = integrateAndRank(merged, effectiveQuery);
     const sorted = sortDatasets(ranked, sortBy);
     const total = sorted.length;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));

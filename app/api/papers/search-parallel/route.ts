@@ -12,9 +12,8 @@ import {
   type QueryIntent,
 } from '../../../../lib/search/queryPlanner';
 import {
-  buildPublicPubMedQuery,
   buildPublicSuggestedTopics,
-  expandPublicBioQuery,
+  expandPublicBioQueryLoose,
   mergePublicPaperRecords,
   normalizePublicBioQuery,
   publicSourceHealth,
@@ -1741,7 +1740,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     : ((!hasManualAuthor && effectiveMode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic) ? '' : detectedTopic);
   const effectiveQuery = pureAuthorSearch
     ? (authorCandidates[0] || query).trim()
-    : expandPublicBioQuery((topicQuery || authorCandidates[0] || query).trim());
+    : expandPublicBioQueryLoose((topicQuery || authorCandidates[0] || query).trim());
 
   const defaultSourcesByMode: Record<SearchMode, TrackSource[]> = {
     broad: ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'],
@@ -1764,7 +1763,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     // INSTITUTION: pass full original query so T1 can extract affiliation name.
     // TOPIC/AUTHOR: pass raw topicQuery — synonym expansion causes zero results for
     // specific gene queries (e.g. DHCR24 endometrium → adds "uterine lining" AND).
-    const pubmedQuery = intent === 'INSTITUTION' ? query : (topicQuery || query);
+    const pubmedQuery = intent === 'INSTITUTION' ? query : expandPublicBioQueryLoose(topicQuery || query);
     trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(pubmedQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('semantic')) {
@@ -1774,11 +1773,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('europepmc')) {
-    const epmcQuery = intent === 'INSTITUTION' ? query : (topicQuery || query);
+    const epmcQuery = intent === 'INSTITUTION' ? query : expandPublicBioQueryLoose(topicQuery || query);
     trackJobs.push({ source: 'europepmc', promise: t6_europePmcEnhanced(epmcQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('biorxiv')) {
-    trackJobs.push({ source: 'biorxiv', promise: t7_biorxivEnhanced(topicQuery || query, yearFrom, yearTo, authorCandidates, intent) });
+    trackJobs.push({ source: 'biorxiv', promise: t7_biorxivEnhanced(expandPublicBioQueryLoose(topicQuery || query), yearFrom, yearTo, authorCandidates, intent) });
   }
 
   const sourceStartedAt = new Map(trackJobs.map((job) => [job.source, Date.now()]));
@@ -1878,7 +1877,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   }
   // INSTITUTION: affiliation filter in PubMed already constrains results; skip topic guard.
   if (intent !== 'INSTITUTION') {
-    papers = papers.filter((paper) => publicTopicGuard(paper, nonAuthorQuery || effectiveQuery));
+    papers = papers.filter((paper) => publicTopicGuard(paper, effectiveQuery || nonAuthorQuery));
   }
 
   // Per-source view: topic-guarded raw results scored lightly (no cross-source dedup)
@@ -1889,10 +1888,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     if (!srcPapers?.length) continue;
     const guardFilter = intent === 'INSTITUTION'
       ? srcPapers
-      : srcPapers.filter((p) => publicTopicGuard(p, nonAuthorQuery || effectiveQuery));
+      : srcPapers.filter((p) => publicTopicGuard(p, effectiveQuery || nonAuthorQuery));
     if (guardFilter.length) {
       bySourceScored[src] = guardFilter
-        .map((p) => ({ ...p, rankScore: Math.round(publicWorkflowScore(p, nonAuthorQuery || effectiveQuery)) }))
+        .map((p) => ({ ...p, rankScore: Math.round(publicWorkflowScore(p, effectiveQuery || nonAuthorQuery)) }))
         .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
     }
   }
