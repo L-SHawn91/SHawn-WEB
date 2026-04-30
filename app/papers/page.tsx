@@ -575,80 +575,93 @@ export default function PapersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 py-6 dark:bg-slate-950 sm:py-8">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-4 flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-800 dark:bg-slate-900">
-          <Link href="/" className="rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800">Home</Link>
-          <Link href="/papers" className="rounded-md bg-blue-100 px-2 py-1 font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">Papers</Link>
-          <Link href="/datasets" className="rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800">Datasets</Link>
-        </div>
-        <div className="mb-5 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:mb-6 sm:px-6 sm:py-5">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="min-h-screen bg-slate-950 text-slate-100">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-4">
+        {/* Navigation */}
+        <nav className="mb-5 flex items-center gap-1 rounded-2xl border border-slate-800 bg-slate-900/80 px-3 py-2 text-sm backdrop-blur">
+          <Link href="/" className="rounded-lg px-3 py-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white">Home</Link>
+          <Link href="/papers" className="rounded-lg bg-blue-600 px-3 py-1.5 font-semibold text-white">Papers</Link>
+          <Link href="/datasets" className="rounded-lg px-3 py-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white">Datasets</Link>
+        </nav>
+        {/* Hero Header */}
+        <div className="relative mb-5 overflow-hidden rounded-3xl border border-blue-900/40 bg-gradient-to-br from-blue-950 via-indigo-950 to-slate-950 px-6 py-8 sm:px-8 sm:py-10">
+          <div className="pointer-events-none absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(ellipse at 20% 60%, #3b82f6 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, #8b5cf6 0%, transparent 50%)' }} />
+          <div className="relative flex flex-wrap items-start justify-between gap-6">
             <div>
-              <h1 className="flex items-center gap-3 text-2xl font-bold text-slate-900 dark:text-white">
-                <span title="논문 통합 검색 대시보드"><BookOpen className="h-7 w-7 text-blue-600" /></span>
+              <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                <span className="text-4xl">🔬</span>
                 SHawn Bio Search
               </h1>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                6개 소스 티어드 병렬 검색 · Evidence 분류 · 가설 검증 지원
+              <p className="mt-2 text-sm text-blue-200/80">
+                7개 소스 · 티어드 병렬 검색 · Evidence 분류 · 가설 검증
               </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {(['pubmed', 'europepmc', 'biorxiv', 'semantic', 'openalex', 'crossref', 'arxiv'] as const).map((src) => (
+                  <span key={src} className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${sourceBadge[src]}`}>
+                    {sourceLabel[src]}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
-              <span title="검색 전체 소요시간(밀리초)"><Activity className="h-4 w-4" /></span>
-              Last Query Time: {meta?.totalTime ? `${meta.totalTime}ms` : 'N/A'}
-              {meta?.intent ? <span className="ml-2 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] dark:bg-slate-700">Intent {meta.intent}</span> : null}
+            <div className="flex flex-col items-end gap-2">
+              {meta?.totalTime && (
+                <div className="flex items-center gap-1.5 rounded-full border border-blue-800/60 bg-blue-950/60 px-3 py-1.5 text-xs text-blue-300">
+                  <Activity className="h-3.5 w-3.5" />
+                  {meta.totalTime}ms
+                </div>
+              )}
+              {meta?.intent && (
+                <span className={`rounded-full px-3 py-1 text-[11px] font-semibold ${intentBadgeClass[meta.intent as keyof typeof intentBadgeClass] || 'bg-slate-700 text-slate-200'}`}>
+                  {meta.intent}
+                </span>
+              )}
             </div>
           </div>
         </div>
-        <div className="sticky top-3 z-30 mb-5 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-cyan-50 to-indigo-50 p-3 shadow-sm dark:border-blue-900/50 dark:from-slate-900 dark:via-blue-950/40 dark:to-slate-900 sm:mb-6 sm:p-4">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <p className="text-sm font-semibold text-slate-900 dark:text-white">Search Control Center</p>
-            <p className="text-xs text-slate-600 dark:text-slate-300">키워드 입력 후 Enter 또는 검색 실행</p>
-          </div>
+        {/* Sticky Search Bar */}
+        <div className="sticky top-0 z-30 mb-6 rounded-2xl border border-slate-800 bg-slate-950/95 px-4 py-4 shadow-2xl backdrop-blur-md">
           <div className="flex flex-col gap-3 lg:flex-row">
             <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
               <input
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
-                placeholder="예: single-cell atlas"
-                className="w-full rounded-xl border border-blue-300 bg-white px-10 py-2.5 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-blue-700 dark:bg-slate-900 dark:text-slate-100 sm:py-3"
+                placeholder="논문 검색: single-cell endometrium, DHCR24 cholesterol..."
+                className="w-full rounded-xl border border-slate-700 bg-slate-900 px-10 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none ring-blue-500 transition focus:border-blue-600 focus:ring-2"
               />
             </div>
-            {/* Claim input — collapses when empty */}
-            <div className="relative flex-1 lg:flex-none lg:w-80">
-              <Sparkles className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-violet-400" />
+            <div className="relative lg:w-72">
+              <Sparkles className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-violet-400" />
               <input
                 type="text"
                 value={filters.claim}
                 onChange={(e) => setFilters({ ...filters, claim: e.target.value })}
                 onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
-                placeholder="검증할 주장 (선택): organoids recapitulate endometrial function"
-                className="w-full rounded-xl border border-violet-300 bg-white px-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none ring-violet-400 transition focus:ring-2 dark:border-violet-700 dark:bg-slate-900 dark:text-slate-100 sm:py-3"
+                placeholder="검증할 주장 (선택)..."
+                className="w-full rounded-xl border border-violet-800 bg-slate-900 px-10 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none ring-violet-500 transition focus:border-violet-600 focus:ring-2"
               />
             </div>
             <button
-              onClick={() => {
-                void searchPapers();
-              }}
+              onClick={() => { void searchPapers(); }}
               disabled={loading}
-              className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 sm:px-6 sm:py-3"
+              className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/40 transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? '검색 중...' : '검색 실행'}
+              {loading ? (
+                <span className="flex items-center gap-2"><span className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />검색 중...</span>
+              ) : '검색 실행'}
             </button>
           </div>
           {quickQueries.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
+              <span className="text-[11px] text-slate-600 self-center">최근:</span>
               {quickQueries.map((item) => (
                 <button
                   key={item}
                   type="button"
-                  onClick={() => {
-                    void runQuickQuery(item);
-                  }}
-                  className="rounded-full border border-slate-300 bg-white px-2.5 py-1 text-[11px] text-slate-700 transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-600 dark:hover:text-blue-300 sm:px-3 sm:py-1.5 sm:text-xs"
+                  onClick={() => { void runQuickQuery(item); }}
+                  className="rounded-full border border-slate-700 bg-slate-900 px-2.5 py-1 text-[11px] text-slate-400 transition hover:border-blue-600 hover:text-blue-400"
                 >
                   {item}
                 </button>
@@ -657,750 +670,444 @@ export default function PapersPage() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
-          <section className="space-y-6 lg:col-span-8">
-            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
-              <div className="flex flex-col gap-4">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">Advanced Query Builder</p>
-                      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                        상단 Control Center로 즉시 검색하고, 여기서는 chip 기반 쿼리 조합만 수행합니다.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setIsAdvancedOpen((v) => !v)}
-                      className="rounded-md border border-slate-300 px-2 py-1 text-[11px] text-slate-600 dark:border-slate-600 dark:text-slate-300"
-                    >
-                      {isAdvancedOpen ? '접기' : '열기'}
-                    </button>
-                  </div>
-                  {isAdvancedOpen && (
-                    <div className="relative mt-2">
-                      <div className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus-within:ring-2 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          {chips.map((chip, idx) => (
-                            <span key={`${chip}-${idx}`} className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-100 px-2 py-0.5 text-xs text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
-                              {chip}
-                              <button
-                                type="button"
-                                onClick={() => setChips((prev) => prev.filter((_, i) => i !== idx))}
-                                className="text-blue-700 hover:text-blue-900 dark:text-blue-300"
-                                title="블록 제거"
-                              >
-                                ×
-                              </button>
-                            </span>
-                          ))}
-                          <input
-                            type="text"
-                            value={query}
-                            onChange={(e) => {
-                              setQuery(e.target.value);
-                              setMergeSuggestion(null);
-                            }}
-                            onCompositionStart={() => setIsComposing(true)}
-                            onCompositionEnd={() => setIsComposing(false)}
-                            onKeyDown={(e) => {
-                              if (isComposing || (e.nativeEvent as any)?.isComposing) return;
-                              const now = Date.now();
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                if (query.trim()) {
-                                  commitBufferToChip(query);
-                                  setQuery('');
-                                }
-                                void searchPapers();
-                                return;
-                              }
-                              if (e.key === 'Backspace' && !query && chips.length > 0) {
-                                e.preventDefault();
-                                setChips((prev) => prev.slice(0, -1));
-                                setMergeSuggestion(null);
-                                return;
-                              }
-                              if (e.key === ' ' || e.key === 'Tab' || e.key === ',' || e.key === ';' || e.key === '/') {
-                                if (!query.trim()) return;
-                                e.preventDefault();
-                                const newToken = tokenizeInput(query).join(' ').trim();
-                                if (!newToken) {
-                                  setQuery('');
-                                  return;
-                                }
-                                setChips((prev) => {
-                                  const next = [...prev, newToken];
-                                  const prevToken = prev[prev.length - 1];
-                                  const last = lastChipCommitAtRef.current;
-                                  if (prevToken && last && now - last <= T_MERGE && canSuggestMerge(prevToken, newToken)) {
-                                    setMergeSuggestion({ left: prevToken, right: newToken, merged: `${prevToken} ${newToken}` });
-                                  } else {
-                                    setMergeSuggestion(null);
-                                  }
-                                  return next;
-                                });
-                                lastChipCommitAtRef.current = now;
-                                setQuery('');
-                              }
-                            }}
-                            placeholder={chips.length ? '다음 블록 입력...' : '질환, 기술, 저자, 키워드 입력'}
-                            className="min-w-[140px] flex-1 bg-transparent py-1 text-sm outline-none sm:min-w-[180px]"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
+        {/* Main grid */}
+        <div className="grid grid-cols-1 gap-6 pb-12 lg:grid-cols-12">
+
+          {/* ── LEFT: Results column ── */}
+          <section className="space-y-4 lg:col-span-8">
+
+            {/* Advanced Query Builder */}
+            <div className="rounded-2xl border border-slate-800 bg-slate-900">
+              <div className="flex items-center justify-between gap-3 px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-slate-300">Advanced Query Builder</span>
+                  <span className="text-[11px] text-slate-600">chip 기반 쿼리 조합</span>
                 </div>
-                {isAdvancedOpen && effectiveInputQuery && ghostTail && (
-                  <p className="-mt-1 text-xs text-slate-400 dark:text-slate-500">
-                    <span className="opacity-70">{effectiveInputQuery}</span>
-                    <span className="opacity-40">{ghostTail}</span>
-                  </p>
-                )}
-                {isAdvancedOpen && contextualSuggestions.length > 0 && (
-                  <div className="space-y-2 text-xs">
-                    <span className="text-slate-500 dark:text-slate-400">추천 확장:</span>
-                    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                      {contextualSuggestions.map((s) => (
-                        <button
-                          key={s.value}
-                          type="button"
-                          onClick={() => {
-                            setChips([]);
-                            setQuery(s.value);
-                          }}
-                          className="rounded-xl border border-indigo-200 bg-indigo-50/60 px-3 py-2 text-left text-[11px] text-indigo-900 hover:bg-indigo-100 dark:border-indigo-900 dark:bg-indigo-900/20 dark:text-indigo-200"
-                        >
-                          <div className="mb-1 flex items-center justify-between gap-2">
-                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${intentBadgeClass[s.intent]}`}>
-                              {s.intent}
-                            </span>
-                            <span className="text-[10px] text-slate-500 dark:text-slate-400">클릭해 반영</span>
-                          </div>
-                          <p className="line-clamp-2">{s.value}</p>
-                        </button>
+                <button
+                  type="button"
+                  onClick={() => setIsAdvancedOpen((v) => !v)}
+                  className="rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] text-slate-400 transition hover:border-slate-500 hover:text-slate-200"
+                >
+                  {isAdvancedOpen ? '접기' : '열기'}
+                </button>
+              </div>
+
+              {isAdvancedOpen && (
+                <div className="space-y-3 border-t border-slate-800 px-4 pb-4 pt-3">
+                  {/* Chip input */}
+                  <div className="min-h-[44px] w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 ring-blue-600 transition focus-within:ring-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {chips.map((chip, idx) => (
+                        <span key={`${chip}-${idx}`} className="inline-flex items-center gap-1 rounded-lg border border-blue-800 bg-blue-950/60 px-2 py-0.5 text-xs text-blue-300">
+                          {chip}
+                          <button type="button" onClick={() => setChips((prev) => prev.filter((_, i) => i !== idx)) } className="text-blue-500 hover:text-blue-200" title="블록 제거">×</button>
+                        </span>
                       ))}
-                    </div>
-                  </div>
-                )}
-                {isAdvancedOpen && isGuideOpen && (
-                  <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs text-slate-700 shadow-sm dark:border-blue-900/60 dark:bg-slate-800/80 dark:text-slate-200">
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <p className="font-semibold text-blue-700 dark:text-blue-300">검색 가이드 (입력/호버 도움말)</p>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsGuideOpen((v) => !v);
+                      <input
+                        type="text"
+                        value={query}
+                        onChange={(e) => { setQuery(e.target.value); setMergeSuggestion(null); }}
+                        onCompositionStart={() => setIsComposing(true)}
+                        onCompositionEnd={() => setIsComposing(false)}
+                        onKeyDown={(e) => {
+                          if (isComposing || (e.nativeEvent as any)?.isComposing) return;
+                          const now = Date.now();
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (query.trim()) { commitBufferToChip(query); setQuery(''); }
+                            void searchPapers(); return;
+                          }
+                          if (e.key === 'Backspace' && !query && chips.length > 0) {
+                            e.preventDefault(); setChips((prev) => prev.slice(0, -1)); setMergeSuggestion(null); return;
+                          }
+                          if (e.key === ' ' || e.key === 'Tab' || e.key === ',' || e.key === ';' || e.key === '/') {
+                            if (!query.trim()) return;
+                            e.preventDefault();
+                            const newToken = tokenizeInput(query).join(' ').trim();
+                            if (!newToken) { setQuery(''); return; }
+                            setChips((prev) => {
+                              const next = [...prev, newToken];
+                              const prevToken = prev[prev.length - 1];
+                              const last = lastChipCommitAtRef.current;
+                              if (prevToken && last && now - last <= T_MERGE && canSuggestMerge(prevToken, newToken)) {
+                                setMergeSuggestion({ left: prevToken, right: newToken, merged: `${prevToken} ${newToken}` });
+                              } else { setMergeSuggestion(null); }
+                              return next;
+                            });
+                            lastChipCommitAtRef.current = now; setQuery('');
+                          }
                         }}
-                        className="rounded-md border border-blue-300 px-2 py-0.5 text-[11px] text-blue-700 dark:border-blue-700 dark:text-blue-300"
-                      >
-                        {isGuideOpen ? '닫기' : '열기'}
-                      </button>
-                    </div>
-                    <p className="mb-2 rounded-md bg-white/80 px-2 py-1 text-[11px] dark:bg-slate-900/60">실시간 힌트: {liveHint}</p>
-                    <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-                      <div>
-                        <p className="mb-1 font-medium">빠른 예시</p>
-                        <ul className="space-y-1">
-                          {SEARCH_GUIDE.quick.length === 0 ? (
-                            <li className="text-[11px]">• 최근 검색어가 자동으로 표시됩니다.</li>
-                          ) : SEARCH_GUIDE.quick.map((line) => (
-                            <li key={line} className="text-[11px]">• {line}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="mb-1 font-medium">키보드 조작</p>
-                        <ul className="space-y-1">
-                          {SEARCH_GUIDE.keyboard.map((line) => (
-                            <li key={line} className="text-[11px]">• {line}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="mb-1 font-medium">정확도 팁</p>
-                        <ul className="space-y-1">
-                          {SEARCH_GUIDE.tips.map((line) => (
-                            <li key={line} className="text-[11px]">• {line}</li>
-                          ))}
-                        </ul>
-                      </div>
+                        placeholder={chips.length ? '다음 블록 입력...' : '질환, 기술, 저자, 키워드 입력'}
+                        className="min-w-[140px] flex-1 bg-transparent py-1 text-sm text-slate-100 outline-none placeholder:text-slate-600 sm:min-w-[180px]"
+                      />
                     </div>
                   </div>
-                )}
-                {isAdvancedOpen && (
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!query.trim()) return;
-                      commitBufferToChip(query);
-                      setQuery('');
-                    }}
-                    className="rounded-md border border-slate-300 px-2 py-0.5"
-                  >
-                    Add chip
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setChips([]);
-                      setQuery('');
-                      setMergeSuggestion(null);
-                    }}
-                    className="rounded-md border border-slate-300 px-2 py-0.5"
-                  >
-                    Clear chips
-                  </button>
-                  <span className="text-[11px]">IME 입력 중(한글 조합)에는 자동 분할을 보류합니다.</span>
-                </div>
-                )}
-                {isAdvancedOpen && mergeSuggestion && (
-                  <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-                    <span>병합 제안: [{mergeSuggestion.left}] + [{mergeSuggestion.right}]</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setChips((prev) => {
-                          if (prev.length < 2) return prev;
-                          const next = [...prev.slice(0, -2), mergeSuggestion.merged];
-                          return next;
-                        });
-                        setMergeSuggestion(null);
-                      }}
-                      className="rounded-md border border-emerald-400 px-2 py-0.5 text-emerald-700"
-                    >
-                      Merge
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setMergeSuggestion(null)}
-                      className="rounded-md border border-slate-300 px-2 py-0.5"
-                    >
-                      Keep split
-                    </button>
-                  </div>
-                )}
-                {isAdvancedOpen && (
-                  <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-                    <button
-                      type="button"
-                      onClick={() => setIsGuideOpen((v) => !v)}
-                      className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-2 py-0.5 text-[11px] dark:border-slate-700"
-                      title="검색 사용법 보기"
-                    >
-                      <Info className="h-3.5 w-3.5" /> {isGuideOpen ? 'Guide 닫기' : 'Guide 열기'}
-                    </button>
-                  </div>
-                )}
 
-                <div className="grid grid-cols-2 gap-2 md:grid-cols-2 xl:grid-cols-4">
-                  {(Object.keys(trackStatus) as Array<keyof TrackStatus>).map((track) => (
-                    <div
-                      key={track}
-                      title={`${trackNames[track]}: ${track === 't1' ? 'PubMed 검색' : track === 't2' ? 'arXiv 검색' : track === 't3' ? 'Semantic Scholar 검색' : '중복제거 + 점수통합 랭킹'}`}
-                      className={`rounded-xl border p-2.5 sm:p-3 ${trackCardClass(trackStatus[track])}`}
-                    >
-                      <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                        {trackNames[track]}
-                      </p>
-                      <p className="mt-1 text-xs font-semibold text-slate-900 dark:text-white sm:text-sm">
-                        {trackStatusText(trackStatus[track])}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
-              <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-                <div>
-                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                    Search Results
-                  </h2>
-                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400" title={scoreTooltip}>
-                    Score = 최신성 + 주제 연관도 + 영향도 + 메타정보 보너스
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                  <select
-                    value={sortMode}
-                    onChange={(e) => setSortMode(e.target.value as SortMode)}
-                    className="rounded-md border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 sm:text-xs"
-                    title="결과 정렬"
-                  >
-                    <option value="score">Sort: Score</option>
-                    <option value="recent">Sort: Recent</option>
-                    <option value="citations">Sort: Citations</option>
-                    <option value="source">Sort: Source</option>
-                  </select>
-                  <button
-                    onClick={() => setShowSavedOnly((v) => !v)}
-                    className={`rounded-md border px-2 py-1 text-[11px] sm:text-xs ${showSavedOnly ? 'border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300'}`}
-                    title="저장한 논문만 보기"
-                  >
-                    {showSavedOnly ? 'Saved only' : 'All results'}
-                  </button>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">
-                    {displayedPapers.length} papers
-                  </span>
-                  {papers.length > 0 && (
-                    <button
-                      onClick={exportBibTeX}
-                      className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                    >
-                      <Download className="h-3.5 w-3.5" /> BibTeX
-                    </button>
+                  {/* Ghost tail */}
+                  {effectiveInputQuery && ghostTail && (
+                    <p className="text-xs text-slate-600">
+                      <span className="text-slate-400">{effectiveInputQuery}</span>
+                      <span className="text-slate-700">{ghostTail}</span>
+                    </p>
                   )}
-                </div>
-              </div>
 
-              {displayedPapers.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                  {effectiveInputQuery ? '검색 결과가 없습니다. 필터를 조정해보세요.' : '검색어를 입력하면 결과가 대시보드에 표시됩니다.'}
-                </div>
-              ) : (
-                <div className="space-y-2.5 sm:space-y-3">
-                  {displayedPapers.map((paper) => (
-                    <article
-                      key={paper.id}
-                      className="relative rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60 sm:p-4"
-                    >
-                      <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
-                        <span
-                          className={`rounded-full px-2 py-1 font-semibold ${sourceBadge[paper.source]}`}
-                          title={sourceTooltip[paper.source]}
-                        >
-                          {sourceLabel[paper.source]}
-                        </span>
-                        {paper.matchType && (
-                          <span className="rounded-full bg-violet-100 px-2 py-1 text-violet-800 dark:bg-violet-900/40 dark:text-violet-200">
-                            {paper.matchType}
-                          </span>
-                        )}
-                        <span
-                          className="rounded-full bg-slate-200 px-2 py-1 text-slate-700 dark:bg-slate-700 dark:text-slate-200"
-                          title={yearTooltip}
-                        >
-                          {paper.year}
-                        </span>
-                        {paper.rankScore !== undefined && (
-                          <span
-                            className="rounded-full bg-amber-100 px-2 py-1 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
-                            title={`${scoreTooltip}\nIF: ${journalMetricHint[paper.source].if}\nQuartile: ${journalMetricHint[paper.source].q}\n${journalMetricHint[paper.source].note}`}
-                          >
-                            Score {paper.rankScore}
-                          </span>
-                        )}
-                        {paper.citations !== undefined && (
-                          <span
-                            className="rounded-full bg-sky-100 px-2 py-1 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200"
-                            title={citationTooltip}
-                          >
-                            Citations {paper.citations}
-                          </span>
-                        )}
-                        {paper.evidenceLabel && (
-                          <span
-                            className={`rounded-full px-2 py-1 font-semibold ${evidenceLabelBadge[paper.evidenceLabel] || 'bg-slate-100 text-slate-500'}`}
-                            title={paper.evidenceScore !== undefined ? `Evidence score: ${paper.evidenceScore.toFixed(3)}` : ''}
-                          >
-                            {evidenceLabelText[paper.evidenceLabel] || paper.evidenceLabel}
-                          </span>
-                        )}
-                        {paper.evidenceScore !== undefined && paper.evidenceScore > 0 && (
-                          <span className="text-[11px] text-slate-400 dark:text-slate-500">
-                            ev {paper.evidenceScore.toFixed(2)}
-                          </span>
-                        )}
+                  {/* Chip actions */}
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
+                    <button type="button" onClick={() => { if (!query.trim()) return; commitBufferToChip(query); setQuery(''); }} className="rounded-md border border-slate-700 px-2 py-0.5 hover:border-slate-500 hover:text-slate-300 transition">Add chip</button>
+                    <button type="button" onClick={() => { setChips([]); setQuery(''); setMergeSuggestion(null); }} className="rounded-md border border-slate-700 px-2 py-0.5 hover:border-slate-500 hover:text-slate-300 transition">Clear</button>
+                    <button type="button" onClick={() => setIsGuideOpen((v) => !v)} className="inline-flex items-center gap-1 rounded-md border border-slate-700 px-2 py-0.5 hover:border-slate-500 hover:text-slate-300 transition"><Info className="h-3 w-3" />{isGuideOpen ? 'Guide 닫기' : 'Guide'}</button>
+                    <span className="text-slate-700">IME 조합 중 자동 분할 보류</span>
+                  </div>
+
+                  {/* Merge suggestion */}
+                  {mergeSuggestion && (
+                    <div className="flex items-center gap-2 rounded-lg border border-emerald-800/50 bg-emerald-950/30 px-3 py-2 text-xs text-slate-300">
+                      <span className="text-slate-400">병합 제안: [{mergeSuggestion.left}] + [{mergeSuggestion.right}]</span>
+                      <button type="button" onClick={() => { setChips((prev) => { if (prev.length < 2) return prev; return [...prev.slice(0, -2), mergeSuggestion.merged]; }); setMergeSuggestion(null); }} className="rounded-md border border-emerald-600 px-2 py-0.5 text-emerald-400 hover:bg-emerald-900/30 transition">Merge</button>
+                      <button type="button" onClick={() => setMergeSuggestion(null)} className="rounded-md border border-slate-700 px-2 py-0.5 hover:border-slate-500 transition">Keep split</button>
+                    </div>
+                  )}
+
+                  {/* Guide */}
+                  {isGuideOpen && (
+                    <div className="rounded-xl border border-blue-900/50 bg-blue-950/20 p-3 text-xs text-slate-300">
+                      <p className="mb-2 font-semibold text-blue-400">검색 가이드</p>
+                      <p className="mb-2 rounded-lg bg-slate-800/60 px-2 py-1 text-[11px] text-slate-400">힌트: {liveHint}</p>
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                        <div><p className="mb-1 font-medium text-slate-300">빠른 예시</p><ul className="space-y-1 text-[11px] text-slate-500">{SEARCH_GUIDE.quick.length === 0 ? <li>• 최근 검색어가 자동으로 표시됩니다.</li> : SEARCH_GUIDE.quick.map((line) => <li key={line}>• {line}</li>)}</ul></div>
+                        <div><p className="mb-1 font-medium text-slate-300">키보드 조작</p><ul className="space-y-1 text-[11px] text-slate-500">{SEARCH_GUIDE.keyboard.map((line) => <li key={line}>• {line}</li>)}</ul></div>
+                        <div><p className="mb-1 font-medium text-slate-300">정확도 팁</p><ul className="space-y-1 text-[11px] text-slate-500">{SEARCH_GUIDE.tips.map((line) => <li key={line}>• {line}</li>)}</ul></div>
                       </div>
+                    </div>
+                  )}
 
-                      <div className="absolute right-3 top-3">
-                        <button
-                          onMouseEnter={() => {
-                            setHoverPaperId(paper.id);
-                            void loadRelatedPapers(paper);
-                          }}
-                          onMouseLeave={() => setHoverPaperId((id) => (id === paper.id ? null : id))}
-                          className="rounded-full border border-violet-300 px-2 py-1 text-[11px] text-violet-700 dark:border-violet-700 dark:text-violet-300"
-                          title="연관 논문 미리보기"
-                        >
-                          <span className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3" /> Related</span>
-                        </button>
-                        {hoverPaperId === paper.id && (
-                          <div className="absolute right-0 z-20 mt-2 w-72 rounded-lg border border-slate-200 bg-white p-3 text-xs shadow-xl dark:border-slate-700 dark:bg-slate-900 sm:w-80">
-                            <p className="mb-2 font-semibold text-slate-700 dark:text-slate-200">연관 논문</p>
-                            {(relatedByPaper[paper.id] || []).length === 0 ? (
-                              <p className="text-slate-500">불러오는 중이거나 결과가 없습니다.</p>
-                            ) : (
-                              <ul className="max-h-64 space-y-2 overflow-y-auto pr-1">
-                                {(relatedByPaper[paper.id] || []).map((r) => (
-                                  <li key={r.id}>
-                                    <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-blue-600 hover:underline dark:text-blue-300">
-                                      {r.title}
-                                    </a>
-                                    <p className="text-[11px] text-slate-500">{r.source}{r.year ? ` · ${r.year}` : ''}</p>
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
-                        {paper.title}
-                      </h3>
-                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                        {paper.authors.join(', ')}
-                      </p>
-                      <p className="mt-2 line-clamp-3 text-sm text-slate-700 dark:text-slate-200">
-                        {paper.abstract}
-                      </p>
-                      {(paper.evidenceLabel === 'support' || paper.evidenceLabel === 'contradict') && paper.bestSupportSentence && (
-                        <p className={`mt-1.5 rounded-lg px-3 py-1.5 text-xs italic ${paper.evidenceLabel === 'support' ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300' : 'bg-rose-50 text-rose-800 dark:bg-rose-950/30 dark:text-rose-300'}`}>
-                          &ldquo;{paper.bestSupportSentence.slice(0, 160)}{paper.bestSupportSentence.length > 160 ? '…' : ''}&rdquo;
-                        </p>
-                      )}
-
-                      {(paper.meshTerms?.length || paper.techniques?.length) && (
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {paper.meshTerms?.slice(0, 3).map((term) => (
-                            <span
-                              key={term}
-                              className="rounded bg-blue-100 px-2 py-0.5 text-[11px] text-blue-800 dark:bg-blue-900/40 dark:text-blue-200"
-                            >
-                              {term}
-                            </span>
-                          ))}
-                          {paper.techniques?.slice(0, 3).map((tech) => (
-                            <span
-                              key={tech}
-                              className="rounded bg-purple-100 px-2 py-0.5 text-[11px] text-purple-800 dark:bg-purple-900/40 dark:text-purple-200"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs sm:gap-3">
-                        <a
-                          href={paper.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="원문/초록 페이지를 새 탭에서 엽니다"
-                          className="inline-flex items-center gap-1 font-medium text-blue-600 hover:underline dark:text-blue-300"
-                        >
-                          Open <span title="외부 링크"><ExternalLink className="h-3.5 w-3.5" /></span>
-                        </a>
-                        {paper.pdfUrl && (
-                          <a
-                            href={paper.pdfUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="PDF 원문을 새 탭에서 엽니다"
-                            className="inline-flex items-center gap-1 font-medium text-emerald-600 hover:underline dark:text-emerald-300"
-                          >
-                            PDF <span title="PDF 다운로드/열기"><Download className="h-3.5 w-3.5" /></span>
-                          </a>
-                        )}
-                        <Link
-                          href={`/datasets?query=${encodeURIComponent(paper.title)}`}
-                          className="inline-flex items-center gap-1 rounded border border-indigo-300 px-2 py-1 text-indigo-700 hover:bg-indigo-50 dark:border-indigo-700 dark:text-indigo-300 dark:hover:bg-indigo-900/20"
-                          title="이 논문과 연관된 데이터셋 검색"
-                        >
-                          Related datasets
-                        </Link>
-                        {authUserId ? (
-                          <button
-                            onClick={() => toggleSave(paper)}
-                            disabled={saveLoadingId === paper.id}
-                            className="inline-flex items-center gap-1 rounded border border-amber-400 px-2 py-1 text-amber-600 disabled:opacity-50"
-                            title="로그인 사용자 보관함에 저장/해제"
-                          >
-                            {savedIds.has(paper.id) ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
-                            {savedIds.has(paper.id) ? 'Saved' : 'Save'}
+                  {/* Contextual suggestions */}
+                  {contextualSuggestions.length > 0 && (
+                    <div className="space-y-2">
+                      <span className="text-[11px] text-slate-600">추천 확장:</span>
+                      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                        {contextualSuggestions.map((s) => (
+                          <button key={s.value} type="button" onClick={() => { setChips([]); setQuery(s.value); }} className="rounded-xl border border-indigo-900/60 bg-indigo-950/30 px-3 py-2 text-left text-[11px] text-indigo-300 transition hover:border-indigo-700 hover:bg-indigo-950/60">
+                            <div className="mb-1 flex items-center justify-between gap-2">
+                              <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${intentBadgeClass[s.intent]}`}>{s.intent}</span>
+                              <span className="text-[10px] text-slate-600">클릭해 반영</span>
+                            </div>
+                            <p className="line-clamp-2 text-slate-300">{s.value}</p>
                           </button>
-                        ) : (
-                          <span className="text-slate-400" title="저장 기능은 로그인 후 사용 가능합니다">Login to save</span>
-                        )}
+                        ))}
                       </div>
-                    </article>
-                  ))}
+                    </div>
+                  )}
+
+                  {/* Track status pills */}
+                  <div className="grid grid-cols-2 gap-2 xl:grid-cols-4">
+                    {(Object.keys(trackStatus) as Array<keyof TrackStatus>).map((track) => (
+                      <div key={track} title={`${trackNames[track]}`} className={`rounded-xl border p-2.5 ${trackCardClass(trackStatus[track])}`}>
+                        <p className="text-[11px] font-medium text-slate-400">{trackNames[track]}</p>
+                        <p className="mt-0.5 text-xs font-bold text-slate-200">{trackStatusText(trackStatus[track])}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
+
+            {/* Results header: sort bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900 p-1">
+                {(['score', 'recent', 'citations'] as const).map((mode) => (
+                  <button key={mode} onClick={() => setSortMode(mode)} className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${sortMode === mode ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}>
+                    {mode === 'score' ? 'Score' : mode === 'recent' ? 'Recent' : 'Citations'}
+                  </button>
+                ))}
+                <button onClick={() => setSortMode('source')} className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${sortMode === 'source' ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}>Source</button>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-slate-500">{displayedPapers.length} papers</span>
+                <button onClick={() => setShowSavedOnly((v) => !v)} className={`rounded-lg border px-3 py-1.5 text-xs transition ${showSavedOnly ? 'border-blue-600 bg-blue-900/30 text-blue-300' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-200'}`}>{showSavedOnly ? 'Saved only' : 'All'}</button>
+                {papers.length > 0 && (
+                  <button onClick={exportBibTeX} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-400 transition hover:border-slate-500 hover:text-slate-200">
+                    <Download className="h-3.5 w-3.5" /> BibTeX
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Paper list */}
+            {loading ? (
+              <div className="space-y-3">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className="animate-pulse rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                    <div className="mb-3 flex gap-2"><div className="h-5 w-16 rounded-full bg-slate-800" /><div className="h-5 w-10 rounded-full bg-slate-800" /><div className="h-5 w-20 rounded-full bg-slate-800" /></div>
+                    <div className="h-5 w-3/4 rounded bg-slate-800" />
+                    <div className="mt-2 h-3 w-1/3 rounded bg-slate-800" />
+                    <div className="mt-3 space-y-1.5"><div className="h-3 rounded bg-slate-800" /><div className="h-3 w-5/6 rounded bg-slate-800" /><div className="h-3 w-4/6 rounded bg-slate-800" /></div>
+                  </div>
+                ))}
+              </div>
+            ) : displayedPapers.length === 0 ? (
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/50 py-20 text-center">
+                <Search className="mb-4 h-12 w-12 text-slate-700" />
+                <p className="text-base font-semibold text-slate-400">
+                  {effectiveInputQuery ? '검색 결과가 없습니다' : '검색어를 입력해 주세요'}
+                </p>
+                <p className="mt-1 text-sm text-slate-600">
+                  {effectiveInputQuery ? '필터를 조정하거나 다른 키워드로 시도해보세요.' : '상단 검색창에 키워드를 입력하면 7개 소스에서 동시에 검색합니다.'}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {displayedPapers.map((paper) => {
+                  const evAccent =
+                    paper.evidenceLabel === 'support' ? 'bg-emerald-500' :
+                    paper.evidenceLabel === 'contradict' ? 'bg-rose-500' :
+                    paper.evidenceLabel === 'uncertain' ? 'bg-amber-500' : 'bg-slate-700';
+                  return (
+                    <article key={paper.id} className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition-all duration-200 hover:border-slate-700">
+                      {/* Top accent bar */}
+                      <div className={`h-0.5 w-full ${evAccent}`} />
+                      <div className="p-5">
+                        {/* Badges row */}
+                        <div className="mb-3 flex flex-wrap items-center gap-1.5 text-xs">
+                          <span className={`rounded-full px-2.5 py-0.5 font-semibold ${sourceBadge[paper.source]}`} title={sourceTooltip[paper.source]}>{sourceLabel[paper.source]}</span>
+                          {paper.matchType && <span className="rounded-full bg-violet-900/50 px-2.5 py-0.5 text-violet-300">{paper.matchType}</span>}
+                          <span className="rounded-full bg-slate-800 px-2.5 py-0.5 text-slate-300" title={yearTooltip}>{paper.year}</span>
+                          {paper.rankScore !== undefined && (
+                            <span className="rounded-full bg-amber-950/60 px-2.5 py-0.5 text-amber-300" title={`${scoreTooltip}\n${journalMetricHint[paper.source].note}`}>Score {paper.rankScore}</span>
+                          )}
+                          {paper.citations !== undefined && (
+                            <span className="rounded-full bg-sky-950/60 px-2.5 py-0.5 text-sky-300" title={citationTooltip}>⬆ {paper.citations}</span>
+                          )}
+                          {paper.evidenceLabel && (
+                            <span className={`rounded-full px-2.5 py-0.5 font-semibold ${evidenceLabelBadge[paper.evidenceLabel] || 'bg-slate-800 text-slate-400'}`} title={paper.evidenceScore !== undefined ? `Evidence score: ${paper.evidenceScore.toFixed(3)}` : ''}>{evidenceLabelText[paper.evidenceLabel] || paper.evidenceLabel}</span>
+                          )}
+                          {paper.evidenceScore !== undefined && paper.evidenceScore > 0 && (
+                            <span className="text-[11px] text-slate-600">ev {paper.evidenceScore.toFixed(2)}</span>
+                          )}
+                          {/* Related hover button — right-aligned via ml-auto */}
+                          <div className="relative ml-auto">
+                            <button onMouseEnter={() => { setHoverPaperId(paper.id); void loadRelatedPapers(paper); }} onMouseLeave={() => setHoverPaperId((id) => (id === paper.id ? null : id))} className="inline-flex items-center gap-1 rounded-full border border-slate-700 px-2 py-0.5 text-[11px] text-slate-500 transition hover:border-violet-700 hover:text-violet-400" title="연관 논문 미리보기"><Sparkles className="h-3 w-3" /> Related</button>
+                            {hoverPaperId === paper.id && (
+                              <div className="absolute right-0 z-20 mt-2 w-72 rounded-xl border border-slate-700 bg-slate-900 p-3 text-xs shadow-2xl sm:w-80">
+                                <p className="mb-2 font-semibold text-slate-200">연관 논문</p>
+                                {(relatedByPaper[paper.id] || []).length === 0 ? <p className="text-slate-500">불러오는 중이거나 결과가 없습니다.</p> : (
+                                  <ul className="max-h-60 space-y-2 overflow-y-auto pr-1">
+                                    {(relatedByPaper[paper.id] || []).map((r) => (
+                                      <li key={r.id}><a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-blue-400 hover:underline">{r.title}</a><p className="text-[11px] text-slate-600">{r.source}{r.year ? ` · ${r.year}` : ''}</p></li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="line-clamp-2 text-base font-semibold leading-snug text-white">{paper.title}</h3>
+                        {/* Authors */}
+                        <p className="mt-1 truncate text-xs text-slate-500">{paper.authors.join(', ')}</p>
+                        {/* Abstract */}
+                        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-400">{paper.abstract}</p>
+
+                        {/* Support sentence */}
+                        {(paper.evidenceLabel === 'support' || paper.evidenceLabel === 'contradict') && paper.bestSupportSentence && (
+                          <blockquote className={`mt-3 border-l-2 pl-3 text-xs italic ${paper.evidenceLabel === 'support' ? 'border-emerald-600 text-emerald-400' : 'border-rose-600 text-rose-400'}`}>
+                            &ldquo;{paper.bestSupportSentence.slice(0, 160)}{paper.bestSupportSentence.length > 160 ? '…' : ''}&rdquo;
+                          </blockquote>
+                        )}
+
+                        {/* MeSH / technique tags */}
+                        {(paper.meshTerms?.length || paper.techniques?.length) ? (
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {paper.meshTerms?.slice(0, 3).map((term) => <span key={term} className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">{term}</span>)}
+                            {paper.techniques?.slice(0, 3).map((tech) => <span key={tech} className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-purple-400">{tech}</span>)}
+                          </div>
+                        ) : null}
+
+                        {/* Footer actions */}
+                        <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-slate-800 pt-3 text-xs">
+                          <a href={paper.url} target="_blank" rel="noopener noreferrer" title="원문/초록 페이지" className="inline-flex items-center gap-1 text-blue-400 transition hover:text-blue-300">Open <ExternalLink className="h-3.5 w-3.5" /></a>
+                          {paper.pdfUrl && <a href={paper.pdfUrl} target="_blank" rel="noopener noreferrer" title="PDF 원문" className="inline-flex items-center gap-1 text-emerald-400 transition hover:text-emerald-300">PDF <Download className="h-3.5 w-3.5" /></a>}
+                          <Link href={`/datasets?query=${encodeURIComponent(paper.title)}`} className="inline-flex items-center gap-1 rounded-lg border border-slate-700 px-2 py-1 text-slate-400 transition hover:border-indigo-700 hover:text-indigo-400" title="연관 데이터셋 검색"><Database className="h-3 w-3" /> Datasets</Link>
+                          {authUserId ? (
+                            <button onClick={() => toggleSave(paper)} disabled={saveLoadingId === paper.id} className="inline-flex items-center gap-1 rounded-lg border border-slate-700 px-2 py-1 text-slate-400 transition hover:border-amber-700 hover:text-amber-400 disabled:opacity-50" title="보관함에 저장/해제">
+                              {savedIds.has(paper.id) ? <BookmarkCheck className="h-3.5 w-3.5 text-amber-400" /> : <Bookmark className="h-3.5 w-3.5" />}
+                              {savedIds.has(paper.id) ? 'Saved' : 'Save'}
+                            </button>
+                          ) : (
+                            <span className="text-slate-700" title="저장은 로그인 후 사용 가능">Login to save</span>
+                          )}
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
           </section>
 
-          <aside className="space-y-4 sm:space-y-6 lg:col-span-4">
-            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
-                <Filter className="h-4 w-4" /> Paper Filters
+          {/* ── RIGHT: Sidebar ── */}
+          <aside className="space-y-4 lg:col-span-4">
+
+            {/* Filters */}
+            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-200">
+                <Filter className="h-4 w-4 text-slate-500" /> Filters
               </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
-                  <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Search Mode</span>
+              <div className="space-y-3">
+                {/* Mode */}
+                <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5">
+                  <span className="mb-1.5 block text-[11px] text-slate-500">Search Mode</span>
                   {filters.mode !== 'precision' ? (
-                    <p className="mb-2 rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-[11px] leading-4 text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
-                      Citation-critical 검색은 Precision 모드를 권장합니다.
-                    </p>
+                    <p className="mb-2 rounded-lg border border-amber-900/50 bg-amber-950/20 px-2 py-1 text-[11px] text-amber-400">Citation-critical 검색은 Precision 모드 권장</p>
                   ) : (
-                    <p className="mb-2 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1 text-[11px] leading-4 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-200">
-                      Precision: claim/evidence 정합성 우선 필터를 적용합니다.
-                    </p>
+                    <p className="mb-2 rounded-lg border border-emerald-900/50 bg-emerald-950/20 px-2 py-1 text-[11px] text-emerald-400">Precision: claim/evidence 정합성 우선</p>
                   )}
-                  <select
-                    value={filters.mode}
-                    onChange={(e) => setFilters({ ...filters, mode: e.target.value as SearchMode, profileIds: [] })}
-                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
-                  >
+                  <select value={filters.mode} onChange={(e) => setFilters({ ...filters, mode: e.target.value as SearchMode, profileIds: [] })} className="w-full bg-transparent text-xs text-slate-200 outline-none">
                     <option value="broad">Broad</option>
                     <option value="precision">Precision · citation-critical</option>
                     <option value="author">Author</option>
                   </select>
-                </label>
-                {filters.mode === 'author' && (
-                  <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
-                    <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Author Aliases (comma-separated)</span>
-                    <input
-                      type="text"
-                      value={filters.authorNames}
-                      onChange={(e) => setFilters({ ...filters, authorNames: e.target.value })}
-                      placeholder="Author Name, Name Initials"
-                      className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
-                    />
-                  </label>
-                )}
-                {filters.mode === 'author' && (
-                  <label className="col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
-                    <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">
-                      Profile Merge Strictness: {filters.profileMergeThreshold.toFixed(2)}
-                    </span>
-                    <input
-                      type="range"
-                      min={0.3}
-                      max={0.9}
-                      step={0.05}
-                      value={filters.profileMergeThreshold}
-                      onChange={(e) => setFilters({ ...filters, profileMergeThreshold: Number(e.target.value), profileIds: [] })}
-                      className="w-full"
-                    />
-                    <div className="mt-1 flex justify-between text-[10px] text-slate-400">
-                      <span>More merge</span>
-                      <span>More split</span>
-                    </div>
-                  </label>
-                )}
-                <label className="col-span-2 rounded-xl border border-violet-200 bg-violet-50/60 px-3 py-2 text-sm dark:border-violet-900/50 dark:bg-slate-800">
-                  <span className="mb-1 block text-[11px] text-violet-600 dark:text-violet-400">Claim (가설 검증)</span>
-                  <input
-                    type="text"
-                    value={filters.claim}
-                    onChange={(e) => setFilters({ ...filters, claim: e.target.value })}
-                    placeholder="e.g. progesterone drives organoid differentiation"
-                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
-                  />
-                </label>
-                <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
-                  <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Year From</span>
-                  <input
-                    type="number"
-                    value={filters.yearFrom}
-                    onChange={(e) => setFilters({ ...filters, yearFrom: e.target.value })}
-                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
-                  />
-                </label>
-                <label className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
-                  <span className="mb-1 block text-[11px] text-slate-500 dark:text-slate-400">Year To</span>
-                  <input
-                    type="number"
-                    value={filters.yearTo}
-                    onChange={(e) => setFilters({ ...filters, yearTo: e.target.value })}
-                    className="w-full bg-transparent text-xs text-slate-900 outline-none dark:text-slate-100"
-                  />
-                </label>
-                {filters.mode === 'author' && (
-                  <label className="col-span-2 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800">
-                    <input
-                      type="checkbox"
-                      checked={filters.firstAuthorOnly}
-                      onChange={(e) => setFilters({ ...filters, firstAuthorOnly: e.target.checked })}
-                    />
-                    <span className="text-slate-600 dark:text-slate-300">First author only</span>
-                  </label>
-                )}
-              </div>
-              <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
-                <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Source Filters</div>
-                <div className="flex flex-wrap gap-1.5 text-xs">
-                  {(['pubmed', 'europepmc', 'biorxiv', 'semantic', 'openalex', 'crossref', 'arxiv'] as const).map((source) => {
-                    const active = filters.sources.includes(source);
-                    return (
-                      <button
-                        key={source}
-                        title={sourceTooltip[source]}
-                        onClick={() => {
-                          const next = active
-                            ? filters.sources.filter((s) => s !== source)
-                            : [...filters.sources, source];
-                          setFilters({ ...filters, sources: next });
-                        }}
-                        className={`rounded-full border px-2 py-1 text-[11px] capitalize transition ${
-                          active
-                            ? 'border-blue-600 bg-blue-600 text-white'
-                            : 'border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200'
-                        }`}
-                      >
-                        {sourceLabel[source]}
-                      </button>
-                    );
-                  })}
                 </div>
-              </div>
-              {filters.mode === 'author' && (meta?.homonymProfiles?.length || 0) > 0 && (
-                <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
-                  <div className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">Recommended Author Profiles</div>
-                  <div className="space-y-2">
-                    {(meta?.homonymProfiles || []).slice(0, 5).map((profile) => {
-                      const active = filters.profileIds.includes(profile.profileId);
+
+                {/* Author fields */}
+                {filters.mode === 'author' && (
+                  <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5">
+                    <span className="mb-1 block text-[11px] text-slate-500">Author Aliases</span>
+                    <input type="text" value={filters.authorNames} onChange={(e) => setFilters({ ...filters, authorNames: e.target.value })} placeholder="Author Name, Name Initials" className="w-full bg-transparent text-xs text-slate-200 outline-none placeholder:text-slate-600" />
+                  </div>
+                )}
+                {filters.mode === 'author' && (
+                  <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5">
+                    <span className="mb-1.5 block text-[11px] text-slate-500">Profile Merge Strictness: {filters.profileMergeThreshold.toFixed(2)}</span>
+                    <input type="range" min={0.3} max={0.9} step={0.05} value={filters.profileMergeThreshold} onChange={(e) => setFilters({ ...filters, profileMergeThreshold: Number(e.target.value), profileIds: [] })} className="w-full accent-blue-600" />
+                    <div className="mt-1 flex justify-between text-[10px] text-slate-600"><span>More merge</span><span>More split</span></div>
+                  </div>
+                )}
+
+                {/* Claim */}
+                <div className="rounded-xl border border-violet-900/50 bg-violet-950/10 px-3 py-2.5">
+                  <span className="mb-1 block text-[11px] text-violet-500">Claim (가설 검증)</span>
+                  <input type="text" value={filters.claim} onChange={(e) => setFilters({ ...filters, claim: e.target.value })} placeholder="e.g. progesterone drives organoid differentiation" className="w-full bg-transparent text-xs text-slate-200 outline-none placeholder:text-slate-600" />
+                </div>
+
+                {/* Year */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5">
+                    <span className="mb-1 block text-[11px] text-slate-500">Year From</span>
+                    <input type="number" value={filters.yearFrom} onChange={(e) => setFilters({ ...filters, yearFrom: e.target.value })} className="w-full bg-transparent text-xs text-slate-200 outline-none" />
+                  </div>
+                  <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5">
+                    <span className="mb-1 block text-[11px] text-slate-500">Year To</span>
+                    <input type="number" value={filters.yearTo} onChange={(e) => setFilters({ ...filters, yearTo: e.target.value })} className="w-full bg-transparent text-xs text-slate-200 outline-none" />
+                  </div>
+                </div>
+
+                {filters.mode === 'author' && (
+                  <label className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-slate-400">
+                    <input type="checkbox" checked={filters.firstAuthorOnly} onChange={(e) => setFilters({ ...filters, firstAuthorOnly: e.target.checked })} className="accent-blue-600" />
+                    First author only
+                  </label>
+                )}
+
+                {/* Source toggles */}
+                <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5">
+                  <span className="mb-2 block text-[11px] text-slate-500">Sources</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(['pubmed', 'europepmc', 'biorxiv', 'semantic', 'openalex', 'crossref', 'arxiv'] as const).map((source) => {
+                      const active = filters.sources.includes(source);
                       return (
-                        <button
-                          key={profile.profileId}
-                          onClick={() => {
-                            const next = active
-                              ? filters.profileIds.filter((x) => x !== profile.profileId)
-                              : [profile.profileId];
-                            setFilters((prev) => ({ ...prev, profileIds: next }));
-                          }}
-                          className={`w-full rounded-lg border px-2 py-2 text-left text-[11px] ${
-                            active
-                              ? 'border-blue-600 bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200'
-                              : 'border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200'
-                          }`}
-                        >
-                          <div className="font-semibold">{profile.matchedAuthor} · {profile.topicBucket}</div>
-                          <div className="mt-1 text-[10px] opacity-80">
-                            score {profile.recommendationScore} · papers {profile.count} · {profile.yearMin}-{profile.yearMax}
-                          </div>
-                          {(profile.topAffiliations || []).length > 0 && (
-                            <div className="mt-1 line-clamp-1 text-[10px] opacity-80">
-                              {profile.topAffiliations?.slice(0, 2).join(' | ')}
-                            </div>
-                          )}
+                        <button key={source} title={sourceTooltip[source]} onClick={() => { const next = active ? filters.sources.filter((s) => s !== source) : [...filters.sources, source]; setFilters({ ...filters, sources: next }); }} className={`rounded-full border px-2 py-0.5 text-[11px] transition ${active ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-700 bg-slate-900 text-slate-400 hover:border-slate-500 hover:text-slate-200'}`}>
+                          {sourceLabel[source]}
                         </button>
                       );
                     })}
                   </div>
-                  <div className="mt-2 flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const top = (meta?.homonymProfiles || [])[0];
-                        if (!top) return;
-                        setFilters((prev) => ({ ...prev, profileIds: [top.profileId] }));
-                      }}
-                      className="rounded-md border border-emerald-500 px-2 py-1 text-[11px] text-emerald-700 dark:text-emerald-300"
-                    >
-                      Use best profile
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => void searchPapers()}
-                      className="rounded-md border border-blue-500 px-2 py-1 text-[11px] text-blue-700 dark:text-blue-300"
-                    >
-                      Apply profile filter
-                    </button>
-                    {filters.profileIds.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setFilters((prev) => ({ ...prev, profileIds: [] }))}
-                        className="rounded-md border border-slate-300 px-2 py-1 text-[11px]"
-                      >
-                        Clear profile
-                      </button>
-                    )}
+                </div>
+
+                {/* Author profiles */}
+                {filters.mode === 'author' && (meta?.homonymProfiles?.length || 0) > 0 && (
+                  <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5">
+                    <span className="mb-2 block text-[11px] text-slate-500">Recommended Author Profiles</span>
+                    <div className="space-y-1.5">
+                      {(meta?.homonymProfiles || []).slice(0, 5).map((profile) => {
+                        const active = filters.profileIds.includes(profile.profileId);
+                        return (
+                          <button key={profile.profileId} onClick={() => { const next = active ? filters.profileIds.filter((x) => x !== profile.profileId) : [profile.profileId]; setFilters((prev) => ({ ...prev, profileIds: next })); }} className={`w-full rounded-lg border px-2.5 py-2 text-left text-[11px] transition ${active ? 'border-blue-600 bg-blue-900/20 text-blue-300' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-200'}`}>
+                            <div className="font-semibold">{profile.matchedAuthor} · {profile.topicBucket}</div>
+                            <div className="mt-0.5 text-[10px] opacity-70">score {profile.recommendationScore} · {profile.count} papers · {profile.yearMin}–{profile.yearMax}</div>
+                            {(profile.topAffiliations || []).length > 0 && <div className="mt-0.5 line-clamp-1 text-[10px] opacity-60">{profile.topAffiliations?.slice(0, 2).join(' | ')}</div>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <button type="button" onClick={() => { const top = (meta?.homonymProfiles || [])[0]; if (!top) return; setFilters((prev) => ({ ...prev, profileIds: [top.profileId] })); }} className="rounded-lg border border-emerald-800 px-2.5 py-1 text-[11px] text-emerald-400 transition hover:bg-emerald-950/30">Best profile</button>
+                      <button type="button" onClick={() => void searchPapers()} className="rounded-lg border border-blue-800 px-2.5 py-1 text-[11px] text-blue-400 transition hover:bg-blue-950/30">Apply filter</button>
+                      {filters.profileIds.length > 0 && <button type="button" onClick={() => setFilters((prev) => ({ ...prev, profileIds: [] }))} className="rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] text-slate-400">Clear</button>}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
-              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
-                <Database className="h-4 w-4" /> Dashboard Metrics
+            {/* Stats */}
+            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-200">
+                <Database className="h-4 w-4 text-slate-500" /> Stats
               </h3>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl bg-slate-100 p-3 dark:bg-slate-800">
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Total</p>
-                  <p className="mt-1 text-xl font-bold text-slate-900 dark:text-white">{papers.length}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl bg-slate-950 px-3 py-3">
+                  <p className="text-[11px] text-slate-600">Total</p>
+                  <p className="mt-0.5 text-2xl font-bold text-white">{papers.length}</p>
                 </div>
-                <div className="rounded-xl bg-slate-100 p-3 dark:bg-slate-800">
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Track Latency</p>
-                  <p className="mt-1 text-xl font-bold text-slate-900 dark:text-white">
-                    {meta?.totalTime ? `${meta.totalTime}ms` : '-'}
-                  </p>
+                <div className="rounded-xl bg-slate-950 px-3 py-3">
+                  <p className="text-[11px] text-slate-600">Latency</p>
+                  <p className="mt-0.5 text-2xl font-bold text-white">{meta?.totalTime ? `${meta.totalTime}` : '—'}<span className="text-sm font-normal text-slate-500">{meta?.totalTime ? 'ms' : ''}</span></p>
                 </div>
-                <div className="rounded-xl bg-slate-100 p-3 dark:bg-slate-800">
-                  <p className="text-xs text-slate-500 dark:text-slate-400">PubMed</p>
-                  <p className="mt-1 text-xl font-bold text-slate-900 dark:text-white">{sourceCounts.pubmed}</p>
+                <div className="rounded-xl bg-slate-950 px-3 py-3">
+                  <p className="text-[11px] text-slate-600">PubMed</p>
+                  <p className="mt-0.5 text-xl font-bold text-emerald-400">{sourceCounts.pubmed}</p>
                 </div>
-                <div className="rounded-xl bg-slate-100 p-3 dark:bg-slate-800">
-                  <p className="text-xs text-slate-500 dark:text-slate-400">arXiv</p>
-                  <p className="mt-1 text-xl font-bold text-slate-900 dark:text-white">{sourceCounts.arxiv}</p>
+                <div className="rounded-xl bg-slate-950 px-3 py-3">
+                  <p className="text-[11px] text-slate-600">arXiv</p>
+                  <p className="mt-0.5 text-xl font-bold text-rose-400">{sourceCounts.arxiv}</p>
                 </div>
               </div>
-              <div className="mt-3 rounded-xl bg-slate-100 p-3 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                Semantic: <span className="font-semibold">{sourceCounts.semantic}</span> · Crossref: <span className="font-semibold">{sourceCounts.crossref}</span> · OpenAlex: <span className="font-semibold">{sourceCounts.openalex}</span>
-                <br />
-                Final integrated: <span className="font-semibold">{meta?.trackResults?.final ?? papers.length}</span>
+              <div className="mt-2 rounded-xl bg-slate-950 px-3 py-2.5 text-[11px] text-slate-500">
+                <span className="text-indigo-400">{sourceCounts.semantic}</span> Semantic · <span className="text-orange-400">{sourceCounts.crossref}</span> Crossref · <span className="text-cyan-400">{sourceCounts.openalex}</span> OpenAlex
+                <br /><span className="text-teal-400">{sourceCounts.europepmc}</span> EuropePMC · <span className="text-purple-400">{sourceCounts.biorxiv}</span> bioRxiv
+                <br /><span className="text-slate-400 font-medium">{meta?.trackResults?.final ?? papers.length}</span> integrated
               </div>
             </div>
 
+            {/* Suggested Topics */}
             {(meta?.suggestedTopics || []).length > 0 && (
-              <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
-                <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white">Suggested Topics</h3>
+              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                <h3 className="mb-3 text-sm font-semibold text-slate-200">Suggested Topics</h3>
                 <div className="flex flex-wrap gap-2">
                   {(meta?.suggestedTopics || []).slice(0, 8).map((topic) => (
-                    <button
-                      key={topic.label}
-                      type="button"
-                      onClick={() => {
-                        setChips([]);
-                        setQuery(topic.query);
-                        if (topic.filter?.yearFrom) setFilters((f) => ({ ...f, yearFrom: topic.filter!.yearFrom! }));
-                        if (topic.filter?.yearTo) setFilters((f) => ({ ...f, yearTo: topic.filter!.yearTo! }));
-                      }}
-                      className="rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-700 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 transition"
-                      title={`${topic.type} · ${topic.count}건`}
-                    >
-                      {topic.label} <span className="opacity-50">{topic.count}</span>
+                    <button key={topic.label} type="button" onClick={() => { setChips([]); setQuery(topic.query); if (topic.filter?.yearFrom) setFilters((f) => ({ ...f, yearFrom: topic.filter!.yearFrom! })); if (topic.filter?.yearTo) setFilters((f) => ({ ...f, yearTo: topic.filter!.yearTo! })); }} className="rounded-full border border-slate-700 bg-slate-950 px-2.5 py-1 text-[11px] text-slate-400 transition hover:border-blue-700 hover:text-blue-400" title={`${topic.type} · ${topic.count}건`}>
+                      {topic.label} <span className="text-slate-700">{topic.count}</span>
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
-              <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">Top Signals</h3>
+            {/* Top Signals */}
+            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+              <h3 className="mb-3 text-sm font-semibold text-slate-200">Top Signals</h3>
               {topSignals.length === 0 ? (
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  검색 후 상위 점수 논문이 여기에 표시됩니다.
-                </p>
+                <p className="text-xs text-slate-600">검색 후 상위 점수 논문이 표시됩니다.</p>
               ) : (
                 <ul className="space-y-2">
                   {topSignals.map((paper, idx) => (
-                    <li
-                      key={paper.id}
-                      className="rounded-xl border border-slate-200 p-3 dark:border-slate-700"
-                    >
-                      <p className="line-clamp-2 text-xs font-semibold text-slate-900 dark:text-slate-100">
-                        {idx + 1}. {paper.title}
-                      </p>
-                      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                        {sourceLabel[paper.source]} · {paper.year}
-                        {paper.rankScore !== undefined ? ` · Score ${paper.rankScore}` : ''}
+                    <li key={paper.id} className="rounded-xl border border-slate-800 bg-slate-950 p-3">
+                      <p className="line-clamp-2 text-xs font-semibold text-slate-200">{idx + 1}. {paper.title}</p>
+                      <p className="mt-1 text-[11px] text-slate-600">
+                        <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${sourceBadge[paper.source]}`}>{sourceLabel[paper.source]}</span>
+                        <span className="ml-1.5">{paper.year}{paper.rankScore !== undefined ? ` · ${paper.rankScore}pt` : ''}</span>
                       </p>
                     </li>
                   ))}
