@@ -355,7 +355,14 @@ export default function PapersPage() {
     if (activeSourceTab !== 'all' && bySource[activeSourceTab]?.length) {
       base = bySource[activeSourceTab];
     } else {
-      base = showSavedOnly ? papers.filter((p) => savedIds.has(p.id)) : papers;
+      const allMap = new Map<string, Paper>();
+      for (const src of ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv']) {
+        for (const p of (bySource[src] || [])) {
+          if (!allMap.has(p.id)) allMap.set(p.id, p);
+        }
+      }
+      const allUnion = allMap.size > 0 ? Array.from(allMap.values()) : papers;
+      base = showSavedOnly ? allUnion.filter((p) => savedIds.has(p.id)) : allUnion;
     }
     const sorted = [...base];
     if (sortMode === 'recent') {
@@ -637,17 +644,6 @@ export default function PapersPage() {
                 className="w-full rounded-xl border border-[#D8DEE6] bg-white px-10 py-3 text-sm text-[#263238] placeholder:text-[#263238]/40 outline-none ring-[#2A9D8F] transition focus:border-[#2A9D8F] focus:ring-2"
               />
             </div>
-            <div className="relative lg:w-72">
-              <Sparkles className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#7B6BA8]" />
-              <input
-                type="text"
-                value={filters.claim}
-                onChange={(e) => setFilters({ ...filters, claim: e.target.value })}
-                onKeyDown={(e) => e.key === 'Enter' && searchPapers()}
-                placeholder="검증할 주장 (선택)..."
-                className="w-full rounded-xl border border-[#7B6BA8]/40 bg-white px-10 py-3 text-sm text-[#263238] placeholder:text-[#263238]/40 outline-none ring-[#7B6BA8] transition focus:border-[#7B6BA8] focus:ring-2"
-              />
-            </div>
             <button
               onClick={() => { void searchPapers(); }}
               disabled={loading}
@@ -841,12 +837,21 @@ export default function PapersPage() {
             {/* Source tabs — per-source view */}
             {(papers.length > 0 || Object.keys(bySource).length > 0) && (
               <div className="flex flex-wrap gap-1.5">
-                <button
-                  onClick={() => setActiveSourceTab('all')}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition ${activeSourceTab === 'all' ? 'bg-[#10243A] text-white shadow' : 'border border-[#D8DEE6] text-[#263238]/60 hover:border-[#2A9D8F] hover:text-[#2A9D8F]'}`}
-                >
-                  All ({papers.length})
-                </button>
+                {(() => {
+                  const ids = new Set<string>();
+                  for (const src of ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv']) {
+                    for (const p of (bySource[src] || [])) ids.add(p.id);
+                  }
+                  const allCount = ids.size || papers.length;
+                  return (
+                    <button
+                      onClick={() => setActiveSourceTab('all')}
+                      className={`rounded-full px-3 py-1 text-xs font-medium transition ${activeSourceTab === 'all' ? 'bg-[#10243A] text-white shadow' : 'border border-[#D8DEE6] text-[#263238]/60 hover:border-[#2A9D8F] hover:text-[#2A9D8F]'}`}
+                    >
+                      All ({allCount})
+                    </button>
+                  );
+                })()}
                 {(['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'] as const).map((src) => {
                   const count = (bySource[src] || []).length;
                   if (!count) return null;
@@ -888,7 +893,7 @@ export default function PapersPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {displayedPapers.map((paper) => {
+                {displayedPapers.slice(0, visibleCount).map((paper) => {
                   const evAccent =
                     paper.evidenceLabel === 'support' ? 'bg-emerald-500' :
                     paper.evidenceLabel === 'contradict' ? 'bg-rose-500' :
@@ -982,6 +987,16 @@ export default function PapersPage() {
                     </article>
                   );
                 })}
+                {displayedPapers.length > visibleCount && (
+                  <div className="flex justify-center pt-4">
+                    <button
+                      onClick={() => setVisibleCount((v) => v + 25)}
+                      className="sketch-btn rounded-xl border border-[#2A9D8F] bg-white px-8 py-2.5 text-sm font-semibold text-[#2A9D8F] transition hover:bg-[#2A9D8F]/10"
+                    >
+                      더 보기 ({displayedPapers.length - visibleCount}개 남음)
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </section>
@@ -1024,12 +1039,6 @@ export default function PapersPage() {
                     <div className="mt-1 flex justify-between text-[10px] text-[#263238]/40"><span>More merge</span><span>More split</span></div>
                   </div>
                 )}
-
-                {/* Claim */}
-                <div className="rounded-xl border border-[#7B6BA8]/40 bg-[#7B6BA8]/5 px-3 py-2.5">
-                  <span className="mb-1 block text-[11px] text-[#7B6BA8]">Claim (가설 검증)</span>
-                  <input type="text" value={filters.claim} onChange={(e) => setFilters({ ...filters, claim: e.target.value })} placeholder="e.g. progesterone drives organoid differentiation" className="w-full bg-transparent text-xs text-[#263238] outline-none placeholder:text-[#263238]/40" />
-                </div>
 
                 {/* Year */}
                 <div className="grid grid-cols-2 gap-2">
