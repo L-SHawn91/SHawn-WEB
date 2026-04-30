@@ -59,6 +59,11 @@ interface Paper {
   impactFactor?: number;
   journalQuartile?: string;
   journalHIndex?: number;
+  journalField?: string;
+  journalSubfield?: string;
+  journalDomain?: string;
+  journalTopic?: string;
+  journalRecentYears?: Array<{ year: number; works: number; citations: number }>;
 }
 
 function isPaper(paper: Paper | null): paper is Paper {
@@ -1951,7 +1956,7 @@ export async function POST(request: NextRequest) {
 
     // Cache lookup — skip for author mode to always return fresh profile data
     if (mode !== 'author') {
-      const cacheKey = makeCacheKey({ v: 'ifq3', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'ifq4', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       const cached = papersCache.get(cacheKey);
       if (cached) {
         const c = cached as Record<string, unknown>;
@@ -2027,7 +2032,7 @@ export async function POST(request: NextRequest) {
 
     // Store in cache (skip author mode — profile results are user-specific)
     if (mode !== 'author' && sortedPapers.length > 0) {
-      const cacheKey = makeCacheKey({ v: 'ifq3', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'ifq4', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       papersCache.set(cacheKey, responseBody);
     }
 

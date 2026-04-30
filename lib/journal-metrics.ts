@@ -15,6 +15,11 @@ interface JournalMetrics {
   quartile: string;
   hIndex: number;
   name: string;
+  field?: string;
+  subfield?: string;
+  domain?: string;
+  topic?: string;
+  recentYears?: Array<{ year: number; works: number; citations: number }>;
 }
 
 const EMPTY: JournalMetrics = { if: 0, quartile: '', hIndex: 0, name: '' };
@@ -71,11 +76,28 @@ export async function lookupJournalMetrics(issn: string, name: string): Promise<
     }
 
     const impactFactor: number = source.summary_stats?.['2yr_mean_citedness'] ?? 0;
+    const topic = Array.isArray(source.topics) ? source.topics[0] : undefined;
+    const recentYears = Array.isArray(source.counts_by_year)
+      ? source.counts_by_year
+          .filter((row: any) => Number(row?.year) > 0)
+          .sort((a: any, b: any) => Number(b.year) - Number(a.year))
+          .slice(0, 3)
+          .map((row: any) => ({
+            year: Number(row.year),
+            works: Number(row.works_count || 0),
+            citations: Number(row.cited_by_count || 0),
+          }))
+      : undefined;
     const metrics: JournalMetrics = {
       if: Math.round(impactFactor * 10) / 10,
       quartile: estimateQuartile(impactFactor),
       hIndex: source.summary_stats?.h_index ?? source.h_index ?? 0,
       name: source.display_name || name,
+      field: topic?.field?.display_name,
+      subfield: topic?.subfield?.display_name,
+      domain: topic?.domain?.display_name,
+      topic: topic?.display_name,
+      recentYears,
     };
 
     journalMetricsCache.set(cacheKey, metrics);
@@ -90,7 +112,7 @@ export async function lookupJournalMetrics(issn: string, name: string): Promise<
  * Batch-enrich papers with journal IF + quartile.
  * Deduplicates ISSN/name lookups so each journal is fetched once.
  */
-export async function enrichPapersWithJournalMetrics<T extends { journal?: string; journalIssn?: string; impactFactor?: number; journalQuartile?: string; journalHIndex?: number }>(
+export async function enrichPapersWithJournalMetrics<T extends { journal?: string; journalIssn?: string; impactFactor?: number; journalQuartile?: string; journalHIndex?: number; journalField?: string; journalSubfield?: string; journalDomain?: string; journalTopic?: string; journalRecentYears?: Array<{ year: number; works: number; citations: number }> }>(
   papers: T[],
 ): Promise<T[]> {
   // Gather unique lookup keys
@@ -127,6 +149,11 @@ export async function enrichPapersWithJournalMetrics<T extends { journal?: strin
       impactFactor: m.if || p.impactFactor,
       journalQuartile: m.quartile,
       journalHIndex: m.hIndex,
+      journalField: m.field,
+      journalSubfield: m.subfield,
+      journalDomain: m.domain,
+      journalTopic: m.topic,
+      journalRecentYears: m.recentYears,
       // Preserve the source-provided journal title. OpenAlex name search can rank
       // broader journals first (e.g. "Reproduction" → "Human Reproduction"),
       // so enrichment must only add metrics, not rewrite bibliographic metadata.

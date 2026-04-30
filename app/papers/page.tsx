@@ -46,6 +46,11 @@ interface Paper {
   impactFactor?: number;
   journalQuartile?: string;
   journalHIndex?: number;
+  journalField?: string;
+  journalSubfield?: string;
+  journalDomain?: string;
+  journalTopic?: string;
+  journalRecentYears?: Array<{ year: number; works: number; citations: number }>;
 }
 
 interface TrackStatus {
@@ -961,15 +966,35 @@ export default function PapersPage() {
                               <span>📖</span>
                               <span className="max-w-[180px] truncate">{paper.journal}</span>
                               {paper.impactFactor ? (
-                                <span className="ml-1 font-semibold text-[#2A9D8F]" title="OpenAlex 2-year mean citedness 기반 IF 근사값">IF {paper.impactFactor.toFixed(1)}</span>
+                                <span tabIndex={0} className="group/if relative ml-1 cursor-help font-semibold text-[#2A9D8F] outline-none" title="OpenAlex 2-year mean citedness 기반 IF 근사값">
+                                  IF {paper.impactFactor.toFixed(1)}
+                                  <span className="pointer-events-none absolute bottom-full left-0 z-50 mb-1.5 hidden w-64 rounded-lg border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-[11px] font-normal text-[#263238]/70 dark:text-slate-300 shadow-lg group-hover/if:block group-focus/if:block">
+                                    <span className="block font-semibold text-[#10243A] dark:text-slate-100">OpenAlex IF 근사값</span>
+                                    <span className="block">2-year mean citedness: {paper.impactFactor.toFixed(1)}</span>
+                                    {paper.journalRecentYears?.length ? (
+                                      <span className="mt-1 block">
+                                        최근 3년: {paper.journalRecentYears.map((r) => `${r.year} 논문 ${r.works} / 인용 ${r.citations}`).join(' · ')}
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                </span>
                               ) : null}
                               {paper.journalQuartile ? (
-                                <span className={`ml-0.5 font-bold text-[10px] px-1 py-0.5 rounded ${
+                                <span className={`group/q relative ml-0.5 font-bold text-[10px] px-1 py-0.5 rounded ${
                                   paper.journalQuartile === 'Q1' ? 'bg-emerald-100 text-emerald-700' :
                                   paper.journalQuartile === 'Q2' ? 'bg-blue-100 text-blue-700' :
                                   paper.journalQuartile === 'Q3' ? 'bg-amber-100 text-amber-700' :
                                   'bg-[#D8DEE6] text-[#263238]/60 dark:text-slate-400'
-                                }`} title="Q score: IF 근사값 기반 저널 분위 추정">{paper.journalQuartile}</span>
+                                } cursor-help outline-none`} title="Q score: IF 근사값 기반 저널 분위 추정" tabIndex={0}>
+                                  {paper.journalQuartile}
+                                  <span className="pointer-events-none absolute bottom-full left-0 z-50 mb-1.5 hidden w-64 rounded-lg border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-[11px] font-normal text-[#263238]/70 dark:text-slate-300 shadow-lg group-hover/q:block group-focus/q:block">
+                                    <span className="block font-semibold text-[#10243A] dark:text-slate-100">Q score 분야</span>
+                                    <span className="block">분야: {paper.journalField || 'OpenAlex field 미확인'}</span>
+                                    {paper.journalSubfield ? <span className="block">세부분야: {paper.journalSubfield}</span> : null}
+                                    {paper.journalTopic ? <span className="block">대표 topic: {paper.journalTopic}</span> : null}
+                                    {paper.journalDomain ? <span className="block">domain: {paper.journalDomain}</span> : null}
+                                  </span>
+                                </span>
                               ) : null}
                             </span>
                           )}

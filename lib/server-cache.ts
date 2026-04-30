@@ -61,6 +61,11 @@ export const journalMetricsCache = new TTLCache<{
   quartile: string;
   hIndex: number;
   name: string;
+  field?: string;
+  subfield?: string;
+  domain?: string;
+  topic?: string;
+  recentYears?: Array<{ year: number; works: number; citations: number }>;
 }>(86400, 500);
 
 /**
