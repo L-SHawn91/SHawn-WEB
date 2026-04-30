@@ -94,6 +94,7 @@ type SortMode = 'score' | 'recent' | 'citations' | 'source';
 type SearchMode = 'broad' | 'precision' | 'author';
 
 type RelatedItem = { id: string; title: string; year?: number; source: string; url: string };
+type RelatedDatasetItem = { id: string; title: string; source: string; url: string; accessionIds?: string[]; reason?: string };
 
 type MergeSuggestion = { left: string; right: string; merged: string };
 
@@ -304,6 +305,7 @@ export default function PapersPage() {
   const [saveLoadingId, setSaveLoadingId] = useState<string | null>(null);
   const [hoverPaperId, setHoverPaperId] = useState<string | null>(null);
   const [relatedByPaper, setRelatedByPaper] = useState<Record<string, RelatedItem[]>>({});
+  const [relatedDatasetsByPaper, setRelatedDatasetsByPaper] = useState<Record<string, RelatedDatasetItem[]>>({});
   const [queryHistory, setQueryHistory] = useState<string[]>([]);
   const [filters, setFilters] = useState({
     mode: 'broad' as SearchMode,
@@ -432,12 +434,14 @@ export default function PapersPage() {
       const res = await apiFetch('/api/related', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kind: 'paper', title: paper.title }),
+        body: JSON.stringify({ kind: 'paper', title: paper.title, excludeId: paper.id, excludeTitle: paper.title, excludeUrl: paper.url }),
       });
       const data = await res.json();
       setRelatedByPaper((prev) => ({ ...prev, [paper.id]: data.items || [] }));
+      setRelatedDatasetsByPaper((prev) => ({ ...prev, [paper.id]: data.datasets || [] }));
     } catch {
       setRelatedByPaper((prev) => ({ ...prev, [paper.id]: [] }));
+      setRelatedDatasetsByPaper((prev) => ({ ...prev, [paper.id]: [] }));
     }
   };
 
@@ -976,12 +980,22 @@ export default function PapersPage() {
                               <div className="absolute right-0 z-20 mt-2 w-72 rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 p-3 text-xs shadow-xl sm:w-80">
                                 <p className="mb-2 font-semibold text-[#10243A] dark:text-slate-100">연관 논문</p>
                                 {(relatedByPaper[paper.id] || []).length === 0 ? <p className="text-[#263238]/40 dark:text-slate-600">불러오는 중이거나 결과가 없습니다.</p> : (
-                                  <ul className="max-h-60 space-y-2 overflow-y-auto pr-1">
+                                  <ul className="max-h-44 space-y-2 overflow-y-auto pr-1">
                                     {(relatedByPaper[paper.id] || []).map((r) => (
                                       <li key={r.id}><a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-[#2A9D8F] hover:underline">{r.title}</a><p className="text-[11px] text-[#263238]/40 dark:text-slate-600">{r.source}{r.year ? ` · ${r.year}` : ''}</p></li>
                                     ))}
                                   </ul>
                                 )}
+                                <div className="mt-3 border-t border-[#D8DEE6] dark:border-slate-700 pt-2">
+                                  <p className="mb-2 font-semibold text-[#10243A] dark:text-slate-100">연관 데이터셋</p>
+                                  {(relatedDatasetsByPaper[paper.id] || []).length === 0 ? <p className="text-[#263238]/40 dark:text-slate-600">데이터셋 결과가 없습니다.</p> : (
+                                    <ul className="max-h-36 space-y-2 overflow-y-auto pr-1">
+                                      {(relatedDatasetsByPaper[paper.id] || []).map((r) => (
+                                        <li key={r.id}><a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-[#7B6BA8] hover:underline">{r.title}</a><p className="text-[11px] text-[#263238]/40 dark:text-slate-600">{r.source}{r.accessionIds?.length ? ` · ${r.accessionIds.slice(0, 2).join(', ')}` : ''}</p></li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
                               </div>
                             )}
                           </div>

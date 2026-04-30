@@ -233,7 +233,7 @@ export default function DatasetsPage() {
       const res = await apiFetch('/api/related', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kind: 'dataset', title: dataset.title, accessionIds: dataset.accessionIds || [] }),
+        body: JSON.stringify({ kind: 'dataset', title: dataset.title, accessionIds: dataset.accessionIds || [], excludeId: dataset.id, excludeTitle: dataset.title, excludeUrl: dataset.url }),
       });
       const data = await res.json();
       setRelatedByDataset((prev) => ({ ...prev, [dataset.id]: data.items || [] }));
