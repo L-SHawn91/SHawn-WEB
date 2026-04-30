@@ -31,6 +31,10 @@ function normalizeIssnOrName(issn: string, name: string): string {
   return (issn || name || '').toLowerCase().trim();
 }
 
+function normalizeJournalName(name: string): string {
+  return (name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
 export async function lookupJournalMetrics(issn: string, name: string): Promise<JournalMetrics> {
   const cacheKey = normalizeIssnOrName(issn, name);
   if (!cacheKey) return EMPTY;
@@ -56,7 +60,11 @@ export async function lookupJournalMetrics(issn: string, name: string): Promise<
       return EMPTY;
     }
     const data = await res.json();
-    const source = data?.results?.[0] || data;
+    const results = Array.isArray(data?.results) ? data.results : [];
+    const wantedName = normalizeJournalName(name);
+    const source = issn
+      ? (results[0] || data)
+      : (results.find((row: any) => normalizeJournalName(row?.display_name || '') === wantedName) || results[0] || data);
     if (!source) {
       journalMetricsCache.set(cacheKey, EMPTY);
       return EMPTY;
@@ -119,7 +127,10 @@ export async function enrichPapersWithJournalMetrics<T extends { journal?: strin
       impactFactor: m.if || p.impactFactor,
       journalQuartile: m.quartile,
       journalHIndex: m.hIndex,
-      journal: m.name || p.journal,
+      // Preserve the source-provided journal title. OpenAlex name search can rank
+      // broader journals first (e.g. "Reproduction" → "Human Reproduction"),
+      // so enrichment must only add metrics, not rewrite bibliographic metadata.
+      journal: p.journal || m.name,
     };
   });
 }
