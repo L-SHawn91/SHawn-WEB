@@ -38,7 +38,7 @@ const laneLinks = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F3EA] text-[#263238] overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-[#F7F3EA] dark:bg-slate-900 text-[#263238] dark:text-slate-200 overflow-x-hidden">
       <main className="flex-1">
         <section className="relative paper-ruled">
           {/* SABS flow lines — teal / navy / coral */}
@@ -62,8 +62,8 @@ export default function Home() {
               <h1 className="bg-gradient-to-r from-[#2A9D8F] to-[#10243A] bg-clip-text text-4xl font-bold text-transparent sm:text-6xl">
                 Bio
               </h1>
-              <p className="mt-4 text-lg text-[#263238] sm:text-2xl">Bio-first research and operating hub</p>
-              <p className="mx-auto mt-4 max-w-3xl text-sm text-[#263238]/70 sm:text-base">
+              <p className="mt-4 text-lg text-[#263238] dark:text-slate-200 sm:text-2xl">Bio-first research and operating hub</p>
+              <p className="mx-auto mt-4 max-w-3xl text-sm text-[#263238]/70 dark:text-slate-400 sm:text-base">
                 A bio-centered operating hub for research, datasets, project workflow, and selective side-lane support.
               </p>
             </div>
@@ -77,7 +77,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/datasets"
-                className="sketch-btn inline-flex items-center border border-[#10243A]/40 bg-white px-5 py-3 text-sm font-medium text-[#10243A] transition hover:bg-[#10243A]/5"
+                className="sketch-btn inline-flex items-center border border-[#10243A]/40 bg-white dark:bg-slate-900 px-5 py-3 text-sm font-medium text-[#10243A] dark:text-slate-100 transition hover:bg-[#10243A]/5 dark:hover:bg-slate-800/30"
               >
                 Search Datasets
               </Link>
@@ -88,13 +88,13 @@ export default function Home() {
                 {quickLinks.map((item) => (
                   <Link key={item.href} href={item.href}>
                     <article
-                      className="sketch-card group h-full border-2 border-[#D8DEE6] bg-white p-5 transition hover:border-[#2A9D8F]/50"
+                      className="sketch-card group h-full border-2 border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 p-5 transition hover:border-[#2A9D8F]/50"
                       style={{ borderLeftWidth: '3px', borderLeftColor: item.accentColor }}
                       title={`${item.title}: ${item.desc}`}
                     >
                       <div className="text-2xl">{item.emoji}</div>
-                      <h2 className="mt-3 text-base font-semibold text-[#10243A]">{item.title}</h2>
-                      <p className="mt-2 text-sm text-[#263238]/70 leading-relaxed">{item.desc}</p>
+                      <h2 className="mt-3 text-base font-semibold text-[#10243A] dark:text-slate-100">{item.title}</h2>
+                      <p className="mt-2 text-sm text-[#263238]/70 dark:text-slate-400 leading-relaxed">{item.desc}</p>
                     </article>
                   </Link>
                 ))}
@@ -107,13 +107,13 @@ export default function Home() {
           {laneLinks.map((lane) => (
             <Link key={lane.href} href={lane.href}>
               <article
-                className="sketch-card border-2 border-[#D8DEE6] bg-white p-6 transition hover:border-[#E76F51]/40"
+                className="sketch-card border-2 border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 p-6 transition hover:border-[#E76F51]/40"
                 style={{ borderLeftWidth: '3px', borderLeftColor: lane.accentColor }}
                 title={`${lane.title}: ${lane.desc}`}
               >
                 <div className="text-3xl">{lane.emoji}</div>
-                <h3 className="mt-3 text-xl font-bold text-[#10243A]">{lane.title}</h3>
-                <p className="mt-2 text-sm text-[#263238]/70 leading-relaxed">{lane.desc}</p>
+                <h3 className="mt-3 text-xl font-bold text-[#10243A] dark:text-slate-100">{lane.title}</h3>
+                <p className="mt-2 text-sm text-[#263238]/70 dark:text-slate-400 leading-relaxed">{lane.desc}</p>
               </article>
             </Link>
           ))}
