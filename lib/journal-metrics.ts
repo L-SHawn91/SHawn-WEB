@@ -45,9 +45,9 @@ export async function lookupJournalMetrics(issn: string, name: string): Promise<
 
     let url: string;
     if (issn) {
-      url = `https://api.openalex.org/sources/issn:${encodeURIComponent(issn)}?select=id,display_name,issn_l,h_index,summary_stats${mailtoParam}`;
+      url = `https://api.openalex.org/sources?filter=issn:${encodeURIComponent(issn)}&per_page=1${mailtoParam}`;
     } else {
-      url = `https://api.openalex.org/sources?search=${encodeURIComponent(name)}&per_page=1&select=id,display_name,issn_l,h_index,summary_stats${mailtoParam}`;
+      url = `https://api.openalex.org/sources?search=${encodeURIComponent(name)}&per_page=1${mailtoParam}`;
     }
 
     const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
@@ -56,7 +56,7 @@ export async function lookupJournalMetrics(issn: string, name: string): Promise<
       return EMPTY;
     }
     const data = await res.json();
-    const source = issn ? data : data?.results?.[0];
+    const source = data?.results?.[0] || data;
     if (!source) {
       journalMetricsCache.set(cacheKey, EMPTY);
       return EMPTY;
@@ -66,7 +66,7 @@ export async function lookupJournalMetrics(issn: string, name: string): Promise<
     const metrics: JournalMetrics = {
       if: Math.round(impactFactor * 10) / 10,
       quartile: estimateQuartile(impactFactor),
-      hIndex: source.h_index ?? 0,
+      hIndex: source.summary_stats?.h_index ?? source.h_index ?? 0,
       name: source.display_name || name,
     };
 

@@ -254,7 +254,7 @@ const evidenceLabelText: Record<string, string> = {
   'support': '지지',
   'contradict': '반박',
   'uncertain': '불확실',
-  'mention-only': '언급',
+  'mention-only': '키워드 일치',
 };
 
 function trackCardClass(status: TrackStatus[keyof TrackStatus]): string {
@@ -951,7 +951,7 @@ export default function PapersPage() {
                             </span>
                           )}
                           {paper.evidenceLabel && (
-                            <span className={`rounded-full px-2.5 py-0.5 font-semibold ${evidenceLabelBadge[paper.evidenceLabel] || 'bg-[#D8DEE6]/50 text-[#263238]/60 dark:text-slate-400'}`} title={paper.evidenceScore !== undefined ? `Evidence score: ${paper.evidenceScore.toFixed(3)}` : ''}>{evidenceLabelText[paper.evidenceLabel] || paper.evidenceLabel}</span>
+                            <span className={`rounded-full px-2.5 py-0.5 font-semibold ${evidenceLabelBadge[paper.evidenceLabel] || 'bg-[#D8DEE6]/50 text-[#263238]/60 dark:text-slate-400'}`} title={paper.evidenceLabel === 'mention-only' ? '검색어가 포함된 결과입니다. 주장 지지/반박 판정은 아닙니다.' : (paper.evidenceScore !== undefined ? `Evidence score: ${paper.evidenceScore.toFixed(3)}` : '')}>{evidenceLabelText[paper.evidenceLabel] || paper.evidenceLabel}</span>
                           )}
                           {paper.evidenceScore !== undefined && paper.evidenceScore > 0 && (
                             <span className="text-[11px] text-[#263238]/40 dark:text-slate-600">ev {paper.evidenceScore.toFixed(2)}</span>
@@ -961,7 +961,7 @@ export default function PapersPage() {
                               <span>📖</span>
                               <span className="max-w-[180px] truncate">{paper.journal}</span>
                               {paper.impactFactor ? (
-                                <span className="ml-1 font-semibold text-[#2A9D8F]">IF {paper.impactFactor.toFixed(1)}</span>
+                                <span className="ml-1 font-semibold text-[#2A9D8F]" title="OpenAlex 2-year mean citedness 기반 IF 근사값">IF {paper.impactFactor.toFixed(1)}</span>
                               ) : null}
                               {paper.journalQuartile ? (
                                 <span className={`ml-0.5 font-bold text-[10px] px-1 py-0.5 rounded ${
@@ -969,7 +969,7 @@ export default function PapersPage() {
                                   paper.journalQuartile === 'Q2' ? 'bg-blue-100 text-blue-700' :
                                   paper.journalQuartile === 'Q3' ? 'bg-amber-100 text-amber-700' :
                                   'bg-[#D8DEE6] text-[#263238]/60 dark:text-slate-400'
-                                }`}>{paper.journalQuartile}</span>
+                                }`} title="Q score: IF 근사값 기반 저널 분위 추정">{paper.journalQuartile}</span>
                               ) : null}
                             </span>
                           )}

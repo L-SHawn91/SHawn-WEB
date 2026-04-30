@@ -1951,7 +1951,7 @@ export async function POST(request: NextRequest) {
 
     // Cache lookup — skip for author mode to always return fresh profile data
     if (mode !== 'author') {
-      const cacheKey = makeCacheKey({ q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'ifq3', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       const cached = papersCache.get(cacheKey);
       if (cached) {
         const c = cached as Record<string, unknown>;
@@ -1991,11 +1991,15 @@ export async function POST(request: NextRequest) {
 
     const sortedPapers = applySortBy(selected.papers, sortBy);
 
-    // Enrich papers with journal quartile (non-blocking, best-effort)
-    const enrichedPapers = await enrichPapersWithJournalMetrics(sortedPapers).catch(() => sortedPapers);
+    // Enrich papers with journal quartile (non-blocking, best-effort).
+    // Include per-source rows too, because the All/source tabs are built from bySource.
+    const sourceRows = Object.values(selected.bySource || {}).flat() as Paper[];
+    const uniqueForMetrics = Array.from(new Map([...sortedPapers, ...sourceRows].map((p) => [p.id, p])).values());
+    const enrichedAll = await enrichPapersWithJournalMetrics(uniqueForMetrics).catch(() => uniqueForMetrics);
+    const enrichedById = new Map(enrichedAll.map((p) => [p.id, p]));
+    const enrichedPapers = sortedPapers.map((p) => enrichedById.get(p.id) || p);
 
     // Propagate enrichment to bySource so all tabs show IF/quartile
-    const enrichedById = new Map(enrichedPapers.map((p) => [p.id, p]));
     const enrichedBySource: Record<string, Paper[]> = {};
     for (const [src, srcPapers] of Object.entries(selected.bySource || {})) {
       enrichedBySource[src] = (srcPapers as Paper[]).map((p) => enrichedById.get(p.id) || p);
@@ -2023,7 +2027,7 @@ export async function POST(request: NextRequest) {
 
     // Store in cache (skip author mode — profile results are user-specific)
     if (mode !== 'author' && sortedPapers.length > 0) {
-      const cacheKey = makeCacheKey({ q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'ifq3', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       papersCache.set(cacheKey, responseBody);
     }
 
