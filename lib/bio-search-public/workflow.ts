@@ -387,16 +387,34 @@ function citationVelocity(citations?: number, year?: number, currentYear = new D
   return 0.5 * absolute + 0.5 * velocity;
 }
 
+function queryTokens(query: string): string[] {
+  const generic = new Set(['and', 'or', 'the', 'with', 'from', 'into', 'dataset', 'data', 'search', 'paper', 'papers']);
+  return Array.from(new Set((query || '').toLowerCase().match(/[a-z0-9가-힣-]{3,}/g) || []))
+    .map((tok) => tok === 'rnaseq' ? 'rna-seq' : tok)
+    .filter((tok) => !generic.has(tok));
+}
+
+function tokenHit(text: string, token: string): boolean {
+  const prefix = token.slice(0, Math.max(5, token.length - 2));
+  return text.includes(token) || text.includes(prefix);
+}
+
+function weightedQueryScore(title: string, body: string, query: string): number {
+  const tokens = queryTokens(normalizePublicBioQuery(query));
+  if (!tokens.length) return 0;
+  const t = (title || '').toLowerCase();
+  const b = (body || '').toLowerCase();
+  const titleHits = tokens.filter((tok) => tokenHit(t, tok)).length;
+  const bodyHits = tokens.filter((tok) => tokenHit(b, tok)).length;
+  const andCoverage = titleHits === tokens.length || (titleHits + bodyHits) >= tokens.length ? 1 : 0;
+  const orCoverage = Math.max(titleHits, titleHits + bodyHits * 0.45) / tokens.length;
+  const exactPhrase = t.includes(query.toLowerCase()) ? 1 : 0;
+  return Math.min(1.8, 1.05 * orCoverage + 0.45 * andCoverage + 0.3 * exactPhrase);
+}
+
 function topicOverlap(text: string, query: string): number {
   if (!query || !text) return 0;
-  const qTokens = query.toLowerCase().match(/[a-z0-9가-힣]{3,}/g) || [];
-  if (!qTokens.length) return 0;
-  const t = text.toLowerCase();
-  const matched = qTokens.filter((tok) => {
-    const prefix = tok.slice(0, Math.max(5, tok.length - 2));
-    return t.includes(prefix);
-  }).length;
-  return matched / qTokens.length;
+  return Math.min(1, weightedQueryScore('', text, query));
 }
 
 export function publicWorkflowScore(paper: PublicPaperLike, query = "", currentYear = new Date().getFullYear()): number {
@@ -410,8 +428,7 @@ export function publicWorkflowScore(paper: PublicPaperLike, query = "", currentY
   const metadata = (paper.meshTerms?.length ? 5 : 0) + (paper.techniques?.length ? 5 : 0);
   const doiBonus = paper.doi ? 3 : 0;
   const abstractBonus = paper.abstract && paper.abstract.length > 80 ? 4 : 0;
-  const text = `${paper.title || ""} ${paper.abstract || ""}`;
-  const topicBonus = query ? Math.round(topicOverlap(text, normalizePublicBioQuery(query)) * 25) : 0;
+  const topicBonus = query ? Math.round(weightedQueryScore(paper.title || "", paper.abstract || "", normalizePublicBioQuery(query)) * 32) : 0;
   return (recency + influence + metadata + doiBonus + abstractBonus + topicBonus) * publicSourceWeight(paper.source);
 }
 

@@ -714,12 +714,24 @@ function datasetQueryRelevance(item: DatasetItem, query: string): number {
   const targetTokens = important.length ? important : tokens;
   if (!targetTokens.length) return 0;
 
-  const matched = targetTokens.filter((token) => text.includes(token)).length;
-  const phraseBonus = q && text.includes(q) ? 35 : 0;
   const title = (item.title || "").toLowerCase();
+  const description = (item.description || "").toLowerCase();
+  const accessions = (item.accessionIds || []).join(" ").toLowerCase();
   const titleMatches = targetTokens.filter((token) => title.includes(token)).length;
+  const descriptionMatches = targetTokens.filter((token) => description.includes(token)).length;
+  const accessionMatches = targetTokens.filter((token) => accessions.includes(token)).length;
+  const andCoverage = titleMatches === targetTokens.length || titleMatches + descriptionMatches + accessionMatches >= targetTokens.length ? 1 : 0;
+  const orScore = (titleMatches * 1.25 + descriptionMatches * 0.45 + accessionMatches * 1.4) / targetTokens.length;
+  const phraseBonus = q && title.includes(q) ? 45 : q && text.includes(q) ? 20 : 0;
   const accessionBonus = item.accessionIds?.length ? 12 : 0;
-  return Math.round((matched / targetTokens.length) * 100 + titleMatches * 12 + phraseBonus + accessionBonus);
+  const assayTokens = ["organoid", "scrna", "single", "rna", "seq", "rnaseq", "transcriptomics", "atac", "chip", "spatial", "proteomics", "metabolomics"];
+  const assayAsked = targetTokens.some((token) => assayTokens.includes(token));
+  const assayHit = !assayAsked || assayTokens.some((token) => title.includes(token) || description.includes(token));
+  const specificHits = titleMatches + descriptionMatches + accessionMatches;
+  const weakAndPenalty = targetTokens.length >= 2 && specificHits < Math.ceil(targetTokens.length * 0.5) ? 90 : 0;
+  const noTitleOrAccessionPenalty = titleMatches === 0 && accessionMatches === 0 ? 45 : 0;
+  const genericSpeciesPenalty = assayAsked && !assayHit ? 45 : 0;
+  return Math.round(orScore * 100 + andCoverage * 45 + phraseBonus + accessionBonus - genericSpeciesPenalty - weakAndPenalty - noTitleOrAccessionPenalty);
 }
 
 function integrateAndRank(items: DatasetItem[], query: string): DatasetItem[] {
@@ -929,15 +941,16 @@ export async function POST(request: NextRequest) {
       return publicSourceHealth(source, result, Date.now() - (sourceStartedAt.get(source as DatasetSource) || Date.now()));
     });
 
+    const relevanceQuery = normalizedQuery;
     const guardedBySource = ALL_SOURCES.reduce<Record<string, DatasetItem[]>>((acc, source) => {
-      const guardedItems = bySource[source].filter((item) => publicDatasetTopicGuard(item, effectiveQuery));
-      const rankedItems = integrateAndRank(guardedItems, effectiveQuery);
+      const guardedItems = bySource[source].filter((item) => publicDatasetTopicGuard(item, relevanceQuery));
+      const rankedItems = integrateAndRank(guardedItems, relevanceQuery);
       acc[source] = sortDatasets(rankedItems, sortBy);
       return acc;
     }, {});
 
     const merged = ALL_SOURCES.flatMap((source) => guardedBySource[source] || []);
-    const ranked = integrateAndRank(merged, effectiveQuery);
+    const ranked = integrateAndRank(merged, relevanceQuery);
     const sorted = sortDatasets(ranked, sortBy);
     const total = sorted.length;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));

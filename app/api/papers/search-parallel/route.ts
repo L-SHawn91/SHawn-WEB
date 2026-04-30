@@ -252,11 +252,24 @@ function titleKeywordTokens(query: string): string[] {
     .slice(0, 6);
 }
 
+function queryWeightedOverlap(query: string, title: string, abstract = ''): number {
+  const tokens = titleKeywordTokens(query);
+  if (!tokens.length) return 0;
+  const t = (title || '').toLowerCase();
+  const a = (abstract || '').toLowerCase();
+  const titleHits = tokens.filter((tok) => t.includes(tok) || t.includes(tok.slice(0, Math.max(5, tok.length - 2)))).length;
+  const abstractHits = tokens.filter((tok) => a.includes(tok) || a.includes(tok.slice(0, Math.max(5, tok.length - 2)))).length;
+  const andBonus = titleHits === tokens.length || titleHits + abstractHits >= tokens.length ? 0.45 : 0;
+  const orScore = (titleHits * 1.0 + Math.max(0, abstractHits - titleHits) * 0.35) / tokens.length;
+  return Math.min(1.8, orScore + andBonus);
+}
+
 function buildPubMedTitleQuery(query: string): string {
   const tokens = titleKeywordTokens(query);
   if (!tokens.length) return query;
+  const titleAnd = tokens.map((t) => `"${t.replace(/"/g, '')}"[Title]`).join(' AND ');
   const titleOr = tokens.map((t) => `"${t.replace(/"/g, '')}"[Title]`).join(' OR ');
-  return `(${titleOr})`;
+  return `((${titleAnd}) OR (${titleOr}))`;
 }
 
 function splitSentences(text: string): string[] {
@@ -421,8 +434,8 @@ function matchedAuthorConfidence(authors: string[] = [], candidates: string[]): 
     const author = normalizeName(authors[i] || '');
     if (!author) continue;
     const overlap = normalizedCandidates.reduce((m, c) => Math.max(m, tokenOverlapRatio(c, author)), 0);
-    const positionBoost = i === 0 ? 0.1 : i <= 2 ? 0.05 : 0;
-    best = Math.max(best, Math.min(1, overlap + positionBoost));
+    const positionWeight = i === 0 ? 1.25 : i === 1 ? 1.1 : i <= 3 ? 1.0 : i <= 8 ? 0.82 : 0.68;
+    best = Math.max(best, Math.min(1.25, overlap * positionWeight));
   }
   return Number(best.toFixed(4));
 }
@@ -1327,10 +1340,12 @@ function t6_integrateAndRank(
     
     // Public-safe SHawn bio workflow score: recency + citation signal + topic overlap + source reliability + metadata hints.
     score += publicWorkflowScore(paper, query);
+    score += Math.round(queryWeightedOverlap(query, paper.title || '', paper.abstract || '') * 35);
 
     // Author-first priority boost
     const authorBoost = getAuthorPriorityBoost(paper, authorCandidates, intent);
     score += authorBoost;
+    if (authorCandidates.length) score += Math.round(matchedAuthorConfidence(paper.authors || [], authorCandidates) * 22);
     // Claim/hypothesis evidence boost only when the user requested evidence mode inputs.
     if (hasEvidenceQuery) {
       score += evidenceScore * 25;
