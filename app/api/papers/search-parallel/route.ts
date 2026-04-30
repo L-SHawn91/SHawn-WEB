@@ -387,7 +387,6 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
   try {
     const baseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
     const authorTerm = buildAuthorTermForPubMed(authorCandidates);
-    const publicationTerm = '(Clinical Trial[pt] OR Meta-Analysis[pt] OR Randomized Controlled Trial[pt] OR Review[pt])';
     const topicTerm = query ? `(${query})` : '';
     const termParts: string[] = [];
 
@@ -399,8 +398,6 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
     } else if (topicTerm) {
       termParts.push(topicTerm);
     }
-
-    termParts.push(publicationTerm);
 
     const ncbiKeyEarly = process.env.NCBI_API_KEY || '';
     const params = new URLSearchParams({
@@ -1355,7 +1352,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
 
   const trackJobs: Array<{ source: TrackSource; promise: Promise<Paper[]> }> = [];
   if (sources.includes('pubmed')) {
-    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(buildPublicPubMedQuery(effectiveQuery), yearFrom, yearTo, authorCandidates, intent) });
+    // Use raw topicQuery for PubMed — synonym expansion adds implicit AND terms
+    // which cause zero results for specific gene queries (e.g. DHCR24).
+    // SHawn-bio-search approach: plain query, let PubMed relevance ranking handle it.
+    trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(topicQuery || query, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('arxiv')) {
     trackJobs.push({ source: 'arxiv', promise: t2_arxivEnhanced(topicQuery, yearFrom, yearTo, authorCandidates, intent, split.author) });
