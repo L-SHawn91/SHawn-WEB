@@ -148,17 +148,27 @@ const BIO_PRESETS: BioPreset[] = [
   },
 ];
 
-const MODALITY_OPTIONS = [
-  "single-cell RNA-seq",
-  "bulk RNA-seq",
-  "spatial transcriptomics",
-  "ATAC-seq",
-  "ChIP-seq",
-  "proteomics",
-  "metabolomics",
-  "multi-omics",
-  "epigenomics",
+const MODALITY_CONFIG = [
+  { id: "", label: "전체", icon: "🔍", active: "bg-[#10243A] text-white border-[#10243A]", inactive: "bg-white border-[#D8DEE6] text-[#263238]/70 hover:border-[#10243A]/50 hover:bg-[#F7F3EA]" },
+  { id: "single-cell RNA-seq", label: "scRNA-seq", icon: "🧬", active: "bg-teal-600 text-white border-teal-600", inactive: "bg-teal-50 border-teal-200 text-teal-700 hover:bg-teal-100" },
+  { id: "bulk RNA-seq", label: "Bulk RNA", icon: "📊", active: "bg-blue-600 text-white border-blue-600", inactive: "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100" },
+  { id: "spatial transcriptomics", label: "Spatial", icon: "🗺️", active: "bg-purple-600 text-white border-purple-600", inactive: "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100" },
+  { id: "ATAC-seq", label: "ATAC-seq", icon: "🔓", active: "bg-orange-500 text-white border-orange-500", inactive: "bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100" },
+  { id: "ChIP-seq", label: "ChIP-seq", icon: "🧲", active: "bg-rose-500 text-white border-rose-500", inactive: "bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100" },
+  { id: "proteomics", label: "Proteomics", icon: "⚗️", active: "bg-amber-500 text-white border-amber-500", inactive: "bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100" },
+  { id: "metabolomics", label: "Metabolomics", icon: "🔬", active: "bg-lime-600 text-white border-lime-600", inactive: "bg-lime-50 border-lime-200 text-lime-700 hover:bg-lime-100" },
+  { id: "multi-omics", label: "Multi-omics", icon: "🌐", active: "bg-indigo-600 text-white border-indigo-600", inactive: "bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100" },
+  { id: "epigenomics", label: "Epigenomics", icon: "🧩", active: "bg-cyan-600 text-white border-cyan-600", inactive: "bg-cyan-50 border-cyan-200 text-cyan-700 hover:bg-cyan-100" },
 ];
+
+const PRESET_STYLE: Record<string, { active: string; inactive: string }> = {
+  "single-cell":            { active: "bg-teal-600 text-white border-teal-600",   inactive: "bg-teal-50 border-teal-200 text-teal-700 hover:bg-teal-100" },
+  "differential-expression":{ active: "bg-blue-600 text-white border-blue-600",   inactive: "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100" },
+  "spatial-transcriptomics":{ active: "bg-purple-600 text-white border-purple-600", inactive: "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100" },
+  "atac-seq":               { active: "bg-orange-500 text-white border-orange-500", inactive: "bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100" },
+  "chip-seq":               { active: "bg-rose-500 text-white border-rose-500",   inactive: "bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100" },
+  "alternative-splicing":   { active: "bg-emerald-600 text-white border-emerald-600", inactive: "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100" },
+};
 const QUICK_DATASET_QUERIES = [
   "endometrium single-cell atlas",
   "ovarian cancer organoid",
@@ -202,7 +212,7 @@ export default function DatasetsPage() {
   const [meta, setMeta] = useState<DatasetMeta | null>(null);
   const [sortBy, setSortBy] = useState<SortBy>("rank");
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(25);
   const [hoverDatasetId, setHoverDatasetId] = useState<string | null>(null);
   const [relatedByDataset, setRelatedByDataset] = useState<Record<string, RelatedItem[]>>({});
   const [relatedLoadingByDataset, setRelatedLoadingByDataset] = useState<Record<string, boolean>>({});
@@ -213,7 +223,7 @@ export default function DatasetsPage() {
     sources: [...BIO_CORE_SOURCES] as string[],
     yearFrom: "",
     yearTo: "",
-    modality: "single-cell RNA-seq",
+    modality: "",
     context: "",
   });
   const pagination = meta?.pagination;
@@ -349,48 +359,48 @@ export default function DatasetsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div className="min-h-screen bg-[#F7F3EA] text-[#263238] paper-ruled py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-4 flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800">
-          <Link href="/" className="rounded-md px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700">Home</Link>
-          <Link href="/papers" className="rounded-md px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700">Papers</Link>
-          <Link href="/datasets" className="rounded-md bg-indigo-100 px-2 py-1 font-semibold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300">Datasets</Link>
-        </div>
+        <nav className="mb-4 flex items-center gap-1 rounded-2xl border border-[#D8DEE6] bg-[#F7F3EA]/90 px-3 py-2 text-sm backdrop-blur">
+          <Link href="/" className="rounded-lg px-3 py-1.5 text-[#263238]/60 transition hover:bg-[#2A9D8F]/10 hover:text-[#10243A]">Home</Link>
+          <Link href="/papers" className="rounded-lg px-3 py-1.5 text-[#263238]/60 transition hover:bg-[#2A9D8F]/10 hover:text-[#10243A]">Papers</Link>
+          <Link href="/datasets" className="rounded-lg bg-[#7B6BA8] px-3 py-1.5 font-semibold text-white">Datasets</Link>
+        </nav>
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
-            <Database className="w-10 h-10 text-indigo-600" />
+          <h1 className="text-4xl font-bold text-[#10243A] mb-4 flex items-center justify-center gap-3">
+            <Database className="w-10 h-10 text-[#7B6BA8]" />
             Dataset Search
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
+          <p className="text-xl text-[#263238]/70">
             Search across global dataset registries and repositories
           </p>
         </div>
-        <div className="sticky top-3 z-30 mb-6 rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50 via-sky-50 to-cyan-50 p-4 shadow-sm dark:border-indigo-900/50 dark:from-gray-900 dark:via-indigo-950/30 dark:to-gray-900">
+        <div className="sticky top-3 z-30 mb-6 rounded-2xl border border-[#D8DEE6] bg-[#F7F3EA]/95 p-4 shadow-md shadow-[#7B6BA8]/10 backdrop-blur-md">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white">Dataset Search Control Center</p>
-            <p className="text-xs text-gray-600 dark:text-gray-300">키워드 입력 후 Enter 또는 Search</p>
+            <p className="text-sm font-semibold text-[#10243A]">Dataset Search Control Center</p>
+            <p className="text-xs text-[#263238]/50">키워드 입력 후 Enter 또는 Search</p>
           </div>
           <div className="flex gap-3 flex-col md:flex-row">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#263238]/40 w-5 h-5" />
               <input
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && searchDatasets({ page: 1 })}
                 placeholder="예: endometrium single-cell atlas"
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-indigo-300 dark:border-indigo-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#D8DEE6] bg-white text-[#263238] placeholder:text-[#263238]/40 focus:ring-2 focus:ring-[#7B6BA8] focus:border-[#7B6BA8] outline-none"
               />
             </div>
             <button
               onClick={() => searchDatasets({ page: 1 })}
               disabled={loading}
-              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-xl font-semibold transition-colors"
+              className="sketch-btn px-6 py-3 bg-[#7B6BA8] hover:bg-[#6a5a97] disabled:opacity-60 text-white rounded-xl font-semibold transition-colors"
             >
               {loading ? "Searching..." : "Search"}
             </button>
           </div>
-          <p className="mt-3 rounded-xl border border-indigo-200 bg-white/70 px-3 py-2 text-xs leading-5 text-indigo-900 dark:border-indigo-800 dark:bg-indigo-950/30 dark:text-indigo-100">
+          <p className="mt-3 rounded-xl border border-[#7B6BA8]/20 bg-[#7B6BA8]/5 px-3 py-2 text-xs leading-5 text-[#263238]/70">
             정밀 검색 팁: <strong>조직명 + modality + accession 힌트</strong>를 함께 넣으세요. 예: <code>endometrial organoid single-cell RNA-seq GSE</code>. 넓은 질의는 여러 조직의 organoid dataset이 섞일 수 있습니다.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -401,7 +411,7 @@ export default function DatasetsPage() {
                 onClick={() => {
                   void runQuickQuery(q);
                 }}
-                className="rounded-full border border-indigo-200 bg-white px-3 py-1.5 text-xs text-indigo-800 transition hover:border-indigo-400 hover:bg-indigo-50 dark:border-indigo-800 dark:bg-gray-900 dark:text-indigo-200 dark:hover:bg-indigo-900/30"
+                className="rounded-full border border-[#D8DEE6] bg-white px-3 py-1.5 text-xs text-[#263238]/60 transition hover:border-[#7B6BA8] hover:text-[#7B6BA8]"
               >
                 {q}
               </button>
@@ -409,36 +419,37 @@ export default function DatasetsPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
-          <p className="rounded-lg border border-indigo-100 bg-indigo-50 px-3 py-2 text-xs text-indigo-800 dark:border-indigo-900/40 dark:bg-indigo-900/20 dark:text-indigo-200">
+        <div className="sketch-card border border-[#D8DEE6] bg-white p-6 mb-8">
+          <p className="rounded-lg border border-[#7B6BA8]/20 bg-[#7B6BA8]/5 px-3 py-2 text-xs text-[#7B6BA8]">
             검색 입력은 상단 고정 패널에서 진행하고, 이 섹션에서는 프리셋과 상세 필터를 조정합니다.
           </p>
           <div className="mt-4">
-            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Bio Presets</p>
+            <p className="text-xs font-medium text-[#263238]/50 mb-2">Bio Presets</p>
             <div className="flex flex-wrap gap-2">
-              {BIO_PRESETS.map((preset) => (
-                <button
-                  key={preset.id}
-                  type="button"
-                  onClick={() => applyBioPreset(preset)}
-                  disabled={loading}
-                  className={`px-3 py-1.5 text-xs rounded-full border ${
-                    activePresetId === preset.id
-                      ? "border-indigo-500 bg-indigo-200 text-indigo-900"
-                      : "border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
-                  } disabled:opacity-50`}
-                >
-                  {preset.label}
-                </button>
-              ))}
+              {BIO_PRESETS.map((preset) => {
+                const style = PRESET_STYLE[preset.id] ?? { active: "bg-[#10243A] text-white border-[#10243A]", inactive: "bg-white border-[#D8DEE6] text-[#263238]/70 hover:bg-[#F7F3EA]" };
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => applyBioPreset(preset)}
+                    disabled={loading}
+                    className={`sketch-btn px-3 py-1.5 text-xs border font-medium transition ${
+                      activePresetId === preset.id ? style.active : style.inactive
+                    } disabled:opacity-50`}
+                  >
+                    {preset.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="mt-6 pt-6 border-t border-[#D8DEE6]">
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Sources:</span>
+                <Filter className="w-4 h-4 text-[#263238]/40" />
+                <span className="text-sm font-medium text-[#263238]/70">Sources:</span>
               </div>
               {SOURCE_OPTIONS.map((source) => (
                 <label key={source} className="flex items-center gap-2 cursor-pointer">
@@ -451,53 +462,59 @@ export default function DatasetsPage() {
                         : filters.sources.filter((s) => s !== source);
                       setFilters({ ...filters, sources: nextSources });
                     }}
-                    className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 accent-[#7B6BA8] rounded"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300" title={SOURCE_TOOLTIPS[source]}>{SOURCE_LABELS[source]}</span>
+                  <span className="text-sm text-[#263238]/70" title={SOURCE_TOOLTIPS[source]}>{SOURCE_LABELS[source]}</span>
                 </label>
               ))}
-              <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Modality:</span>
-                <select
-                  value={filters.modality}
-                  onChange={(e) => setFilters({ ...filters, modality: e.target.value })}
-                  className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300"
-                >
-                  {MODALITY_OPTIONS.map((m) => (
-                    <option key={m} value={m}>{m}</option>
+              <div className="w-full mt-3 pt-3 border-t border-[#D8DEE6]">
+                <span className="text-xs font-medium text-[#263238]/50 block mb-2">Modality</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {MODALITY_CONFIG.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setFilters({ ...filters, modality: m.id })}
+                      className={`sketch-badge inline-flex items-center gap-1 px-2.5 py-1 text-xs border font-medium transition ${
+                        filters.modality === m.id ? m.active : m.inactive
+                      }`}
+                    >
+                      <span>{m.icon}</span>
+                      {m.label}
+                    </button>
                   ))}
-                </select>
+                </div>
               </div>
               <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Context:</span>
+                <span className="text-sm font-medium text-[#263238]/70">Context:</span>
                 <input
                   type="text"
                   placeholder="tissue/disease/accession hint (e.g. endometrium GSE)"
                   value={filters.context}
                   onChange={(e) => setFilters({ ...filters, context: e.target.value })}
-                  className="w-64 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm"
+                  className="w-64 px-2 py-1 rounded border border-[#D8DEE6] bg-white text-sm text-[#263238] placeholder:text-[#263238]/40"
                 />
               </div>
               <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Year:</span>
+                <span className="text-sm font-medium text-[#263238]/70">Year:</span>
                 <input
                   type="number"
                   placeholder="From"
                   value={filters.yearFrom}
                   onChange={(e) => setFilters({ ...filters, yearFrom: e.target.value })}
-                  className="w-20 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm"
+                  className="w-20 px-2 py-1 rounded border border-[#D8DEE6] bg-white text-sm text-[#263238]"
                 />
-                <span className="text-gray-500">-</span>
+                <span className="text-[#263238]/40">-</span>
                 <input
                   type="number"
                   placeholder="To"
                   value={filters.yearTo}
                   onChange={(e) => setFilters({ ...filters, yearTo: e.target.value })}
-                  className="w-20 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm"
+                  className="w-20 px-2 py-1 rounded border border-[#D8DEE6] bg-white text-sm text-[#263238]"
                 />
               </div>
               <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Sort:</span>
+                <span className="text-sm font-medium text-[#263238]/70">Sort:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => {
@@ -506,7 +523,7 @@ export default function DatasetsPage() {
                     setPage(1);
                     if (query.trim()) searchDatasets({ page: 1, sortBy: next });
                   }}
-                  className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300"
+                  className="px-2 py-1 rounded border border-[#D8DEE6] bg-white text-sm text-[#263238]"
                 >
                   <option value="rank">Rank</option>
                   <option value="recent">Most recent</option>
@@ -515,7 +532,7 @@ export default function DatasetsPage() {
                 </select>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Per page:</span>
+                <span className="text-sm font-medium text-[#263238]/70">Per page:</span>
                 <select
                   value={pageSize}
                   onChange={(e) => {
@@ -524,7 +541,7 @@ export default function DatasetsPage() {
                     setPage(1);
                     if (query.trim()) searchDatasets({ page: 1, pageSize: next });
                   }}
-                  className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300"
+                  className="px-2 py-1 rounded border border-[#D8DEE6] bg-white text-sm text-[#263238]"
                 >
                   <option value={10}>10</option>
                   <option value={20}>20</option>
@@ -535,7 +552,7 @@ export default function DatasetsPage() {
           </div>
 
           {meta && (
-            <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+            <div className="mt-4 text-xs text-[#263238]/40">
               {SOURCE_OPTIONS.map((source) => `${SOURCE_LABELS[source]}: ${meta.trackResults?.[source] || 0}`).join(" | ")} | Final:{" "}
               {meta.trackResults?.final || 0} | Sort: {meta.sort?.by || sortBy}
             </div>
@@ -545,17 +562,17 @@ export default function DatasetsPage() {
         {datasets.length > 0 && (
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-[#10243A]">
                 {meta?.pagination?.total || datasets.length} datasets found
               </h2>
               {pagination && (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-[#263238]/50">
                   Page {pagination.page} / {pagination.totalPages}
                 </p>
               )}
             </div>
             {datasets.map((dataset) => (
-              <div key={dataset.id} className="sketch-card relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6">
+              <div key={dataset.id} className="sketch-card relative bg-white border border-[#D8DEE6] hover:border-[#7B6BA8]/40 transition-all p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="absolute right-4 top-4">
@@ -565,26 +582,26 @@ export default function DatasetsPage() {
                           void loadRelatedForDataset(dataset);
                         }}
                         onMouseLeave={() => setHoverDatasetId((id) => (id === dataset.id ? null : id))}
-                        className="rounded-full border border-violet-300 px-2 py-1 text-[11px] text-violet-700"
+                        className="rounded-full border border-[#7B6BA8]/40 px-2 py-1 text-[11px] text-[#7B6BA8] transition hover:border-[#7B6BA8]"
                         title="연관 논문 미리보기"
                       >
                         <span className="inline-flex items-center gap-1"><Sparkles className="w-3 h-3" /> Related</span>
                       </button>
                       {hoverDatasetId === dataset.id && (
-                        <div className="absolute right-0 z-20 mt-2 w-80 rounded-lg border border-gray-200 bg-white p-3 text-xs shadow-xl dark:border-gray-700 dark:bg-gray-900">
-                          <p className="mb-2 font-semibold text-gray-700 dark:text-gray-200">연관 논문</p>
+                        <div className="absolute right-0 z-20 mt-2 w-80 rounded-xl border border-[#D8DEE6] bg-white p-3 text-xs shadow-xl">
+                          <p className="mb-2 font-semibold text-[#10243A]">연관 논문</p>
                           {relatedLoadingByDataset[dataset.id] ? (
-                            <p className="text-gray-500">불러오는 중...</p>
+                            <p className="text-[#263238]/40">불러오는 중...</p>
                           ) : (relatedByDataset[dataset.id] || []).length === 0 ? (
-                            <p className="text-gray-500">연관 논문이 없습니다.</p>
+                            <p className="text-[#263238]/40">연관 논문이 없습니다.</p>
                           ) : (
                             <ul className="max-h-64 space-y-2 overflow-y-auto pr-1">
                               {(relatedByDataset[dataset.id] || []).map((r) => (
                                 <li key={r.id}>
-                                  <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-blue-600 hover:underline dark:text-blue-300">
+                                  <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-2 text-[#2A9D8F] hover:underline">
                                     {r.title}
                                   </a>
-                                  <p className="text-[11px] text-gray-500">{r.source}{r.year ? ` · ${r.year}` : ""}{r.reason ? ` · ${r.reason}` : ""}</p>
+                                  <p className="text-[11px] text-[#263238]/40">{r.source}{r.year ? ` · ${r.year}` : ""}{r.reason ? ` · ${r.reason}` : ""}</p>
                                 </li>
                               ))}
                             </ul>
@@ -594,25 +611,25 @@ export default function DatasetsPage() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800" title={SOURCE_TOOLTIPS[dataset.source]}>
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-[#7B6BA8]/15 text-[#7B6BA8]" title={SOURCE_TOOLTIPS[dataset.source]}>
                         {dataset.source}
                       </span>
-                      <span className="text-sm text-gray-500">{dataset.updatedAt ? dataset.updatedAt.slice(0, 10) : "No Date"}</span>
+                      <span className="text-sm text-[#263238]/50">{dataset.updatedAt ? dataset.updatedAt.slice(0, 10) : "No Date"}</span>
                       {dataset.rankScore !== undefined && (
-                        <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full" title={DATASET_SCORE_TOOLTIP}>
+                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full" title={DATASET_SCORE_TOOLTIP}>
                           Score: {dataset.rankScore}
                         </span>
                       )}
                       {dataset.downloads !== undefined && (
-                        <span className="text-sm text-gray-500">Downloads: {dataset.downloads}</span>
+                        <span className="text-sm text-[#263238]/50">Downloads: {dataset.downloads}</span>
                       )}
                       {dataset.likes !== undefined && (
-                        <span className="text-sm text-gray-500">Likes: {dataset.likes}</span>
+                        <span className="text-sm text-[#263238]/50">Likes: {dataset.likes}</span>
                       )}
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{dataset.title}</h3>
+                    <h3 className="text-lg font-semibold text-[#10243A] mb-2">{dataset.title}</h3>
                     {dataset.license && (
-                      <p className="text-xs text-gray-500 mb-2">License: {dataset.license}</p>
+                      <p className="text-xs text-[#263238]/50 mb-2">License: {dataset.license}</p>
                     )}
                     {dataset.accessionIds && dataset.accessionIds.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3" title="Dataset accession identifiers (e.g., GEO GSE, SRA SRP/SRR, PRJNA, CNP)">
@@ -626,25 +643,25 @@ export default function DatasetsPage() {
                     {dataset.tags && dataset.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
                         {dataset.tags.slice(0, 8).map((tag) => (
-                          <span key={`${dataset.id}-${tag}`} className="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded">
+                          <span key={`${dataset.id}-${tag}`} className="text-xs bg-[#7B6BA8]/10 text-[#7B6BA8] px-2 py-1 rounded">
                             {tag}
                           </span>
                         ))}
                       </div>
                     )}
-                    <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3 mb-4">{dataset.description}</p>
+                    <p className="text-[#263238]/70 text-sm line-clamp-3 mb-4">{dataset.description}</p>
                     <div className="flex flex-wrap items-center gap-3">
                       <a
                         href={dataset.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                        className="inline-flex items-center gap-1 text-sm text-[#2A9D8F] hover:text-[#238a7e] transition"
                       >
                         Open dataset <ExternalLink className="w-3 h-3" />
                       </a>
                       <Link
                         href={`/papers?query=${encodeURIComponent(dataset.title)}`}
-                        className="inline-flex items-center gap-1 text-sm text-violet-700 hover:text-violet-800 dark:text-violet-300"
+                        className="inline-flex items-center gap-1 text-sm text-[#7B6BA8] hover:text-[#6a5a97] transition"
                         title="이 데이터셋과 연관된 논문 검색"
                       >
                         Related papers
@@ -664,12 +681,12 @@ export default function DatasetsPage() {
                     searchDatasets({ page: prev });
                   }}
                   disabled={loading || page <= 1}
-                  className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-gray-300 text-sm disabled:opacity-50"
+                  className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-[#D8DEE6] text-sm text-[#263238] disabled:opacity-50 hover:border-[#7B6BA8]"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   Prev
                 </button>
-                <span className="text-sm text-gray-600 dark:text-gray-300">
+                <span className="text-sm text-[#263238]/60">
                   {pagination.page} / {pagination.totalPages}
                 </span>
                 <button
@@ -680,7 +697,7 @@ export default function DatasetsPage() {
                     searchDatasets({ page: next });
                   }}
                   disabled={loading || page >= pagination.totalPages}
-                  className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-gray-300 text-sm disabled:opacity-50"
+                  className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-[#D8DEE6] text-sm text-[#263238] disabled:opacity-50 hover:border-[#7B6BA8]"
                 >
                   Next
                   <ChevronRight className="w-4 h-4" />
@@ -691,7 +708,7 @@ export default function DatasetsPage() {
         )}
 
         {datasets.length === 0 && !loading && hasSearched && (
-          <div className="text-center py-12 text-gray-500">No datasets found. Try different keywords or adjust filters.</div>
+          <div className="text-center py-12 text-[#263238]/50">No datasets found. Try different keywords or adjust filters.</div>
         )}
       </div>
     </div>
