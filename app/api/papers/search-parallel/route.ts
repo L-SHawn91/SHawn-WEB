@@ -297,11 +297,28 @@ function extractExplicitAuthorLabels(query: string): string[] {
   return uniqueList(values);
 }
 
+function titleCaseAuthorName(name: string): string {
+  return (name || '').split(/\s+/).filter(Boolean).map((part) => {
+    if (!/^[a-z][a-z'-]{1,}$/i.test(part)) return part;
+    return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+  }).join(' ');
+}
+
+function pubmedInitialAuthorVariant(name: string): string {
+  const parts = titleCaseAuthorName(name).split(/\s+/).filter(Boolean);
+  if (parts.length < 2) return '';
+  const first = parts[0] || '';
+  const last = parts[parts.length - 1] || '';
+  if (!first || !last) return '';
+  return `${last} ${first.charAt(0).toUpperCase()}`;
+}
+
 function buildAuthorTermForPubMed(authors: string[]): string {
-  const tokens = authors.filter((name) => name.includes(",") || name.includes(" "));
+  const tokens = uniqueList(authors.flatMap((name) => [name, titleCaseAuthorName(name), pubmedInitialAuthorVariant(name)]))
+    .filter((name) => name.includes(",") || name.includes(" "));
   if (tokens.length === 0) return "";
 
-  const quoted = tokens.map((name) => {
+  const quoted = tokens.slice(0, 6).map((name) => {
     const q = name.replace(/["']/g, "");
     return `"${q}"[au]`;
   });
@@ -408,6 +425,10 @@ function titleOrMetadataTopicMatches(query: string, paper: Pick<Paper, 'title' |
 
 function hasExplicitAndOperator(query: string): boolean {
   return /(?:^|\s)(?:AND|&&|\+)(?:\s|$)/i.test(query || '');
+}
+
+function hasExplicitOrOperator(query: string): boolean {
+  return /(?:^|\s)(?:OR|\|\|)(?:\s|$)/i.test(query || '');
 }
 
 function queryTokenHits(tokens: string[], text: string): number {
@@ -679,6 +700,11 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
     const baseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
     const authorTerm = buildAuthorTermForPubMed(authorCandidates);
     const pubmedParts = parsePublicBioQuery(query);
+    const booleanTopicTokens = titleKeywordTokens(query);
+    const booleanTopicOperator = hasExplicitAndOperator(query) ? 'AND' : hasExplicitOrOperator(query) ? 'OR' : '';
+    const booleanTopicTerm = booleanTopicOperator && booleanTopicTokens.length > 1
+      ? `(${booleanTopicTokens.map((t) => `"${t.replace(/"/g, '')}"[Title/Abstract]`).join(` ${booleanTopicOperator} `)})`
+      : '';
     const speciesOrTerm = pubmedParts.species.length
       ? `(${pubmedParts.species.slice(0, 4).map((s) => `"${s.replace(/"/g, '')}"[Title/Abstract]`).join(' OR ')})`
       : '';
@@ -686,9 +712,9 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
       && pubmedParts.keywords
       && pubmedParts.species.some((s) => normalizeName(s) === normalizeName(pubmedParts.keywords));
     const keywordTerm = pubmedParts.keywords && !speciesOnlyKeyword ? `(${pubmedParts.keywords})` : '';
-    const topicTerm = speciesOrTerm && keywordTerm
+    const topicTerm = booleanTopicTerm || (speciesOrTerm && keywordTerm
       ? `${keywordTerm} AND ${speciesOrTerm}`
-      : (speciesOrTerm || (query ? `(${query})` : ''));
+      : (speciesOrTerm || (query ? `(${query})` : '')));
     const termParts: string[] = [];
 
     if (intent === 'INSTITUTION') {
@@ -2050,7 +2076,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   }
   const hasManualAuthor = manualAuthorNames.length > 0;
   const firstAuthorOnly = Boolean(filters?.firstAuthorOnly);
-  const expandAuthorNameForSearch = (name: string): string[] => uniqueList([name, ...extractAuthorCandidates(name).authorCandidates]);
+  const expandAuthorNameForSearch = (name: string): string[] => uniqueList([name, titleCaseAuthorName(name), pubmedInitialAuthorVariant(name), ...extractAuthorCandidates(name).authorCandidates]);
   const labeledAuthorAliases = uniqueList([...explicitAuthorLabels, ...parsedPublicQuery.authors].flatMap(expandAuthorNameForSearch));
   const baseCandidates = labeledAuthorAliases.length
     ? labeledAuthorAliases
@@ -2215,6 +2241,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   let homonymProfiles: SearchAttemptResult['homonymProfiles'] = undefined;
 
   const softRankQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
+  const builderTerms = Array.isArray(filters?.queryBuilderTerms)
+    ? filters.queryBuilderTerms.filter((x: unknown): x is string => typeof x === 'string' && x.trim().length > 0)
+    : [];
+  const builderAutoTokens = builderTerms.length > 1 ? titleKeywordTokens(builderTerms.join(' ')) : [];
   const explicitAndQuery = hasExplicitAndOperator(topicQuery || query);
   const explicitAndTokens = explicitAndQuery ? titleKeywordTokens(topicQuery || query) : [];
   const topicText = (nonAuthorQuery || topicQuery || '').trim();
@@ -2239,6 +2269,9 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       if (explicitAndTokens.length > 1) {
         const hits = queryTokenHits(explicitAndTokens, paperSearchText(paper));
         delta += hits === explicitAndTokens.length ? 90 : -160 * (explicitAndTokens.length - hits);
+      } else if (builderAutoTokens.length > 1) {
+        const hits = queryTokenHits(builderAutoTokens, paperSearchText(paper));
+        delta += hits === builderAutoTokens.length ? 70 : hits > 0 ? hits * 28 : -70;
       }
       if (effectiveMode === 'author' && authorCandidates.length && topicTokenCount <= 2) {
         delta += topicAnchor ? 60 : -120;

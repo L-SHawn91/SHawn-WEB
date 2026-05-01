@@ -513,7 +513,7 @@ export default function PapersPage() {
     lastChipCommitAtRef.current = Date.now();
   };
 
-  const searchPapers = async (forcedQuery?: string) => {
+  const searchPapers = async (forcedQuery?: string, forcedBuilderTerms?: string[]) => {
     const userQuery = (forcedQuery ?? effectiveInputQuery).trim();
     if (!userQuery.trim()) return;
 
@@ -526,6 +526,9 @@ export default function PapersPage() {
       .split(',')
       .map((x) => x.trim())
       .filter(Boolean);
+    const activeBuilderTerms = (forcedBuilderTerms || (chips.length ? [...chips, ...tokenizeInput(query)] : []))
+      .map((term) => term.trim())
+      .filter((term) => term && !/^(AND|OR)$/i.test(term));
     const requestFilters: Record<string, unknown> = {
       sources: filters.sources,
       yearFrom: filters.yearFrom,
@@ -537,6 +540,10 @@ export default function PapersPage() {
     };
     if (parsedAuthorNames.length) requestFilters.authorNames = parsedAuthorNames;
     if (filters.profileIds.length) requestFilters.profileIds = filters.profileIds;
+    if (activeBuilderTerms.length > 1) {
+      requestFilters.queryBuilderTerms = activeBuilderTerms;
+      requestFilters.queryBuilderOperator = 'auto';
+    }
 
     try {
       setTimeout(() => setTrackStatus((s) => ({ ...s, t1: 'done' })), 700);
@@ -741,11 +748,10 @@ export default function PapersPage() {
                           const now = Date.now();
                           if (e.key === 'Enter') {
                             e.preventDefault();
-                            const submittedQuery = query.trim()
-                              ? buildQueryFromChips([...chips, ...tokenizeInput(query)], '')
-                              : buildQueryFromChips(chips, '');
+                            const submittedTerms = query.trim() ? [...chips, ...tokenizeInput(query)] : chips;
+                            const submittedQuery = buildQueryFromChips(submittedTerms, '');
                             if (query.trim()) { commitBufferToChip(query); setQuery(''); }
-                            void searchPapers(submittedQuery); return;
+                            void searchPapers(submittedQuery, submittedTerms); return;
                           }
                           if (e.key === 'Backspace' && !query && chips.length > 0) {
                             e.preventDefault(); setChips((prev) => prev.slice(0, -1)); setMergeSuggestion(null); return;
