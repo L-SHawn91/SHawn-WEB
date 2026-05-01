@@ -143,7 +143,7 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
   }
 
   // Case: romanized name (e.g. Korean given name, optionally two tokens)
-  // followed by a species/bio topic token: "soohyung pig", "soohyung lee pig".
+  // followed by a species/bio topic token.
   const firstIsLooseName = isNameWordLoose(first) && !BIO_TERMS_EXCLUDE.has(first.toLowerCase());
   const secondIsLooseName = isNameWordLoose(second) && !BIO_TERMS_EXCLUDE.has(second.toLowerCase());
   const thirdIsBioTerm = BIO_TERMS_EXCLUDE.has((third || '').toLowerCase());

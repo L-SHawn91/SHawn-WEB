@@ -2204,8 +2204,8 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
         const merged = paperSearchText(paper);
         const rel = overlapRatio(topicText, merged);
         const conf = matchedAuthorConfidence(paper.authors || [], authorCandidates);
-        // For short author+keyword searches (e.g. "soohyung endometrium"),
-        // require at least one topic anchor in the title or explicit metadata.
+        // For short author+keyword searches, require at least one topic anchor
+        // in the title or explicit metadata.
         // Abstract-only mentions are too noisy for this interaction pattern.
         if (topicTokenCount <= 2) return titleOrMetadataTopicMatches(topicText, paper);
         return rel >= 0.03 || conf >= 0.9 || (paper.rankScore || 0) >= 72;
