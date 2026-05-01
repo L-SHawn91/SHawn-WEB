@@ -30,6 +30,7 @@ interface Paper {
   url: string;
   pdfUrl?: string;
   citations?: number;
+  keywords?: string[];
   meshTerms?: string[];
   techniques?: string[];
   influenceScore?: number;
@@ -1040,11 +1041,18 @@ export default function PapersPage() {
                           </blockquote>
                         )}
 
-                        {/* MeSH / technique tags */}
-                        {(paper.meshTerms?.length || paper.techniques?.length) ? (
-                          <div className="mt-3 flex flex-wrap gap-1.5">
-                            {paper.meshTerms?.slice(0, 3).map((term) => <span key={term} className="rounded bg-[#D8DEE6]/40 dark:bg-slate-700/30 px-1.5 py-0.5 text-[10px] text-[#263238]/70 dark:text-slate-400">{term}</span>)}
-                            {paper.techniques?.slice(0, 3).map((tech) => <span key={tech} className="rounded bg-[#7B6BA8]/10 dark:bg-purple-900/20 px-1.5 py-0.5 text-[10px] text-[#7B6BA8]">{tech}</span>)}
+                        {/* Author keywords / MeSH / technique tags */}
+                        {(paper.keywords?.length || paper.meshTerms?.length || paper.techniques?.length) ? (
+                          <div className="mt-3 rounded-xl border border-[#D8DEE6]/70 dark:border-slate-700/70 bg-[#F7F3EA]/55 dark:bg-slate-900/45 px-3 py-2">
+                            <div className="mb-1.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#10243A]/55 dark:text-slate-400">
+                              <Sparkles className="h-3 w-3 text-[#2A9D8F]" />
+                              <span>Author keywords · MeSH · Concepts</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {paper.keywords?.slice(0, 5).map((term) => <span key={`kw-${term}`} className="rounded-full bg-[#2A9D8F]/12 dark:bg-teal-900/25 px-2 py-0.5 text-[10px] font-medium text-[#1f7f75] dark:text-teal-300" title="Author keyword / source concept">{term}</span>)}
+                              {paper.meshTerms?.slice(0, 4).map((term) => <span key={`mesh-${term}`} className="rounded-full bg-[#D8DEE6]/55 dark:bg-slate-700/35 px-2 py-0.5 text-[10px] text-[#263238]/70 dark:text-slate-400" title="MeSH term">{term}</span>)}
+                              {paper.techniques?.slice(0, 3).map((tech) => <span key={`tech-${tech}`} className="rounded-full bg-[#7B6BA8]/12 dark:bg-purple-900/25 px-2 py-0.5 text-[10px] text-[#7B6BA8]" title="Publication / technique tag">{tech}</span>)}
+                            </div>
                           </div>
                         ) : null}
 
