@@ -1643,13 +1643,6 @@ async function tieredSettle(promises: Promise<Paper[]>[], deadlineMs: number): P
   ]);
 }
 
-function normalizeSearchMode(value: unknown): SearchMode {
-  const v = typeof value === 'string' ? value.toLowerCase().trim() : '';
-  if (v === 'precision') return 'precision';
-  if (v === 'author') return 'author';
-  return 'broad';
-}
-
 type SearchAttemptResult = {
   query: string;
   mode: SearchMode;
@@ -2216,7 +2209,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       if (!wordMatch) delta -= 14;
     }
     if (queryHasSpecies) {
-      delta += speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper)) ? 22 : -10;
+      delta += speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper)) ? 36 : -90;
     }
     if (softRankQuery) {
       const weighted = queryWeightedOverlap(softRankQuery, paper.title || '', [paper.abstract || '', paperKeywordText(paper)].join(' '));
@@ -2225,7 +2218,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       delta += Math.round(weighted * 32);
       delta += Math.round(keywordWeighted * 18);
       if (effectiveMode === 'author' && authorCandidates.length && topicTokenCount <= 2) {
-        delta += topicAnchor ? 28 : -24;
+        delta += topicAnchor ? 36 : -80;
       }
       if (ambiguousSingleTokenAuthorTopic && topicTokenCount >= 1) {
         delta += topicAnchor || weighted >= 0.12 ? 36 : -60;
@@ -2332,13 +2325,18 @@ export async function POST(request: NextRequest) {
     const correctedQuery = correctBioTypos(rawQuery);
     const normalizedQuery = preprocessUserQuery(correctedQuery);
     const filters = payload?.filters || {};
-    const mode = normalizeSearchMode(payload?.mode || filters?.mode);
+    // UI is query-driven: do not let filter/search-mode state steer behavior.
+    // Author/precision-like behavior should be inferred from the query text itself.
+    const mode: SearchMode = 'broad';
+    const cacheableQuery = classifyIntent(normalizedQuery) === 'TOPIC'
+      && extractExplicitAuthorLabels(normalizedQuery).length === 0
+      && parsePublicBioQuery(normalizedQuery).authors.length === 0;
     const sortBy = normalizeSortBy(payload?.sortBy ?? filters?.sortBy);
     if (typeof payload?.claim === 'string' && !filters.claim) filters.claim = payload.claim;
     if (typeof payload?.hypothesis === 'string' && !filters.hypothesis) filters.hypothesis = payload.hypothesis;
 
-    // Cache lookup — skip for author mode to always return fresh profile data
-    if (mode !== 'author') {
+    // Cache only plain topic queries; author-like behavior is query-inferred and should stay fresh.
+    if (cacheableQuery) {
       const cacheKey = makeCacheKey({ v: 'query-parts-2', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       const cached = papersCache.get(cacheKey);
       if (cached) {
@@ -2413,8 +2411,8 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    // Store in cache (skip author mode — profile results are user-specific)
-    if (mode !== 'author' && sortedPapers.length > 0) {
+    // Store only plain topic queries; author-like profile results are query-inferred and should stay fresh.
+    if (cacheableQuery && sortedPapers.length > 0) {
       const cacheKey = makeCacheKey({ v: 'query-parts-2', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       papersCache.set(cacheKey, responseBody);
     }

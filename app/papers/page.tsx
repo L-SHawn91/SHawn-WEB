@@ -97,7 +97,6 @@ interface HomonymProfile {
 }
 
 type SortMode = 'score' | 'recent' | 'citations' | 'source';
-type SearchMode = 'broad' | 'precision' | 'author';
 
 type RelatedItem = { id: string; title: string; year?: number; source: string; url: string };
 type RelatedDatasetItem = { id: string; title: string; source: string; url: string; accessionIds?: string[]; reason?: string };
@@ -314,7 +313,6 @@ export default function PapersPage() {
   const [relatedDatasetsByPaper, setRelatedDatasetsByPaper] = useState<Record<string, RelatedDatasetItem[]>>({});
   const [queryHistory, setQueryHistory] = useState<string[]>([]);
   const [filters, setFilters] = useState({
-    mode: 'broad' as SearchMode,
     sources: ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'] as string[],
     yearFrom: '',
     yearTo: '',
@@ -548,7 +546,7 @@ export default function PapersPage() {
       const response = await apiFetch('/api/papers/search-parallel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: userQuery, mode: filters.mode, filters: requestFilters, claim: filters.claim }),
+        body: JSON.stringify({ query: userQuery, filters: requestFilters, claim: filters.claim }),
       });
       const data = await response.json();
 
@@ -1102,35 +1100,12 @@ export default function PapersPage() {
                 <Filter className="h-4 w-4 text-[#263238]/40 dark:text-slate-600" /> Filters
               </h3>
               <div className="space-y-3">
-                {/* Mode */}
                 <div className="rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA] dark:bg-slate-900 px-3 py-2.5">
-                  <span className="mb-1.5 block text-[11px] text-[#263238]/50 dark:text-slate-500">Search Mode</span>
-                  {filters.mode !== 'precision' ? (
-                    <p className="mb-2 rounded-lg border border-amber-300 bg-amber-50 px-2 py-1 text-[11px] text-amber-700">Citation-critical 검색은 Precision 모드 권장</p>
-                  ) : (
-                    <p className="mb-2 rounded-lg border border-emerald-300 bg-emerald-50 px-2 py-1 text-[11px] text-emerald-700">Precision: claim/evidence 정합성 우선</p>
-                  )}
-                  <select value={filters.mode} onChange={(e) => setFilters({ ...filters, mode: e.target.value as SearchMode, profileIds: [] })} className="w-full bg-transparent text-xs text-[#263238] dark:text-slate-200 outline-none">
-                    <option value="broad">Broad</option>
-                    <option value="precision">Precision · citation-critical</option>
-                    <option value="author">Author</option>
-                  </select>
+                  <span className="mb-1 block text-[11px] text-[#263238]/50 dark:text-slate-500">Query-driven search</span>
+                  <p className="text-[11px] leading-relaxed text-[#263238]/60 dark:text-slate-400">
+                    Search mode is inferred from the search box. Use patterns like <code>author: Lee S keyword: endometrium</code>, <code>species: pig</code>, or plain topic terms.
+                  </p>
                 </div>
-
-                {/* Author fields */}
-                {filters.mode === 'author' && (
-                  <div className="rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA] dark:bg-slate-900 px-3 py-2.5">
-                    <span className="mb-1 block text-[11px] text-[#263238]/50 dark:text-slate-500">Author Aliases</span>
-                    <input type="text" value={filters.authorNames} onChange={(e) => setFilters({ ...filters, authorNames: e.target.value })} placeholder="Author Name, Name Initials" className="w-full bg-transparent text-xs text-[#263238] dark:text-slate-200 outline-none placeholder:text-[#263238]/40 dark:placeholder:text-slate-500" />
-                  </div>
-                )}
-                {filters.mode === 'author' && (
-                  <div className="rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA] dark:bg-slate-900 px-3 py-2.5">
-                    <span className="mb-1.5 block text-[11px] text-[#263238]/50 dark:text-slate-500">Profile Merge Strictness: {filters.profileMergeThreshold.toFixed(2)}</span>
-                    <input type="range" min={0.3} max={0.9} step={0.05} value={filters.profileMergeThreshold} onChange={(e) => setFilters({ ...filters, profileMergeThreshold: Number(e.target.value), profileIds: [] })} className="w-full accent-[#2A9D8F]" />
-                    <div className="mt-1 flex justify-between text-[10px] text-[#263238]/40 dark:text-slate-600"><span>More merge</span><span>More split</span></div>
-                  </div>
-                )}
 
                 {/* Year */}
                 <div className="grid grid-cols-2 gap-2">
@@ -1143,13 +1118,6 @@ export default function PapersPage() {
                     <input type="number" value={filters.yearTo} onChange={(e) => setFilters({ ...filters, yearTo: e.target.value })} className="w-full bg-transparent text-xs text-[#263238] dark:text-slate-200 outline-none" />
                   </div>
                 </div>
-
-                {filters.mode === 'author' && (
-                  <label className="flex items-center gap-2 rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA] dark:bg-slate-900 px-3 py-2.5 text-xs text-[#263238]/60 dark:text-slate-400">
-                    <input type="checkbox" checked={filters.firstAuthorOnly} onChange={(e) => setFilters({ ...filters, firstAuthorOnly: e.target.checked })} className="accent-[#2A9D8F]" />
-                    First author only
-                  </label>
-                )}
 
                 {/* Source toggles */}
                 <div className="rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA] dark:bg-slate-900 px-3 py-2.5">
@@ -1167,7 +1135,7 @@ export default function PapersPage() {
                 </div>
 
                 {/* Author profiles */}
-                {filters.mode === 'author' && (meta?.homonymProfiles?.length || 0) > 0 && (
+                {(meta?.mode === 'author') && (meta?.homonymProfiles?.length || 0) > 0 && (
                   <div className="rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA] dark:bg-slate-900 px-3 py-2.5">
                     <span className="mb-2 block text-[11px] text-[#263238]/50 dark:text-slate-500">Recommended Author Profiles</span>
                     <div className="space-y-1.5">
