@@ -406,6 +406,23 @@ function titleOrMetadataTopicMatches(query: string, paper: Pick<Paper, 'title' |
   return hits >= 1;
 }
 
+function hasExplicitAndOperator(query: string): boolean {
+  return /(?:^|\s)(?:AND|&&|\+)(?:\s|$)/i.test(query || '');
+}
+
+function queryTokenHits(tokens: string[], text: string): number {
+  const normalized = (text || '').toLowerCase();
+  return tokens.filter((tok) => {
+    const prefix = tok.slice(0, Math.max(5, tok.length - 2));
+    return normalized.includes(tok) || normalized.includes(prefix);
+  }).length;
+}
+
+function allQueryTokensMatch(tokens: string[], paper: Pick<Paper, 'title' | 'abstract' | 'keywords' | 'meshTerms' | 'techniques'>): boolean {
+  if (!tokens.length) return true;
+  return queryTokenHits(tokens, paperSearchText(paper)) === tokens.length;
+}
+
 function tokenFrequency(text: string, token: string): number {
   const normalized = (text || '').toLowerCase();
   const prefix = token.slice(0, Math.max(5, token.length - 2));
@@ -2198,6 +2215,8 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   let homonymProfiles: SearchAttemptResult['homonymProfiles'] = undefined;
 
   const softRankQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
+  const explicitAndQuery = hasExplicitAndOperator(topicQuery || query);
+  const explicitAndTokens = explicitAndQuery ? titleKeywordTokens(topicQuery || query) : [];
   const topicText = (nonAuthorQuery || topicQuery || '').trim();
   const topicTokenCount = (topicText.match(/[a-z0-9가-힣]{3,}/gi) || []).length;
   const applySoftRelevanceScore = (paper: Paper): Paper => {
@@ -2217,6 +2236,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       const topicAnchor = titleOrMetadataTopicMatches(softRankQuery, paper);
       delta += Math.round(weighted * 32);
       delta += Math.round(keywordWeighted * 18);
+      if (explicitAndTokens.length > 1) {
+        const hits = queryTokenHits(explicitAndTokens, paperSearchText(paper));
+        delta += hits === explicitAndTokens.length ? 90 : -160 * (explicitAndTokens.length - hits);
+      }
       if (effectiveMode === 'author' && authorCandidates.length && topicTokenCount <= 2) {
         delta += topicAnchor ? 60 : -120;
       }
@@ -2245,6 +2268,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   // Keep paper-search outputs paper-like, but do not hard-block relevance.
   papers = papers
     .filter((paper) => !isNonResearchCommentTitle(paper.title || ''))
+    .filter((paper) => !explicitAndTokens.length || allQueryTokensMatch(explicitAndTokens, paper))
     .map(applySoftRelevanceScore);
   if (effectiveMode === 'precision') {
     papers = papers.map((paper) => ({ ...paper, rankScore: Math.round((paper.rankScore || 0) + ((paper.evidenceScore || 0) >= 0.05 ? 8 : -8)) }));

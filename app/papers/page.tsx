@@ -155,13 +155,17 @@ function canSuggestMerge(left: string, right: string): boolean {
 }
 
 function buildQueryFromChips(chips: string[], buffer: string): string {
-  const tokens = [...chips];
   const parsed = tokenizeInput(buffer);
-  tokens.push(...parsed);
-  return tokens
-    .map((t) => (t.includes(' ') ? `"${t}"` : t))
-    .join(' ')
-    .trim();
+  if (chips.length === 0) {
+    return buffer.trim();
+  }
+  const tokens = [...chips, ...parsed].filter(Boolean);
+  const hasOperator = tokens.some((t) => /^(AND|OR)$/i.test(t));
+  const quoted = tokens.map((t) => {
+    if (/^(AND|OR)$/i.test(t)) return t.toUpperCase();
+    return t.includes(' ') ? `"${t}"` : t;
+  });
+  return quoted.join(hasOperator ? ' ' : ' OR ').trim();
 }
 
 const SUGGESTION_STOP_WORDS = new Set([
@@ -737,8 +741,11 @@ export default function PapersPage() {
                           const now = Date.now();
                           if (e.key === 'Enter') {
                             e.preventDefault();
+                            const submittedQuery = query.trim()
+                              ? buildQueryFromChips([...chips, ...tokenizeInput(query)], '')
+                              : buildQueryFromChips(chips, '');
                             if (query.trim()) { commitBufferToChip(query); setQuery(''); }
-                            void searchPapers(); return;
+                            void searchPapers(submittedQuery); return;
                           }
                           if (e.key === 'Backspace' && !query && chips.length > 0) {
                             e.preventDefault(); setChips((prev) => prev.slice(0, -1)); setMergeSuggestion(null); return;
