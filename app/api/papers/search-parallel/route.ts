@@ -6,6 +6,7 @@ import { correctBioTypos } from '../../../../lib/bio-typo';
 import { enrichPapersWithJournalMetrics } from '../../../../lib/journal-metrics';
 import { makeCacheKey, papersCache } from '../../../../lib/server-cache';
 import {
+  BIO_TERMS_EXCLUDE,
   buildArxivQuery,
   classifyIntent,
   splitAuthorAndTopic,
@@ -355,7 +356,12 @@ function normalizeAuthorToken(raw: string): string {
  */
 function isRomanizedSingleTokenName(name: string): boolean {
   if (!name) return false;
-  return !name.includes(' ') && !name.includes(',') && name === name.toLowerCase() && name.length >= 3;
+  if (name.includes(' ') || name.includes(',')) return false;
+  // All-lowercase romanized given name (e.g. "soohyung", "jiyeon")
+  if (name === name.toLowerCase() && name.length >= 3) return true;
+  // Proper-case single-token given name (e.g. "Jiyeon", "Soohyung", "Inkyu"):
+  // 1 uppercase + 3+ lowercase = 4+ total chars; must not be a known bio/science term
+  return /^[A-Z][a-z]{3,}$/.test(name) && !BIO_TERMS_EXCLUDE.has(name.toLowerCase());
 }
 
 function tokenOverlapRatio(a: string, b: string): number {
@@ -1084,14 +1090,16 @@ async function t3_semanticAuthorSearch(
 }
 
 // T3: Semantic Scholar track - influence analysis
-async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC'): Promise<Paper[]> {
+async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC', originalTopic = ''): Promise<Paper[]> {
   console.log('[T3:Semantic] Search starting...');
   const startTime = Date.now();
-  
+
   try {
     // Romanized single-token given names (e.g. "soohyung") are unreliable in the S2 author API:
     // results are ranked by paper count and return the wrong person. Use full-text paper search
     // with the combined query ("soohyung pig") instead so S2's own indexing finds the right papers.
+    // Use the raw (non-expanded) topic so S2 gets a focused combined query like "soohyung endometrium",
+    // not the expanded OR form "soohyung endometrium OR uterus OR uterine OR..." which returns 0.
     const firstCandidate = authorCandidates[0] || '';
     const romanizedGivenName = isRomanizedSingleTokenName(firstCandidate);
     if (authorCandidates.length > 0 && !romanizedGivenName && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
@@ -1099,8 +1107,9 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
       if (results.length > 0) return results;
     }
 
-    const s2SearchQuery = romanizedGivenName && intent !== 'TOPIC' && firstCandidate && query
-      ? `${firstCandidate} ${query}`
+    const topicForSearch = romanizedGivenName && originalTopic ? originalTopic : query;
+    const s2SearchQuery = romanizedGivenName && intent !== 'TOPIC' && firstCandidate && topicForSearch
+      ? `${firstCandidate} ${topicForSearch}`
       : query;
     const baseUrl = 'https://api.semanticscholar.org/graph/v1/paper/search';
     const params = new URLSearchParams({
@@ -1232,7 +1241,7 @@ async function t4_crossrefEnhanced(query: string, yearFrom?: string, yearTo?: st
 }
 
 // T5: OpenAlex track
-async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC'): Promise<Paper[]> {
+async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: string, authorCandidates: string[] = [], intent: QueryIntent = 'TOPIC', originalTopic = ''): Promise<Paper[]> {
   console.log('[T5:OpenAlex] Search starting...');
   const startTime = Date.now();
   const openAlexAbstract = (inv: any): string => {
@@ -1339,8 +1348,9 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
       }
     }
 
-    const oaSearchQuery = _romanizedT5 && intent !== 'TOPIC' && _firstCandT5 && query
-      ? `${_firstCandT5} ${query}`
+    const _topicForOA = _romanizedT5 && originalTopic ? originalTopic : query;
+    const oaSearchQuery = _romanizedT5 && intent !== 'TOPIC' && _firstCandT5 && _topicForOA
+      ? `${_firstCandT5} ${_topicForOA}`
       : query;
     const params = new URLSearchParams({
       search: oaSearchQuery,
@@ -2181,10 +2191,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(pubmedQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('semantic')) {
-    trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent) });
+    trackJobs.push({ source: 'semantic', promise: t3_semanticEnhanced(effectiveQuery, yearFrom, yearTo, authorCandidates, intent, topicQuery) });
   }
   if (sources.includes('openalex')) {
-    trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent) });
+    trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent, topicQuery) });
   }
   if (sources.includes('europepmc')) {
     const epmcQuery = intent === 'INSTITUTION' ? query : buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true });

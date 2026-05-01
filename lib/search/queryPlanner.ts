@@ -3,7 +3,7 @@ export type QueryIntent = 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'INSTITUTION' | 'TOP
 const INSTITUTION_KEYWORDS = /\b(university|univ|institute|hospital|college|school|center|centre|lab|laboratory|department|dept)\b/i;
 
 // Bio/science terms that are definitively NOT person names
-const BIO_TERMS_EXCLUDE = new Set([
+export const BIO_TERMS_EXCLUDE = new Set([
   'endometrium', 'endometrial', 'uterus', 'uterine', 'organoid', 'organoids',
   'transcriptomics', 'transcriptome', 'transcriptional', 'transcription',
   'genomics', 'genomic', 'genome', 'proteomics', 'proteomic',
