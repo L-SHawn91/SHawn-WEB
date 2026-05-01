@@ -72,6 +72,48 @@ function isPaper(paper: Paper | null): paper is Paper {
   return paper !== null;
 }
 
+function decodeXmlEntities(text: string): string {
+  return (text || '')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&#(\d+);/g, (_, n) => {
+      const code = Number(n);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : '';
+    })
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => {
+      const code = parseInt(n, 16);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : '';
+    });
+}
+
+function cleanPaperText(text = ''): string {
+  // PubMed/PMC/EuropePMC can return JATS/HTML inline tags in titles, e.g.
+  // <scp>PTEN</scp>/<scp>AKT</scp>/<scp>FOXO</scp>3a. Preserve the text, drop markup.
+  return decodeXmlEntities(text)
+    .replace(/<\/?(?:scp|italic|i|b|bold|sub|sup|em|strong|span)[^>]*>/gi, '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+([,.;:!?])/g, '$1')
+    .replace(/\s*([/])\s*/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function cleanPaperRecord<T extends Paper>(paper: T): T {
+  return {
+    ...paper,
+    title: cleanPaperText(paper.title || 'No title') || 'No title',
+    abstract: cleanPaperText(paper.abstract || ''),
+    authors: (paper.authors || []).map((a) => cleanPaperText(a)).filter(Boolean),
+    meshTerms: paper.meshTerms?.map((m) => cleanPaperText(m)).filter(Boolean),
+    techniques: paper.techniques?.map((m) => cleanPaperText(m)).filter(Boolean),
+    bestSupportSentence: paper.bestSupportSentence ? cleanPaperText(paper.bestSupportSentence) : undefined,
+    bestContradictSentence: paper.bestContradictSentence ? cleanPaperText(paper.bestContradictSentence) : undefined,
+  };
+}
+
 
 type AuthorExtraction = {
   cleanQuery: string;
@@ -2241,7 +2283,7 @@ export async function POST(request: NextRequest) {
 
     // Cache lookup — skip for author mode to always return fresh profile data
     if (mode !== 'author') {
-      const cacheKey = makeCacheKey({ v: 'query-parts-1', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'query-parts-2', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       const cached = papersCache.get(cacheKey);
       if (cached) {
         const c = cached as Record<string, unknown>;
@@ -2287,12 +2329,12 @@ export async function POST(request: NextRequest) {
     const uniqueForMetrics = Array.from(new Map([...sortedPapers, ...sourceRows].map((p) => [p.id, p])).values());
     const enrichedAll = await enrichPapersWithJournalMetrics(uniqueForMetrics).catch(() => uniqueForMetrics);
     const enrichedById = new Map(enrichedAll.map((p) => [p.id, p]));
-    const enrichedPapers = sortedPapers.map((p) => enrichedById.get(p.id) || p);
+    const enrichedPapers = sortedPapers.map((p) => cleanPaperRecord(enrichedById.get(p.id) || p));
 
     // Propagate enrichment to bySource so all tabs show IF/quartile
     const enrichedBySource: Record<string, Paper[]> = {};
     for (const [src, srcPapers] of Object.entries(selected.bySource || {})) {
-      enrichedBySource[src] = (srcPapers as Paper[]).map((p) => enrichedById.get(p.id) || p);
+      enrichedBySource[src] = (srcPapers as Paper[]).map((p) => cleanPaperRecord(enrichedById.get(p.id) || p));
     }
 
     const responseBody = {
@@ -2317,7 +2359,7 @@ export async function POST(request: NextRequest) {
 
     // Store in cache (skip author mode — profile results are user-specific)
     if (mode !== 'author' && sortedPapers.length > 0) {
-      const cacheKey = makeCacheKey({ v: 'query-parts-1', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'query-parts-2', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       papersCache.set(cacheKey, responseBody);
     }
 
