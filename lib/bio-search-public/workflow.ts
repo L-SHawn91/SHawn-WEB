@@ -12,6 +12,7 @@ export type PublicPaperLike = {
   citations?: number;
   meshTerms?: string[];
   techniques?: string[];
+  keywords?: string[];
   influenceScore?: number;
 };
 
@@ -473,10 +474,13 @@ export function publicWorkflowScore(paper: PublicPaperLike, query = "", currentY
   // cite velocity × 40 previously dominated topicBonus × 15, causing high-citation
   // off-topic papers (e.g. COVID papers) to outrank genuinely relevant results.
   const influence = Math.min(20, Number(paper.influenceScore || 0) / 5);
-  const metadata = (paper.meshTerms?.length ? 5 : 0) + (paper.techniques?.length ? 5 : 0);
+  const metadata = (paper.meshTerms?.length ? 5 : 0) + (paper.techniques?.length ? 5 : 0) + (paper.keywords?.length ? 6 : 0);
   const doiBonus = paper.doi ? 3 : 0;
   const abstractBonus = paper.abstract && paper.abstract.length > 80 ? 4 : 0;
-  const topicBonus = query ? Math.round(weightedQueryScore(paper.title || "", paper.abstract || "", normalizePublicBioQuery(query)) * 32) : 0;
+  const keywordText = (paper.keywords || []).join(' ');
+  const meshText = (paper.meshTerms || []).join(' ');
+  const topicBody = [paper.abstract || '', keywordText, meshText].filter(Boolean).join(' ');
+  const topicBonus = query ? Math.round(weightedQueryScore(paper.title || "", topicBody, normalizePublicBioQuery(query)) * 32) : 0;
   return (recency + influence + metadata + doiBonus + abstractBonus + topicBonus) * publicSourceWeight(paper.source);
 }
 
@@ -484,7 +488,7 @@ export function publicTopicGuard(paper: PublicPaperLike, query: string): boolean
   const tokens = normalizePublicBioQuery(query).toLowerCase().match(/[a-z0-9가-힣]{3,}/g) || [];
   if (tokens.length < 2) return true;
 
-  const text = `${paper.title || ""} ${paper.abstract || ""}`.toLowerCase();
+  const text = `${paper.title || ""} ${paper.abstract || ""} ${(paper.keywords || []).join(' ')} ${(paper.meshTerms || []).join(' ')}`.toLowerCase();
   // Prefix match (first 6 chars min) handles stemming: "endometrium" matches "endometrial"
   const matched = tokens.filter((token) => {
     const prefix = token.slice(0, Math.max(5, token.length - 2));
@@ -561,6 +565,7 @@ export function mergePublicPaperRecords<T extends PublicPaperLike>(papers: T[]):
       citations: Math.max(Number(prev.citations || 0), Number(paper.citations || 0)),
       meshTerms: Array.from(new Set([...(prev.meshTerms || []), ...(paper.meshTerms || [])])),
       techniques: Array.from(new Set([...(prev.techniques || []), ...(paper.techniques || [])])),
+      keywords: Array.from(new Set([...(prev.keywords || []), ...(paper.keywords || [])])),
       sourceHits: Array.from(sourceHits),
       sourceIds: Array.from(sourceIds),
     });

@@ -38,6 +38,7 @@ interface Paper {
   citations?: number;
   meshTerms?: string[];
   techniques?: string[];
+  keywords?: string[];
   influenceScore?: number;
   rankScore?: number;
   claimOverlap?: number;
@@ -109,6 +110,7 @@ function cleanPaperRecord<T extends Paper>(paper: T): T {
     authors: (paper.authors || []).map((a) => cleanPaperText(a)).filter(Boolean),
     meshTerms: paper.meshTerms?.map((m) => cleanPaperText(m)).filter(Boolean),
     techniques: paper.techniques?.map((m) => cleanPaperText(m)).filter(Boolean),
+    keywords: paper.keywords?.map((m) => cleanPaperText(m)).filter(Boolean),
     bestSupportSentence: paper.bestSupportSentence ? cleanPaperText(paper.bestSupportSentence) : undefined,
     bestContradictSentence: paper.bestContradictSentence ? cleanPaperText(paper.bestContradictSentence) : undefined,
   };
@@ -362,6 +364,35 @@ function speciesTopicMatches(speciesTerms: string[], text: string): boolean {
     if (s === 'rat' || s === 'rattus norvegicus') return /\b(rat|rats|rattus)\b/i.test(t);
     return t.includes(s);
   });
+}
+
+
+function paperKeywordText(paper: Pick<Paper, 'keywords' | 'meshTerms' | 'techniques'>): string {
+  return [...(paper.keywords || []), ...(paper.meshTerms || []), ...(paper.techniques || [])].join(' ');
+}
+
+function paperSearchText(paper: Pick<Paper, 'title' | 'abstract' | 'keywords' | 'meshTerms' | 'techniques'>): string {
+  return `${paper.title || ''} ${paper.abstract || ''} ${paperKeywordText(paper)}`;
+}
+
+function extractXmlTagValues(block: string, tagName: string): string[] {
+  const out: string[] = [];
+  const rx = new RegExp(`<${tagName}[^>]*>([\s\S]*?)<\/${tagName}>`, 'gi');
+  let match: RegExpExecArray | null;
+  while ((match = rx.exec(block)) !== null) {
+    const clean = cleanPaperText(match[1] || '');
+    if (clean) out.push(clean);
+  }
+  return Array.from(new Set(out));
+}
+
+function keywordWeightedOverlap(query: string, paper: Pick<Paper, 'keywords' | 'meshTerms' | 'techniques'>): number {
+  const tokens = titleKeywordTokens(query);
+  if (!tokens.length) return 0;
+  const keywordText = paperKeywordText(paper).toLowerCase();
+  if (!keywordText) return 0;
+  const hits = tokens.filter((tok) => keywordText.includes(tok) || keywordText.includes(tok.slice(0, Math.max(5, tok.length - 2)))).length;
+  return hits / tokens.length;
 }
 
 function tokenFrequency(text: string, token: string): number {
@@ -724,6 +755,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
     });
     const abstractMap: Record<string, string> = {};
     const meshMapFromFetch: Record<string, string[]> = {};
+    const keywordMapFromFetch: Record<string, string[]> = {};
     try {
       const fetchRes = await fetch(`${fetchUrl}?${fetchParams.toString()}`, {
         signal: AbortSignal.timeout(20000),
@@ -742,11 +774,11 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
           if (txt) parts.push(txt);
         }
         if (parts.length) abstractMap[pmid] = parts.join(' ');
-        // MeSH
-        const meshMatches = block.matchAll(/<DescriptorName[^>]*>([\s\S]*?)<\/DescriptorName>/g);
-        const mesh: string[] = [];
-        for (const m of meshMatches) mesh.push((m[1] || '').trim());
+        // MeSH and author keywords
+        const mesh = extractXmlTagValues(block, 'DescriptorName');
         if (mesh.length) meshMapFromFetch[pmid] = mesh;
+        const keywords = extractXmlTagValues(block, 'Keyword');
+        if (keywords.length) keywordMapFromFetch[pmid] = keywords;
       }
     } catch {
       // efetch failure is non-fatal — fall back to no-abstract
@@ -757,6 +789,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
       if (!doc) return null;
 
       const meshTerms = meshMapFromFetch[id] || doc.meshterms?.map((t: any) => t.name) || [];
+      const keywords = keywordMapFromFetch[id] || [];
       const pubTypes = doc.pubtype || [];
       const studyType = pubTypes.find((t: string) =>
         t.includes('Clinical Trial') || t.includes('Meta-Analysis') || t.includes('Review')
@@ -771,6 +804,7 @@ async function t1_pubmedEnhanced(query: string, yearFrom?: string, yearTo?: stri
         source: 'pubmed' as const,
         url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`,
         meshTerms,
+        keywords,
         techniques: studyType ? [studyType] : [],
         matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
         journal: doc.fulljournalname || doc.source || undefined,
@@ -931,7 +965,7 @@ async function t3_semanticAuthorSearch(
     const NON_PAPER_TYPES = new Set(['LettersAndComments', 'Editorial', 'News', 'Dataset']);
     const candidatePaperSets = await Promise.allSettled(rankedCandidates.map(async (candidate: any) => {
       const papersRes = await fetch(
-        `https://api.semanticscholar.org/graph/v1/author/${candidate.authorId}/papers?fields=paperId,title,authors,year,abstract,citationCount,openAccessPdf,url,publicationTypes,venue,journal&limit=100&sort=year`,
+        `https://api.semanticscholar.org/graph/v1/author/${candidate.authorId}/papers?fields=paperId,title,authors,year,abstract,citationCount,openAccessPdf,url,publicationTypes,venue,journal,fieldsOfStudy,s2FieldsOfStudy&limit=100&sort=year`,
         { headers, signal: AbortSignal.timeout(15000) },
       );
       if (!papersRes.ok) return [];
@@ -963,7 +997,8 @@ async function t3_semanticAuthorSearch(
         matchType: 'author-exact' as const,
         journal: (p.venue as string | undefined) || (p.journal?.name as string | undefined) || undefined,
         journalIssn: (p.journal?.issn as string | undefined) || undefined,
-        rankScore: topicQuery ? Math.round(publicWorkflowScore({ title: p.title || '', abstract: p.abstract || '', year: p.year, source: 'semantic' }, topicQuery) + (p._candidateScore || 0) * 8) : undefined,
+        keywords: Array.isArray(p.fieldsOfStudy) ? p.fieldsOfStudy.filter(Boolean) : [],
+        rankScore: topicQuery ? Math.round(publicWorkflowScore({ title: p.title || '', abstract: p.abstract || '', keywords: Array.isArray(p.fieldsOfStudy) ? p.fieldsOfStudy.filter(Boolean) : [], year: p.year, source: 'semantic' }, topicQuery) + (p._candidateScore || 0) * 8) : undefined,
       } as Paper))
       .sort((a: Paper, b: Paper) => (b.rankScore || 0) - (a.rankScore || 0));
   } catch {
@@ -1037,6 +1072,7 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
           journal: (paper.venue as string | undefined) || (paper.journal?.name as string | undefined) || undefined,
           journalIssn: (paper.journal?.issn as string | undefined) || undefined,
+          keywords: Array.isArray(paper.fieldsOfStudy) ? paper.fieldsOfStudy.filter(Boolean) : [],
         };
       });
 
@@ -1152,7 +1188,7 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
             const worksParams = new URLSearchParams({
               filter: `author.id:${bestAuthor.id}`,
               per_page: '50',
-              select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count',
+              select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count,concepts,keywords',
             });
             const worksRes = await fetch(`https://api.openalex.org/works?${worksParams.toString()}`, {
               signal: AbortSignal.timeout(15000),
@@ -1193,6 +1229,10 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
                     citations: typeof row?.cited_by_count === 'number' ? row.cited_by_count : undefined,
                     authorAffiliations,
                     authorCountries,
+                    keywords: [
+                      ...(Array.isArray(row.keywords) ? row.keywords.map((k: any) => k?.display_name || k?.keyword).filter(Boolean) : []),
+                      ...(Array.isArray(row.concepts) ? row.concepts.slice(0, 8).map((c: any) => c?.display_name).filter(Boolean) : []),
+                    ],
                     matchType: 'author-exact' as const,
                     journal: (row.primary_location?.source?.display_name as string | undefined) || undefined,
                     journalIssn: (row.primary_location?.source?.issn_l as string | undefined) || undefined,
@@ -1215,7 +1255,7 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
     const params = new URLSearchParams({
       search: query,
       per_page: authorCandidates.length > 0 && intent !== 'TOPIC' ? '50' : '15',
-      select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count',
+      select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count,concepts,keywords',
     });
     const res = await fetch(`https://api.openalex.org/works?${params.toString()}`, {
       signal: AbortSignal.timeout(15000),
@@ -1257,6 +1297,10 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
           citations: typeof row?.cited_by_count === 'number' ? row.cited_by_count : undefined,
           authorAffiliations,
           authorCountries,
+          keywords: [
+            ...(Array.isArray(row.keywords) ? row.keywords.map((k: any) => k?.display_name || k?.keyword).filter(Boolean) : []),
+            ...(Array.isArray(row.concepts) ? row.concepts.slice(0, 8).map((c: any) => c?.display_name).filter(Boolean) : []),
+          ],
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
           journal: (row.primary_location?.source?.display_name as string | undefined) || undefined,
           journalIssn: (row.primary_location?.source?.issn_l as string | undefined) || undefined,
@@ -1283,7 +1327,7 @@ async function t5_openalexTitleFallback(query: string, yearFrom?: string, yearTo
   const params = new URLSearchParams({
     filter: `title.search:${clean}`,
     per_page: '25',
-    select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count',
+    select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count,concepts,keywords',
   });
   try {
     const res = await fetch(`https://api.openalex.org/works?${params.toString()}`, {
@@ -1391,6 +1435,7 @@ async function t6_europePmcEnhanced(
           url: doi ? `https://doi.org/${doi}` : pid ? `https://europepmc.org/article/${src}/${pid}` : 'https://europepmc.org',
           doi,
           citations: parseInt(r.citedByCount || '0') || undefined,
+          keywords: Array.isArray(r.keywordList?.keyword) ? r.keywordList.keyword : (typeof r.keywordList?.keyword === 'string' ? [r.keywordList.keyword] : []),
           matchType: authorCandidates.length ? (intent === 'AUTHOR_WEAK' ? 'author-weak' : 'author-exact') : 'topic',
           journal: r.journalTitle || r.journal || undefined,
           journalIssn: r.journalInfo?.issn || r.journalInfo?.journal?.issn || undefined,
@@ -1507,7 +1552,7 @@ function t6_integrateAndRank(
   const hasEvidenceQuery = Boolean((claim || '').trim() || (hypothesis || '').trim());
   const rankedPapers = uniquePapers.map(paper => {
     let score = 0;
-    const mergedText = `${paper.title || ''} ${paper.abstract || ''}`.trim();
+    const mergedText = paperSearchText(paper).trim();
     const claimOverlap = claim ? overlapRatio(claim, mergedText) : 0;
     const hypothesisOverlap = hypothesis ? overlapRatio(hypothesis, mergedText) : 0;
     // citations excluded from relevance — used only for user-facing sort
@@ -1520,7 +1565,8 @@ function t6_integrateAndRank(
     
     // Public-safe SHawn bio workflow score: recency + citation signal + topic overlap + source reliability + metadata hints.
     score += publicWorkflowScore(paper, query);
-    score += Math.round(queryWeightedOverlap(query, paper.title || '', paper.abstract || '') * 35);
+    score += Math.round(queryWeightedOverlap(query, paper.title || '', [paper.abstract || '', paperKeywordText(paper)].join(' ')) * 35);
+    score += Math.round(keywordWeightedOverlap(query, paper) * 18);
 
     // Author-first priority boost
     const authorBoost = getAuthorPriorityBoost(paper, authorCandidates, intent);
@@ -2137,13 +2183,13 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const topicTokenCount = (topicText.match(/[a-z0-9가-힣]{3,}/gi) || []).length;
     if (topicTokenCount >= 1 && parsedPublicQuery.species.length > 0) {
       papers = papers.filter((paper) => {
-        const merged = `${paper.title || ''} ${paper.abstract || ''}`;
+        const merged = paperSearchText(paper);
         const rel = overlapRatio(topicText, merged);
         return rel >= 0.03 || speciesTopicMatches(parsedPublicQuery.species, merged);
       });
     } else if (topicTokenCount >= 2) {
       papers = papers.filter((paper) => {
-        const merged = `${paper.title || ''} ${paper.abstract || ''}`;
+        const merged = paperSearchText(paper);
         const rel = overlapRatio(topicText, merged);
         const conf = matchedAuthorConfidence(paper.authors || [], authorCandidates);
         return rel >= 0.03 || conf >= 0.9 || (paper.rankScore || 0) >= 72;
@@ -2174,14 +2220,14 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const beforeTopicGuard = papers;
     const guardQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
     papers = papers.filter((paper) => {
-      if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`);
+      if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper));
       return publicTopicGuard(paper, guardQuery);
     });
     if (papers.length === 0 && beforeTopicGuard.length > 0) {
       const relaxedTopic = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true });
       papers = beforeTopicGuard
         .filter((paper) => {
-          const merged = `${paper.title || ''} ${paper.abstract || ''}`;
+          const merged = paperSearchText(paper);
           return overlapRatio(relaxedTopic, merged) >= 0.08 || queryWeightedOverlap(relaxedTopic, paper.title || '', paper.abstract || '') >= 0.28;
         })
         .map((paper) => ({ ...paper, rankScore: Math.max(paper.rankScore || 0, Math.round(publicWorkflowScore(paper, relaxedTopic) + queryWeightedOverlap(relaxedTopic, paper.title || '', paper.abstract || '') * 35)) }))
@@ -2196,7 +2242,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       ]);
       const fallbackRows = titleFallback.flatMap((r) => r.status === 'fulfilled' ? r.value : []);
       papers = mergePublicPaperRecords(fallbackRows)
-        .filter((paper) => overlapRatio(buildPublicKeywordSpeciesQuery(topicQuery, { expand: false, titleOnly: true }), `${paper.title || ''} ${paper.abstract || ''}`) >= 0.08)
+        .filter((paper) => overlapRatio(buildPublicKeywordSpeciesQuery(topicQuery, { expand: false, titleOnly: true }), paperSearchText(paper)) >= 0.08)
         .map((paper) => ({ ...paper, rankScore: Math.round(publicWorkflowScore(paper, topicQuery)) }))
         .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0))
         .slice(0, 50);
@@ -2206,7 +2252,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   // Re-apply hard guards after relaxed/fallback paths so noise cannot leak back in.
   papers = papers
     .filter((paper) => !isNonResearchCommentTitle(paper.title || ''))
-    .filter((paper) => !queryHasSpecies || speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`))
+    .filter((paper) => !queryHasSpecies || speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper)))
     .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
 
   // Per-source view: topic-guarded raw results scored lightly (no cross-source dedup)
@@ -2218,7 +2264,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const guardFilter = intent === 'INSTITUTION'
       ? srcPapers
       : srcPapers.filter((p) => {
-          if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, `${p.title || ''} ${p.abstract || ''}`);
+          if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, paperSearchText(p));
           return publicTopicGuard(p, buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery);
         });
     if (guardFilter.length) {
