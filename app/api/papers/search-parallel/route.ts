@@ -1072,14 +1072,24 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
   const startTime = Date.now();
   
   try {
-    if (authorCandidates.length > 0 && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
+    // Single-token lowercase names (e.g. romanized Korean given names like "soohyung") are ambiguous
+    // in the S2 author API — it returns the wrong people ranked by paper count.
+    // Fall through to the paper search which does full-text matching on the whole query instead.
+    const firstCandidate = authorCandidates[0] || '';
+    const isSingleTokenLowercase = !firstCandidate.includes(' ') && firstCandidate === firstCandidate.toLowerCase() && firstCandidate.length >= 3;
+    if (authorCandidates.length > 0 && !isSingleTokenLowercase && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
       const results = await t3_semanticAuthorSearch(authorCandidates[0]!, yearFrom, yearTo, query);
       if (results.length > 0) return results;
     }
 
+    // For single-token lowercase author names the caller strips the name from the query ("pig" only).
+    // Prepend the author token so S2 full-text search can find the right papers ("soohyung pig").
+    const s2SearchQuery = isSingleTokenLowercase && intent !== 'TOPIC' && firstCandidate && query
+      ? `${firstCandidate} ${query}`
+      : query;
     const baseUrl = 'https://api.semanticscholar.org/graph/v1/paper/search';
     const params = new URLSearchParams({
-      query,
+      query: s2SearchQuery,
       limit: '15',
       fields: 'title,authors,year,abstract,url,citationCount,referenceCount,influentialCitationCount,openAccessPdf,fieldsOfStudy,venue,journal',
     });
@@ -1229,7 +1239,11 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
     return seq.join(' ').trim() || 'No abstract available';
   };
   try {
-    if (authorCandidates.length > 0 && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
+    // Single-token lowercase names (e.g. "soohyung") are ambiguous in the author lookup API.
+    // Fall through to the full-text search which matches the complete query.
+    const _firstCandT5 = authorCandidates[0] || '';
+    const _isSingleLowercaseT5 = !_firstCandT5.includes(' ') && _firstCandT5 === _firstCandT5.toLowerCase() && _firstCandT5.length >= 3;
+    if (authorCandidates.length > 0 && !_isSingleLowercaseT5 && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
       try {
         const authorSearchRes = await fetch(
           `https://api.openalex.org/authors?search=${encodeURIComponent(authorCandidates[0]!)}&select=id,display_name&per_page=5`,
@@ -1312,8 +1326,12 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
       }
     }
 
+    // Same as t3: prepend single-token lowercase author name so OpenAlex full-text finds the right papers.
+    const oaSearchQuery = _isSingleLowercaseT5 && intent !== 'TOPIC' && _firstCandT5 && query
+      ? `${_firstCandT5} ${query}`
+      : query;
     const params = new URLSearchParams({
-      search: query,
+      search: oaSearchQuery,
       per_page: authorCandidates.length > 0 && intent !== 'TOPIC' ? '50' : '15',
       select: 'id,display_name,publication_year,authorships,abstract_inverted_index,primary_location,cited_by_count,concepts,keywords',
     });
@@ -2113,11 +2131,19 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       ? (parsedPublicQuery.keywords || parsedPublicQuery.species.join(' ') || extracted.cleanQuery || query).trim()
       : (split.topic || parsedPublicQuery.keywords || extracted.cleanQuery || query).trim();
   const pureAuthorSearch = effectiveMode === 'author' && !split.topic && !hasStructuredTopic;
+  // Lowercase single-token names (e.g. "soohyung") are definitively Korean given names,
+  // not ambiguous topic keywords. Exclude them from the ambiguous-author-topic fallback so
+  // topic-only searches don't flood the results and bury the actual author's papers.
+  const authorNameIsLowercaseSingleToken = authorCandidates.length > 0
+    && !(authorCandidates[0] || '').includes(' ')
+    && (authorCandidates[0] || '') === (authorCandidates[0] || '').toLowerCase()
+    && (authorCandidates[0] || '').length >= 3;
   const ambiguousSingleTokenAuthorTopic = effectiveMode === 'author'
     && !hasStructuredAuthor
     && !hasManualAuthor
     && Boolean(split.author && split.topic)
-    && normalizeName(split.author).split(/\s+/).filter(Boolean).length === 1;
+    && normalizeName(split.author).split(/\s+/).filter(Boolean).length === 1
+    && !authorNameIsLowercaseSingleToken;
   const topicQuery = pureAuthorSearch
     ? ''
     : ((!hasManualAuthor && effectiveMode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic && !hasStructuredTopic) ? '' : detectedTopic);
