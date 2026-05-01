@@ -364,14 +364,10 @@ export default function PapersPage() {
     if (activeSourceTab !== 'all' && bySource[activeSourceTab]?.length) {
       base = bySource[activeSourceTab];
     } else {
-      const allMap = new Map<string, Paper>();
-      for (const src of ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv']) {
-        for (const p of (bySource[src] || [])) {
-          if (!allMap.has(p.id)) allMap.set(p.id, p);
-        }
-      }
-      const allUnion = allMap.size > 0 ? Array.from(allMap.values()) : papers;
-      base = showSavedOnly ? allUnion.filter((p) => savedIds.has(p.id)) : allUnion;
+      // The All tab must use the integrated/reranked result set. Raw per-source
+      // rows are useful for source tabs, but unioning them here can hide the
+      // cross-source scorer and surface weak source-local matches first.
+      base = showSavedOnly ? papers.filter((p) => savedIds.has(p.id)) : papers;
     }
     const sorted = [...base];
     if (sortMode === 'recent') {

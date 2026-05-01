@@ -2205,11 +2205,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     if (authorCandidates.length && intent !== 'TOPIC') {
       const confidence = matchedAuthorConfidence(paper.authors || [], authorCandidates);
       const wordMatch = strictAuthorWordMatch(paper.authors || [], authorCandidates);
-      delta += Math.round(confidence * 28);
-      if (!wordMatch) delta -= 14;
+      delta += Math.round(confidence * 80);
+      if (!wordMatch) delta -= 90;
     }
     if (queryHasSpecies) {
-      delta += speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper)) ? 36 : -90;
+      delta += speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper)) ? 80 : -160;
     }
     if (softRankQuery) {
       const weighted = queryWeightedOverlap(softRankQuery, paper.title || '', [paper.abstract || '', paperKeywordText(paper)].join(' '));
@@ -2218,7 +2218,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       delta += Math.round(weighted * 32);
       delta += Math.round(keywordWeighted * 18);
       if (effectiveMode === 'author' && authorCandidates.length && topicTokenCount <= 2) {
-        delta += topicAnchor ? 36 : -80;
+        delta += topicAnchor ? 60 : -120;
       }
       if (ambiguousSingleTokenAuthorTopic && topicTokenCount >= 1) {
         delta += topicAnchor || weighted >= 0.12 ? 36 : -60;
