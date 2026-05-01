@@ -395,6 +395,18 @@ function keywordWeightedOverlap(query: string, paper: Pick<Paper, 'keywords' | '
   return hits / tokens.length;
 }
 
+function titleOrMetadataTopicMatches(query: string, paper: Pick<Paper, 'title' | 'keywords' | 'meshTerms' | 'techniques'>): boolean {
+  const tokens = titleKeywordTokens(query);
+  if (!tokens.length) return true;
+  const target = `${paper.title || ''} ${paperKeywordText(paper)}`.toLowerCase();
+  if (!target.trim()) return false;
+  const hits = tokens.filter((tok) => {
+    const prefix = tok.slice(0, Math.max(5, tok.length - 2));
+    return target.includes(tok) || target.includes(prefix);
+  }).length;
+  return hits >= 1;
+}
+
 function tokenFrequency(text: string, token: string): number {
   const normalized = (text || '').toLowerCase();
   const prefix = token.slice(0, Math.max(5, token.length - 2));
@@ -2187,11 +2199,15 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
         const rel = overlapRatio(topicText, merged);
         return rel >= 0.03 || speciesTopicMatches(parsedPublicQuery.species, merged);
       });
-    } else if (topicTokenCount >= 2) {
+    } else if (topicTokenCount >= 1) {
       papers = papers.filter((paper) => {
         const merged = paperSearchText(paper);
         const rel = overlapRatio(topicText, merged);
         const conf = matchedAuthorConfidence(paper.authors || [], authorCandidates);
+        // For short author+keyword searches (e.g. "soohyung endometrium"),
+        // require at least one topic anchor in the title or explicit metadata.
+        // Abstract-only mentions are too noisy for this interaction pattern.
+        if (topicTokenCount <= 2) return titleOrMetadataTopicMatches(topicText, paper);
         return rel >= 0.03 || conf >= 0.9 || (paper.rankScore || 0) >= 72;
       });
     }
@@ -2221,6 +2237,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const guardQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
     papers = papers.filter((paper) => {
       if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper));
+      if (effectiveMode === 'author' && authorCandidates.length && titleKeywordTokens(guardQuery).length <= 2) return titleOrMetadataTopicMatches(guardQuery, paper);
       return publicTopicGuard(paper, guardQuery);
     });
     if (papers.length === 0 && beforeTopicGuard.length > 0) {
@@ -2264,8 +2281,15 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const guardFilter = intent === 'INSTITUTION'
       ? srcPapers
       : srcPapers.filter((p) => {
+          if (effectiveMode === 'author' && authorCandidates.length) {
+            const minOverlap = hasManualAuthor ? 0.85 : 0.9;
+            if (!matchByAuthor(p.authors || [], authorCandidates, minOverlap)) return false;
+            if (intent !== 'TOPIC' && !strictAuthorWordMatch(p.authors || [], authorCandidates)) return false;
+          }
+          const sourceGuardQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
           if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, paperSearchText(p));
-          return publicTopicGuard(p, buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery);
+          if (effectiveMode === 'author' && authorCandidates.length && titleKeywordTokens(sourceGuardQuery).length <= 2) return titleOrMetadataTopicMatches(sourceGuardQuery, p);
+          return publicTopicGuard(p, sourceGuardQuery);
         });
     if (guardFilter.length) {
       bySourceScored[src] = guardFilter

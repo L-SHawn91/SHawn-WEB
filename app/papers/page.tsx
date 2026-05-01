@@ -556,6 +556,11 @@ export default function PapersPage() {
       setBySource(data.bySource || {});
       setVisibleCount(25);
       setMeta(data.meta || null);
+      // Normalize the builder after each search. Chips are composition helpers,
+      // not sticky filters; keeping them made the next search unintentionally accumulate old terms.
+      setChips([]);
+      setQuery(userQuery);
+      setMergeSuggestion(null);
       setQueryHistory((prev) => [userQuery, ...prev.filter((item) => item !== userQuery)].slice(0, 10));
       setTrackStatus({ t1: 'done', t2: 'done', t3: 'done', t4: 'done' });
       window.setTimeout(() => resultsTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
