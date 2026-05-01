@@ -23,10 +23,7 @@ type DatasetSource =
   | "kaggle"
   | "datagov"
   | "dataeu"
-  | "github"
-  | "openml"
-  | "crossref"
-  | "openalex";
+  | "openml";
 
 interface DatasetItem {
   id: string;
@@ -89,10 +86,7 @@ const SOURCE_OPTIONS: DatasetSource[] = [
   "kaggle",
   "datagov",
   "dataeu",
-  "github",
   "openml",
-  "crossref",
-  "openalex",
 ];
 
 
@@ -125,10 +119,7 @@ const SOURCE_LABELS: Record<DatasetSource, string> = {
   kaggle: "Kaggle",
   datagov: "Data.gov",
   dataeu: "Data.europa.eu",
-  github: "GitHub",
   openml: "OpenML",
-  crossref: "CrossRef",
-  openalex: "OpenAlex",
 };
 
 const SOURCE_TOOLTIPS: Record<DatasetSource, string> = {
@@ -146,10 +137,7 @@ const SOURCE_TOOLTIPS: Record<DatasetSource, string> = {
   kaggle: "Kaggle: 데이터사이언스 대회 및 공개 데이터셋",
   datagov: "Data.gov: 미국 정부 공개 데이터",
   dataeu: "Data.europa.eu: EU 공개 데이터 포털",
-  github: "GitHub: 코드와 함께 공개된 연구 데이터셋",
   openml: "OpenML: 머신러닝 벤치마크 데이터셋",
-  crossref: "CrossRef: DOI 기반 데이터셋 레퍼런스",
-  openalex: "OpenAlex: 오픈 학술 데이터 그래프",
 };
 
 const DATASET_SCORE_TOOLTIP = "Dataset score는 최신성, 활용도(download/like), 메타데이터 품질로 계산됩니다.\nDataset는 저널 논문이 아니므로 IF/Q 지표가 직접 적용되지 않습니다.";

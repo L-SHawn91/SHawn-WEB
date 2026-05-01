@@ -25,10 +25,7 @@ type DatasetSource =
   | "dryad"
   | "dataverse"
   | "figshare"
-  | "github"
   | "openml"
-  | "crossref"
-  | "openalex"
   | "cngb";
 
 type SortBy = "rank" | "recent" | "popular" | "title";
@@ -71,10 +68,7 @@ const ALL_SOURCES: DatasetSource[] = [
   "dryad",
   "dataverse",
   "figshare",
-  "github",
   "openml",
-  "crossref",
-  "openalex",
   "cngb",
 ];
 
@@ -103,9 +97,6 @@ function inYearRange(value: string | undefined, yearFrom?: string, yearTo?: stri
   return true;
 }
 
-function normalizeQueryForGithub(query: string): string {
-  return query.trim().replace(/\s+/g, "+");
-}
 
 function extractAccessions(text: string): string[] {
   const regex = /\b(GSE\d+|GSM\d+|SRP\d+|SRS\d+|SRX\d+|SRR\d+|PRJNA\d+|PRJEB\d+|PRJCA\d+|E-MTAB-\d+|CNP\d+)\b/gi;
@@ -529,36 +520,6 @@ async function searchFigshare(query: string, yearFrom?: string, yearTo?: string)
   }
 }
 
-async function searchGithubDatasets(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
-  try {
-    const q = `${normalizeQueryForGithub(query)}+topic:dataset`;
-    const res = await fetch(`https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=20`, {
-      headers: { Accept: "application/vnd.github+json" },
-      signal: AbortSignal.timeout(15000),
-    });
-    const data = await res.json();
-    const rows = data?.items;
-    if (!Array.isArray(rows)) return [];
-
-    return rows
-      .filter((row: any) => inYearRange(row.updated_at, yearFrom, yearTo))
-      .map((row: any) => ({
-        id: `github-${row.full_name || row.id || Math.random().toString(36).slice(2)}`,
-        title: row.full_name || row.name || "Untitled repository",
-        description: cleanText(row.description),
-        source: "github" as const,
-        url: row.html_url || "https://github.com/topics/dataset",
-        license: row.license?.spdx_id || undefined,
-        likes: typeof row.stargazers_count === "number" ? row.stargazers_count : undefined,
-        updatedAt: row.updated_at,
-        tags: Array.isArray(row.topics) ? row.topics : [],
-      }));
-  } catch (error) {
-    console.error("[datasets] GitHub dataset search failed:", error);
-    return [];
-  }
-}
-
 async function searchOpenMl(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
   try {
     const res = await fetch("https://api.openml.org/api/v1/json/data/list/limit/200", {
@@ -585,85 +546,6 @@ async function searchOpenMl(query: string, yearFrom?: string, yearTo?: string): 
       }));
   } catch (error) {
     console.error("[datasets] OpenML search failed:", error);
-    return [];
-  }
-}
-
-async function searchCrossref(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
-  try {
-    const params = new URLSearchParams({
-      query,
-      rows: "20",
-      sort: "relevance",
-      order: "desc",
-      select: "DOI,title,published-print,published-online,issued,abstract,type,publisher,URL,subject,container-title",
-    });
-    const res = await fetch(`https://api.crossref.org/works?${params.toString()}`, {
-      signal: AbortSignal.timeout(15000),
-      headers: { Accept: "application/json" },
-    });
-    const data = await res.json();
-    const rows = data?.message?.items;
-    if (!Array.isArray(rows)) return [];
-
-    return rows
-      .map((row: any) => {
-        const dateParts = row?.issued?.["date-parts"]?.[0] || row?.["published-online"]?.["date-parts"]?.[0] || row?.["published-print"]?.["date-parts"]?.[0];
-        const year = Array.isArray(dateParts) && dateParts.length > 0 ? String(dateParts[0]) : undefined;
-        const updatedAt = year ? `${year}-01-01` : undefined;
-        return {
-          id: `crossref-${row.DOI || Math.random().toString(36).slice(2)}`,
-          title: Array.isArray(row.title) ? row.title[0] || "Untitled work" : "Untitled work",
-          description: cleanText(Array.isArray(row["container-title"]) ? row["container-title"][0] : row.publisher || row.type || "Crossref record"),
-          source: "crossref" as const,
-          url: row.URL || (row.DOI ? `https://doi.org/${row.DOI}` : "https://api.crossref.org"),
-          updatedAt,
-          tags: Array.isArray(row.subject) ? row.subject.slice(0, 6) : [],
-        } as DatasetItem;
-      })
-      .filter((item) => inYearRange(item.updatedAt, yearFrom, yearTo));
-  } catch (error) {
-    console.error("[datasets] Crossref search failed:", error);
-    return [];
-  }
-}
-
-async function searchOpenAlex(query: string, yearFrom?: string, yearTo?: string): Promise<DatasetItem[]> {
-  try {
-    const params = new URLSearchParams({
-      search: query,
-      per_page: "50",
-      select: "id,display_name,publication_year,primary_location,open_access,concepts,cited_by_count",
-    });
-    const res = await fetch(`https://api.openalex.org/works?${params.toString()}`, {
-      signal: AbortSignal.timeout(15000),
-      headers: { Accept: "application/json" },
-    });
-    const data = await res.json();
-    const rows = data?.results;
-    if (!Array.isArray(rows)) return [];
-
-    return rows
-      .map((row: any) => {
-        const year = row.publication_year ? String(row.publication_year) : undefined;
-        const updatedAt = year ? `${year}-01-01` : undefined;
-        const doi = typeof row?.doi === "string" ? row.doi.replace(/^https?:\/\/doi.org\//, "") : undefined;
-        return {
-          id: `openalex-${row.id || Math.random().toString(36).slice(2)}`,
-          title: row.display_name || "Untitled work",
-          description: cleanText(`OpenAlex work. Citations: ${row.cited_by_count || 0}`),
-          source: "openalex" as const,
-          url: row?.primary_location?.landing_page_url || (doi ? `https://doi.org/${doi}` : "https://openalex.org"),
-          updatedAt,
-          likes: typeof row.cited_by_count === "number" ? row.cited_by_count : undefined,
-          tags: Array.isArray(row.concepts)
-            ? row.concepts.slice(0, 6).map((c: any) => c?.display_name).filter((x: unknown): x is string => typeof x === "string")
-            : [],
-        } as DatasetItem;
-      })
-      .filter((item) => inYearRange(item.updatedAt, yearFrom, yearTo));
-  } catch (error) {
-    console.error("[datasets] OpenAlex search failed:", error);
     return [];
   }
 }
@@ -899,10 +781,7 @@ export async function POST(request: NextRequest) {
       dryad: searchDryad,
       dataverse: searchDataverse,
       figshare: searchFigshare,
-      github: searchGithubDatasets,
       openml: searchOpenMl,
-      crossref: searchCrossref,
-      openalex: searchOpenAlex,
       cngb: searchCngb,
     };
 
@@ -924,10 +803,7 @@ export async function POST(request: NextRequest) {
       dryad: [],
       dataverse: [],
       figshare: [],
-      github: [],
       openml: [],
-      crossref: [],
-      openalex: [],
       cngb: [],
     };
 
