@@ -314,8 +314,14 @@ function pubmedInitialAuthorVariant(name: string): string {
 }
 
 function buildAuthorTermForPubMed(authors: string[]): string {
-  const tokens = uniqueList(authors.flatMap((name) => [name, titleCaseAuthorName(name), pubmedInitialAuthorVariant(name)]))
-    .filter((name) => name.includes(",") || name.includes(" "));
+  const allVariants = uniqueList(authors.flatMap((name) => [name, titleCaseAuthorName(name), pubmedInitialAuthorVariant(name)]));
+  // Prefer multi-token names (Last First / Last, First) — most precise
+  const multiToken = allVariants.filter((name) => name.includes(",") || name.includes(" "));
+  // Fall back to single-token names ≥4 chars (e.g. romanized Korean given names like "soohyung")
+  // These are safe when combined with a topic term in AUTHOR_WEAK mode.
+  const tokens = multiToken.length > 0
+    ? multiToken
+    : allVariants.filter((name) => !name.includes(",") && !name.includes(" ") && name.length >= 4);
   if (tokens.length === 0) return "";
 
   const quoted = tokens.slice(0, 6).map((name) => {
