@@ -2247,6 +2247,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const builderAutoTokens = builderTerms.length > 1 ? titleKeywordTokens(builderTerms.join(' ')) : [];
   const explicitAndQuery = hasExplicitAndOperator(topicQuery || query);
   const explicitAndTokens = explicitAndQuery ? titleKeywordTokens(topicQuery || query) : [];
+  const autoAndTokens = builderAutoTokens.length > 1 ? builderAutoTokens : [];
   const topicText = (nonAuthorQuery || topicQuery || '').trim();
   const topicTokenCount = (topicText.match(/[a-z0-9가-힣]{3,}/gi) || []).length;
   const applySoftRelevanceScore = (paper: Paper): Paper => {
@@ -2269,9 +2270,9 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       if (explicitAndTokens.length > 1) {
         const hits = queryTokenHits(explicitAndTokens, paperSearchText(paper));
         delta += hits === explicitAndTokens.length ? 90 : -160 * (explicitAndTokens.length - hits);
-      } else if (builderAutoTokens.length > 1) {
-        const hits = queryTokenHits(builderAutoTokens, paperSearchText(paper));
-        delta += hits === builderAutoTokens.length ? 70 : hits > 0 ? hits * 28 : -70;
+      } else if (autoAndTokens.length > 1) {
+        const hits = queryTokenHits(autoAndTokens, paperSearchText(paper));
+        delta += hits === autoAndTokens.length ? 90 : hits > 0 ? hits * 24 : -70;
       }
       if (effectiveMode === 'author' && authorCandidates.length && topicTokenCount <= 2) {
         delta += topicAnchor ? 60 : -120;
@@ -2298,11 +2299,15 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     }
   }
 
-  // Keep paper-search outputs paper-like, but do not hard-block relevance.
-  papers = papers
-    .filter((paper) => !isNonResearchCommentTitle(paper.title || ''))
-    .filter((paper) => !explicitAndTokens.length || allQueryTokensMatch(explicitAndTokens, paper))
-    .map(applySoftRelevanceScore);
+  // Keep paper-search outputs paper-like. Builder auto mode prefers AND first,
+  // then falls back to OR-style partial scoring when no all-term candidates exist.
+  papers = papers.filter((paper) => !isNonResearchCommentTitle(paper.title || ''));
+  const requiredTokens = explicitAndTokens.length ? explicitAndTokens : autoAndTokens;
+  if (requiredTokens.length > 1) {
+    const andPapers = papers.filter((paper) => allQueryTokensMatch(requiredTokens, paper));
+    if (andPapers.length > 0) papers = andPapers;
+  }
+  papers = papers.map(applySoftRelevanceScore);
   if (effectiveMode === 'precision') {
     papers = papers.map((paper) => ({ ...paper, rankScore: Math.round((paper.rankScore || 0) + ((paper.evidenceScore || 0) >= 0.05 ? 8 : -8)) }));
   }

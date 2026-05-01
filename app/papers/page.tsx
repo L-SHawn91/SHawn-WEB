@@ -165,7 +165,7 @@ function buildQueryFromChips(chips: string[], buffer: string): string {
     if (/^(AND|OR)$/i.test(t)) return t.toUpperCase();
     return t.includes(' ') ? `"${t}"` : t;
   });
-  return quoted.join(hasOperator ? ' ' : ' OR ').trim();
+  return quoted.join(hasOperator ? ' ' : ' AND ').trim();
 }
 
 const SUGGESTION_STOP_WORDS = new Set([
