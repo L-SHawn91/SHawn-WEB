@@ -341,6 +341,23 @@ function normalizeAuthorToken(raw: string): string {
   return normalizeName(raw).replace(/\s+/g, "");
 }
 
+/**
+ * Returns true when the author name is a romanized single-token given name
+ * entered entirely in lowercase (e.g. "soohyung", "jiyeon", "minhyuk").
+ *
+ * These names are:
+ *   - Single tokens with no spaces or commas
+ *   - All lowercase — the user typed the name without capitalisation
+ *   - At least 3 characters (avoids false-positives on 2-letter initials)
+ *
+ * Capitalized names ("Kim", "Lee") and multi-token names ("Kim Lee") are
+ * handled by the normal author-API lookup path and are NOT affected.
+ */
+function isRomanizedSingleTokenName(name: string): boolean {
+  if (!name) return false;
+  return !name.includes(' ') && !name.includes(',') && name === name.toLowerCase() && name.length >= 3;
+}
+
 function tokenOverlapRatio(a: string, b: string): number {
   const ta = new Set(a.split(/\s+/).filter(Boolean));
   const tb = new Set(b.split(/\s+/).filter(Boolean));
@@ -1072,19 +1089,17 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
   const startTime = Date.now();
   
   try {
-    // Single-token lowercase names (e.g. romanized Korean given names like "soohyung") are ambiguous
-    // in the S2 author API — it returns the wrong people ranked by paper count.
-    // Fall through to the paper search which does full-text matching on the whole query instead.
+    // Romanized single-token given names (e.g. "soohyung") are unreliable in the S2 author API:
+    // results are ranked by paper count and return the wrong person. Use full-text paper search
+    // with the combined query ("soohyung pig") instead so S2's own indexing finds the right papers.
     const firstCandidate = authorCandidates[0] || '';
-    const isSingleTokenLowercase = !firstCandidate.includes(' ') && firstCandidate === firstCandidate.toLowerCase() && firstCandidate.length >= 3;
-    if (authorCandidates.length > 0 && !isSingleTokenLowercase && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
+    const romanizedGivenName = isRomanizedSingleTokenName(firstCandidate);
+    if (authorCandidates.length > 0 && !romanizedGivenName && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
       const results = await t3_semanticAuthorSearch(authorCandidates[0]!, yearFrom, yearTo, query);
       if (results.length > 0) return results;
     }
 
-    // For single-token lowercase author names the caller strips the name from the query ("pig" only).
-    // Prepend the author token so S2 full-text search can find the right papers ("soohyung pig").
-    const s2SearchQuery = isSingleTokenLowercase && intent !== 'TOPIC' && firstCandidate && query
+    const s2SearchQuery = romanizedGivenName && intent !== 'TOPIC' && firstCandidate && query
       ? `${firstCandidate} ${query}`
       : query;
     const baseUrl = 'https://api.semanticscholar.org/graph/v1/paper/search';
@@ -1239,11 +1254,9 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
     return seq.join(' ').trim() || 'No abstract available';
   };
   try {
-    // Single-token lowercase names (e.g. "soohyung") are ambiguous in the author lookup API.
-    // Fall through to the full-text search which matches the complete query.
     const _firstCandT5 = authorCandidates[0] || '';
-    const _isSingleLowercaseT5 = !_firstCandT5.includes(' ') && _firstCandT5 === _firstCandT5.toLowerCase() && _firstCandT5.length >= 3;
-    if (authorCandidates.length > 0 && !_isSingleLowercaseT5 && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
+    const _romanizedT5 = isRomanizedSingleTokenName(_firstCandT5);
+    if (authorCandidates.length > 0 && !_romanizedT5 && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
       try {
         const authorSearchRes = await fetch(
           `https://api.openalex.org/authors?search=${encodeURIComponent(authorCandidates[0]!)}&select=id,display_name&per_page=5`,
@@ -1326,8 +1339,7 @@ async function t5_openalexEnhanced(query: string, yearFrom?: string, yearTo?: st
       }
     }
 
-    // Same as t3: prepend single-token lowercase author name so OpenAlex full-text finds the right papers.
-    const oaSearchQuery = _isSingleLowercaseT5 && intent !== 'TOPIC' && _firstCandT5 && query
+    const oaSearchQuery = _romanizedT5 && intent !== 'TOPIC' && _firstCandT5 && query
       ? `${_firstCandT5} ${query}`
       : query;
     const params = new URLSearchParams({
@@ -2131,19 +2143,12 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       ? (parsedPublicQuery.keywords || parsedPublicQuery.species.join(' ') || extracted.cleanQuery || query).trim()
       : (split.topic || parsedPublicQuery.keywords || extracted.cleanQuery || query).trim();
   const pureAuthorSearch = effectiveMode === 'author' && !split.topic && !hasStructuredTopic;
-  // Lowercase single-token names (e.g. "soohyung") are definitively Korean given names,
-  // not ambiguous topic keywords. Exclude them from the ambiguous-author-topic fallback so
-  // topic-only searches don't flood the results and bury the actual author's papers.
-  const authorNameIsLowercaseSingleToken = authorCandidates.length > 0
-    && !(authorCandidates[0] || '').includes(' ')
-    && (authorCandidates[0] || '') === (authorCandidates[0] || '').toLowerCase()
-    && (authorCandidates[0] || '').length >= 3;
   const ambiguousSingleTokenAuthorTopic = effectiveMode === 'author'
     && !hasStructuredAuthor
     && !hasManualAuthor
     && Boolean(split.author && split.topic)
     && normalizeName(split.author).split(/\s+/).filter(Boolean).length === 1
-    && !authorNameIsLowercaseSingleToken;
+    && !isRomanizedSingleTokenName(split.author);
   const topicQuery = pureAuthorSearch
     ? ''
     : ((!hasManualAuthor && effectiveMode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic && !hasStructuredTopic) ? '' : detectedTopic);
