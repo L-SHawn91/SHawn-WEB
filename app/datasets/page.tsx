@@ -61,7 +61,6 @@ interface FiltersState {
   sources: string[];
   yearFrom: string;
   yearTo: string;
-  modality: string;
   context: string;
 }
 
@@ -90,18 +89,6 @@ const SOURCE_OPTIONS: DatasetSource[] = [
 ];
 
 
-const MODALITY_CONFIG = [
-  { id: "", label: "전체", icon: "🔍", active: "bg-[#10243A] text-white border-[#10243A]", inactive: "bg-white dark:bg-slate-900 border-[#D8DEE6] dark:border-slate-700 text-[#263238]/70 dark:text-slate-400 hover:border-[#10243A]/50 hover:bg-[#F7F3EA] dark:hover:bg-slate-800" },
-  { id: "single-cell RNA-seq", label: "scRNA-seq", icon: "🧬", active: "bg-teal-600 text-white border-teal-600", inactive: "bg-teal-50 border-teal-200 text-teal-700 hover:bg-teal-100" },
-  { id: "bulk RNA-seq", label: "Bulk RNA", icon: "📊", active: "bg-blue-600 text-white border-blue-600", inactive: "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100" },
-  { id: "spatial transcriptomics", label: "Spatial", icon: "🗺️", active: "bg-purple-600 text-white border-purple-600", inactive: "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100" },
-  { id: "ATAC-seq", label: "ATAC-seq", icon: "🔓", active: "bg-orange-500 text-white border-orange-500", inactive: "bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100" },
-  { id: "ChIP-seq", label: "ChIP-seq", icon: "🧲", active: "bg-rose-500 text-white border-rose-500", inactive: "bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100" },
-  { id: "proteomics", label: "Proteomics", icon: "⚗️", active: "bg-amber-500 text-white border-amber-500", inactive: "bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100" },
-  { id: "metabolomics", label: "Metabolomics", icon: "🔬", active: "bg-lime-600 text-white border-lime-600", inactive: "bg-lime-50 border-lime-200 text-lime-700 hover:bg-lime-100" },
-  { id: "multi-omics", label: "Multi-omics", icon: "🌐", active: "bg-indigo-600 text-white border-indigo-600", inactive: "bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100" },
-  { id: "epigenomics", label: "Epigenomics", icon: "🧩", active: "bg-cyan-600 text-white border-cyan-600", inactive: "bg-cyan-50 border-cyan-200 text-cyan-700 hover:bg-cyan-100" },
-];
 
 
 const SOURCE_LABELS: Record<DatasetSource, string> = {
@@ -161,7 +148,6 @@ export default function DatasetsPage() {
     sources: [...SOURCE_OPTIONS] as string[],
     yearFrom: "",
     yearTo: "",
-    modality: "",
     context: "",
   });
   const pagination = meta?.pagination;
@@ -174,7 +160,7 @@ export default function DatasetsPage() {
     setLoading(true);
     setMeta(null);
     try {
-      const parts = [queryText?.trim(), activeFilters.modality?.trim(), activeFilters.context?.trim()].filter(Boolean);
+      const parts = [queryText?.trim(), activeFilters.context?.trim()].filter(Boolean);
       const combinedQuery = parts.join(" ").trim();
       if (!combinedQuery) {
         setDatasets([]);
@@ -343,24 +329,6 @@ export default function DatasetsPage() {
                   <span className="text-sm text-[#263238]/70 dark:text-slate-400" title={SOURCE_TOOLTIPS[source]}>{SOURCE_LABELS[source]}</span>
                 </label>
               ))}
-              <div className="w-full mt-3 pt-3 border-t border-[#D8DEE6] dark:border-slate-700">
-                <span className="text-xs font-medium text-[#263238]/50 dark:text-slate-500 block mb-2">Modality</span>
-                <div className="flex flex-wrap gap-1.5">
-                  {MODALITY_CONFIG.map((m) => (
-                    <button
-                      key={m.id}
-                      type="button"
-                      onClick={() => setFilters({ ...filters, modality: m.id })}
-                      className={`sketch-badge inline-flex items-center gap-1 px-2.5 py-1 text-xs border font-medium transition ${
-                        filters.modality === m.id ? m.active : m.inactive
-                      }`}
-                    >
-                      <span>{m.icon}</span>
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
               <div className="flex items-center gap-2 ml-4">
                 <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">Context:</span>
                 <input
