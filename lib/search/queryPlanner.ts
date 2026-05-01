@@ -85,9 +85,13 @@ export function classifyIntent(query: string): QueryIntent {
   const firstTokenLooseName = tokens.length >= 2 && isNameWordLoose(tokens[0] || '');
   const hasFollowingBioTerm = tokens.slice(1).some((t) => BIO_TERMS_EXCLUDE.has((t || '').toLowerCase()));
   const looksLikeNamePlusBioTopic = firstTokenLooseName && hasFollowingBioTerm;
+  const looksLikeTwoLooseNamesPlusBio = tokens.length >= 3
+    && isNameWordLoose(tokens[0] || '')
+    && isNameWordLoose(tokens[1] || '')
+    && tokens.slice(2).some((t) => BIO_TERMS_EXCLUDE.has((t || '').toLowerCase()));
 
   if (INSTITUTION_KEYWORDS.test(q)) return 'INSTITUTION';
-  if (hasQuotes || hasCommaName || looksLikeName2Strict || looksLikeNameWithMiddleInitial) return 'AUTHOR_STRONG';
+  if (hasQuotes || hasCommaName || looksLikeName2Strict || looksLikeNameWithMiddleInitial || looksLikeTwoLooseNamesPlusBio) return 'AUTHOR_STRONG';
 
   // 저자 우선 정책: 이름처럼 보이면 AUTHOR_WEAK로 취급
   if (looksLikeName2Loose || looksLikeNamePlusBioTopic) return 'AUTHOR_WEAK';

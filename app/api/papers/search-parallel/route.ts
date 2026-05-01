@@ -204,42 +204,43 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
   };
 }
 
-const KNOWN_BIO_AUTHOR_ALIASES: Record<string, string[]> = {
-  soohyung: ['Soohyung Lee'],
-  'soohyung lee': ['Soohyung Lee'],
-  inkyu: ['Inkyu Yoo'],
-  'inkyu yoo': ['Inkyu Yoo'],
-};
-
-const KNOWN_AUTHOR_CONTEXT: Record<string, string[]> = {
-  'soohyung lee': ['yoo', 'cheon', 'ka', 'maternal', 'conceptus', 'endometrium', 'uterine', 'pregnancy', 'implantation'],
-  soohyung: ['yoo', 'cheon', 'ka', 'maternal', 'conceptus', 'endometrium', 'uterine', 'pregnancy', 'implantation'],
-  'inkyu yoo': ['lee', 'cheon', 'ka', 'maternal', 'conceptus', 'endometrium', 'uterine', 'pregnancy', 'implantation'],
-  inkyu: ['lee', 'cheon', 'ka', 'maternal', 'conceptus', 'endometrium', 'uterine', 'pregnancy', 'implantation'],
-};
-
 function isNonResearchCommentTitle(title = ''): boolean {
   return /^(comment(s|ed)?\s+by|comment(s|ed)?\s+on|comment(s|ed)?\b|letter|response|reply|erratum|correction|retraction|editorial)\b/i.test(title.trim());
 }
 
-function expandKnownBioAuthorAliases(name: string): string[] {
-  const key = normalizeName(name);
-  return KNOWN_BIO_AUTHOR_ALIASES[key] || [];
-}
-
-function knownAuthorContextTerms(candidates: string[]): string[] {
-  return uniqueList(candidates.flatMap((name) => KNOWN_AUTHOR_CONTEXT[normalizeName(name)] || []));
-}
-
-function matchesKnownAuthorContext(paper: Paper, contextTerms: string[]): boolean {
-  if (!contextTerms.length) return true;
-  const text = `${(paper.authors || []).join(' ')} ${paper.title || ''} ${paper.abstract || ''}`.toLowerCase();
-  return contextTerms.some((term) => text.includes(term));
-}
-
-function isSoohyungPigLabContext(paper: Paper): boolean {
-  const text = `${(paper.authors || []).join(' ')} ${paper.title || ''} ${paper.abstract || ''}`.toLowerCase();
-  return /\b(yoo|cheon|\bka\b|maternal|conceptus|endometrium|uterine|pregnancy|implantation)\b/i.test(text);
+async function resolveAuthorNameCandidates(partialName: string): Promise<string[]> {
+  const q = normalizeName(partialName);
+  if (!q || q.split(/\s+/).length !== 1 || q.length < 3) return [];
+  const out = new Set<string>();
+  const s2Key = process.env.S2_API_KEY || process.env.SEMANTIC_SCHOLAR_API_KEY || '';
+  try {
+    const res = await fetch(`https://api.semanticscholar.org/graph/v1/author/search?query=${encodeURIComponent(partialName)}&fields=name,paperCount&limit=8`, {
+      headers: s2Key ? { 'x-api-key': s2Key } : {},
+      signal: AbortSignal.timeout(7000),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      for (const a of data?.data || []) {
+        const name = String(a?.name || '').trim();
+        if (name && normalizeName(name).split(/\s+/).includes(q)) out.add(name);
+      }
+    }
+  } catch {}
+  try {
+    const params = new URLSearchParams({ search: partialName, select: 'display_name,works_count', per_page: '8' });
+    const res = await fetch(`https://api.openalex.org/authors?${params.toString()}`, {
+      signal: AbortSignal.timeout(7000),
+      headers: { Accept: 'application/json' },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      for (const a of data?.results || []) {
+        const name = String(a?.display_name || '').trim();
+        if (name && normalizeName(name).split(/\s+/).includes(q)) out.add(name);
+      }
+    }
+  } catch {}
+  return Array.from(out).slice(0, 5);
 }
 
 function extractExplicitAuthorLabels(query: string): string[] {
@@ -859,6 +860,7 @@ async function t3_semanticAuthorSearch(
   authorName: string,
   yearFrom?: string,
   yearTo?: string,
+  topicQuery = '',
 ): Promise<Paper[]> {
   const s2Key = process.env.S2_API_KEY || process.env.SEMANTIC_SCHOLAR_API_KEY || '';
   const headers: Record<string, string> = s2Key ? { 'x-api-key': s2Key } : {};
@@ -873,20 +875,28 @@ async function t3_semanticAuthorSearch(
     if (!candidates.length) return [];
     const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
     const qNorm = norm(authorName);
-    const best = candidates.find((a: any) => {
-      const n = norm(a.name || '');
-      return n === qNorm || n.includes(qNorm) || qNorm.includes(n);
-    }) ?? candidates[0];
-    if (!best?.authorId) return [];
-    const papersRes = await fetch(
-      `https://api.semanticscholar.org/graph/v1/author/${best.authorId}/papers?fields=paperId,title,authors,year,abstract,citationCount,openAccessPdf,url,publicationTypes,venue,journal&limit=100&sort=year`,
-      { headers, signal: AbortSignal.timeout(15000) },
-    );
-    if (!papersRes.ok) return [];
-    const papersData = await papersRes.json();
-    // S2 publicationTypes that are NOT primary research outputs
+    const rankedCandidates = candidates
+      .filter((a: any) => a?.authorId)
+      .map((a: any) => {
+        const n = norm(a.name || '');
+        const nameScore = n === qNorm ? 4 : n.includes(qNorm) ? 3 : qNorm.includes(n) ? 2 : 0;
+        const paperScore = Math.min(2, Math.log10(Math.max(1, Number(a.paperCount || 0))) / 2);
+        return { ...a, _candidateScore: nameScore + paperScore };
+      })
+      .sort((a: any, b: any) => (b._candidateScore || 0) - (a._candidateScore || 0))
+      .slice(0, topicQuery ? 5 : 1);
+    if (!rankedCandidates.length) return [];
     const NON_PAPER_TYPES = new Set(['LettersAndComments', 'Editorial', 'News', 'Dataset']);
-    return ((papersData.data as any[]) || [])
+    const candidatePaperSets = await Promise.allSettled(rankedCandidates.map(async (candidate: any) => {
+      const papersRes = await fetch(
+        `https://api.semanticscholar.org/graph/v1/author/${candidate.authorId}/papers?fields=paperId,title,authors,year,abstract,citationCount,openAccessPdf,url,publicationTypes,venue,journal&limit=100&sort=year`,
+        { headers, signal: AbortSignal.timeout(15000) },
+      );
+      if (!papersRes.ok) return [];
+      const papersData = await papersRes.json();
+      return ((papersData.data as any[]) || []).map((p: any) => ({ ...p, _candidateScore: candidate._candidateScore || 0 }));
+    }));
+    return candidatePaperSets.flatMap((r) => r.status === 'fulfilled' ? r.value : [])
       .filter((p: any) => {
         if (yearFrom && (p.year || 0) < parseInt(yearFrom)) return false;
         if (yearTo && (p.year || 0) > parseInt(yearTo)) return false;
@@ -911,7 +921,9 @@ async function t3_semanticAuthorSearch(
         matchType: 'author-exact' as const,
         journal: (p.venue as string | undefined) || (p.journal?.name as string | undefined) || undefined,
         journalIssn: (p.journal?.issn as string | undefined) || undefined,
-      }));
+        rankScore: topicQuery ? Math.round(publicWorkflowScore({ title: p.title || '', abstract: p.abstract || '', year: p.year, source: 'semantic' }, topicQuery) + (p._candidateScore || 0) * 8) : undefined,
+      } as Paper))
+      .sort((a: Paper, b: Paper) => (b.rankScore || 0) - (a.rankScore || 0));
   } catch {
     return [];
   }
@@ -924,7 +936,7 @@ async function t3_semanticEnhanced(query: string, yearFrom?: string, yearTo?: st
   
   try {
     if (authorCandidates.length > 0 && (intent === 'AUTHOR_STRONG' || intent === 'AUTHOR_WEAK')) {
-      const results = await t3_semanticAuthorSearch(authorCandidates[0]!, yearFrom, yearTo);
+      const results = await t3_semanticAuthorSearch(authorCandidates[0]!, yearFrom, yearTo, query);
       if (results.length > 0) return results;
     }
 
@@ -1913,11 +1925,6 @@ function buildQueryVariants(rawQuery: string, normalizedQuery: string): string[]
 }
 
 async function runSingleSearchAttempt(query: string, filters: any, mode: SearchMode = 'broad'): Promise<SearchAttemptResult> {
-  // Known lab-author shorthand: users often type "soohyung pig" intending
-  // Soohyung Lee's pig/endometrium papers, not every Lee S homonym.
-  query = query
-    .replace(/^\s*soohyung\s+lee\b/i, 'Soohyung Lee')
-    .replace(/^\s*soohyung\b/i, 'Soohyung Lee');
   const intent = classifyIntent(query);
   const split = splitAuthorAndTopic(query);
   const parsedPublicQuery = parsePublicBioQuery(query);
@@ -1934,13 +1941,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   }
   const hasManualAuthor = manualAuthorNames.length > 0;
   const firstAuthorOnly = Boolean(filters?.firstAuthorOnly);
-  const expandAuthorNameForSearch = (name: string): string[] => {
-    const known = expandKnownBioAuthorAliases(name);
-    return uniqueList([name, ...known, ...extractAuthorCandidates(name).authorCandidates, ...known.flatMap((alias) => extractAuthorCandidates(alias).authorCandidates)]);
-  };
+  const expandAuthorNameForSearch = (name: string): string[] => uniqueList([name, ...extractAuthorCandidates(name).authorCandidates]);
   const labeledAuthorAliases = uniqueList([...explicitAuthorLabels, ...parsedPublicQuery.authors].flatMap(expandAuthorNameForSearch));
   const baseCandidates = labeledAuthorAliases.length
-    ? [...labeledAuthorAliases, ...extracted.authorCandidates]
+    ? labeledAuthorAliases
     : split.author
       ? expandAuthorNameForSearch(split.author)
       : [split.author, ...extracted.authorCandidates];
@@ -2117,10 +2121,6 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     }
   }
   papers = papers.filter((paper) => !isNonResearchCommentTitle(paper.title || ''));
-  const knownContext = knownAuthorContextTerms(authorCandidates);
-  if (knownContext.length && queryHasSpecies) {
-    papers = papers.filter((paper) => matchesKnownAuthorContext(paper, knownContext));
-  }
   if (effectiveMode === 'precision') {
     papers = papers.filter((paper) => (paper.evidenceScore || 0) >= 0.05);
   }
@@ -2165,8 +2165,6 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   papers = papers
     .filter((paper) => !isNonResearchCommentTitle(paper.title || ''))
     .filter((paper) => !queryHasSpecies || speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`))
-    .filter((paper) => !knownContext.length || !queryHasSpecies || matchesKnownAuthorContext(paper, knownContext))
-    .filter((paper) => !/soohyung/i.test(query) || !queryHasSpecies || isSoohyungPigLabContext(paper))
     .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
 
   // Per-source view: topic-guarded raw results scored lightly (no cross-source dedup)
