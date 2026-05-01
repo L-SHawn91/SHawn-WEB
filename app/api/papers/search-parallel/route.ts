@@ -19,7 +19,6 @@ import {
   normalizePublicBioQuery,
   parsePublicBioQuery,
   publicSourceHealth,
-  publicTopicGuard,
   publicWorkflowScore,
   type PublicSourceHealth,
   type SuggestedTopic,
@@ -2179,7 +2178,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     nonAuthorQuery,
     bySource.biorxiv,
   );
-  const fallbackRawPapers = papersRanked.length
+  let fallbackRawPapers = papersRanked.length
     ? papersRanked
     : mergePublicPaperRecords([
         ...bySource.pubmed,
@@ -2188,35 +2187,55 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
         ...bySource.europepmc,
         ...bySource.biorxiv,
       ]).map((p) => ({ ...p, rankScore: Math.round(publicWorkflowScore(p, effectiveQuery || nonAuthorQuery)) }));
+  if (ambiguousSingleTokenAuthorTopic && topicQuery) {
+    const topicFallback = await Promise.allSettled([
+      t1_pubmedEnhanced(buildPubMedTitleQuery(topicQuery), yearFrom, yearTo, [], 'TOPIC'),
+      t5_openalexTitleFallback(topicQuery, yearFrom, yearTo),
+      t3_semanticEnhanced(buildPublicKeywordSpeciesQuery(topicQuery, { expand: false, titleOnly: true }), yearFrom, yearTo, [], 'TOPIC'),
+    ]);
+    const topicRows = topicFallback.flatMap((r) => r.status === 'fulfilled' ? r.value : []);
+    fallbackRawPapers = mergePublicPaperRecords([
+      ...topicRows.map((p) => ({ ...p, rankScore: Math.round(publicWorkflowScore(p, topicQuery) + 40) })),
+      ...fallbackRawPapers,
+    ]);
+  }
   let papers = firstAuthorOnly
     ? fallbackRawPapers.filter((paper) => matchByFirstAuthor(paper.authors || [], authorCandidates, hasManualAuthor ? 0.85 : 0.9))
     : fallbackRawPapers;
   let homonymProfiles: SearchAttemptResult['homonymProfiles'] = undefined;
 
-  if (effectiveMode === 'author' && authorCandidates.length) {
-    papers = papers.filter((paper) => matchByAuthor(paper.authors || [], authorCandidates, hasManualAuthor ? 0.85 : 0.9));
-    // Reduce obvious noise in author-mode when topic terms exist.
-    const topicText = (nonAuthorQuery || '').trim();
-    const topicTokenCount = (topicText.match(/[a-z0-9가-힣]{3,}/gi) || []).length;
-    if (topicTokenCount >= 1 && parsedPublicQuery.species.length > 0) {
-      papers = papers.filter((paper) => {
-        const merged = paperSearchText(paper);
-        const rel = overlapRatio(topicText, merged);
-        return rel >= 0.03 || speciesTopicMatches(parsedPublicQuery.species, merged);
-      });
-    } else if (topicTokenCount >= 1) {
-      papers = papers.filter((paper) => {
-        const merged = paperSearchText(paper);
-        const rel = overlapRatio(topicText, merged);
-        const conf = matchedAuthorConfidence(paper.authors || [], authorCandidates);
-        // For short author+keyword searches, require at least one topic anchor
-        // in the title or explicit metadata.
-        // Abstract-only mentions are too noisy for this interaction pattern.
-        if (topicTokenCount <= 2) return titleOrMetadataTopicMatches(topicText, paper);
-        return rel >= 0.03 || conf >= 0.9 || (paper.rankScore || 0) >= 72;
-      });
+  const softRankQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
+  const topicText = (nonAuthorQuery || topicQuery || '').trim();
+  const topicTokenCount = (topicText.match(/[a-z0-9가-힣]{3,}/gi) || []).length;
+  const applySoftRelevanceScore = (paper: Paper): Paper => {
+    let delta = 0;
+    if (authorCandidates.length && intent !== 'TOPIC') {
+      const confidence = matchedAuthorConfidence(paper.authors || [], authorCandidates);
+      const wordMatch = strictAuthorWordMatch(paper.authors || [], authorCandidates);
+      delta += Math.round(confidence * 28);
+      if (!wordMatch) delta -= 14;
     }
-    const homonym = buildHomonymProfiles(papers, topicText || query, authorCandidates, {
+    if (queryHasSpecies) {
+      delta += speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper)) ? 22 : -10;
+    }
+    if (softRankQuery) {
+      const weighted = queryWeightedOverlap(softRankQuery, paper.title || '', [paper.abstract || '', paperKeywordText(paper)].join(' '));
+      const keywordWeighted = keywordWeightedOverlap(softRankQuery, paper);
+      const topicAnchor = titleOrMetadataTopicMatches(softRankQuery, paper);
+      delta += Math.round(weighted * 32);
+      delta += Math.round(keywordWeighted * 18);
+      if (effectiveMode === 'author' && authorCandidates.length && topicTokenCount <= 2) {
+        delta += topicAnchor ? 28 : -24;
+      }
+      if (ambiguousSingleTokenAuthorTopic && topicTokenCount >= 1) {
+        delta += topicAnchor || weighted >= 0.12 ? 36 : -60;
+      }
+    }
+    return { ...paper, rankScore: Math.round((paper.rankScore || 0) + delta) };
+  };
+
+  if (effectiveMode === 'author' && authorCandidates.length) {
+    const homonym = buildHomonymProfiles(papers.map(applySoftRelevanceScore), topicText || query, authorCandidates, {
       mergeThreshold: Number.isFinite(profileMergeThreshold) ? profileMergeThreshold : 0.5,
     });
     homonymProfiles = homonym.profiles;
@@ -2229,76 +2248,38 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       papers = papers.filter((p) => p.homonymProfileId && allowed.has(p.homonymProfileId));
     }
   }
-  papers = papers.filter((paper) => !isNonResearchCommentTitle(paper.title || ''));
-  if (effectiveMode === 'precision') {
-    papers = papers.filter((paper) => (paper.evidenceScore || 0) >= 0.05);
-  }
-  if (authorCandidates.length && intent !== 'TOPIC') {
-    papers = papers.filter((paper) => strictAuthorWordMatch(paper.authors || [], authorCandidates));
-  }
-  // INSTITUTION: affiliation filter in PubMed already constrains results; skip topic guard.
-  if (intent !== 'INSTITUTION') {
-    const beforeTopicGuard = papers;
-    const guardQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
-    papers = papers.filter((paper) => {
-      if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper));
-      if (effectiveMode === 'author' && authorCandidates.length && titleKeywordTokens(guardQuery).length <= 2) return titleOrMetadataTopicMatches(guardQuery, paper);
-      return publicTopicGuard(paper, guardQuery);
-    });
-    if (papers.length === 0 && beforeTopicGuard.length > 0) {
-      const relaxedTopic = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true });
-      papers = beforeTopicGuard
-        .filter((paper) => {
-          const merged = paperSearchText(paper);
-          return overlapRatio(relaxedTopic, merged) >= 0.08 || queryWeightedOverlap(relaxedTopic, paper.title || '', paper.abstract || '') >= 0.28;
-        })
-        .map((paper) => ({ ...paper, rankScore: Math.max(paper.rankScore || 0, Math.round(publicWorkflowScore(paper, relaxedTopic) + queryWeightedOverlap(relaxedTopic, paper.title || '', paper.abstract || '') * 35)) }))
-        .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0))
-        .slice(0, 50);
-    }
-    if (papers.length === 0 && topicQuery && (ambiguousSingleTokenAuthorTopic || !(effectiveMode === 'author' && authorCandidates.length))) {
-      const titleFallback = await Promise.allSettled([
-        t1_pubmedEnhanced(buildPubMedTitleQuery(topicQuery), yearFrom, yearTo, [], 'TOPIC'),
-        t5_openalexTitleFallback(topicQuery, yearFrom, yearTo),
-        t3_semanticEnhanced(buildPublicKeywordSpeciesQuery(topicQuery, { expand: false, titleOnly: true }), yearFrom, yearTo, [], 'TOPIC'),
-      ]);
-      const fallbackRows = titleFallback.flatMap((r) => r.status === 'fulfilled' ? r.value : []);
-      papers = mergePublicPaperRecords(fallbackRows)
-        .filter((paper) => overlapRatio(buildPublicKeywordSpeciesQuery(topicQuery, { expand: false, titleOnly: true }), paperSearchText(paper)) >= 0.08)
-        .map((paper) => ({ ...paper, rankScore: Math.round(publicWorkflowScore(paper, topicQuery)) }))
-        .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0))
-        .slice(0, 50);
-    }
-  }
 
-  // Re-apply hard guards after relaxed/fallback paths so noise cannot leak back in.
+  // Keep paper-search outputs paper-like, but do not hard-block relevance.
   papers = papers
     .filter((paper) => !isNonResearchCommentTitle(paper.title || ''))
-    .filter((paper) => !queryHasSpecies || speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper)))
-    .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
+    .map(applySoftRelevanceScore);
+  if (effectiveMode === 'precision') {
+    papers = papers.map((paper) => ({ ...paper, rankScore: Math.round((paper.rankScore || 0) + ((paper.evidenceScore || 0) >= 0.05 ? 8 : -8)) }));
+  }
+  if (papers.length === 0 && topicQuery) {
+    const titleFallback = await Promise.allSettled([
+      t1_pubmedEnhanced(buildPubMedTitleQuery(topicQuery), yearFrom, yearTo, [], 'TOPIC'),
+      t5_openalexTitleFallback(topicQuery, yearFrom, yearTo),
+      t3_semanticEnhanced(buildPublicKeywordSpeciesQuery(topicQuery, { expand: false, titleOnly: true }), yearFrom, yearTo, [], 'TOPIC'),
+    ]);
+    const fallbackRows = titleFallback.flatMap((r) => r.status === 'fulfilled' ? r.value : []);
+    papers = mergePublicPaperRecords(fallbackRows)
+      .filter((paper) => !isNonResearchCommentTitle(paper.title || ''))
+      .map((paper) => applySoftRelevanceScore({ ...paper, rankScore: Math.round(publicWorkflowScore(paper, topicQuery)) }))
+      .slice(0, 50);
+  }
+  papers = papers.sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
 
-  // Per-source view: topic-guarded raw results scored lightly (no cross-source dedup)
+  // Per-source view: scored raw paper results (no relevance hard guard)
   const bySourceScored: Record<string, Paper[]> = {};
   const activeSrcs: TrackSource[] = ['pubmed', 'semantic', 'openalex', 'europepmc', 'biorxiv'];
   for (const src of activeSrcs) {
     const srcPapers = bySource[src];
     if (!srcPapers?.length) continue;
-    const guardFilter = intent === 'INSTITUTION'
-      ? srcPapers
-      : srcPapers.filter((p) => {
-          if (effectiveMode === 'author' && authorCandidates.length) {
-            const minOverlap = hasManualAuthor ? 0.85 : 0.9;
-            if (!matchByAuthor(p.authors || [], authorCandidates, minOverlap)) return false;
-            if (intent !== 'TOPIC' && !strictAuthorWordMatch(p.authors || [], authorCandidates)) return false;
-          }
-          const sourceGuardQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
-          if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, paperSearchText(p));
-          if (effectiveMode === 'author' && authorCandidates.length && titleKeywordTokens(sourceGuardQuery).length <= 2) return titleOrMetadataTopicMatches(sourceGuardQuery, p);
-          return publicTopicGuard(p, sourceGuardQuery);
-        });
-    if (guardFilter.length) {
-      bySourceScored[src] = guardFilter
-        .map((p) => ({ ...p, rankScore: Math.round(publicWorkflowScore(p, effectiveQuery || nonAuthorQuery)) }))
+    const paperRows = srcPapers.filter((p) => !isNonResearchCommentTitle(p.title || ''));
+    if (paperRows.length) {
+      bySourceScored[src] = paperRows
+        .map((p) => applySoftRelevanceScore({ ...p, rankScore: Math.round(publicWorkflowScore(p, effectiveQuery || nonAuthorQuery)) }))
         .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
     }
   }
