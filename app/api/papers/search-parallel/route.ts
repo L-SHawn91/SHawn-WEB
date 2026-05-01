@@ -204,6 +204,44 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
   };
 }
 
+const KNOWN_BIO_AUTHOR_ALIASES: Record<string, string[]> = {
+  soohyung: ['Soohyung Lee'],
+  'soohyung lee': ['Soohyung Lee'],
+  inkyu: ['Inkyu Yoo'],
+  'inkyu yoo': ['Inkyu Yoo'],
+};
+
+const KNOWN_AUTHOR_CONTEXT: Record<string, string[]> = {
+  'soohyung lee': ['yoo', 'cheon', 'ka', 'maternal', 'conceptus', 'endometrium', 'uterine', 'pregnancy', 'implantation'],
+  soohyung: ['yoo', 'cheon', 'ka', 'maternal', 'conceptus', 'endometrium', 'uterine', 'pregnancy', 'implantation'],
+  'inkyu yoo': ['lee', 'cheon', 'ka', 'maternal', 'conceptus', 'endometrium', 'uterine', 'pregnancy', 'implantation'],
+  inkyu: ['lee', 'cheon', 'ka', 'maternal', 'conceptus', 'endometrium', 'uterine', 'pregnancy', 'implantation'],
+};
+
+function isNonResearchCommentTitle(title = ''): boolean {
+  return /^(comment(s|ed)?\s+by|comment(s|ed)?\s+on|comment(s|ed)?\b|letter|response|reply|erratum|correction|retraction|editorial)\b/i.test(title.trim());
+}
+
+function expandKnownBioAuthorAliases(name: string): string[] {
+  const key = normalizeName(name);
+  return KNOWN_BIO_AUTHOR_ALIASES[key] || [];
+}
+
+function knownAuthorContextTerms(candidates: string[]): string[] {
+  return uniqueList(candidates.flatMap((name) => KNOWN_AUTHOR_CONTEXT[normalizeName(name)] || []));
+}
+
+function matchesKnownAuthorContext(paper: Paper, contextTerms: string[]): boolean {
+  if (!contextTerms.length) return true;
+  const text = `${(paper.authors || []).join(' ')} ${paper.title || ''} ${paper.abstract || ''}`.toLowerCase();
+  return contextTerms.some((term) => text.includes(term));
+}
+
+function isSoohyungPigLabContext(paper: Paper): boolean {
+  const text = `${(paper.authors || []).join(' ')} ${paper.title || ''} ${paper.abstract || ''}`.toLowerCase();
+  return /\b(yoo|cheon|\bka\b|maternal|conceptus|endometrium|uterine|pregnancy|implantation)\b/i.test(text);
+}
+
 function extractExplicitAuthorLabels(query: string): string[] {
   const q = normalizePublicBioQuery(query || '');
   const values: string[] = [];
@@ -848,7 +886,6 @@ async function t3_semanticAuthorSearch(
     const papersData = await papersRes.json();
     // S2 publicationTypes that are NOT primary research outputs
     const NON_PAPER_TYPES = new Set(['LettersAndComments', 'Editorial', 'News', 'Dataset']);
-    const NON_PAPER_TITLE = /^(comment(ed)?|letter|response|reply|erratum|correction|retraction|editorial)\b/i;
     return ((papersData.data as any[]) || [])
       .filter((p: any) => {
         if (yearFrom && (p.year || 0) < parseInt(yearFrom)) return false;
@@ -858,7 +895,7 @@ async function t3_semanticAuthorSearch(
         if (types.length && types.every((t: string) => NON_PAPER_TYPES.has(t))) return false;
         // Exclude by title pattern as fallback
         const title: string = p.title || '';
-        if (title && NON_PAPER_TITLE.test(title.trim())) return false;
+        if (title && isNonResearchCommentTitle(title)) return false;
         return true;
       })
       .map((p: any) => ({
@@ -1876,6 +1913,11 @@ function buildQueryVariants(rawQuery: string, normalizedQuery: string): string[]
 }
 
 async function runSingleSearchAttempt(query: string, filters: any, mode: SearchMode = 'broad'): Promise<SearchAttemptResult> {
+  // Known lab-author shorthand: users often type "soohyung pig" intending
+  // Soohyung Lee's pig/endometrium papers, not every Lee S homonym.
+  query = query
+    .replace(/^\s*soohyung\s+lee\b/i, 'Soohyung Lee')
+    .replace(/^\s*soohyung\b/i, 'Soohyung Lee');
   const intent = classifyIntent(query);
   const split = splitAuthorAndTopic(query);
   const parsedPublicQuery = parsePublicBioQuery(query);
@@ -1892,8 +1934,16 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   }
   const hasManualAuthor = manualAuthorNames.length > 0;
   const firstAuthorOnly = Boolean(filters?.firstAuthorOnly);
-  const labeledAuthorAliases = uniqueList([...explicitAuthorLabels, ...parsedPublicQuery.authors].flatMap((name) => [name, ...extractAuthorCandidates(name).authorCandidates]));
-  const baseCandidates = split.author ? [split.author, ...extractAuthorCandidates(split.author).authorCandidates] : [split.author, ...labeledAuthorAliases, ...extracted.authorCandidates];
+  const expandAuthorNameForSearch = (name: string): string[] => {
+    const known = expandKnownBioAuthorAliases(name);
+    return uniqueList([name, ...known, ...extractAuthorCandidates(name).authorCandidates, ...known.flatMap((alias) => extractAuthorCandidates(alias).authorCandidates)]);
+  };
+  const labeledAuthorAliases = uniqueList([...explicitAuthorLabels, ...parsedPublicQuery.authors].flatMap(expandAuthorNameForSearch));
+  const baseCandidates = labeledAuthorAliases.length
+    ? [...labeledAuthorAliases, ...extracted.authorCandidates]
+    : split.author
+      ? expandAuthorNameForSearch(split.author)
+      : [split.author, ...extracted.authorCandidates];
   const authorCandidatesRaw = uniqueList(baseCandidates.filter(Boolean))
     .filter((name) => String(name || '').trim().split(/\s+/).filter(Boolean).length <= 4);
   const authorCandidatesMerged = uniqueList([...authorCandidatesRaw, ...manualAuthorNames]);
@@ -1909,10 +1959,13 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       : hasManualAuthor
         ? authorCandidatesMerged
         : (intent === 'TOPIC' || intent === 'INSTITUTION' ? [] : authorCandidatesRaw);
-  const hasStructuredTopic = parsedPublicQuery.species.length > 0 || parsedPublicQuery.keywords !== parsedPublicQuery.normalized;
-  const detectedTopic = (parsedPublicQuery.authors.length || hasStructuredTopic)
-    ? (parsedPublicQuery.keywords || parsedPublicQuery.species.join(' ') || extracted.cleanQuery || query).trim()
-    : (split.topic || parsedPublicQuery.keywords || extracted.cleanQuery || query).trim();
+  const queryHasSpecies = parsedPublicQuery.species.length > 0 || /\b(pig|pigs|porcine|swine|sus\s+scrofa|human|mouse|mice|zebrafish)\b|종|동물종/i.test(query);
+  const hasStructuredTopic = queryHasSpecies || parsedPublicQuery.keywords !== parsedPublicQuery.normalized;
+  const detectedTopic = split.author && split.topic
+    ? split.topic.trim()
+    : (parsedPublicQuery.authors.length || hasStructuredTopic)
+      ? (parsedPublicQuery.keywords || parsedPublicQuery.species.join(' ') || extracted.cleanQuery || query).trim()
+      : (split.topic || parsedPublicQuery.keywords || extracted.cleanQuery || query).trim();
   const pureAuthorSearch = effectiveMode === 'author' && !split.topic && !hasStructuredTopic;
   const topicQuery = pureAuthorSearch
     ? ''
@@ -2063,6 +2116,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       papers = papers.filter((p) => p.homonymProfileId && allowed.has(p.homonymProfileId));
     }
   }
+  papers = papers.filter((paper) => !isNonResearchCommentTitle(paper.title || ''));
+  const knownContext = knownAuthorContextTerms(authorCandidates);
+  if (knownContext.length && queryHasSpecies) {
+    papers = papers.filter((paper) => matchesKnownAuthorContext(paper, knownContext));
+  }
   if (effectiveMode === 'precision') {
     papers = papers.filter((paper) => (paper.evidenceScore || 0) >= 0.05);
   }
@@ -2074,7 +2132,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const beforeTopicGuard = papers;
     const guardQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery;
     papers = papers.filter((paper) => {
-      if (parsedPublicQuery.species.length > 0) return speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`);
+      if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`);
       return publicTopicGuard(paper, guardQuery);
     });
     if (papers.length === 0 && beforeTopicGuard.length > 0) {
@@ -2103,7 +2161,13 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     }
   }
 
-  papers = papers.sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
+  // Re-apply hard guards after relaxed/fallback paths so noise cannot leak back in.
+  papers = papers
+    .filter((paper) => !isNonResearchCommentTitle(paper.title || ''))
+    .filter((paper) => !queryHasSpecies || speciesTopicMatches(parsedPublicQuery.species, `${paper.title || ''} ${paper.abstract || ''}`))
+    .filter((paper) => !knownContext.length || !queryHasSpecies || matchesKnownAuthorContext(paper, knownContext))
+    .filter((paper) => !/soohyung/i.test(query) || !queryHasSpecies || isSoohyungPigLabContext(paper))
+    .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
 
   // Per-source view: topic-guarded raw results scored lightly (no cross-source dedup)
   const bySourceScored: Record<string, Paper[]> = {};
@@ -2114,7 +2178,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     const guardFilter = intent === 'INSTITUTION'
       ? srcPapers
       : srcPapers.filter((p) => {
-          if (parsedPublicQuery.species.length > 0) return speciesTopicMatches(parsedPublicQuery.species, `${p.title || ''} ${p.abstract || ''}`);
+          if (queryHasSpecies) return speciesTopicMatches(parsedPublicQuery.species, `${p.title || ''} ${p.abstract || ''}`);
           return publicTopicGuard(p, buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: false, titleOnly: true }) || nonAuthorQuery || effectiveQuery);
         });
     if (guardFilter.length) {

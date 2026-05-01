@@ -18,7 +18,7 @@ const BIO_TERMS_EXCLUDE = new Set([
   'protein', 'proteins', 'rna', 'dna', 'mrna', 'cdna',
   'chromatin', 'histone', 'epigenetic', 'epigenetics',
   'mouse', 'human', 'bovine', 'equine', 'porcine', 'canine', 'murine',
-  'mice', 'rat', 'rats',
+  'mice', 'rat', 'rats', 'pig', 'pigs', 'swine', 'sus', 'scrofa', 'zebrafish',
   'analysis', 'profiling', 'sequencing', 'pathway', 'pathways',
   'cluster', 'clustering', 'network', 'regulation', 'signaling',
   'methylation', 'acetylation', 'phosphorylation', 'ubiquitination',
@@ -81,8 +81,8 @@ export function classifyIntent(query: string): QueryIntent {
   const looksLikeSingleName =
     tokens.length === 1 && /^[A-Z][a-z'-]{2,}$/.test(tokens[0] || '');
 
-  // Detect: lowercase romanized name (e.g. Korean given name) + bio topic token
-  const firstTokenLooseName = tokens.length >= 2 && isNameWordLoose(tokens[0] || '') && !isNameWord(tokens[0] || '');
+  // Detect: romanized name (including lowercase Korean names) + bio/species topic token
+  const firstTokenLooseName = tokens.length >= 2 && isNameWordLoose(tokens[0] || '');
   const hasFollowingBioTerm = tokens.slice(1).some((t) => BIO_TERMS_EXCLUDE.has((t || '').toLowerCase()));
   const looksLikeNamePlusBioTopic = firstTokenLooseName && hasFollowingBioTerm;
 
@@ -138,11 +138,20 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
     return { author: first, topic: '' };
   }
 
-  // Case: lowercase romanized name (e.g. Korean given name) followed by bio topic tokens
-  const firstIsLowercaseName = /^[a-z]{3,12}$/.test(first) && !BIO_TERMS_EXCLUDE.has(first);
+  // Case: romanized name (e.g. Korean given name, optionally two tokens)
+  // followed by a species/bio topic token: "soohyung pig", "soohyung lee pig".
+  const firstIsLooseName = isNameWordLoose(first) && !BIO_TERMS_EXCLUDE.has(first.toLowerCase());
+  const secondIsLooseName = isNameWordLoose(second) && !BIO_TERMS_EXCLUDE.has(second.toLowerCase());
+  const thirdIsBioTerm = BIO_TERMS_EXCLUDE.has((third || '').toLowerCase());
   const hasFollowingBioTermSplit = tokens.length >= 2 &&
     tokens.slice(1).some((t) => BIO_TERMS_EXCLUDE.has((t || '').toLowerCase()));
-  if (firstIsLowercaseName && hasFollowingBioTermSplit) {
+  if (firstIsLooseName && secondIsLooseName && thirdIsBioTerm) {
+    return {
+      author: `${first} ${second}`,
+      topic: tokens.slice(2).join(' ').trim(),
+    };
+  }
+  if (firstIsLooseName && hasFollowingBioTermSplit) {
     return {
       author: first,
       topic: tokens.slice(1).join(' ').trim(),
