@@ -2071,6 +2071,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       ? (parsedPublicQuery.keywords || parsedPublicQuery.species.join(' ') || extracted.cleanQuery || query).trim()
       : (split.topic || parsedPublicQuery.keywords || extracted.cleanQuery || query).trim();
   const pureAuthorSearch = effectiveMode === 'author' && !split.topic && !hasStructuredTopic;
+  const ambiguousSingleTokenAuthorTopic = effectiveMode === 'author'
+    && !hasStructuredAuthor
+    && !hasManualAuthor
+    && Boolean(split.author && split.topic)
+    && normalizeName(split.author).split(/\s+/).filter(Boolean).length === 1;
   const topicQuery = pureAuthorSearch
     ? ''
     : ((!hasManualAuthor && effectiveMode !== 'author' && intent === 'AUTHOR_WEAK' && !split.topic && !hasStructuredTopic) ? '' : detectedTopic);
@@ -2251,7 +2256,7 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
         .sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0))
         .slice(0, 50);
     }
-    if (papers.length === 0 && topicQuery && !(effectiveMode === 'author' && authorCandidates.length)) {
+    if (papers.length === 0 && topicQuery && (ambiguousSingleTokenAuthorTopic || !(effectiveMode === 'author' && authorCandidates.length))) {
       const titleFallback = await Promise.allSettled([
         t1_pubmedEnhanced(buildPubMedTitleQuery(topicQuery), yearFrom, yearTo, [], 'TOPIC'),
         t5_openalexTitleFallback(topicQuery, yearFrom, yearTo),
