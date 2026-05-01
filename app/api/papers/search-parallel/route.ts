@@ -2301,11 +2301,18 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const topicTokenCount = (topicText.match(/[a-z0-9가-힣]{3,}/gi) || []).length;
   const applySoftRelevanceScore = (paper: Paper): Paper => {
     let delta = 0;
+    let authorWordMatch = authorCandidates.length === 0; // true when no author filter
     if (authorCandidates.length && intent !== 'TOPIC') {
       const confidence = matchedAuthorConfidence(paper.authors || [], authorCandidates);
-      const wordMatch = strictAuthorWordMatch(paper.authors || [], authorCandidates);
+      authorWordMatch = strictAuthorWordMatch(paper.authors || [], authorCandidates);
       delta += Math.round(confidence * 80);
-      if (!wordMatch) delta -= 90;
+      if (authorWordMatch) {
+        // Confirmed author paper: extra lift so it outranks unrelated topic papers
+        if (effectiveMode === 'author') delta += 50;
+      } else {
+        // Author mismatch: stronger penalty in author mode to push non-author papers down
+        delta -= effectiveMode === 'author' ? 150 : 90;
+      }
     }
     if (queryHasSpecies) {
       delta += speciesTopicMatches(parsedPublicQuery.species, paperSearchText(paper)) ? 80 : -160;
@@ -2330,7 +2337,13 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
         delta += hits === autoAndTokens.length ? 90 : hits > 0 ? hits * 24 : -70;
       }
       if (effectiveMode === 'author' && authorCandidates.length && topicTokenCount <= 2) {
-        delta += topicAnchor ? 60 : -120;
+        if (authorWordMatch) {
+          // Confirmed author paper: topicAnchor is informational only, no penalty
+          delta += topicAnchor ? 30 : 0;
+        } else {
+          // Non-author paper: must have topic anchor to stay relevant
+          delta += topicAnchor ? 60 : -120;
+        }
       }
       if (ambiguousSingleTokenAuthorTopic && topicTokenCount >= 1) {
         delta += topicAnchor || weighted >= 0.12 ? 36 : -60;
@@ -2379,6 +2392,14 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       .slice(0, 50);
   }
   papers = papers.sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
+
+  // In author mode: confirmed-author papers always precede unconfirmed ones,
+  // regardless of base score. Unconfirmed papers follow sorted by rankScore.
+  if (effectiveMode === 'author' && authorCandidates.length && intent !== 'TOPIC') {
+    const confirmed = papers.filter((p) => strictAuthorWordMatch(p.authors || [], authorCandidates));
+    const others = papers.filter((p) => !strictAuthorWordMatch(p.authors || [], authorCandidates));
+    papers = [...confirmed, ...others];
+  }
 
   // Per-source view: scored raw paper results (no relevance hard guard)
   const bySourceScored: Record<string, Paper[]> = {};
