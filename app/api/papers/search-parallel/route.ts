@@ -2046,13 +2046,14 @@ function buildQueryVariants(rawQuery: string, normalizedQuery: string): string[]
   add(preprocessUserQuery(rawQuery));
 
   const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
-  if (tokens.length >= 2) {
+  const primaryIntent = classifyIntent(normalizedQuery);
+  if (primaryIntent !== 'TOPIC' && tokens.length >= 2) {
     add([...tokens.slice(1), tokens[0]].join(' '));
   }
 
   const particleStripped = tokens.map(stripKoreanParticle);
   add(particleStripped.join(' '));
-  if (particleStripped.length >= 2) {
+  if (primaryIntent !== 'TOPIC' && particleStripped.length >= 2) {
     add([...particleStripped.slice(1), particleStripped[0]].join(' '));
   }
 
@@ -2247,7 +2248,8 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const builderAutoTokens = builderTerms.length > 1 ? titleKeywordTokens(builderTerms.join(' ')) : [];
   const explicitAndQuery = hasExplicitAndOperator(topicQuery || query);
   const explicitAndTokens = explicitAndQuery ? titleKeywordTokens(topicQuery || query) : [];
-  const autoAndTokens = builderAutoTokens.length > 1 ? builderAutoTokens : [];
+  const plainTopicAutoTokens = intent === 'TOPIC' ? titleKeywordTokens(topicQuery || query) : [];
+  const autoAndTokens = builderAutoTokens.length > 1 ? builderAutoTokens : (plainTopicAutoTokens.length > 1 ? plainTopicAutoTokens : []);
   const topicText = (nonAuthorQuery || topicQuery || '').trim();
   const topicTokenCount = (topicText.match(/[a-z0-9가-힣]{3,}/gi) || []).length;
   const applySoftRelevanceScore = (paper: Paper): Paper => {
@@ -2265,6 +2267,12 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       const weighted = queryWeightedOverlap(softRankQuery, paper.title || '', [paper.abstract || '', paperKeywordText(paper)].join(' '));
       const keywordWeighted = keywordWeightedOverlap(softRankQuery, paper);
       const topicAnchor = titleOrMetadataTopicMatches(softRankQuery, paper);
+      const softTokens = titleKeywordTokens(softRankQuery);
+      if (softTokens.length > 1) {
+        const titleHits = queryTokenHits(softTokens, paper.title || '');
+        if (titleHits === softTokens.length) delta += 110;
+        else if (titleHits > 0) delta += titleHits * 22;
+      }
       delta += Math.round(weighted * 32);
       delta += Math.round(keywordWeighted * 18);
       if (explicitAndTokens.length > 1) {
