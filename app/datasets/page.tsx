@@ -18,7 +18,15 @@ type DatasetSource =
   | "figshare"
   | "cngb"
   | "arrayexpress"
-  | "cellxgene";
+  | "cellxgene"
+  | "huggingface"
+  | "kaggle"
+  | "datagov"
+  | "dataeu"
+  | "github"
+  | "openml"
+  | "crossref"
+  | "openalex";
 
 interface DatasetItem {
   id: string;
@@ -77,6 +85,14 @@ const SOURCE_OPTIONS: DatasetSource[] = [
   "cngb",
   "arrayexpress",
   "cellxgene",
+  "huggingface",
+  "kaggle",
+  "datagov",
+  "dataeu",
+  "github",
+  "openml",
+  "crossref",
+  "openalex",
 ];
 
 
@@ -105,6 +121,14 @@ const SOURCE_LABELS: Record<DatasetSource, string> = {
   cngb: "CNGBdb",
   arrayexpress: "ArrayExpress",
   cellxgene: "CellxGene",
+  huggingface: "HuggingFace",
+  kaggle: "Kaggle",
+  datagov: "Data.gov",
+  dataeu: "Data.europa.eu",
+  github: "GitHub",
+  openml: "OpenML",
+  crossref: "CrossRef",
+  openalex: "OpenAlex",
 };
 
 const SOURCE_TOOLTIPS: Record<DatasetSource, string> = {
@@ -118,6 +142,14 @@ const SOURCE_TOOLTIPS: Record<DatasetSource, string> = {
   cngb: "CNGBdb 중국 유전체/바이오 데이터베이스",
   arrayexpress: "ArrayExpress: EBI 전사체/기능유전체 실험 데이터",
   cellxgene: "CellxGene: Chan Zuckerberg 단일세포 아틀라스",
+  huggingface: "HuggingFace: ML/AI 데이터셋 허브",
+  kaggle: "Kaggle: 데이터사이언스 대회 및 공개 데이터셋",
+  datagov: "Data.gov: 미국 정부 공개 데이터",
+  dataeu: "Data.europa.eu: EU 공개 데이터 포털",
+  github: "GitHub: 코드와 함께 공개된 연구 데이터셋",
+  openml: "OpenML: 머신러닝 벤치마크 데이터셋",
+  crossref: "CrossRef: DOI 기반 데이터셋 레퍼런스",
+  openalex: "OpenAlex: 오픈 학술 데이터 그래프",
 };
 
 const DATASET_SCORE_TOOLTIP = "Dataset score는 최신성, 활용도(download/like), 메타데이터 품질로 계산됩니다.\nDataset는 저널 논문이 아니므로 IF/Q 지표가 직접 적용되지 않습니다.";
