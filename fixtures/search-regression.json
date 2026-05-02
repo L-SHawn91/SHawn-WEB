@@ -1,0 +1,193 @@
+[
+  {
+    "name": "topic_melatonin_pten_akt_foxo3a_mouse_ovary",
+    "query": "melatonin PTEN AKT FOXO3a mouse ovary",
+    "group": "plain_topic",
+    "expect": {
+      "intent": "TOPIC",
+      "minResults": 1,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        [
+          "melatonin"
+        ],
+        [
+          "pten"
+        ],
+        [
+          "akt"
+        ],
+        [
+          "foxo3",
+          "foxo3a"
+        ],
+        [
+          "mouse",
+          "mice",
+          "murine"
+        ],
+        [
+          "ovary",
+          "ovarian",
+          "oocyte"
+        ]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 2,
+      "minRelevantTopN": 3,
+      "minTopGroupCoverage": 0.25,
+      "maxArxivWeakInTop10": 0,
+      "maxUnknownMatchInTop10": 0
+    }
+  },
+  {
+    "name": "topic_pancreatic_cancer_organoid",
+    "query": "pancreatic cancer organoid",
+    "group": "plain_topic",
+    "expect": {
+      "intent": "TOPIC",
+      "minResults": 5,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        [
+          "pancreatic",
+          "pancreas"
+        ],
+        [
+          "cancer",
+          "tumor",
+          "tumour",
+          "carcinoma"
+        ],
+        [
+          "organoid",
+          "organoids"
+        ]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 2,
+      "minRelevantTopN": 4,
+      "minTopGroupCoverage": 0.45,
+      "maxArxivWeakInTop10": 0,
+      "maxUnknownMatchInTop10": 0
+    }
+  },
+  {
+    "name": "topic_dhcr24_endometrium",
+    "query": "DHCR24 endometrium",
+    "group": "plain_topic",
+    "expect": {
+      "intent": "TOPIC",
+      "minResults": 1,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        [
+          "dhcr24",
+          "seladin"
+        ],
+        [
+          "endometrium",
+          "endometrial",
+          "uterine"
+        ]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 1,
+      "minRelevantTopN": 3,
+      "minTopGroupCoverage": 0.25,
+      "maxArxivWeakInTop10": 0,
+      "maxUnknownMatchInTop10": 0
+    }
+  },
+  {
+    "name": "topic_zebrafish_heart_regeneration",
+    "query": "zebrafish heart regeneration",
+    "group": "plain_topic",
+    "expect": {
+      "intent": "TOPIC",
+      "minResults": 5,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        [
+          "zebrafish",
+          "danio"
+        ],
+        [
+          "heart",
+          "cardiac",
+          "myocardial"
+        ],
+        [
+          "regeneration",
+          "regenerative",
+          "repair"
+        ]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 2,
+      "minRelevantTopN": 4,
+      "minTopGroupCoverage": 0.45,
+      "maxArxivWeakInTop10": 0,
+      "maxUnknownMatchInTop10": 0
+    }
+  },
+  {
+    "name": "author_topic_soohyung_lee_pig",
+    "query": "soohyung lee pig",
+    "group": "author_topic",
+    "expect": {
+      "minResults": 1,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        [
+          "soohyung"
+        ],
+        [
+          "lee"
+        ],
+        [
+          "pig",
+          "porcine",
+          "swine"
+        ]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 2,
+      "minRelevantTopN": 1,
+      "maxUnknownMatchInTop10": 0,
+      "minAuthorMatchTypeRateTop10": 0.5
+    }
+  },
+  {
+    "name": "builder_auto_and_pancreatic_cancer_organoid",
+    "query": "pancreatic AND cancer AND organoid",
+    "group": "builder_auto_and",
+    "filters": {
+      "queryBuilderTerms": [
+        "pancreatic",
+        "cancer",
+        "organoid"
+      ]
+    },
+    "expect": {
+      "minResults": 5,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        [
+          "pancreatic",
+          "pancreas"
+        ],
+        [
+          "cancer",
+          "tumor",
+          "tumour",
+          "carcinoma"
+        ],
+        [
+          "organoid",
+          "organoids"
+        ]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 2,
+      "minRelevantTopN": 4,
+      "minTopGroupCoverage": 0.45,
+      "maxArxivWeakInTop10": 0,
+      "maxUnknownMatchInTop10": 0
+    }
+  }
+]

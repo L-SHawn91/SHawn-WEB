@@ -16,6 +16,7 @@
     "sync": "python3 ../sync_to_web.py",
     "reports:sync-index": "node scripts/sync-reports-index.mjs",
     "test:search": "node scripts/test-search.mjs",
+    "test:search:regression": "node scripts/test-search.mjs --regression --fail-on-regression",
     "check:i18n": "node scripts/enforce-i18n.mjs",
     "check:forbidden-terms": "node scripts/enforce-forbidden-terms.mjs"
   },

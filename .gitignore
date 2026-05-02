@@ -17,6 +17,9 @@ out/
 dist/
 build/
 
+# Generated smoke-test reports
+fixtures/*-report.json
+
 # Environment
 .env
 .env.local

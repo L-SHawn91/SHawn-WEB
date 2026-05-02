@@ -23,6 +23,20 @@ npm install
 npm run dev
 ```
 
+## 🔎 Paper search regression smoke test
+```bash
+# 로컬/배포 서버가 떠 있어야 합니다. 기본 URL은 http://localhost:3000
+npm run test:search:regression
+
+# 다른 서버를 검사할 때
+SEARCH_BASE_URL=https://phdshawn.com npm run test:search:regression
+```
+
+- 고정 fixture: `fixtures/search-regression.json`
+- 리포트: `fixtures/search-regression-report.json`
+- 커버 범위: plain topic keyword, Builder auto-AND, author+topic query
+- 목적: 검색 ranking 수정 후 무관 논문이 top 결과로 튀는 regression을 배포 전 차단
+
 ## 🚢 Production Deploy (GitHub Actions)
 - `main` 브랜치 push 시 프로덕션 배포 워크플로가 실행됩니다: `.github/workflows/deploy-production.yml`
 - Build gate는 Vercel secret 없이도 통과할 수 있지만, 실제 public site 반영은 아래 저장소 secret이 모두 있어야 실행됩니다.
