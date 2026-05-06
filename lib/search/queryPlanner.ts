@@ -35,10 +35,26 @@ export const BIO_TERMS_EXCLUDE = new Set([
   'biomarker', 'biomarkers', 'diagnostic', 'prognostic',
   'rnaseq', 'atacseq', 'chipseq', 'bisulfite',
   'data', 'dataset', 'database',
+  // Medical condition / histology terms often confused with names
+  'pcos', 'syndrome', 'disorder', 'disease', 'fibrosis', 'granulosa', 'follicle',
+  'follicular', 'luteal', 'corpus', 'polycystic', 'conceptus', 'trophectoderm',
+  'interferon', 'interleukin', 'cytokines',
 ]);
 
+function bioTermKey(token: string): string {
+  return (token || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+function isBioToken(token: string): boolean {
+  const lower = (token || '').toLowerCase();
+  return BIO_TERMS_EXCLUDE.has(lower) || BIO_TERMS_EXCLUDE.has(bioTermKey(token));
+}
+
 function isNameWord(token: string): boolean {
-  return /^[A-Z][A-Za-z'-]{1,}$/.test(token || '');
+  // Person names are Title Case (first letter capitalized, rest lowercase).
+  // Reject all-caps abbreviations (PCOS, LIF, TGF, DNA) and mixed-caps
+  // scientific terms (RNA-seq, mRNA) — they are not person name tokens.
+  return /^[A-Z][a-z'-]{1,}$/.test(token || '');
 }
 
 function isInitialToken(token: string): boolean {
@@ -50,7 +66,7 @@ function isNameWordLoose(token: string): boolean {
   if (isNameWord(token)) return true;
   // All-lowercase purely alphabetic, 3-12 chars, not a known bio/science term
   if (/^[a-z]{3,12}$/.test(token)) {
-    return !BIO_TERMS_EXCLUDE.has(token);
+    return !isBioToken(token);
   }
   return false;
 }
@@ -66,7 +82,9 @@ export function classifyIntent(query: string): QueryIntent {
   const looksLikeName2Strict =
     tokens.length >= 2 &&
     /^[A-Z][a-z'-]+$/.test(tokens[0] || '') &&
-    /^[A-Z][a-z'-]+$/.test(tokens[1] || '');
+    /^[A-Z][a-z'-]+$/.test(tokens[1] || '') &&
+    !isBioToken(tokens[0] || '') &&
+    !isBioToken(tokens[1] || '');
 
   const looksLikeNameWithMiddleInitial =
     tokens.length >= 3 &&
@@ -84,22 +102,31 @@ export function classifyIntent(query: string): QueryIntent {
 
   // Detect: romanized name (including lowercase Korean names) + bio/species topic token
   const firstTokenLooseName = tokens.length >= 2 && isNameWordLoose(tokens[0] || '');
-  const hasFollowingBioTerm = tokens.slice(1).some((t) => BIO_TERMS_EXCLUDE.has((t || '').toLowerCase()));
+  const hasFollowingBioTerm = tokens.slice(1).some((t) => isBioToken(t || ''));
   const looksLikeNamePlusBioTopic = firstTokenLooseName && hasFollowingBioTerm;
   const looksLikeTwoLooseNamesPlusBio = tokens.length >= 3
     && isNameWordLoose(tokens[0] || '')
     && isNameWordLoose(tokens[1] || '')
-    && tokens.slice(2).some((t) => BIO_TERMS_EXCLUDE.has((t || '').toLowerCase()));
+    && tokens.slice(2).some((t) => isBioToken(t || ''));
 
   if (INSTITUTION_KEYWORDS.test(q)) return 'INSTITUTION';
-  if (hasQuotes || hasCommaName || looksLikeName2Strict || looksLikeNameWithMiddleInitial || looksLikeTwoLooseNamesPlusBio) return 'AUTHOR_STRONG';
+
+  // Strong author signals: explicit quotes/commas or strict proper-case 2-token name.
+  if (hasQuotes || hasCommaName || looksLikeName2Strict || looksLikeNameWithMiddleInitial) return 'AUTHOR_STRONG';
+
+  // Bio-term density escape: 3+ definitive bio tokens → almost certainly a topic
+  // query even if the first token looks like a name (e.g. "Asherman syndrome
+  // endometrial fibrosis mouse model", "LIF implantation mouse uterus").
+  const bioCandidateCount = tokens.filter((t) => isBioToken(t || '')).length;
+  if (bioCandidateCount >= 3) return 'TOPIC';
+
+  // Loose author signals checked only after confirming bio-density is low.
+  if (looksLikeTwoLooseNamesPlusBio) return 'AUTHOR_STRONG';
 
   // 저자 우선 정책: 이름처럼 보이면 AUTHOR_WEAK로 취급
   if (looksLikeName2Loose || looksLikeNamePlusBioTopic) return 'AUTHOR_WEAK';
 
-  if (looksLikeSingleName) {
-    return 'AUTHOR_WEAK';
-  }
+  if (looksLikeSingleName) return 'AUTHOR_WEAK';
 
   return 'TOPIC';
 }
@@ -116,6 +143,13 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
   }
 
   const tokens = q.split(/\s+/).filter(Boolean);
+
+  // Bio-density escape: same threshold as classifyIntent.  When a query is
+  // dominated by bio terms it should be treated as a pure topic so the full
+  // query string reaches the search APIs rather than being truncated to only
+  // the portion after the (false-positive) author token.
+  const bioDensity = tokens.filter((t) => isBioToken(t || '')).length;
+  if (bioDensity >= 3) return { author: '', topic: q };
   const first = tokens[0] || '';
   const second = tokens[1] || '';
   const third = tokens[2] || '';
@@ -145,11 +179,11 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
 
   // Case: romanized name (e.g. Korean given name, optionally two tokens)
   // followed by a species/bio topic token.
-  const firstIsLooseName = isNameWordLoose(first) && !BIO_TERMS_EXCLUDE.has(first.toLowerCase());
-  const secondIsLooseName = isNameWordLoose(second) && !BIO_TERMS_EXCLUDE.has(second.toLowerCase());
-  const thirdIsBioTerm = BIO_TERMS_EXCLUDE.has((third || '').toLowerCase());
+  const firstIsLooseName = isNameWordLoose(first) && !isBioToken(first);
+  const secondIsLooseName = isNameWordLoose(second) && !isBioToken(second);
+  const thirdIsBioTerm = isBioToken(third || '');
   const hasFollowingBioTermSplit = tokens.length >= 2 &&
-    tokens.slice(1).some((t) => BIO_TERMS_EXCLUDE.has((t || '').toLowerCase()));
+    tokens.slice(1).some((t) => isBioToken(t || ''));
   if (firstIsLooseName && secondIsLooseName && thirdIsBioTerm) {
     return {
       author: `${first} ${second}`,

@@ -10,6 +10,8 @@ const reportPath = process.env.SEARCH_REPORT
   ? path.resolve(process.env.SEARCH_REPORT)
   : new URL(args.has('--regression') ? '../fixtures/search-regression-report.json' : '../fixtures/search-report.json', import.meta.url).pathname;
 const failOnRegression = args.has('--fail-on-regression') || args.has('--regression');
+const maxHttpAttempts = Number(process.env.SEARCH_HTTP_ATTEMPTS || '4');
+const retryStatuses = new Set([408, 429, 500, 502, 503, 504]);
 
 const DEFAULT_FILTERS = {
   sources: ['pubmed', 'arxiv', 'semantic'],
@@ -158,6 +160,38 @@ function computeRow(item, data) {
   };
 }
 
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchSearchWithRetry(item) {
+  let lastResponse = null;
+  for (let attempt = 1; attempt <= maxHttpAttempts; attempt += 1) {
+    const res = await fetch(`${baseUrl}/api/papers/search-parallel`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: item.query,
+        filters: {
+          ...DEFAULT_FILTERS,
+          ...(item.filters || {}),
+        },
+        ...(item.payload || {}),
+      }),
+    });
+
+    if (res.ok || !retryStatuses.has(res.status) || attempt === maxHttpAttempts) {
+      return res;
+    }
+
+    lastResponse = res;
+    const waitMs = 1500 * attempt;
+    console.warn(`[retry] ${item.name}: HTTP ${res.status} ${res.statusText}; retrying in ${waitMs}ms (${attempt}/${maxHttpAttempts})`);
+    await delay(waitMs);
+  }
+  return lastResponse;
+}
+
 function summarize(rows) {
   const summary = {
     totalQueries: rows.length,
@@ -197,18 +231,7 @@ async function run() {
   const rows = [];
 
   for (const item of fixtures) {
-    const res = await fetch(`${baseUrl}/api/papers/search-parallel`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: item.query,
-        filters: {
-          ...DEFAULT_FILTERS,
-          ...(item.filters || {}),
-        },
-        ...(item.payload || {}),
-      }),
-    });
+    const res = await fetchSearchWithRetry(item);
 
     if (!res.ok) {
       throw new Error(`${item.name}: HTTP ${res.status} ${res.statusText}`);

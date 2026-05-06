@@ -189,5 +189,67 @@
       "maxArxivWeakInTop10": 0,
       "maxUnknownMatchInTop10": 0
     }
+  },
+  {
+    "name": "topic_pcos_granulosa_cell_rna_seq_ovary",
+    "query": "PCOS granulosa cell RNA-seq ovary",
+    "group": "plain_topic",
+    "expect": {
+      "intent": "TOPIC",
+      "minResults": 1,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        ["pcos", "polycystic"],
+        ["granulosa"],
+        ["ovary", "ovarian", "follicle"]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 2,
+      "minRelevantTopN": 2,
+      "minTopGroupCoverage": 0.2,
+      "maxArxivWeakInTop10": 0,
+      "maxUnknownMatchInTop10": 0
+    }
+  },
+  {
+    "name": "topic_asherman_syndrome_endometrial_fibrosis",
+    "query": "Asherman syndrome endometrial fibrosis mouse model",
+    "group": "plain_topic",
+    "expect": {
+      "intent": "TOPIC",
+      "minResults": 1,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        ["asherman"],
+        ["endometrial", "endometrium", "uterine"],
+        ["fibrosis", "fibrous"],
+        ["mouse", "mice", "murine", "model"]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 2,
+      "minRelevantTopN": 2,
+      "minTopGroupCoverage": 0.2,
+      "maxArxivWeakInTop10": 0,
+      "maxUnknownMatchInTop10": 0
+    }
+  },
+  {
+    "name": "topic_lif_implantation_mouse_uterus",
+    "query": "LIF implantation mouse uterus endometrium",
+    "group": "plain_topic",
+    "expect": {
+      "intent": "TOPIC",
+      "minResults": 1,
+      "topN": 5,
+      "requiredAnyTermGroups": [
+        ["lif", "leukemia inhibitory"],
+        ["implantation", "implant"],
+        ["uterus", "uterine", "endometrium", "endometrial"],
+        ["mouse", "mice", "murine"]
+      ],
+      "minMatchedGroupsPerRelevantPaper": 2,
+      "minRelevantTopN": 2,
+      "minTopGroupCoverage": 0.2,
+      "maxArxivWeakInTop10": 0,
+      "maxUnknownMatchInTop10": 0
+    }
   }
 ]
