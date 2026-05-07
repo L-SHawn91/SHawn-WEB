@@ -67,6 +67,16 @@ interface Paper {
   journalDomain?: string;
   journalTopic?: string;
   journalRecentYears?: Array<{ year: number; works: number; citations: number }>;
+  journalIfSource?: string;
+  journalIfMetric?: string;
+  journalIfYear?: string;
+  journalIfIsOfficial?: boolean;
+  journalIfMatchMode?: string;
+  jcrJci?: number;
+  jcrCategory?: string;
+  jcrEdition?: string;
+  jcrRank?: string;
+  jcrPercentile?: number;
 }
 
 function isPaper(paper: Paper | null): paper is Paper {

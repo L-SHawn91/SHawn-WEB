@@ -66,6 +66,16 @@ export const journalMetricsCache = new TTLCache<{
   domain?: string;
   topic?: string;
   recentYears?: Array<{ year: number; works: number; citations: number }>;
+  source?: string;
+  metric?: string;
+  year?: string;
+  isOfficial?: boolean;
+  matchMode?: string;
+  jci?: number;
+  category?: string;
+  edition?: string;
+  rank?: string;
+  percentile?: number;
 }>(86400, 500);
 
 /**

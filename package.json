@@ -19,7 +19,8 @@
     "test:search:intent": "node --experimental-strip-types scripts/test-classify-intent.mjs",
     "test:search:regression": "node scripts/test-search.mjs --regression --fail-on-regression",
     "check:i18n": "node scripts/enforce-i18n.mjs",
-    "check:forbidden-terms": "node scripts/enforce-forbidden-terms.mjs"
+    "check:forbidden-terms": "node scripts/enforce-forbidden-terms.mjs",
+    "jcr:build-index": "node scripts/build-jcr-index.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
