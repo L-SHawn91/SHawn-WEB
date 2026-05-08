@@ -9,6 +9,8 @@ import {
   BIO_TERMS_EXCLUDE,
   buildArxivQuery,
   classifyIntent,
+  isKnownPublicationVenuePhrase,
+  isPublicationVenueFragment,
   splitAuthorAndTopic,
   type QueryIntent,
 } from '../../../../lib/search/queryPlanner';
@@ -113,11 +115,15 @@ function cleanPaperText(text = ''): string {
 }
 
 function cleanPaperRecord<T extends Paper>(paper: T): T {
+  const authors = (paper.authors || [])
+    .map((a) => cleanPaperText(a))
+    .filter(Boolean)
+    .filter((a) => !isKnownPublicationVenuePhrase(a));
   return {
     ...paper,
     title: cleanPaperText(paper.title || 'No title') || 'No title',
     abstract: cleanPaperText(paper.abstract || ''),
-    authors: (paper.authors || []).map((a) => cleanPaperText(a)).filter(Boolean),
+    authors,
     meshTerms: paper.meshTerms?.map((m) => cleanPaperText(m)).filter(Boolean),
     techniques: paper.techniques?.map((m) => cleanPaperText(m)).filter(Boolean),
     keywords: paper.keywords?.map((m) => cleanPaperText(m)).filter(Boolean),
@@ -142,6 +148,19 @@ function normalizeName(raw: string): string {
 
 function uniqueList(values: string[]): string[] {
   return Array.from(new Set(values.filter(Boolean).map((value) => value.trim())));
+}
+
+function isUnsafeAuthorCandidate(value: string): boolean {
+  const candidate = String(value || '').trim();
+  if (!candidate) return true;
+  const words = candidate.split(/\s+/).filter(Boolean);
+  // Journal/venue titles and their fragments frequently arrive from source
+  // metadata as pseudo-authors (e.g. "Scientific Reports", "Reports S",
+  // "World Journal"). Never let those steer author mode.
+  if (isKnownPublicationVenuePhrase(candidate) || isPublicationVenueFragment(candidate)) return true;
+  if (words.length === 1 && /^(critical|infertile|serum|biology|frontiers|reports|reviews|journal|current|major|alternative|science|clinical)$/i.test(candidate)) return true;
+  if (/\b(expression|pathway|signaling|measurement|identification|knowledge|dioxygenase|tryptophan|leukocyte|elisa)\b/i.test(candidate)) return true;
+  return false;
 }
 
 function preprocessUserQuery(raw: string): string {
@@ -181,7 +200,7 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
 
   for (const match of quotedMatches) {
     const token = (match[1] || "").trim();
-    if (token) candidates.add(token);
+    if (token && !isUnsafeAuthorCandidate(token)) candidates.add(token);
     remaining = remaining.replace(match[0], " ");
   }
 
@@ -190,6 +209,7 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
     const token = (match[1] || "").trim();
     if (!token) continue;
     if (token.length <= 3) continue;
+    if (isUnsafeAuthorCandidate(token)) continue;
     candidates.add(token);
     remaining = remaining.replace(token, " ");
   }
@@ -207,13 +227,14 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
       if (words.length < 2 || words.length > 3) continue;
       if (!/^[A-Za-z]/.test(token)) continue;
       if (token.length < 4) continue;
+      if (isUnsafeAuthorCandidate(token)) continue;
       candidates.add(token);
     }
   }
 
   const cleanQuery = remaining.replace(/\bby\b/gi, " ").replace(/\s+/g, " ").trim();
 
-  const authorCandidates = uniqueList(Array.from(candidates).flatMap((candidate) => {
+  const authorCandidates = uniqueList(Array.from(candidates).filter((candidate) => !isUnsafeAuthorCandidate(candidate)).flatMap((candidate) => {
     const parts = candidate.split(",").map((p) => p.trim()).filter(Boolean);
     const flatName = normalizeName(candidate).replace(/\s+/g, " ");
 
@@ -259,7 +280,8 @@ function extractAuthorCandidates(query: string): AuthorExtraction {
 }
 
 function isNonResearchCommentTitle(title = ''): boolean {
-  return /^(comment(s|ed)?\s+by|comment(s|ed)?\s+on|comment(s|ed)?\b|letter|response|reply|erratum|correction|retraction|editorial)\b/i.test(title.trim());
+  const clean = title.trim();
+  return /^(author\s+correction|publisher\s+correction|correction|erratum|corrigendum|retraction|editorial|letter|response|reply|comment(s|ed)?\s+by|comment(s|ed)?\s+on|comment(s|ed)?\b)\b\s*:?/i.test(clean);
 }
 
 async function resolveAuthorNameCandidates(partialName: string): Promise<string[]> {
@@ -1652,8 +1674,10 @@ function t6_integrateAndRank(
   console.log('[T6:Ranker] Integration and ranking starting...');
   const startTime = Date.now();
   
-  // Merge all results
-  const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results, ...t6Results, ...t7Results];
+  // Merge all results. Drop non-research notices before dedupe so an
+  // `Author Correction:` record cannot merge into and poison the actual paper.
+  const allPapers = [...t1Results, ...t2Results, ...t3Results, ...t4Results, ...t5Results, ...t6Results, ...t7Results]
+    .filter((paper) => !isNonResearchCommentTitle(paper.title || ''));
   
   // Public-safe workflow merge: DOI/public ID/title dedupe while preserving source hits and best metadata.
   const uniquePapers = mergePublicPaperRecords(allPapers);
@@ -2113,7 +2137,19 @@ function buildQueryVariants(rawQuery: string, normalizedQuery: string): string[]
     add([...particleStripped.slice(1), particleStripped[0]].join(' '));
   }
 
-  return Array.from(variants).slice(0, 4);
+  // Recall rescue for single-cell endometrium queries. Keep variants narrow and
+  // tissue-anchored so low-recall scRNA searches expand without becoming broad
+  // single-cell literature searches.
+  const lower = normalizedQuery.toLowerCase();
+  const hasSingleCell = /\b(single[-\s]?cell|scrna|rna[-\s]?seq|rnaseq)\b/i.test(lower);
+  const hasEndometrium = /\bendometr/i.test(lower);
+  if (primaryIntent === 'TOPIC' && hasSingleCell && hasEndometrium) {
+    add('single-cell transcriptomics endometrium');
+    add('scRNA-seq endometrium');
+    add('single cell RNA sequencing endometrial');
+  }
+
+  return Array.from(variants).slice(0, 6);
 }
 
 async function runSingleSearchAttempt(query: string, filters: any, mode: SearchMode = 'broad'): Promise<SearchAttemptResult> {
@@ -2141,7 +2177,8 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
       ? expandAuthorNameForSearch(split.author)
       : [split.author, ...extracted.authorCandidates];
   const authorCandidatesRaw = uniqueList(baseCandidates.filter(Boolean))
-    .filter((name) => String(name || '').trim().split(/\s+/).filter(Boolean).length <= 4);
+    .filter((name) => String(name || '').trim().split(/\s+/).filter(Boolean).length <= 4)
+    .filter((name) => !isUnsafeAuthorCandidate(name));
   const authorCandidatesMerged = uniqueList([...authorCandidatesRaw, ...manualAuthorNames]);
   const hasStructuredAuthor = explicitAuthorLabels.length > 0 || parsedPublicQuery.authors.length > 0;
   // AUTO-PROMOTE: name-like query or explicit author-labeled query → author mode
@@ -2190,14 +2227,21 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
   const profileMergeThreshold = typeof filters?.profileMergeThreshold === 'number'
     ? filters.profileMergeThreshold
     : Number(filters?.profileMergeThreshold);
-  const nonAuthorQuery = buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true });
+  const methodQueryText = topicQuery || query;
+  // Method-heavy queries often miss papers when constrained to title-like terms
+  // only (e.g. "single-cell RNA-seq endometrium" vs "single-cell transcriptome").
+  // Use abstract/keyword-expanded search for these while keeping ordinary topic
+  // queries title-anchored for precision.
+  const isMethodologyHeavyQuery = /\b(single[-\s]?cell|scrna|rna[-\s]?seq|rnaseq|atac[-\s]?seq|chip[-\s]?seq|spatial\s+transcriptom|proteom|metabolom)\b/i.test(methodQueryText);
+  const keywordSpeciesOptions = { expand: true, titleOnly: !isMethodologyHeavyQuery };
+  const nonAuthorQuery = buildPublicKeywordSpeciesQuery(methodQueryText, keywordSpeciesOptions);
 
   const trackJobs: Array<{ source: TrackSource; promise: Promise<Paper[]> }> = [];
   if (sources.includes('pubmed')) {
     // INSTITUTION: pass full original query so T1 can extract affiliation name.
     // TOPIC/AUTHOR: pass raw topicQuery — synonym expansion causes zero results for
     // specific gene queries (e.g. DHCR24 endometrium → adds "uterine lining" AND).
-    const pubmedQuery = intent === 'INSTITUTION' ? query : buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true });
+    const pubmedQuery = intent === 'INSTITUTION' ? query : buildPublicKeywordSpeciesQuery(topicQuery || query, keywordSpeciesOptions);
     trackJobs.push({ source: 'pubmed', promise: t1_pubmedEnhanced(pubmedQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('semantic')) {
@@ -2207,11 +2251,11 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     trackJobs.push({ source: 'openalex', promise: t5_openalexEnhanced(nonAuthorQuery, yearFrom, yearTo, authorCandidates, intent, topicQuery) });
   }
   if (sources.includes('europepmc')) {
-    const epmcQuery = intent === 'INSTITUTION' ? query : buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true });
+    const epmcQuery = intent === 'INSTITUTION' ? query : buildPublicKeywordSpeciesQuery(topicQuery || query, keywordSpeciesOptions);
     trackJobs.push({ source: 'europepmc', promise: t6_europePmcEnhanced(epmcQuery, yearFrom, yearTo, authorCandidates, intent) });
   }
   if (sources.includes('biorxiv')) {
-    trackJobs.push({ source: 'biorxiv', promise: t7_biorxivEnhanced(buildPublicKeywordSpeciesQuery(topicQuery || query, { expand: true, titleOnly: true }), yearFrom, yearTo, authorCandidates, intent) });
+    trackJobs.push({ source: 'biorxiv', promise: t7_biorxivEnhanced(buildPublicKeywordSpeciesQuery(topicQuery || query, keywordSpeciesOptions), yearFrom, yearTo, authorCandidates, intent) });
   }
 
   const sourceStartedAt = new Map(trackJobs.map((job) => [job.source, Date.now()]));
@@ -2386,6 +2430,10 @@ async function runSingleSearchAttempt(query: string, filters: any, mode: SearchM
     if (andPapers.length > 0) papers = andPapers;
   }
   papers = papers.map(applySoftRelevanceScore);
+  // Final guard: some retry/fallback paths can reintroduce a preprint/published
+  // or PubMed/OpenAlex pair after the first integration pass. Collapse again
+  // before final sorting and journal-metric enrichment.
+  papers = mergePublicPaperRecords(papers);
   if (effectiveMode === 'precision') {
     papers = papers.map((paper) => ({ ...paper, rankScore: Math.round((paper.rankScore || 0) + ((paper.evidenceScore || 0) >= 0.05 ? 8 : -8)) }));
   }
@@ -2485,7 +2533,7 @@ export async function POST(request: NextRequest) {
 
     // Cache only plain topic queries; author-like behavior is query-inferred and should stay fresh.
     if (cacheableQuery) {
-      const cacheKey = makeCacheKey({ v: 'query-parts-2', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'query-parts-5', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       const cached = papersCache.get(cacheKey);
       if (cached) {
         const c = cached as Record<string, unknown>;
@@ -2531,7 +2579,9 @@ export async function POST(request: NextRequest) {
     const uniqueForMetrics = Array.from(new Map([...sortedPapers, ...sourceRows].map((p) => [p.id, p])).values());
     const enrichedAll = await enrichPapersWithJournalMetrics(uniqueForMetrics).catch(() => uniqueForMetrics);
     const enrichedById = new Map(enrichedAll.map((p) => [p.id, p]));
-    const enrichedPapers = sortedPapers.map((p) => cleanPaperRecord(enrichedById.get(p.id) || p));
+    const enrichedPapers = mergePublicPaperRecords(
+      sortedPapers.map((p) => cleanPaperRecord(enrichedById.get(p.id) || p))
+    ).sort((a, b) => (b.rankScore || 0) - (a.rankScore || 0));
 
     // Propagate enrichment to bySource so all tabs show IF/quartile
     const enrichedBySource: Record<string, Paper[]> = {};
@@ -2561,7 +2611,7 @@ export async function POST(request: NextRequest) {
 
     // Store only plain topic queries; author-like profile results are query-inferred and should stay fresh.
     if (cacheableQuery && sortedPapers.length > 0) {
-      const cacheKey = makeCacheKey({ v: 'query-parts-2', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
+      const cacheKey = makeCacheKey({ v: 'query-parts-5', q: normalizedQuery, mode, sortBy, filters: { yearFrom: filters.yearFrom, yearTo: filters.yearTo } });
       papersCache.set(cacheKey, responseBody);
     }
 
@@ -2575,5 +2625,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;

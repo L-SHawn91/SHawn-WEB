@@ -20,7 +20,9 @@
     "test:search:regression": "node scripts/test-search.mjs --regression --fail-on-regression",
     "check:i18n": "node scripts/enforce-i18n.mjs",
     "check:forbidden-terms": "node scripts/enforce-forbidden-terms.mjs",
-    "jcr:build-index": "node scripts/build-jcr-index.mjs"
+    "jcr:build-index": "node scripts/build-jcr-index.mjs",
+    "search:build-ontology": "node scripts/build-search-ontology.mjs",
+    "check:search-ontology": "node scripts/check-search-ontology.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

@@ -360,18 +360,43 @@ export function buildPublicPubMedQuery(query: string): string {
   return `(${clean}) OR (${meshBlock})`;
 }
 
+function normalizePublicDoi(value?: string): string {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/^https?:\/\/(?:dx\.)?doi\.org\//, '')
+    .replace(/^doi:\s*/i, '')
+    .replace(/[\s.]+$/g, '')
+    .trim();
+}
+
+function normalizeBibliographicTitle(value?: string): string {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/^\s*(?:preprint\s*[:\-]\s*)/i, '')
+    .replace(/\s+/g, ' ')
+    .replace(/[^a-z0-9가-힣]/g, '')
+    .slice(0, 120);
+}
+
 export function publicDedupeKey(paper: PublicPaperLike): string {
-  const doi = String(paper.doi || "").toLowerCase().replace(/^https?:\/\/doi\.org\//, "").trim();
-  if (doi) return `doi:${doi}`;
+  return publicDedupeKeys(paper)[0] || 'title:';
+}
+
+function publicDedupeKeys(paper: PublicPaperLike): string[] {
+  const keys: string[] = [];
+  const doi = normalizePublicDoi(paper.doi);
+  if (doi) keys.push(`doi:${doi}`);
+
+  // Prefer title-based keys over source-local IDs so PubMed/EuropePMC/OpenAlex
+  // rows without DOI can still collapse into one bibliographic record. Fall
+  // back to IDs only for short/empty titles where collision risk is high.
+  const title = normalizeBibliographicTitle(paper.title);
+  if (title.length >= 18) keys.push(`title:${title}`);
 
   const id = String(paper.id || "").toLowerCase().trim();
-  if (id && !id.startsWith("semantic-") && !id.startsWith("openalex-")) return `id:${id}`;
-
-  const title = String(paper.title || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9가-힣]/g, "")
-    .slice(0, 80);
-  return `title:${title}`;
+  if (id) keys.push(`id:${id}`);
+  if (!keys.length) keys.push(`title:${title}`);
+  return Array.from(new Set(keys));
 }
 
 export function publicSourceWeight(source?: string): number {
@@ -532,21 +557,23 @@ export function mergePublicPaperRecords<T extends PublicPaperLike>(papers: T[]):
   const byKey = new Map<string, T & { sourceHits?: string[]; sourceIds?: string[] }>();
 
   for (const paper of papers) {
-    const key = publicDedupeKey(paper);
+    const keys = publicDedupeKeys(paper);
+    const key = keys.find((candidate) => byKey.has(candidate)) || keys[0] || publicDedupeKey(paper);
     const prev = byKey.get(key);
     if (!prev) {
-      byKey.set(key, {
+      const fresh = {
         ...paper,
         sourceHits: paper.source ? [String(paper.source)] : [],
         sourceIds: paper.id ? [String(paper.id)] : [],
-      });
+      } as T & { sourceHits?: string[]; sourceIds?: string[] };
+      for (const candidate of keys) byKey.set(candidate, fresh);
       continue;
     }
 
     const sourceHits = new Set([...(prev.sourceHits || []), paper.source].filter(Boolean).map(String));
     const sourceIds = new Set([...(prev.sourceIds || []), paper.id].filter(Boolean).map(String));
     const preferredSource = bibliographicSourcePriority(paper.source) > bibliographicSourcePriority(prev.source) ? paper : prev;
-    byKey.set(key, {
+    const merged = {
       ...prev,
       ...paper,
       // Bibliographic metadata must stay anchored to the most trusted source DB.
@@ -568,10 +595,12 @@ export function mergePublicPaperRecords<T extends PublicPaperLike>(papers: T[]):
       keywords: Array.from(new Set([...(prev.keywords || []), ...(paper.keywords || [])])),
       sourceHits: Array.from(sourceHits),
       sourceIds: Array.from(sourceIds),
-    });
+    } as T & { sourceHits?: string[]; sourceIds?: string[] };
+    const mergedKeys = Array.from(new Set([...keys, ...publicDedupeKeys(prev)]));
+    for (const candidate of mergedKeys) byKey.set(candidate, merged);
   }
 
-  return Array.from(byKey.values()) as T[];
+  return Array.from(new Set(byKey.values())) as T[];
 }
 
 export function publicDatasetDedupeKey(item: PublicDatasetLike): string {

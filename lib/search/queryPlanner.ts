@@ -1,45 +1,28 @@
+import {
+  SEARCH_ONTOLOGY_BIO_TERMS,
+  SEARCH_ONTOLOGY_VENUES,
+  SEARCH_ONTOLOGY_VENUE_FRAGMENTS,
+  SEARCH_ONTOLOGY_VENUE_TERMINALS,
+} from './searchOntologyData.js';
+
 export type QueryIntent = 'AUTHOR_STRONG' | 'AUTHOR_WEAK' | 'INSTITUTION' | 'TOPIC';
 
 const INSTITUTION_KEYWORDS = /\b(university|univ|institute|hospital|college|school|center|centre|lab|laboratory|department|dept)\b/i;
 
-// Bio/science terms that are definitively NOT person names
-export const BIO_TERMS_EXCLUDE = new Set([
-  'endometrium', 'endometrial', 'uterus', 'uterine', 'organoid', 'organoids',
-  'transcriptomics', 'transcriptome', 'transcriptional', 'transcription',
-  'genomics', 'genomic', 'genome', 'proteomics', 'proteomic',
-  'metabolomics', 'metabolomic', 'lipidomics',
-  'decidua', 'decidual', 'decidualization',
-  'implantation', 'receptivity', 'fertility', 'infertility',
-  'estrogen', 'estradiol', 'progesterone', 'testosterone', 'melatonin',
-  'cholesterol', 'steroid', 'androgen', 'pten', 'akt', 'foxo3a',
-  'carcinoma', 'cancer', 'tumor', 'tumour', 'fibroid', 'leiomyoma',
-  'pancreatic', 'breast', 'bladder', 'colorectal', 'gastric', 'lung', 'liver',
-  'endometriosis', 'adenomyosis',
-  'stem', 'cell', 'cells', 'expression', 'gene', 'genes',
-  'protein', 'proteins', 'rna', 'dna', 'mrna', 'cdna',
-  'chromatin', 'histone', 'epigenetic', 'epigenetics',
-  'mouse', 'human', 'bovine', 'equine', 'porcine', 'canine', 'murine',
-  'mice', 'rat', 'rats', 'pig', 'pigs', 'swine', 'sus', 'scrofa', 'zebrafish',
-  'analysis', 'profiling', 'sequencing', 'pathway', 'pathways',
-  'cluster', 'clustering', 'network', 'regulation', 'signaling',
-  'methylation', 'acetylation', 'phosphorylation', 'ubiquitination',
-  'proliferation', 'apoptosis', 'differentiation', 'migration',
-  'invasion', 'adhesion', 'inflammation', 'immune', 'cytokine',
-  'hormone', 'receptor', 'enzyme', 'kinase', 'phosphatase',
-  'embryo', 'blastocyst', 'trophoblast', 'placenta', 'menstrual',
-  'ovary', 'ovarian', 'cervical', 'cervix', 'fallopian', 'vaginal',
-  'single', 'spatial', 'bulk', 'scrna', 'scrnaseq',
-  'organotypic', 'culture', 'tissue', 'sample', 'patient', 'patients',
-  'clinical', 'vitro', 'vivo', 'study', 'studies', 'review', 'model',
-  'therapy', 'treatment', 'surgery', 'diagnosis',
-  'biomarker', 'biomarkers', 'diagnostic', 'prognostic',
-  'rnaseq', 'atacseq', 'chipseq', 'bisulfite',
-  'data', 'dataset', 'database',
-  // Medical condition / histology terms often confused with names
-  'pcos', 'syndrome', 'disorder', 'disease', 'fibrosis', 'granulosa', 'follicle',
-  'follicular', 'luteal', 'corpus', 'polycystic', 'conceptus', 'trophectoderm',
-  'interferon', 'interleukin', 'cytokines',
-]);
+// Venue/source titles and biomedical term vocabularies are bundled in a
+// Vercel-safe ontology module.  The ontology can be regenerated from the local
+// SHawn corpus DB, but the deployed classifier never reads live SQLite or
+// machine-local cache paths.
+export const KNOWN_PUBLICATION_VENUES = new Set<string>(SEARCH_ONTOLOGY_VENUES);
+
+const PUBLICATION_VENUE_FRAGMENT_WORDS = new Set<string>(SEARCH_ONTOLOGY_VENUE_FRAGMENTS);
+
+const PUBLICATION_VENUE_TERMINAL_WORDS = new Set<string>(SEARCH_ONTOLOGY_VENUE_TERMINALS);
+
+// Bio/science terms that are definitively NOT person names.  Start with the
+// bundled ontology so Vercel and local deployments share identical classifier
+// behavior.
+export const BIO_TERMS_EXCLUDE = new Set<string>(SEARCH_ONTOLOGY_BIO_TERMS);
 
 function bioTermKey(token: string): string {
   return (token || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -47,7 +30,68 @@ function bioTermKey(token: string): string {
 
 function isBioToken(token: string): boolean {
   const lower = (token || '').toLowerCase();
-  return BIO_TERMS_EXCLUDE.has(lower) || BIO_TERMS_EXCLUDE.has(bioTermKey(token));
+  const key = bioTermKey(token);
+  return BIO_TERMS_EXCLUDE.has(lower)
+    || BIO_TERMS_EXCLUDE.has(key)
+    || /^[a-z0-9-]*(ase|kinase|phosphatase|receptor|globulin|tryptophan|dioxygenase)$/i.test(key);
+}
+
+function normalizePhrase(value: string): string {
+  return (value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function venueTokens(value: string): string[] {
+  return normalizePhrase(value).split(/\s+/).filter(Boolean);
+}
+
+export function isPublicationVenueFragment(value: string): boolean {
+  const tokens = venueTokens(value);
+  if (tokens.length === 0) return false;
+  return tokens.some((token) => PUBLICATION_VENUE_FRAGMENT_WORDS.has(token));
+}
+
+function isLikelyPublicationVenuePhrase(value: string): boolean {
+  const tokens = venueTokens(value);
+  if (tokens.length === 0) return false;
+  const tokenSet = new Set(tokens);
+  if (tokenSet.has('journal')) return true;
+  if (tokenSet.has('proceedings')) return true;
+  if (tokens[0] === 'frontiers' && tokens.length >= 1) return true;
+  if (tokens.length <= 3 && tokens.some((token) => ['reports', 'reviews', 'review', 'letters', 'communications'].includes(token))) return true;
+  if (tokens.includes('biology') && (tokenSet.has('reproduction') || tokenSet.has('endocrinology') || tokenSet.has('reproductive') || tokenSet.has('of'))) return true;
+  if (tokens.length >= 2 && PUBLICATION_VENUE_TERMINAL_WORDS.has(tokens[tokens.length - 1] || '')) {
+    return tokens.some((token) => PUBLICATION_VENUE_FRAGMENT_WORDS.has(token));
+  }
+  return false;
+}
+
+export function isKnownPublicationVenuePhrase(value: string): boolean {
+  const normalized = normalizePhrase(value);
+  return Boolean(normalized && (KNOWN_PUBLICATION_VENUES.has(normalized) || isLikelyPublicationVenuePhrase(normalized)));
+}
+
+function leadingVenueTokenCount(tokens: string[]): number {
+  const normalized = tokens
+    .map((token) => (token || '').replace(/^"|"$/g, ''))
+    .filter(Boolean);
+  // Only treat a venue as a leading anchor when at least one token remains as
+  // the topic. Some generic venue heuristics intentionally match full strings
+  // like "Nature Communications endometrial"; using prefix-only matching here
+  // prevents the full query from swallowing the topic token.
+  for (let size = Math.min(5, normalized.length - 1); size >= 1; size -= 1) {
+    const phrase = normalized.slice(0, size).join(' ');
+    if (isKnownPublicationVenuePhrase(phrase)) return size;
+  }
+  return 0;
+}
+
+function hasLeadingVenueWithTopic(tokens: string[]): boolean {
+  const venueTokens = leadingVenueTokenCount(tokens);
+  return venueTokens > 0 && tokens.length > venueTokens;
 }
 
 function isNameWord(token: string): boolean {
@@ -63,7 +107,7 @@ function isInitialToken(token: string): boolean {
 
 // Handles lowercase romanized Korean/Asian names that classifyIntent would otherwise miss
 function isNameWordLoose(token: string): boolean {
-  if (isNameWord(token)) return true;
+  if (isNameWord(token)) return !isBioToken(token);
   // All-lowercase purely alphabetic, 3-12 chars, not a known bio/science term
   if (/^[a-z]{3,12}$/.test(token)) {
     return !isBioToken(token);
@@ -78,6 +122,14 @@ export function classifyIntent(query: string): QueryIntent {
   const hasQuotes = /"[^"]{3,}"/.test(q);
   const hasCommaName = /[A-Za-z'-]+,\s*[A-Za-z'.-]+/.test(q);
   const tokens = q.split(/\s+/).filter(Boolean);
+
+  // Journal/source + topic queries are topic searches, not author searches.
+  // This prevents "Nature Communications endometrial" from being promoted to
+  // AUTHOR_STRONG just because the first two tokens are Title Case.
+  const quotedVenue = q.match(/"([^"]{3,})"/);
+  if ((quotedVenue && isKnownPublicationVenuePhrase(quotedVenue[1] || '')) || hasLeadingVenueWithTopic(tokens)) {
+    return 'TOPIC';
+  }
 
   const looksLikeName2Strict =
     tokens.length >= 2 &&
@@ -139,10 +191,14 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
   if (quoted) {
     const author = (quoted[1] || '').trim();
     const topic = q.replace(quoted[0], '').replace(/\s+/g, ' ').trim();
+    if (isKnownPublicationVenuePhrase(author)) return { author: '', topic: [author, topic].filter(Boolean).join(' ') };
     return { author, topic };
   }
 
   const tokens = q.split(/\s+/).filter(Boolean);
+
+  const venueTokens = leadingVenueTokenCount(tokens);
+  if (venueTokens > 0) return { author: '', topic: q };
 
   // Bio-density escape: same threshold as classifyIntent.  When a query is
   // dominated by bio terms it should be treated as a pure topic so the full

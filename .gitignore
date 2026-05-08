@@ -25,6 +25,13 @@ fixtures/*-report.json
 .env.local
 .env.*.local
 
+# Private/local data and generated ontology review candidates
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
+*search_ontology_candidate*.json
+
 # IDEs
 .vscode/
 .idea/
