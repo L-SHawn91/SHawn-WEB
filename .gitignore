@@ -32,6 +32,9 @@ fixtures/*-report.json
 *.duckdb
 *search_ontology_candidate*.json
 
+# Local agent/planning artifacts
+.hermes/
+
 # IDEs
 .vscode/
 .idea/
