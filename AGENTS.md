@@ -21,6 +21,10 @@ This repository is part of the SHawn system ecosystem. Treat improvements to its
 - `SHawn-learn` owns cross-agent learning intake and promotion candidates.
 - `~/SHawn` is the active DB workspace; OneDrive/GDrive are not live DB write locations.
 
+## Frontend gate
+
+For React/Next.js UI changes, apply `docs/REACT_BEST_PRACTICE_GATE.md` and the canonical SHawn policy at `<git_root>/SHawn-sync/rules/frontend_react_best_practice_gate.md`.
+
 ## Verification
 
 Before reporting completion, run the repo's available tests/checks if present, then re-run `git status -sb` and summarize remaining dirty/untracked files.
