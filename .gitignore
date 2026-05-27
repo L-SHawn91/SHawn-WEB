@@ -46,3 +46,11 @@ fixtures/*-report.json
 Thumbs.db
 legacy_imports/
 .vercel
+
+# Auto-added standard ignore
+*.pyo
+.pytest_cache/
+.cursor/
+dist-app/
+.turbo/
+tmp/
