@@ -7,6 +7,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { RelatedPosts } from '@/components/blog/related-posts';
 import { ShareButtons } from '@/components/blog/share-buttons';
+import { getPublicCategoryLabel, getPublicTagLabels } from '@/lib/public-labels';
 
 const SITE_URL = 'https://phdshawn.com';
 
@@ -28,11 +29,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const postUrl = `${SITE_URL}/blog/${post.slug}`;
   const description = post.description || `${post.title} | SHawn_LAB`;
   const absoluteImage = post.image ? new URL(post.image, SITE_URL).toString() : undefined;
+  const publicTags = getPublicTagLabels(post.tags);
 
   return {
     title: post.title,
     description,
-    keywords: post.tags,
+    keywords: publicTags,
     alternates: {
       canonical: postUrl,
     },
@@ -44,7 +46,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       siteName: 'SHawn_LAB',
       locale: 'ko_KR',
       publishedTime: post.date,
-      tags: post.tags,
+      tags: publicTags,
       images: absoluteImage ? [{ url: absoluteImage, alt: post.title }] : undefined,
     },
     twitter: {
@@ -58,7 +60,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default function BlogPost({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
-  const allPosts = getAllPosts();
+  const allPosts = getAllPosts().map((item) => ({
+    ...item,
+    category: getPublicCategoryLabel(item.category),
+    tags: getPublicTagLabels(item.tags),
+  }));
 
   if (!post) {
     notFound();
@@ -66,6 +72,8 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
   const postUrl = `${SITE_URL}/blog/${post.slug}`;
   const absoluteImage = post.image ? new URL(post.image, SITE_URL).toString() : undefined;
+  const publicCategory = getPublicCategoryLabel(post.category);
+  const publicTags = getPublicTagLabels(post.tags);
   const articleLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -84,8 +92,8 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
     },
     mainEntityOfPage: postUrl,
     image: absoluteImage,
-    keywords: post.tags.join(', '),
-    articleSection: post.category,
+    keywords: publicTags.join(', '),
+    articleSection: publicCategory,
   };
 
   const breadcrumbLd = {
@@ -120,7 +128,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(0,0,0,0.08),transparent_58%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.09),transparent_58%)]" />
       <header className="mb-10 border-b border-border pb-8">
         <div className="mb-4 inline-flex items-center rounded-full border border-foreground bg-foreground px-3 py-1 text-xs font-semibold tracking-wide text-background">
-          {post.category}
+          {publicCategory}
         </div>
         <h1 className="mb-4 text-balance font-heading text-3xl font-bold leading-tight text-foreground md:text-4xl">
           {post.title}
@@ -147,12 +155,12 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
         <MDXRemote source={post.content} />
       </div>
 
-      {post.tags && post.tags.length > 0 && (
+      {publicTags.length > 0 && (
         <footer className="mt-12 border-t border-border pt-8">
           <div className="flex items-center gap-2">
             <strong className="text-foreground">Tags:</strong>
             <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
+              {publicTags.map((tag) => (
                 <span
                   key={tag}
                   className="rounded-full border border-border bg-muted/35 px-3 py-1 text-sm text-muted-foreground"
@@ -189,8 +197,8 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       <RelatedPosts
         posts={allPosts}
         currentSlug={post.slug}
-        currentCategory={post.category}
-        currentTags={post.tags}
+        currentCategory={publicCategory}
+        currentTags={publicTags}
       />
 
       <div className="mt-12 border-t border-border pt-8">

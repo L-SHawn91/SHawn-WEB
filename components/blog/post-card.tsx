@@ -5,6 +5,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { Post } from "@/lib/mdx";
+import { getPublicCategoryLabel, getPublicTagLabels } from "@/lib/public-labels";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 
 interface PostCardProps {
@@ -45,6 +46,8 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
         badge: "bg-foreground text-background border-foreground",
         border: "group-hover:border-foreground"
     };
+    const publicCategory = getPublicCategoryLabel(post.category);
+    const publicTags = getPublicTagLabels(post.tags);
 
     return (
         <motion.div
@@ -69,7 +72,7 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
                     )}
                     <CardHeader>
                         <div className={`inline-flex items-center w-fit rounded-full border px-2.5 py-0.5 text-xs font-semibold mb-3 ${categoryStyle.badge}`}>
-                            {post.category}
+                            {publicCategory}
                         </div>
                         <CardTitle className="line-clamp-2 text-card-foreground transition-colors group-hover:text-foreground/80">
                             {post.title}
@@ -85,9 +88,9 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
                             {post.description}
                         </CardDescription>
                     </CardContent>
-                    {post.tags && post.tags.length > 0 && (
+                    {publicTags.length > 0 && (
                         <CardFooter className="flex gap-2 flex-wrap">
-                            {post.tags.slice(0, 3).map(tag => (
+                            {publicTags.slice(0, 3).map(tag => (
                                 <span
                                     key={tag}
                                     className="inline-flex items-center rounded-full border border-border bg-background px-2.5 py-0.5 text-xs font-medium text-muted-foreground transition-colors hover:border-foreground/50"

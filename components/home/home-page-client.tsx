@@ -4,6 +4,7 @@ import { Footer } from "@/components/ui/footer";
 import { useLanguage } from "@/components/providers/language-provider";
 import Image from "next/image";
 import Link from "next/link";
+import { getPublicCategoryLabel } from "@/lib/public-labels";
 
 export type HomePost = {
   slug: string;
@@ -21,6 +22,9 @@ type QuickLink = {
   eyebrow: string;
   status: string;
   accentColor: string;
+  iconSrc: string;
+  iconAlt: string;
+  sublinks?: { href: string; label: string }[];
 };
 
 type PublicSection = {
@@ -40,9 +44,14 @@ type RouteHighlight = {
 
 const accents = {
   blog: "#E76F51",
-  papers: "#2A9D8F",
-  datasets: "#7B6BA8",
+  bio: "#2A9D8F",
   assets: "#C47F2E",
+};
+
+const homeIconSrc = {
+  blog: "/assets/icons/core/blog.webp",
+  bio: "/assets/icons/core/bio.webp",
+  assets: "/assets/icons/core/assets.webp",
 };
 
 const homeCopy: Record<
@@ -54,8 +63,8 @@ const homeCopy: Record<
       lead: string;
       sublead: string;
       blogCta: string;
-      papersCta: string;
-      datasetsCta: string;
+      bioCta: string;
+      assetsCta: string;
     };
     quickLinks: QuickLink[];
     publicIntro: { eyebrow: string; title: string; desc: string };
@@ -67,12 +76,12 @@ const homeCopy: Record<
   ko: {
     hero: {
       eyebrow: "SHawn_LAB · 공개 웹 게이트웨이",
-      title: "연구, 블로그, 데이터 검색 허브",
-      lead: "숀웹은 공개 블로그, 논문 검색, 데이터셋 검색, 자산/운영 노트를 연결하는 SHawn_LAB의 공개 진입점입니다.",
-      sublead: "읽기 쉬운 글, 연구 근거 탐색, 데이터셋 스카우팅, 선별 운영 업데이트를 한 화면에서 연결합니다.",
+      title: "블로그, 바이오 & 에셋 허브",
+      lead: "공개 글은 Blog에서 읽고, 논문·데이터셋 검색은 Bio에서 한 번에 시작합니다.",
+      sublead: "SHawn_LAB의 글, 연구 근거 탐색, 데이터셋 스카우팅, 자산/운영 리포트를 단순한 3개 진입점으로 정리했습니다.",
       blogCta: "블로그 열기",
-      papersCta: "논문 검색",
-      datasetsCta: "데이터셋 검색",
+      bioCta: "바이오 검색",
+      assetsCta: "에셋 보기",
     },
     quickLinks: [
       {
@@ -82,52 +91,41 @@ const homeCopy: Record<
         eyebrow: "공개 노트",
         status: "공개 콘텐츠",
         accentColor: accents.blog,
+        iconSrc: homeIconSrc.blog,
+        iconAlt: "블로그 아이콘",
       },
       {
-        href: "/papers",
-        title: "논문 검색",
-        desc: "PubMed, arXiv, Semantic Scholar와 인용 기반 탐색 흐름을 연결하는 연구 검색 허브입니다.",
-        eyebrow: "연구",
-        status: "검색 허브",
-        accentColor: accents.papers,
-      },
-      {
-        href: "/datasets",
-        title: "데이터셋 검색",
-        desc: "NCBI, ENA, Europe PMC와 공개 omics 인덱스에서 데이터셋 후보를 찾습니다.",
-        eyebrow: "데이터",
-        status: "데이터 허브",
-        accentColor: accents.datasets,
+        href: "/bio",
+        title: "바이오",
+        desc: "논문 검색과 데이터셋 탐색을 하나의 바이오 진입점으로 묶어 연구 근거를 빠르게 찾습니다.",
+        eyebrow: "연구 검색",
+        status: "논문 + 데이터셋",
+        accentColor: accents.bio,
+        iconSrc: homeIconSrc.bio,
+        iconAlt: "바이오 아이콘",
+        sublinks: [
+          { href: "/papers", label: "논문" },
+          { href: "/datasets", label: "데이터셋" },
+          { href: "/blog", label: "Bio notes" },
+        ],
       },
       {
         href: "/invest",
-        title: "자산 / 투자",
+        title: "에셋",
         desc: "교육·모니터링 목적의 시장 온도와 리포트 아카이브입니다. 투자 조언이 아닙니다.",
-        eyebrow: "자산",
+        eyebrow: "자료 / 리포트",
         status: "참고 전용",
         accentColor: accents.assets,
+        iconSrc: homeIconSrc.assets,
+        iconAlt: "에셋 아이콘",
       },
     ],
     publicIntro: {
       eyebrow: "공개 섹션",
-      title: "숀웹에서 바로 갈 수 있는 곳",
-      desc: "외부 독자에게 필요한 공개 화면만 전면에 두고, 내부 운영명과 작업 레이어는 웹 문구에서 숨깁니다.",
+      title: "세 개의 공개 진입점",
+      desc: "외부 독자에게 필요한 Blog, Bio, Assets만 전면에 두고 내부 운영명과 작업 레이어는 웹 문구에서 숨깁니다.",
     },
     publicSections: [
-      {
-        label: "Research",
-        title: "논문과 근거 탐색",
-        body: "논문 검색, 근거 탐색, 연구 아이디어 스카우팅을 위한 공개 진입점입니다.",
-        status: "Papers",
-        tone: "border-[#2A9D8F]/30 bg-[#2A9D8F]/8 dark:border-emerald-400/30 dark:bg-emerald-950/20",
-      },
-      {
-        label: "Data",
-        title: "공개 데이터셋 탐색",
-        body: "공개 데이터셋과 omics accession 후보를 찾고 다음 분석 단계로 연결합니다.",
-        status: "Datasets",
-        tone: "border-[#7B6BA8]/30 bg-[#7B6BA8]/8 dark:border-violet-400/30 dark:bg-violet-950/20",
-      },
       {
         label: "Blog",
         title: "공개 노트와 해설 글",
@@ -135,17 +133,30 @@ const homeCopy: Record<
         status: "Articles",
         tone: "border-[#E76F51]/30 bg-[#E76F51]/8 dark:border-orange-400/30 dark:bg-orange-950/20",
       },
+      {
+        label: "Bio",
+        title: "논문과 데이터셋 탐색",
+        body: "논문 검색, 근거 탐색, 공개 데이터셋 스카우팅을 하나의 바이오 허브로 연결합니다.",
+        status: "Papers · Datasets",
+        tone: "border-[#2A9D8F]/30 bg-[#2A9D8F]/8 dark:border-emerald-400/30 dark:bg-emerald-950/20",
+      },
+      {
+        label: "Assets",
+        title: "에셋 리포트 아카이브",
+        body: "시장 온도와 리포트를 교육·모니터링 목적으로 정리합니다. 투자 조언으로 표시하지 않습니다.",
+        status: "Reference only",
+        tone: "border-[#C47F2E]/30 bg-[#C47F2E]/8 dark:border-amber-400/30 dark:bg-amber-950/20",
+      },
     ],
     routes: {
       eyebrow: "게이트웨이 라우트",
-      title: "공개용 라우트만 명확하게 보여줍니다",
-      desc: "방문자는 블로그, 논문 검색, 데이터셋 검색, 자산/운영 아카이브로 바로 이동할 수 있습니다.",
+      title: "Papers와 Datasets는 Bio 안으로 묶습니다",
+      desc: "방문자는 블로그, 바이오 검색, 에셋 아카이브로 바로 이동하고, Bio 안에서 논문과 데이터셋을 선택합니다.",
       viewBlog: "전체 블로그 보기",
       items: [
         { id: "blog", href: "/blog", label: "블로그", text: "공개 글과 설명형 콘텐츠" },
-        { id: "papers", href: "/papers", label: "논문", text: "논문 검색과 연구 근거 탐색" },
-        { id: "datasets", href: "/datasets", label: "데이터셋", text: "공개 데이터셋 검색" },
-        { id: "invest", href: "/invest", label: "자산", text: "시장 온도와 리포트 아카이브" },
+        { id: "bio", href: "/bio", label: "바이오", text: "논문 검색과 데이터셋 탐색" },
+        { id: "assets", href: "/invest", label: "에셋", text: "시장 온도와 리포트 아카이브" },
       ],
     },
     latest: {
@@ -160,12 +171,12 @@ const homeCopy: Record<
   en: {
     hero: {
       eyebrow: "SHawn_LAB · public web gateway",
-      title: "Research, Blog & Data Search Hub",
-      lead: "SHawn-WEB is the public entry point connecting articles, paper search, dataset discovery, and selected operating notes from SHawn_LAB.",
-      sublead: "A lightweight public surface for readable articles, research discovery, dataset scouting, and selected operating updates.",
+      title: "Blog, Bio & Assets Hub",
+      lead: "Read public articles in Blog, and start paper plus dataset discovery from Bio.",
+      sublead: "A simple three-entry public surface for SHawn_LAB articles, research evidence discovery, dataset scouting, and selected asset reports.",
       blogCta: "Open Blog",
-      papersCta: "Search Papers",
-      datasetsCta: "Search Datasets",
+      bioCta: "Search Bio",
+      assetsCta: "View Assets",
     },
     quickLinks: [
       {
@@ -175,52 +186,41 @@ const homeCopy: Record<
         eyebrow: "Public notes",
         status: "Open content",
         accentColor: accents.blog,
+        iconSrc: homeIconSrc.blog,
+        iconAlt: "Blog icon",
       },
       {
-        href: "/papers",
-        title: "Papers Search",
-        desc: "Research discovery across PubMed, arXiv, Semantic Scholar, and citation-aware search workflows.",
-        eyebrow: "Research",
-        status: "Search hub",
-        accentColor: accents.papers,
-      },
-      {
-        href: "/datasets",
-        title: "Datasets Search",
-        desc: "Public dataset discovery across NCBI, ENA, Europe PMC, and public omics indexes.",
-        eyebrow: "Data",
-        status: "Dataset hub",
-        accentColor: accents.datasets,
+        href: "/bio",
+        title: "Bio",
+        desc: "One public entry point for paper search, evidence discovery, and dataset scouting.",
+        eyebrow: "Research search",
+        status: "Papers + datasets",
+        accentColor: accents.bio,
+        iconSrc: homeIconSrc.bio,
+        iconAlt: "Bio icon",
+        sublinks: [
+          { href: "/papers", label: "Papers" },
+          { href: "/datasets", label: "Datasets" },
+          { href: "/blog", label: "Bio notes" },
+        ],
       },
       {
         href: "/invest",
-        title: "Assets / Invest",
+        title: "Assets",
         desc: "Market-temperature and report archive surface for education and monitoring, not financial advice.",
-        eyebrow: "Assets",
+        eyebrow: "Reports",
         status: "Reference only",
         accentColor: accents.assets,
+        iconSrc: homeIconSrc.assets,
+        iconAlt: "Assets icon",
       },
     ],
     publicIntro: {
       eyebrow: "Public sections",
-      title: "Where to go from SHawn-WEB",
-      desc: "The public site keeps reader-facing surfaces upfront while hiding internal operation labels and workflow layers.",
+      title: "Three public entry points",
+      desc: "The public site keeps Blog, Bio, and Assets upfront while hiding internal operation labels and workflow layers.",
     },
     publicSections: [
-      {
-        label: "Research",
-        title: "Paper and evidence discovery",
-        body: "A public entry point for paper search, evidence discovery, and research idea scouting.",
-        status: "Papers",
-        tone: "border-[#2A9D8F]/30 bg-[#2A9D8F]/8 dark:border-emerald-400/30 dark:bg-emerald-950/20",
-      },
-      {
-        label: "Data",
-        title: "Public dataset discovery",
-        body: "Find public datasets and omics accession candidates, then connect them to the next analysis step.",
-        status: "Datasets",
-        tone: "border-[#7B6BA8]/30 bg-[#7B6BA8]/8 dark:border-violet-400/30 dark:bg-violet-950/20",
-      },
       {
         label: "Blog",
         title: "Public notes and explainers",
@@ -228,17 +228,30 @@ const homeCopy: Record<
         status: "Articles",
         tone: "border-[#E76F51]/30 bg-[#E76F51]/8 dark:border-orange-400/30 dark:bg-orange-950/20",
       },
+      {
+        label: "Bio",
+        title: "Papers and dataset discovery",
+        body: "A single Bio hub for paper search, evidence discovery, and public dataset scouting.",
+        status: "Papers · Datasets",
+        tone: "border-[#2A9D8F]/30 bg-[#2A9D8F]/8 dark:border-emerald-400/30 dark:bg-emerald-950/20",
+      },
+      {
+        label: "Assets",
+        title: "Asset report archive",
+        body: "Education and monitoring-oriented market temperature reports, clearly framed as reference only.",
+        status: "Reference only",
+        tone: "border-[#C47F2E]/30 bg-[#C47F2E]/8 dark:border-amber-400/30 dark:bg-amber-950/20",
+      },
     ],
     routes: {
       eyebrow: "Gateway routes",
-      title: "Clear public routes only",
-      desc: "Visitors can move directly to the blog, paper search, dataset search, and assets/operations archive.",
+      title: "Papers and Datasets live inside Bio",
+      desc: "Visitors move directly to Blog, Bio search, and the Assets archive; Bio then branches into Papers and Datasets.",
       viewBlog: "View all posts",
       items: [
         { id: "blog", href: "/blog", label: "Blog", text: "Public articles and explainers" },
-        { id: "papers", href: "/papers", label: "Papers", text: "Paper search and evidence discovery" },
-        { id: "datasets", href: "/datasets", label: "Datasets", text: "Public dataset search" },
-        { id: "invest", href: "/invest", label: "Assets", text: "Market temperature and report archive" },
+        { id: "bio", href: "/bio", label: "Bio", text: "Paper search and dataset discovery" },
+        { id: "assets", href: "/invest", label: "Assets", text: "Market temperature and report archive" },
       ],
     },
     latest: {
@@ -297,38 +310,62 @@ export function HomePageClient({ recentPosts }: { recentPosts: HomePost[] }) {
                 {copy.hero.blogCta}
               </Link>
               <Link
-                href="/papers"
+                href="/bio"
                 className="sketch-btn inline-flex items-center border border-[#2A9D8F] bg-[#2A9D8F] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#238a7e]"
               >
-                {copy.hero.papersCta}
+                {copy.hero.bioCta}
               </Link>
               <Link
-                href="/datasets"
+                href="/invest"
                 className="sketch-btn inline-flex items-center border border-[#10243A]/40 bg-white px-5 py-3 text-sm font-medium text-[#10243A] transition hover:bg-[#10243A]/5 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800/30"
               >
-                {copy.hero.datasetsCta}
+                {copy.hero.assetsCta}
               </Link>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
               {copy.quickLinks.map((item) => (
                 <Link key={item.href} href={item.href} aria-label={`${item.title}: ${item.desc}`}>
                   <article
-                    className="sketch-card group h-full border-2 border-[#D8DEE6] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[#2A9D8F]/50 dark:border-slate-700 dark:bg-slate-900"
-                    style={{ borderLeftWidth: "4px", borderLeftColor: item.accentColor }}
+                    className="sketch-card group h-full overflow-hidden border-2 border-[#D8DEE6] bg-white transition hover:-translate-y-0.5 hover:border-[#2A9D8F]/50 dark:border-slate-700 dark:bg-slate-900"
+                    style={{ borderTopWidth: "4px", borderTopColor: item.accentColor }}
                   >
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#263238]/50 dark:text-slate-500">{item.eyebrow}</p>
-                      <span
-                        role="status"
-                        aria-label={`${item.title} status: ${item.status}`}
-                        className="rounded-full border border-[#D8DEE6] bg-[#F7F3EA] px-2 py-0.5 text-[11px] font-medium text-[#263238]/70 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                      >
-                        {item.status}
-                      </span>
+                    <div className="relative aspect-[16/10] overflow-hidden bg-[#F7F3EA] dark:bg-slate-800">
+                      <Image
+                        src={item.iconSrc}
+                        alt={item.iconAlt}
+                        fill
+                        className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                        priority
+                      />
                     </div>
-                    <h2 className="mt-3 text-lg font-semibold text-[#10243A] dark:text-slate-100">{item.title}</h2>
-                    <p className="mt-2 text-sm leading-relaxed text-[#263238]/70 dark:text-slate-400">{item.desc}</p>
+                    <div className="p-5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#263238]/50 dark:text-slate-500">{item.eyebrow}</p>
+                        <span
+                          role="status"
+                          aria-label={`${item.title} status: ${item.status}`}
+                          className="rounded-full border border-[#D8DEE6] bg-[#F7F3EA] px-2 py-0.5 text-[11px] font-medium text-[#263238]/70 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                        >
+                          {item.status}
+                        </span>
+                      </div>
+                      <h2 className="mt-3 text-lg font-semibold text-[#10243A] dark:text-slate-100">{item.title}</h2>
+                      <p className="mt-2 text-sm leading-relaxed text-[#263238]/70 dark:text-slate-400">{item.desc}</p>
+                      {item.sublinks && (
+                        <div className="mt-4 flex flex-wrap gap-2" aria-label={`${item.title} shortcuts`}>
+                          {item.sublinks.map((sublink) => (
+                            <span
+                              key={sublink.href}
+                              className="rounded-full border border-[#2A9D8F]/20 bg-[#2A9D8F]/8 px-2.5 py-1 text-xs font-semibold text-[#2A9D8F]"
+                            >
+                              {sublink.label}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </article>
                 </Link>
               ))}
@@ -380,7 +417,7 @@ export function HomePageClient({ recentPosts }: { recentPosts: HomePost[] }) {
               </Link>
             </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-5 grid gap-3 md:grid-cols-3">
               {copy.routes.items.map((route) => (
                 <Link
                   key={route.id}
@@ -423,7 +460,7 @@ export function HomePageClient({ recentPosts }: { recentPosts: HomePost[] }) {
                       />
                     )}
                     <div className="p-5">
-                      <p className="text-xs font-medium text-[#2A9D8F]">{post.category} · {post.date}</p>
+                      <p className="text-xs font-medium text-[#2A9D8F]">{getPublicCategoryLabel(post.category)} · {post.date}</p>
                       <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#10243A] dark:text-slate-100">{post.title}</h3>
                       <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#263238]/70 dark:text-slate-400">{post.description}</p>
                     </div>

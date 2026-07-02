@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { useLanguage } from "@/components/providers/language-provider"
+import { getPublicCategoryLabel } from "@/lib/public-labels"
 
 interface CategoryFilterProps {
     categories: string[]
@@ -38,7 +39,7 @@ export function CategoryFilter({ categories, selectedCategory, onSelectCategory 
                             : "border border-border bg-background text-foreground hover:border-foreground/50 hover:bg-muted/60"
                         }`}
                 >
-                    {category}
+                    {getPublicCategoryLabel(category)}
                 </motion.button>
             ))}
         </div>

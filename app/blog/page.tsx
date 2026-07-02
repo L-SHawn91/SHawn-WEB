@@ -1,5 +1,7 @@
+// i18n-exempt: user-facing blog shell copy is delegated to BlogPageClient.
 import { BlogPageClient } from "@/components/blog/blog-page-client";
 import { getAllPosts } from "@/lib/mdx";
+import { getPublicCategoryLabel, getPublicTagLabels } from "@/lib/public-labels";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,7 +21,11 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  const posts = getAllPosts();
+  const posts = getAllPosts().map((post) => ({
+    ...post,
+    category: getPublicCategoryLabel(post.category),
+    tags: getPublicTagLabels(post.tags),
+  }));
 
   const categories = [...new Set(posts.map((post) => post.category).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b, "ko"));

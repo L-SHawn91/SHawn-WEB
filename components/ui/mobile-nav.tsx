@@ -35,8 +35,8 @@ export function MobileNav() {
     const menuItems = [
         { href: "/", label: t.nav.home || 'Home' },
         { href: "/blog", label: t.nav.blog || 'Blog' },
-        { href: "/papers", label: t.nav.papers || 'Papers' },
-        { href: "/datasets", label: t.nav.datasets || 'Datasets' },
+        { href: "/bio", label: t.nav.bio || 'Bio' },
+        { href: "/invest", label: t.nav.assets || 'Assets' },
     ]
 
     const container = {
