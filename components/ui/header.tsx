@@ -15,6 +15,8 @@ export function Header() {
     const pathname = usePathname();
 
     const navItems = [
+        { href: "/", label: "Home" },
+        { href: "/blog", label: t.nav.blog || "Blog" },
         { href: "/papers", label: t.nav.papers || "Papers" },
         { href: "/datasets", label: t.nav.datasets || "Datasets" },
     ];
@@ -52,8 +54,8 @@ export function Header() {
                 {/* Right Actions */}
                 <div className="flex items-center gap-2">
                     <div className="hidden lg:flex items-center gap-2">
-                        <Link href="/papers" className={buttonVariants({ size: "sm" })}>
-                            Papers
+                        <Link href="/blog" className={buttonVariants({ size: "sm" })}>
+                            Blog
                         </Link>
                     </div>
                     <LanguageToggle />

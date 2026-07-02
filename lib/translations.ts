@@ -29,7 +29,7 @@ export const translations = {
     },
     common: {
       subscribe: "구독하기",
-      logo: "Bio",
+      logo: "SHawn_LAB",
     },
     hero: {
       badge: "Dr.SHawn의 새로운 지식 저장소",
@@ -97,7 +97,7 @@ export const translations = {
     },
     common: {
       subscribe: "Subscribe",
-      logo: "Bio",
+      logo: "SHawn_LAB",
     },
     hero: {
       badge: "Dr.SHawn's New Knowledge Repository",
