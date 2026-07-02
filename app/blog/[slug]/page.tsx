@@ -1,3 +1,4 @@
+// i18n-exempt: article body follows source MDX language; shared chrome handles language switching.
 import { getPostBySlug, getAllPosts } from '@/lib/mdx';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';

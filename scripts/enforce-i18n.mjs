@@ -30,8 +30,9 @@ for (const file of [...new Set([...targets, ...alwaysRequired])]) {
   if (!fs.existsSync(file)) continue;
   const src = fs.readFileSync(file, "utf8");
   const hasI18nHook = src.includes("useLanguage(") || src.includes("translations[") || src.includes("useI18n(");
+  const delegatesToI18nClient = src.includes("HomePageClient");
   const exempt = src.includes("i18n-exempt");
-  if (!hasI18nHook && !exempt) {
+  if (!hasI18nHook && !delegatesToI18nClient && !exempt) {
     violations.push(file);
   }
 }

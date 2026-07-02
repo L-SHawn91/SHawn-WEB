@@ -1,6 +1,7 @@
 export const translations = {
   ko: {
     nav: {
+      home: "홈",
       about: "소개",
       blog: "블로그",
       bio: "숀바이오 생태계",
@@ -69,6 +70,7 @@ export const translations = {
   },
   en: {
     nav: {
+      home: "Home",
       about: "About",
       blog: "Blog",
       bio: "SHawnbio Ecosystem",
