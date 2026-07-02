@@ -289,6 +289,35 @@ export function normalizePackage(manifestPath, options = {}) {
   };
 }
 
+function renderInlineImage(asset, title, visualIndex) {
+  return `![${title} visual ${visualIndex}](${asset.publicPath})`;
+}
+
+function distributeInlineImages(markdown, assets, title) {
+  const body = String(markdown || '').trim();
+  if (!body || !assets?.length) return body;
+
+  const sections = body.split(/(?=^##\s+)/m).filter((section) => section.trim());
+  if (sections.length < 2) {
+    return `${body}\n\n${assets.map((asset, index) => renderInlineImage(asset, title, index + 1)).join('\n\n')}`;
+  }
+
+  let assetIndex = 0;
+  const rendered = sections.map((section) => {
+    const trimmed = section.trimEnd();
+    if (!trimmed.startsWith('## ') || assetIndex >= assets.length) return trimmed;
+    const imageMarkdown = renderInlineImage(assets[assetIndex], title, assetIndex + 1);
+    assetIndex += 1;
+    return `${trimmed}\n\n${imageMarkdown}`;
+  });
+
+  if (assetIndex < assets.length) {
+    rendered.push(assets.slice(assetIndex).map((asset, index) => renderInlineImage(asset, title, assetIndex + index + 1)).join('\n\n'));
+  }
+
+  return rendered.join('\n\n');
+}
+
 export function renderMdx(pkg) {
   const tagMap = new Map();
   for (const tag of [...(pkg.tags || []), pkg.lane].filter(Boolean)) {
@@ -297,16 +326,11 @@ export function renderMdx(pkg) {
   }
   const tags = Array.from(tagMap.values());
   const sourceLine = pkg.sourceUrl
-    ? `\n> 원문 링크: [WordPress 원문](${pkg.sourceUrl})`
+    ? `\n> 원문 링크: [WordPress 원문](${pkg.sourceUrl})\n\n`
     : '';
   const imageFrontmatter = pkg.assets?.[0]?.publicPath || '';
-  const imageSection = pkg.assets?.length
-    ? `\n## 이미지 자료\n\n${pkg.assets
-        .map((asset, index) => `![${pkg.title} image ${index + 1}](${asset.publicPath})`)
-        .join('\n\n')}\n`
-    : '';
-  const body = (pkg.content || '').trim();
-  return `---\ntitle: ${yamlValue(pkg.title)}\ndate: ${yamlValue(pkg.date)}\ndescription: ${yamlValue(pkg.description)}\ncategory: ${yamlValue(pkg.category)}\ntags: ${JSON.stringify(tags)}\nfeatured: false\nimage: ${yamlValue(imageFrontmatter)}\nsource: ${yamlValue('WordPress blog package')}\nsourceUrl: ${yamlValue(pkg.sourceUrl)}\nwordpressStatus: ${yamlValue(pkg.wordpressStatus || '')}\n---\n\n${sourceLine}\n${imageSection}\n${body}\n`;
+  const inlineBody = distributeInlineImages((pkg.content || '').trim(), (pkg.assets || []).slice(1), pkg.title);
+  return `---\ntitle: ${yamlValue(pkg.title)}\ndate: ${yamlValue(pkg.date)}\ndescription: ${yamlValue(pkg.description)}\ncategory: ${yamlValue(pkg.category)}\ntags: ${JSON.stringify(tags)}\nfeatured: false\nimage: ${yamlValue(imageFrontmatter)}\nsource: ${yamlValue('WordPress blog package')}\nsourceUrl: ${yamlValue(pkg.sourceUrl)}\nwordpressStatus: ${yamlValue(pkg.wordpressStatus || '')}\n---\n\n${sourceLine}${inlineBody}\n`;
 }
 
 export function syncPackages(options = {}) {

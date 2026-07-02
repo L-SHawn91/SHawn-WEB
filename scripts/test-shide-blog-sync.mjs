@@ -83,9 +83,9 @@ function makeFixture({ status = 'publish', lanePath = 'blog__ai__field_notes' } 
   assert.doesNotMatch(mdx, /Status: internal draft note/, 'internal status block should not be published');
   assert.doesNotMatch(mdx, /Blog: SHawn AI Notes/, 'internal blog-routing block should not be published');
   assert.match(mdx, /image: "\/shide-blog-assets\/shide-ai-20260702-example-article\/image-01\.webp"/);
-  assert.match(mdx, /## 이미지 자료/);
-  assert.match(mdx, /!\[Visual Example Title image 1\]\(\/shide-blog-assets\/shide-ai-20260702-example-article\/image-01\.webp\)/);
-  assert.match(mdx, /!\[Visual Example Title image 2\]\(\/shide-blog-assets\/shide-ai-20260702-example-article\/image-02\.webp\)/);
+  assert.doesNotMatch(mdx, /## 이미지 자료/, 'images should be distributed inline instead of dumped into a top gallery');
+  assert.doesNotMatch(mdx, /!\[Visual Example Title visual 1\]\(\/shide-blog-assets\/shide-ai-20260702-example-article\/image-01\.webp\)/, 'frontmatter hero image should not be duplicated immediately in the body');
+  assert.match(mdx, /## 본문[\s\S]*!\[Visual Example Title visual 1\]\(\/shide-blog-assets\/shide-ai-20260702-example-article\/image-02\.webp\)/);
   assert.match(mdx, /원문 링크/);
 }
 
