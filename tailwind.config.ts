@@ -20,15 +20,17 @@ const config = {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'var(--font-inter)',
-  				'var(--font-heading)',
+  				'var(--font-sans)',
   				'Noto Sans KR',
+  				'Pretendard',
+  				'Apple SD Gothic Neo',
   				'sans-serif'
   			],
   			heading: [
-  				'var(--font-inter)',
-  				'var(--font-heading)',
+  				'var(--font-sans)',
   				'Noto Sans KR',
+  				'Pretendard',
+  				'Apple SD Gothic Neo',
   				'sans-serif'
   			]
   		},

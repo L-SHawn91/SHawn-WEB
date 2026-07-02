@@ -1,22 +1,20 @@
 "use client";
 
-import { Languages } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import { cn } from "@/lib/utils";
 
 export function LanguageToggle() {
     const { language, setLanguage } = useLanguage();
     const options = [
-        { value: "ko" as const, label: "KO" },
-        { value: "en" as const, label: "EN" },
+        { value: "ko" as const, label: "KOR" },
+        { value: "en" as const, label: "ENG" },
     ];
 
     return (
         <div
-            className="inline-flex items-center gap-1 rounded-full border border-[#D8DEE6] bg-[#F7F3EA]/80 p-1 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/80"
+            className="inline-flex min-h-10 items-center rounded-full border border-[#10243A]/15 bg-white/85 p-1 shadow-sm backdrop-blur dark:border-white/15 dark:bg-slate-950/75"
             aria-label="Language switcher"
         >
-            <Languages className="ml-1 h-3.5 w-3.5 text-[#2A9D8F]" aria-hidden="true" />
             {options.map((option) => {
                 const active = language === option.value;
                 return (
@@ -26,10 +24,10 @@ export function LanguageToggle() {
                         onClick={() => setLanguage(option.value)}
                         aria-pressed={active}
                         className={cn(
-                            "rounded-full px-2.5 py-1 text-xs font-bold tracking-[0.14em] transition",
+                            "min-h-8 rounded-full px-3 text-[11px] font-bold tracking-[0.18em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2A9D8F] focus-visible:ring-offset-2",
                             active
-                                ? "bg-[#10243A] text-white shadow-sm dark:bg-slate-100 dark:text-slate-900"
-                                : "text-[#263238]/55 hover:bg-white/80 hover:text-[#10243A] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100",
+                                ? "bg-[#10243A] text-white shadow-sm dark:bg-white dark:text-slate-950"
+                                : "text-[#263238]/60 hover:bg-[#F7F3EA] hover:text-[#10243A] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100",
                         )}
                     >
                         {option.label}

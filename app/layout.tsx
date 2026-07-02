@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, Noto_Sans_KR } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@/components/seo/analytics";
@@ -13,12 +13,7 @@ import { SuppressTitleTooltips } from "@/components/ui/suppress-title-tooltips";
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
-  variable: "--font-inter",
-});
-const nunito = Nunito({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-heading",
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -50,8 +45,7 @@ export default function RootLayout({
     <html lang="ko" className="scroll-smooth" suppressHydrationWarning>
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased",
-        notoSansKR.variable,
-        nunito.variable
+        notoSansKR.variable
       )}>
         <ThemeProvider
           attribute="class"

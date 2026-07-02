@@ -14,6 +14,18 @@ interface PostCardProps {
 
 // Category style mapping
 const categoryColors: Record<string, { badge: string; border: string }> = {
+    "AI Notes": {
+        badge: "bg-[#10243A] text-white border-[#10243A]",
+        border: "group-hover:border-[#10243A]/70"
+    },
+    "Bio Notes": {
+        badge: "bg-[#2A9D8F] text-white border-[#2A9D8F]",
+        border: "group-hover:border-[#2A9D8F]/70"
+    },
+    "Asset Signals": {
+        badge: "bg-[#E76F51] text-white border-[#E76F51]",
+        border: "group-hover:border-[#E76F51]/70"
+    },
     "Bio Knowledge": {
         badge: "bg-foreground text-background border-foreground",
         border: "group-hover:border-foreground"

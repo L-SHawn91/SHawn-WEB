@@ -56,15 +56,15 @@ function readJson(filePath) {
 function deriveLane(articleRoot) {
   const normalized = articleRoot.split(path.sep).join('/');
   if (normalized.includes('blog__ai__field_notes')) {
-    return { key: 'ai', category: 'SHide AI', slugPrefix: 'shide-ai', tags: ['SHide', 'AI', 'Field Notes'] };
+    return { key: 'ai', category: 'AI Notes', slugPrefix: 'shide-ai', tags: ['AI', 'Field Notes', 'Automation'] };
   }
   if (normalized.includes('blog__assets__market_signals')) {
-    return { key: 'assets', category: 'SHide Assets', slugPrefix: 'shide-assets', tags: ['SHide', 'Assets', 'Market Signals'] };
+    return { key: 'assets', category: 'Asset Signals', slugPrefix: 'shide-assets', tags: ['Assets', 'Market Signals', 'Education'] };
   }
   if (normalized.includes('blog__bio')) {
-    return { key: 'bio', category: 'SHide Bio', slugPrefix: 'shide-bio', tags: ['SHide', 'Bio', 'Evidence'] };
+    return { key: 'bio', category: 'Bio Notes', slugPrefix: 'shide-bio', tags: ['Bio', 'Evidence', 'Science'] };
   }
-  return { key: 'blog', category: 'SHide Blog', slugPrefix: 'shide-blog', tags: ['SHide'] };
+  return { key: 'blog', category: 'Public Notes', slugPrefix: 'shide-blog', tags: ['Public Notes'] };
 }
 
 function firstExisting(paths) {
@@ -93,8 +93,11 @@ function isBlogScreenCaptureAsset(filePath) {
 }
 
 function discoverImageAssets(articleRoot, slug) {
-  const imageDir = path.join(articleRoot, '20_images');
-  const sourcePaths = walk(imageDir, (filePath) => IMAGE_EXTENSIONS.has(path.extname(filePath).toLowerCase()))
+  const imageDirs = ['20_images', '20_image']
+    .map((dirName) => path.join(articleRoot, dirName))
+    .filter((dirPath) => fs.existsSync(dirPath));
+  const sourcePaths = imageDirs
+    .flatMap((imageDir) => walk(imageDir, (filePath) => IMAGE_EXTENSIONS.has(path.extname(filePath).toLowerCase())))
     .filter((filePath) => !isBlogScreenCaptureAsset(filePath))
     .sort((a, b) => imageSortKey(a).localeCompare(imageSortKey(b)));
 
@@ -255,7 +258,8 @@ function isEligible(manifest, includeDrafts) {
 export function normalizePackage(manifestPath, options = {}) {
   const includeDrafts = Boolean(options.includeDrafts);
   const manifest = readJson(manifestPath);
-  const articleRoot = manifest.canonical_root || manifest.canonical_workspace || path.dirname(manifestPath);
+  const declaredRoot = manifest.canonical_root || manifest.canonical_workspace || path.dirname(manifestPath);
+  const articleRoot = fs.existsSync(declaredRoot) ? declaredRoot : path.dirname(manifestPath);
   const markdownPath = findArticleMarkdown(articleRoot, manifest);
   const lane = deriveLane(articleRoot);
   const articleId = path.basename(articleRoot);

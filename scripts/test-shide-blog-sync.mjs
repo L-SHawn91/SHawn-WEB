@@ -55,7 +55,7 @@ function makeFixture({ status = 'publish', lanePath = 'blog__ai__field_notes' } 
   const { manifestPath } = makeFixture();
   const pkg = normalizePackage(manifestPath, { includeDrafts: false });
   assert.equal(pkg.slug, 'shide-ai-20260702-example-article');
-  assert.equal(pkg.category, 'SHide AI');
+  assert.equal(pkg.category, 'AI Notes');
   assert.equal(pkg.title, 'Visual Example Title');
   assert.equal(pkg.sourceUrl, 'https://example.wordpress.com/2026/07/02/example/');
   assert.equal(pkg.eligible, true);
@@ -77,7 +77,7 @@ function makeFixture({ status = 'publish', lanePath = 'blog__ai__field_notes' } 
   const pkg = normalizePackage(manifestPath, { includeDrafts: false });
   const mdx = renderMdx(pkg);
   assert.match(mdx, /title: "Visual Example Title"/);
-  assert.match(mdx, /category: "SHide AI"/);
+  assert.match(mdx, /category: "AI Notes"/);
   assert.match(mdx, /sourceUrl: "https:\/\/example\.wordpress\.com\/2026\/07\/02\/example\/"/);
   assert.doesNotMatch(mdx, /^# Example Title/m, 'first markdown H1 should be stripped to avoid duplicate title');
   assert.doesNotMatch(mdx, /Status: internal draft note/, 'internal status block should not be published');
