@@ -1,4 +1,5 @@
 import { getPostBySlug, getAllPosts } from '@/lib/mdx';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
@@ -25,6 +26,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   const postUrl = `${SITE_URL}/blog/${post.slug}`;
   const description = post.description || `${post.title} | SHawn_LAB`;
+  const absoluteImage = post.image ? new URL(post.image, SITE_URL).toString() : undefined;
 
   return {
     title: post.title,
@@ -42,11 +44,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       locale: 'ko_KR',
       publishedTime: post.date,
       tags: post.tags,
+      images: absoluteImage ? [{ url: absoluteImage, alt: post.title }] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description,
+      images: absoluteImage ? [absoluteImage] : undefined,
     },
   };
 }
@@ -60,6 +64,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
   }
 
   const postUrl = `${SITE_URL}/blog/${post.slug}`;
+  const absoluteImage = post.image ? new URL(post.image, SITE_URL).toString() : undefined;
   const articleLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -77,6 +82,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       url: SITE_URL,
     },
     mainEntityOfPage: postUrl,
+    image: absoluteImage,
     keywords: post.tags.join(', '),
     articleSection: post.category,
   };
@@ -125,6 +131,11 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           <p className="rounded-r-md border-l-4 border-foreground/50 bg-muted/40 px-4 py-3 text-base italic leading-relaxed text-foreground/85 md:text-lg">
             {post.description}
           </p>
+        )}
+        {post.image && (
+          <figure className="mt-6 overflow-hidden rounded-2xl border border-border bg-muted/30">
+            <Image src={post.image} alt={`${post.title} 대표 이미지`} width={1280} height={720} className="w-full object-cover" priority />
+          </figure>
         )}
         <div className="mt-6">
           <ShareButtons title={post.title} url={postUrl} />

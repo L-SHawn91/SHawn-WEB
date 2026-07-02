@@ -1,30 +1,73 @@
 // i18n-exempt: public landing copy is fixed marketing/search entry copy for now.
 import { Footer } from "@/components/ui/footer";
 import { getAllPosts } from "@/lib/mdx";
+import Image from "next/image";
 import Link from "next/link";
 
 const quickLinks = [
   {
     href: "/blog",
     title: "Blog",
-    desc: "AI, bio, automation, and field-note articles from SHawn_LAB.",
-    eyebrow: "Read",
+    desc: "Public notes on AI tools, automation, field logs, and readable commentary from SHawn_LAB.",
+    eyebrow: "Public notes",
+    status: "Open content",
     accentColor: "#E76F51",
   },
   {
     href: "/papers",
     title: "Papers Search",
-    desc: "Integrated search across PubMed, arXiv, Semantic Scholar, and more.",
+    desc: "Research discovery across PubMed, arXiv, Semantic Scholar, and citation-aware search workflows.",
     eyebrow: "Research",
+    status: "Search hub",
     accentColor: "#2A9D8F",
   },
   {
     href: "/datasets",
     title: "Datasets Search",
-    desc: "Multi-source dataset discovery across NCBI, ENA, Europe PMC, and public omics indexes.",
+    desc: "Public dataset discovery across NCBI, ENA, Europe PMC, and public omics indexes.",
     eyebrow: "Data",
+    status: "Dataset hub",
     accentColor: "#7B6BA8",
   },
+  {
+    href: "/invest",
+    title: "Assets / Invest",
+    desc: "Market-temperature and report archive surface for education and monitoring, not financial advice.",
+    eyebrow: "Assets",
+    status: "Reference only",
+    accentColor: "#C47F2E",
+  },
+];
+
+const publicSections = [
+  {
+    label: "Research",
+    title: "Paper and evidence discovery",
+    body: "논문 검색, 근거 탐색, 연구 아이디어 스카우팅을 위한 공개 진입점입니다.",
+    status: "Papers",
+    tone: "border-[#2A9D8F]/30 bg-[#2A9D8F]/8 dark:border-emerald-400/30 dark:bg-emerald-950/20",
+  },
+  {
+    label: "Data",
+    title: "Public dataset discovery",
+    body: "공개 데이터셋과 omics accession 후보를 찾고 다음 분석 단계로 연결합니다.",
+    status: "Datasets",
+    tone: "border-[#7B6BA8]/30 bg-[#7B6BA8]/8 dark:border-violet-400/30 dark:bg-violet-950/20",
+  },
+  {
+    label: "Blog",
+    title: "Public notes and explainers",
+    body: "AI 도구, 자동화, 연구 운영, 일상 기록을 외부 독자가 읽기 쉬운 글로 정리합니다.",
+    status: "Articles",
+    tone: "border-[#E76F51]/30 bg-[#E76F51]/8 dark:border-orange-400/30 dark:bg-orange-950/20",
+  },
+];
+
+const routeHighlights = [
+  { id: "blog", href: "/blog", label: "Blog", text: "공개 글과 설명형 콘텐츠" },
+  { id: "papers", href: "/papers", label: "Papers", text: "논문 검색과 연구 근거 탐색" },
+  { id: "datasets", href: "/datasets", label: "Datasets", text: "공개 데이터셋 검색" },
+  { id: "invest", href: "/invest", label: "Assets", text: "시장 온도와 리포트 아카이브" },
 ];
 
 export default function Home() {
@@ -52,15 +95,15 @@ export default function Home() {
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 pb-14 pt-14 sm:px-6 lg:px-8 lg:pt-20">
             <div className="text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#2A9D8F]">SHawn_LAB</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#2A9D8F]">SHawn_LAB · public web gateway</p>
               <h1 className="mt-3 bg-gradient-to-r from-[#2A9D8F] via-[#10243A] to-[#E76F51] bg-clip-text text-4xl font-bold text-transparent sm:text-6xl">
-                Research, Blog & Bio Search Hub
+                Research, Blog & Data Search Hub
               </h1>
-              <p className="mt-4 text-lg text-[#263238] dark:text-slate-200 sm:text-2xl">
-                메인 화면에서 블로그, 논문 검색, 데이터셋 검색까지 바로 연결합니다.
+              <p className="mx-auto mt-4 max-w-4xl text-lg text-[#263238] dark:text-slate-200 sm:text-2xl">
+                숀웹은 공개 블로그, 논문 검색, 데이터셋 검색, 자산/운영 노트를 연결하는 SHawn_LAB의 공개 진입점입니다.
               </p>
               <p className="mx-auto mt-4 max-w-3xl text-sm text-[#263238]/70 dark:text-slate-400 sm:text-base">
-                SHawn-WEB is the public-facing entry point for practical AI notes, bio-research search, dataset discovery, and selective operating updates.
+                A lightweight public surface for articles, research discovery, dataset scouting, and selected operating updates.
               </p>
             </div>
 
@@ -85,14 +128,23 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {quickLinks.map((item) => (
-                <Link key={item.href} href={item.href}>
+                <Link key={item.href} href={item.href} aria-label={`${item.title}: ${item.desc}`}>
                   <article
                     className="sketch-card group h-full border-2 border-[#D8DEE6] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[#2A9D8F]/50 dark:border-slate-700 dark:bg-slate-900"
                     style={{ borderLeftWidth: "4px", borderLeftColor: item.accentColor }}
                   >
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#263238]/50 dark:text-slate-500">{item.eyebrow}</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#263238]/50 dark:text-slate-500">{item.eyebrow}</p>
+                      <span
+                        role="status"
+                        aria-label={`${item.title} status: ${item.status}`}
+                        className="rounded-full border border-[#D8DEE6] bg-[#F7F3EA] px-2 py-0.5 text-[11px] font-medium text-[#263238]/70 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                      >
+                        {item.status}
+                      </span>
+                    </div>
                     <h2 className="mt-3 text-lg font-semibold text-[#10243A] dark:text-slate-100">{item.title}</h2>
                     <p className="mt-2 text-sm leading-relaxed text-[#263238]/70 dark:text-slate-400">{item.desc}</p>
                   </article>
@@ -103,14 +155,73 @@ export default function Home() {
         </section>
 
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mb-6 max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#2A9D8F]">Public sections</p>
+            <h2 className="mt-2 text-2xl font-bold text-[#10243A] dark:text-slate-100">숀웹에서 바로 갈 수 있는 곳</h2>
+            <p className="mt-2 text-sm leading-6 text-[#263238]/70 dark:text-slate-400">
+              외부 독자에게 필요한 공개 화면만 전면에 두고, 내부 운영명과 작업 레이어는 웹 문구에서 숨깁니다.
+            </p>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-3">
+            {publicSections.map((section) => (
+              <article key={section.label} className={`rounded-3xl border p-5 shadow-sm ${section.tone}`}>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-bold uppercase tracking-[0.24em] text-[#10243A] dark:text-slate-200">{section.label}</span>
+                  <span
+                    role="status"
+                    aria-label={`${section.label} status: ${section.status}`}
+                    className="rounded-full border border-current/20 px-2.5 py-1 text-[11px] font-semibold text-[#263238]/70 dark:text-slate-300"
+                  >
+                    {section.status}
+                  </span>
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-[#10243A] dark:text-slate-100">{section.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[#263238]/70 dark:text-slate-400">{section.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+          <article className="rounded-3xl border border-[#D8DEE6] bg-white/80 p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#10243A] dark:text-slate-400">Gateway routes</p>
+                <h2 className="mt-2 text-xl font-bold text-[#10243A] dark:text-slate-100">공개용 라우트만 명확하게 보여줍니다</h2>
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-[#263238]/70 dark:text-slate-400">
+                  방문자는 블로그, 논문 검색, 데이터셋 검색, 자산/운영 아카이브로 바로 이동할 수 있습니다.
+                </p>
+              </div>
+              <Link href="/blog" className="text-sm font-semibold text-[#E76F51] hover:underline">
+                전체 블로그 보기 <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {routeHighlights.map((route) => (
+                <Link
+                  key={route.id}
+                  href={route.href}
+                  className="rounded-2xl border border-[#D8DEE6] bg-[#F7F3EA]/70 p-4 transition hover:-translate-y-0.5 hover:border-[#2A9D8F]/40 dark:border-slate-700 dark:bg-slate-800/50"
+                >
+                  <p className="text-sm font-semibold text-[#10243A] dark:text-slate-100">{route.label}</p>
+                  <p className="mt-1 text-xs leading-5 text-[#263238]/70 dark:text-slate-400">{route.text}</p>
+                </Link>
+              ))}
+            </div>
+          </article>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#2A9D8F]">Latest notes</p>
               <h2 className="mt-2 text-2xl font-bold text-[#10243A] dark:text-slate-100">최근 블로그 글</h2>
-              <p className="mt-2 text-sm text-[#263238]/70 dark:text-slate-400">메인에서 최신 글을 확인하고 전체 블로그로 이동할 수 있습니다.</p>
+              <p className="mt-2 text-sm text-[#263238]/70 dark:text-slate-400">메인에서 최신 공개 글을 확인하고 전체 블로그로 이동할 수 있습니다.</p>
             </div>
             <Link href="/blog" className="text-sm font-semibold text-[#E76F51] hover:underline">
-              전체 블로그 보기 →
+              전체 블로그 보기 <span aria-hidden="true">→</span>
             </Link>
           </div>
 
@@ -118,10 +229,22 @@ export default function Home() {
             <div className="grid gap-4 md:grid-cols-3">
               {recentPosts.map((post) => (
                 <Link key={post.slug} href={`/blog/${post.slug}`}>
-                  <article className="h-full rounded-2xl border border-[#D8DEE6] bg-white/80 p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900/80">
-                    <p className="text-xs font-medium text-[#2A9D8F]">{post.category} · {post.date}</p>
-                    <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#10243A] dark:text-slate-100">{post.title}</h3>
-                    <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#263238]/70 dark:text-slate-400">{post.description}</p>
+                  <article className="h-full overflow-hidden rounded-2xl border border-[#D8DEE6] bg-white/80 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900/80">
+                    {post.image && (
+                      <Image
+                        src={post.image}
+                        alt={`${post.title} 대표 이미지`}
+                        width={960}
+                        height={540}
+                        className="aspect-[16/9] w-full object-cover"
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                      />
+                    )}
+                    <div className="p-5">
+                      <p className="text-xs font-medium text-[#2A9D8F]">{post.category} · {post.date}</p>
+                      <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#10243A] dark:text-slate-100">{post.title}</h3>
+                      <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#263238]/70 dark:text-slate-400">{post.description}</p>
+                    </div>
                   </article>
                 </Link>
               ))}

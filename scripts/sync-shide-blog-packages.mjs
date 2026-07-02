@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const DEFAULT_SOURCE_ROOT = '/home/mdge/Clouds/gdrive/SHide/02_projects';
 const DEFAULT_OUTPUT_DIR = path.resolve(process.cwd(), 'content/posts');
+const DEFAULT_ASSETS_DIR = path.resolve(process.cwd(), 'public/shide-blog-assets');
+const ASSET_BASE_PATH = '/shide-blog-assets';
+const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg']);
+const OPTIMIZABLE_IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
 const BLOCKED_MODEL_NAME = ['ge', 'mini'].join('');
 const BLOCKED_BOT_NAME = ['sonol', 'bot'].join('');
 const PUBLIC_REPLACEMENTS = new Map([
@@ -64,6 +69,55 @@ function deriveLane(articleRoot) {
 
 function firstExisting(paths) {
   return paths.find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
+}
+
+function imageSortKey(filePath) {
+  const name = path.basename(filePath).toLowerCase();
+  let priority = 50;
+  if (name.includes('hero') || name.includes('featured')) priority = 0;
+  else if (name.includes('visual_title') || name.includes('title_card')) priority = 5;
+  else if (name.includes('summary') || name.includes('concept') || name.includes('workflow')) priority = 10;
+  else if (name.includes('contact_sheet')) priority = 90;
+  return `${String(priority).padStart(3, '0')}::${name}`;
+}
+
+function discoverImageAssets(articleRoot, slug) {
+  const imageDir = path.join(articleRoot, '20_images');
+  const sourcePaths = walk(imageDir, (filePath) => IMAGE_EXTENSIONS.has(path.extname(filePath).toLowerCase()))
+    .sort((a, b) => imageSortKey(a).localeCompare(imageSortKey(b)));
+
+  return sourcePaths.map((sourcePath, index) => {
+    const ext = path.extname(sourcePath).toLowerCase() || '.png';
+    const publicExt = OPTIMIZABLE_IMAGE_EXTENSIONS.has(ext) ? '.webp' : ext;
+    const publicName = `image-${String(index + 1).padStart(2, '0')}${publicExt}`;
+    return {
+      sourcePath,
+      publicPath: `${ASSET_BASE_PATH}/${slug}/${publicName}`,
+      fileName: publicName,
+    };
+  });
+}
+
+function copyOrOptimizeImage(sourcePath, targetPath) {
+  const ext = path.extname(sourcePath).toLowerCase();
+  if (OPTIMIZABLE_IMAGE_EXTENSIONS.has(ext) && path.extname(targetPath).toLowerCase() === '.webp') {
+    const result = spawnSync(
+      'magick',
+      [sourcePath, '-auto-orient', '-resize', '1600x1600>', '-quality', '86', targetPath],
+      { encoding: 'utf8' },
+    );
+    if (result.status === 0 && fs.existsSync(targetPath)) return;
+  }
+  fs.copyFileSync(sourcePath, targetPath);
+}
+
+function copyImageAssets(pkg, assetsDir) {
+  const targetDir = path.join(assetsDir, pkg.slug);
+  fs.rmSync(targetDir, { recursive: true, force: true });
+  fs.mkdirSync(targetDir, { recursive: true });
+  for (const asset of pkg.assets) {
+    copyOrOptimizeImage(asset.sourcePath, path.join(targetDir, asset.fileName));
+  }
 }
 
 function findArticleMarkdown(articleRoot, manifest) {
@@ -199,6 +253,8 @@ export function normalizePackage(manifestPath, options = {}) {
   const sourceUrl = sanitizePublicUrl(manifest?.wordpress_post?.url || manifest?.source_url || '');
   const eligibility = isEligible(manifest, includeDrafts);
   const baseSlug = slugify(articleId.replace(/^\d{8}_?/, ''));
+  const slug = `${lane.slugPrefix}-${slugify(sanitizePublicText(articleId)) || baseSlug}`;
+  const assets = discoverImageAssets(articleRoot, slug);
 
   return {
     manifestPath,
@@ -208,11 +264,12 @@ export function normalizePackage(manifestPath, options = {}) {
     lane: lane.key,
     category: lane.category,
     tags: lane.tags,
-    slug: `${lane.slugPrefix}-${slugify(sanitizePublicText(articleId)) || baseSlug}`,
+    slug,
     title: sanitizePublicText(title),
     date: dateFrom(articleRoot, manifest),
     description: sanitizePublicText(descriptionFrom(markdown, manifest?.wordpress_post?.visual_title || '')),
     content: sanitizePublicText(stripLeadingInternalNotes(stripFirstHeading(markdown))),
+    assets,
     sourceUrl,
     wordpressStatus: manifest?.wordpress_post?.status || null,
     eligible: eligibility.eligible && Boolean(markdownPath),
@@ -230,20 +287,30 @@ export function renderMdx(pkg) {
   const sourceLine = pkg.sourceUrl
     ? `\n> 원문 링크: [WordPress 원문](${pkg.sourceUrl})`
     : '';
+  const imageFrontmatter = pkg.assets?.[0]?.publicPath || '';
+  const imageSection = pkg.assets?.length
+    ? `\n## 이미지 자료\n\n${pkg.assets
+        .map((asset, index) => `![${pkg.title} image ${index + 1}](${asset.publicPath})`)
+        .join('\n\n')}\n`
+    : '';
   const body = (pkg.content || '').trim();
-  return `---\ntitle: ${yamlValue(pkg.title)}\ndate: ${yamlValue(pkg.date)}\ndescription: ${yamlValue(pkg.description)}\ncategory: ${yamlValue(pkg.category)}\ntags: ${JSON.stringify(tags)}\nfeatured: false\nsource: ${yamlValue('SHide blog package')}\nsourceUrl: ${yamlValue(pkg.sourceUrl)}\nwordpressStatus: ${yamlValue(pkg.wordpressStatus || '')}\n---\n\n${sourceLine}\n\n${body}\n`;
+  return `---\ntitle: ${yamlValue(pkg.title)}\ndate: ${yamlValue(pkg.date)}\ndescription: ${yamlValue(pkg.description)}\ncategory: ${yamlValue(pkg.category)}\ntags: ${JSON.stringify(tags)}\nfeatured: false\nimage: ${yamlValue(imageFrontmatter)}\nsource: ${yamlValue('WordPress blog package')}\nsourceUrl: ${yamlValue(pkg.sourceUrl)}\nwordpressStatus: ${yamlValue(pkg.wordpressStatus || '')}\n---\n\n${sourceLine}\n${imageSection}\n${body}\n`;
 }
 
 export function syncPackages(options = {}) {
   const sourceRoot = options.sourceRoot || DEFAULT_SOURCE_ROOT;
   const outputDir = options.outputDir || DEFAULT_OUTPUT_DIR;
+  const assetsDir = options.assetsDir || DEFAULT_ASSETS_DIR;
   const includeDrafts = Boolean(options.includeDrafts);
   const dryRun = Boolean(options.dryRun);
   const manifests = discoverPackages(sourceRoot);
   const written = [];
   const skipped = [];
 
-  if (!dryRun) fs.mkdirSync(outputDir, { recursive: true });
+  if (!dryRun) {
+    fs.mkdirSync(outputDir, { recursive: true });
+    fs.mkdirSync(assetsDir, { recursive: true });
+  }
 
   for (const manifestPath of manifests) {
     const pkg = normalizePackage(manifestPath, { includeDrafts });
@@ -253,11 +320,22 @@ export function syncPackages(options = {}) {
     }
     const targetPath = path.join(outputDir, `${pkg.slug}.mdx`);
     const content = renderMdx(pkg);
-    if (!dryRun) fs.writeFileSync(targetPath, content, 'utf8');
-    written.push({ manifestPath, targetPath, title: pkg.title, slug: pkg.slug, category: pkg.category, sourceUrl: pkg.sourceUrl });
+    if (!dryRun) {
+      fs.writeFileSync(targetPath, content, 'utf8');
+      copyImageAssets(pkg, assetsDir);
+    }
+    written.push({
+      manifestPath,
+      targetPath,
+      title: pkg.title,
+      slug: pkg.slug,
+      category: pkg.category,
+      sourceUrl: pkg.sourceUrl,
+      assets: pkg.assets.map((asset) => asset.publicPath),
+    });
   }
 
-  return { sourceRoot, outputDir, includeDrafts, dryRun, discovered: manifests.length, written, skipped };
+  return { sourceRoot, outputDir, assetsDir, includeDrafts, dryRun, discovered: manifests.length, written, skipped };
 }
 
 function parseArgs(argv) {
@@ -266,6 +344,7 @@ function parseArgs(argv) {
     const arg = argv[index];
     if (arg === '--source') options.sourceRoot = argv[++index];
     else if (arg === '--out') options.outputDir = argv[++index];
+    else if (arg === '--assets-out') options.assetsDir = argv[++index];
     else if (arg === '--include-drafts') options.includeDrafts = true;
     else if (arg === '--dry-run') options.dryRun = true;
     else if (arg === '--help') options.help = true;
@@ -275,7 +354,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Usage: node scripts/sync-shide-blog-packages.mjs [--source PATH] [--out PATH] [--dry-run] [--include-drafts]\n\nSync public-ready SHide blog article packages into SHawn-WEB content/posts as MDX.\nDefault source: ${DEFAULT_SOURCE_ROOT}\nDefault output: ${DEFAULT_OUTPUT_DIR}\n\nBy default only published/approved packages are synced. Use --include-drafts only for local preview.`);
+  console.log(`Usage: node scripts/sync-shide-blog-packages.mjs [--source PATH] [--out PATH] [--assets-out PATH] [--dry-run] [--include-drafts]\n\nSync public-ready blog article packages into SHawn-WEB content/posts as MDX and copy package images into public assets.\nDefault source: ${DEFAULT_SOURCE_ROOT}\nDefault output: ${DEFAULT_OUTPUT_DIR}\nDefault assets: ${DEFAULT_ASSETS_DIR}\n\nBy default only published/approved packages are synced. Use --include-drafts only for local preview.`);
 }
 
 const isCli = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);

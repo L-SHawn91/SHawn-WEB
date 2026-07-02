@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
@@ -41,7 +42,19 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
             transition={{ delay: index * 0.1, duration: 0.4 }}
         >
             <Link href={`/blog/${post.slug}`}>
-                <Card className={`group flex h-full flex-col border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_10px_30px_rgba(0,0,0,0.4)] ${categoryStyle.border}`}>
+                <Card className={`group flex h-full flex-col overflow-hidden border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_10px_30px_rgba(0,0,0,0.4)] ${categoryStyle.border}`}>
+                    {post.image && (
+                        <div className="aspect-[16/9] overflow-hidden border-b border-border bg-muted">
+                            <Image
+                                src={post.image}
+                                alt={`${post.title} 대표 이미지`}
+                                width={960}
+                                height={540}
+                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                            />
+                        </div>
+                    )}
                     <CardHeader>
                         <div className={`inline-flex items-center w-fit rounded-full border px-2.5 py-0.5 text-xs font-semibold mb-3 ${categoryStyle.badge}`}>
                             {post.category}

@@ -20,6 +20,7 @@ function makeFixture({ status = 'publish', lanePath = 'blog__ai__field_notes' } 
     'utf8',
   );
   fs.writeFileSync(path.join(articleRoot, '20_images', 'hero.png'), 'fake-png', 'utf8');
+  fs.writeFileSync(path.join(articleRoot, '20_images', 'support chart.webp'), 'fake-webp', 'utf8');
   fs.writeFileSync(
     path.join(articleRoot, 'MANIFEST.json'),
     JSON.stringify(
@@ -56,6 +57,9 @@ function makeFixture({ status = 'publish', lanePath = 'blog__ai__field_notes' } 
   assert.equal(pkg.title, 'Visual Example Title');
   assert.equal(pkg.sourceUrl, 'https://example.wordpress.com/2026/07/02/example/');
   assert.equal(pkg.eligible, true);
+  assert.equal(pkg.assets.length, 2);
+  assert.equal(pkg.assets[0].publicPath, '/shide-blog-assets/shide-ai-20260702-example-article/image-01.webp');
+  assert.equal(pkg.assets[1].publicPath, '/shide-blog-assets/shide-ai-20260702-example-article/image-02.webp');
   assert.match(pkg.description, /첫 문단 설명/);
 }
 
@@ -76,7 +80,10 @@ function makeFixture({ status = 'publish', lanePath = 'blog__ai__field_notes' } 
   assert.doesNotMatch(mdx, /^# Example Title/m, 'first markdown H1 should be stripped to avoid duplicate title');
   assert.doesNotMatch(mdx, /Status: internal draft note/, 'internal status block should not be published');
   assert.doesNotMatch(mdx, /Blog: SHawn AI Notes/, 'internal blog-routing block should not be published');
-  assert.match(mdx, /첫 문단 설명입니다/);
+  assert.match(mdx, /image: "\/shide-blog-assets\/shide-ai-20260702-example-article\/image-01\.webp"/);
+  assert.match(mdx, /## 이미지 자료/);
+  assert.match(mdx, /!\[Visual Example Title image 1\]\(\/shide-blog-assets\/shide-ai-20260702-example-article\/image-01\.webp\)/);
+  assert.match(mdx, /!\[Visual Example Title image 2\]\(\/shide-blog-assets\/shide-ai-20260702-example-article\/image-02\.webp\)/);
   assert.match(mdx, /원문 링크/);
 }
 
@@ -103,11 +110,15 @@ function makeFixture({ status = 'publish', lanePath = 'blog__ai__field_notes' } 
 
 {
   const { root } = makeFixture();
-  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'shide-blog-out-'));
-  const result = syncPackages({ sourceRoot: root, outputDir: outDir, includeDrafts: false, dryRun: false });
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'blog-out-'));
+  const assetsDir = fs.mkdtempSync(path.join(os.tmpdir(), 'blog-assets-'));
+  const result = syncPackages({ sourceRoot: root, outputDir: outDir, assetsDir, includeDrafts: false, dryRun: false });
   assert.equal(result.written.length, 1);
   assert.equal(result.skipped.length, 0);
+  assert.equal(result.written[0].assets.length, 2);
   assert.ok(fs.existsSync(path.join(outDir, 'shide-ai-20260702-example-article.mdx')));
+  assert.ok(fs.existsSync(path.join(assetsDir, 'shide-ai-20260702-example-article', 'image-01.webp')));
+  assert.ok(fs.existsSync(path.join(assetsDir, 'shide-ai-20260702-example-article', 'image-02.webp')));
 }
 
-console.log('shide blog sync tests passed');
+console.log('blog sync tests passed');
