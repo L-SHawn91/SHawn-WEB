@@ -21,6 +21,8 @@ function makeFixture({ status = 'publish', lanePath = 'blog__ai__field_notes' } 
   );
   fs.writeFileSync(path.join(articleRoot, '20_images', 'hero.png'), 'fake-png', 'utf8');
   fs.writeFileSync(path.join(articleRoot, '20_images', 'support chart.webp'), 'fake-webp', 'utf8');
+  fs.writeFileSync(path.join(articleRoot, '20_images', 'live_wordpress_post.png'), 'fake-screenshot', 'utf8');
+  fs.writeFileSync(path.join(articleRoot, '20_images', 'web_preview_top.png'), 'fake-screenshot', 'utf8');
   fs.writeFileSync(
     path.join(articleRoot, 'MANIFEST.json'),
     JSON.stringify(

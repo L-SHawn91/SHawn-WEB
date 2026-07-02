@@ -81,9 +81,21 @@ function imageSortKey(filePath) {
   return `${String(priority).padStart(3, '0')}::${name}`;
 }
 
+function isBlogScreenCaptureAsset(filePath) {
+  const name = path.basename(filePath).toLowerCase();
+  return [
+    'live_wordpress',
+    'web_preview',
+    'screenshot',
+    'screen_capture',
+    'browser_capture',
+  ].some((marker) => name.includes(marker));
+}
+
 function discoverImageAssets(articleRoot, slug) {
   const imageDir = path.join(articleRoot, '20_images');
   const sourcePaths = walk(imageDir, (filePath) => IMAGE_EXTENSIONS.has(path.extname(filePath).toLowerCase()))
+    .filter((filePath) => !isBlogScreenCaptureAsset(filePath))
     .sort((a, b) => imageSortKey(a).localeCompare(imageSortKey(b)));
 
   return sourcePaths.map((sourcePath, index) => {
