@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "블로그 - AI, Bio & Asset Signals",
-  description: "AI, Bio, Asset Signals를 공개 글·이미지·검색 노출·수익화 disclosure까지 연결하는 SHawn_LAB 블로그",
+  description: "AI, Bio, Asset Signals를 공개 글·이미지·읽기 흐름으로 정리하는 SHawn_LAB 블로그",
   alternates: {
     canonical: "https://phdshawn.com/blog",
   },
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://phdshawn.com/blog",
     title: "SHawn_LAB 블로그",
-    description: "AI, Bio, Asset Signals를 공개 글·이미지·검색 노출·수익화 disclosure까지 연결하는 SHawn_LAB 블로그",
+    description: "AI, Bio, Asset Signals를 공개 글·이미지·읽기 흐름으로 정리하는 SHawn_LAB 블로그",
     siteName: "SHawn_LAB",
     locale: "ko_KR",
   },

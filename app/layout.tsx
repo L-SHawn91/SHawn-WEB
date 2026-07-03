@@ -3,7 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@/components/seo/analytics";
-import { AdSense } from "@/components/ads/adsense";
+
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/providers/language-provider";
 import { ShawnChatUI } from "@/components/marketing/shawn-chat-ui";
@@ -19,14 +19,14 @@ const notoSansKR = Noto_Sans_KR({
 export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
   title: {
-    default: "SHawn_LAB - 바이오 지식, 일상 & 수익",
+    default: "SHawn_LAB - 바이오 지식, 일상 & 에셋 노트",
     template: "%s | SHawn_LAB",
   },
-  description: "바이오테크놀로지, 일상 효율화 팁, 그리고 수익 창출 전략을 탐구합니다.",
+  description: "바이오테크놀로지, 일상 효율화 팁, 그리고 에셋 리포트를 정리합니다.",
   metadataBase: new URL("https://phdshawn.com"),
   openGraph: {
     title: "SHawn_LAB",
-    description: "바이오 지식, 일상, 그리고 수익 전략.",
+    description: "바이오 지식, 일상, 그리고 에셋 리포트.",
     url: "https://phdshawn.com",
     siteName: "SHawn_LAB",
     locale: "ko_KR",
@@ -59,7 +59,6 @@ export default function RootLayout({
             {children}
             <ShawnChatUI />
             <Analytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""} />
-            <AdSense pId={process.env.NEXT_PUBLIC_ADSENSE_ID || ""} />
             <SpeedInsights />
           </LanguageProvider>
         </ThemeProvider>

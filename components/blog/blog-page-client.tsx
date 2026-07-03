@@ -24,12 +24,12 @@ const copy = {
         allPosts: "모든 글",
         emptyFiltered: "조건에 맞는 글이 없습니다. 검색어 또는 카테고리를 바꿔보세요.",
         empty: "아직 작성된 글이 없습니다.",
-        lanesTitle: "노출·수익화 운영 전략",
-        lanesDesc: "공개 글은 검색 유입 → 본문 체류 → 관련 글 이동 → 광고/제휴/문의 전환까지 이어지도록 설계합니다.",
+        lanesTitle: "공개 글 구성 원칙",
+        lanesDesc: "공개 글은 제목, 요약, 본문 이미지, 관련 글 흐름이 자연스럽게 이어지도록 정리합니다.",
         lanes: [
-            { title: "검색 노출", body: "제목·설명·OG 이미지·sitemap을 정리해 글 단위 발견 가능성을 높입니다." },
+            { title: "명확한 제목", body: "제목과 요약은 독자가 글의 주제와 범위를 바로 이해할 수 있게 씁니다." },
             { title: "본문 체류", body: "상단 이미지 덤프 대신 섹션 사이 inline visual로 읽는 흐름을 유지합니다." },
-            { title: "수익화 안전선", body: "광고와 제휴는 공개 disclosure와 교육/해설 경계 안에서만 연결합니다." },
+            { title: "공개 경계", body: "내부 운영명과 비공개 자료는 숨기고, 외부 독자에게 필요한 설명만 남깁니다." },
         ],
     },
     en: {
@@ -42,12 +42,12 @@ const copy = {
         allPosts: "All posts",
         emptyFiltered: "No posts match this filter. Try another query or category.",
         empty: "No posts yet.",
-        lanesTitle: "Visibility & monetization strategy",
-        lanesDesc: "Each public post is designed as a funnel: search discovery → reading depth → related posts → ad, affiliate, or inquiry conversion.",
+        lanesTitle: "Public article structure",
+        lanesDesc: "Each public post keeps the title, summary, inline visuals, and related reading flow clear and calm.",
         lanes: [
-            { title: "Search visibility", body: "Tight titles, descriptions, OG images, and sitemap entries improve article-level discovery." },
+            { title: "Clear titles", body: "Titles and summaries make the article topic and scope easy to understand." },
             { title: "Reading depth", body: "Inline visuals keep images in context instead of dumping them at the top." },
-            { title: "Safe monetization", body: "Ads and affiliate paths stay inside visible disclosure and education/commentary boundaries." },
+            { title: "Public boundary", body: "Internal labels and private materials stay out; readers see only the necessary public explanation." },
         ],
     },
 } as const;

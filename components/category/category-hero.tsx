@@ -20,10 +20,10 @@ const categoryConfigs: Record<string, CategoryConfig> = {
         gradient: "from-orange-500 to-pink-500 dark:from-orange-400 dark:to-pink-400",
         description: "생산성 도구, 효율적인 시간 관리, 그리고 삶의 질을 높이는 실용적인 노하우를 공유합니다."
     },
-    "Revenue": {
+    "Assets": {
         icon: TrendingUp,
         gradient: "from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400",
-        description: "디지털 노마드, 패시브 인컴, 그리고 지속 가능한 수익 모델 구축 전략을 탐구합니다."
+        description: "에셋 리포트와 시장 흐름을 참고용 공개 노트로 정리합니다."
     }
 }
 

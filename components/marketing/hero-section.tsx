@@ -40,7 +40,7 @@ export function HeroSection() {
                 >
                     <span className="text-gradient-bio">{t.hero.title.part1}</span>{t.hero.title.conjunction1}
                     <span className="text-gradient-life">{t.hero.title.part2}</span>{t.hero.title.conjunction2}<br className="hidden sm:block" />
-                    <span className="text-gradient-revenue">{t.hero.title.part3}</span>
+                    <span className="text-gradient-assets">{t.hero.title.part3}</span>
                 </motion.h1>
 
                 <motion.p

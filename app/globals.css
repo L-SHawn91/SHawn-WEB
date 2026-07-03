@@ -125,7 +125,7 @@
     @apply from-[#E76F51] to-[#7B6BA8] dark:from-[#f08870] dark:to-[#a393c8];
   }
 
-  .text-gradient-revenue {
+  .text-gradient-assets {
     @apply from-[#10243A] to-[#2A9D8F] dark:from-[#7ab3d4] dark:to-[#4ec6b9];
   }
 
