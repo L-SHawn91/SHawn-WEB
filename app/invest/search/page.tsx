@@ -55,18 +55,18 @@ export default function InvestSearchPage() {
   const { language } = useLanguage();
   const isKo = language === "ko";
   const text = {
-    title: isKo ? "Investment Search" : "Investment Search",
+    title: isKo ? "Assets Search" : "Assets Search",
     desc: isKo
-      ? "Zero to Quant: 초보자부터 전문가까지, 데이터 기반의 실시간 종목 분석."
-      : "Zero to Quant: data-driven real-time ticker analysis for all levels.",
+      ? "데이터 기반의 참고용 에셋/종목 분석 화면입니다."
+      : "A data-driven reference screen for asset and ticker analysis.",
     placeholder: isKo ? "기업명 또는 티커 (예: 삼성전자, Apple, AAPL)" : "Company or ticker (e.g., Samsung, Apple, AAPL)",
     searching: isKo ? "분석 중..." : "Analyzing...",
     search: isKo ? "검색" : "Search",
     introTitle: isKo ? "SHawn-INV: From Zero to Quant" : "SHawn-INV: From Zero to Quant",
     introDesc: isKo
-      ? "단순한 가격 정보가 아닌, 왜(Why) 오르고 내리는지 분석합니다."
-      : "Not only price moves, but the reasons behind them.",
-    verdict: isKo ? "투자 판단" : "Investment Verdict",
+      ? "가격 정보와 함께 주요 지표, 흐름, 뉴스 맥락을 참고용으로 정리합니다."
+      : "A reference view that combines price, core indicators, flow, and news context.",
+    verdict: isKo ? "참고 판정" : "Reference View",
     marketConsensus: isKo ? "시장 컨센서스" : "Market Consensus",
     quantCard: isKo ? "정량 분석" : "Quantitative Analysis",
     contextCard: isKo ? "정성 컨텍스트" : "Qualitative Context",
@@ -74,9 +74,9 @@ export default function InvestSearchPage() {
     bandPrefix: isKo ? "점수 구간" : "Score Band",
     approach: isKo ? "권장 접근" : "Recommended Approach",
     note: isKo
-      ? "참고: 본 결과는 투자 판단 보조 도구입니다. 실제 매매는 손실 허용 범위와 분할 원칙을 함께 적용하세요."
-      : "Note: This output is an aid for decision-making. Apply position sizing and loss limits for real trades.",
-    strategyNote: isKo ? "AI 전략 노트" : "AI Strategy Note",
+      ? "참고: 본 결과는 교육·해설용 자료이며 투자 조언이 아닙니다."
+      : "Note: This output is for education and commentary only, not investment advice.",
+    strategyNote: isKo ? "AI 해설 노트" : "AI Commentary Note",
   };
   const scoreDescriptions = SCORE_DESCRIPTIONS[language];
   const scoreBandGuide = isKo
@@ -181,9 +181,9 @@ export default function InvestSearchPage() {
               SHawn Score + 4 core factors (Expert, Whale, Macro, News)
             </p>
             <div className="flex flex-wrap justify-center gap-2 text-xs text-zinc-500">
-              <span className="px-2 py-1 rounded bg-zinc-800">#퀀트분석</span>
-              <span className="px-2 py-1 rounded bg-zinc-800">#실시간데이터</span>
-              <span className="px-2 py-1 rounded bg-zinc-800">#투자교육</span>
+              <span className="px-2 py-1 rounded bg-zinc-800">{isKo ? "#정량분석" : "#Quant"}</span>
+              <span className="px-2 py-1 rounded bg-zinc-800">{isKo ? "#실시간데이터" : "#LiveData"}</span>
+              <span className="px-2 py-1 rounded bg-zinc-800">{isKo ? "#참고자료" : "#Reference"}</span>
             </div>
           </div>
         )}

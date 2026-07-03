@@ -132,20 +132,28 @@ function ShawnInvestDashboard({
   marketPulse: MarketCard[];
   modules: SignalModule[];
 }) {
+  const { language } = useLanguage();
+  const isKo = language === "ko";
   const confidence = Math.round(snapshot?.signalConfidence ?? 52);
   const drift = Math.round(snapshot?.driftDetector?.driftScore ?? 34);
   const fearGreed = Math.max(0, Math.min(100, confidence - Math.round(drift * 0.45) + 6));
   const fearGreedLabel =
-    fearGreed < 35 ? "공포" : fearGreed < 60 ? "중립" : fearGreed < 75 ? "탐욕" : "극단적 탐욕";
+    fearGreed < 35
+      ? (isKo ? "공포" : "Fear")
+      : fearGreed < 60
+        ? (isKo ? "중립" : "Neutral")
+        : fearGreed < 75
+          ? (isKo ? "탐욕" : "Greed")
+          : (isKo ? "극단적 탐욕" : "Extreme greed");
   const topReasons = [...modules]
     .sort((a, b) => (b.weight || 0) - (a.weight || 0))
     .slice(0, 3);
   const headline =
     confidence >= 70
-      ? "공격적 진입보다 강한 종목 선별에 유리한 구간"
+      ? (isKo ? "공격적 진입보다 강한 종목 선별에 유리한 구간" : "A zone better suited to selective review than aggressive entry")
       : confidence >= 50
-        ? "추세는 유지되지만 선택과 비중 조절이 중요한 구간"
-        : "보수적으로 확인하고 리스크 관리가 우선인 구간";
+        ? (isKo ? "추세는 유지되지만 선택과 비중 조절이 중요한 구간" : "Trend remains intact, but selection and sizing matter")
+        : (isKo ? "보수적으로 확인하고 리스크 관리가 우선인 구간" : "A conservative review zone where risk checks come first");
   const headlineTone =
     confidence >= 70 ? "text-emerald-300" : confidence >= 50 ? "text-sky-300" : "text-amber-300";
   const cards = [
@@ -168,7 +176,7 @@ function ShawnInvestDashboard({
       bg: "from-rose-500/18 via-fuchsia-500/8 to-orange-500/12",
     },
     {
-      title: "시장 신뢰도",
+      title: isKo ? "시장 신뢰도" : "Market confidence",
       code: snapshot?.mode?.toUpperCase() || "BALANCED",
       value: `${confidence}`,
       change: `${fearGreed} / 100`,
@@ -177,10 +185,10 @@ function ShawnInvestDashboard({
       bg: "from-sky-500/18 via-blue-500/10 to-cyan-500/12",
     },
     {
-      title: "드리프트",
+      title: isKo ? "드리프트" : "Drift",
       code: snapshot?.driftDetector?.status === "unstable" ? "Risk" : "Stable",
       value: `${drift}`,
-      change: snapshot?.driftDetector?.status === "unstable" ? "변동성 확대" : "안정 구간",
+      change: snapshot?.driftDetector?.status === "unstable" ? (isKo ? "변동성 확대" : "Volatility rising") : (isKo ? "안정 구간" : "Stable zone"),
       positive: snapshot?.driftDetector?.status !== "unstable",
       glow: "shadow-[0_0_40px_rgba(251,191,36,0.14)] border-amber-400/20",
       bg: "from-amber-500/18 via-orange-500/10 to-yellow-500/12",
@@ -191,12 +199,12 @@ function ShawnInvestDashboard({
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
         <section className="min-w-0 overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur sm:p-5">
           <p className="text-[11px] uppercase tracking-[0.35em] text-sky-200/65">Shawn Invest</p>
-          <h2 className="mt-2 break-words text-2xl font-bold tracking-tight sm:text-4xl">오늘의 결론</h2>
+          <h2 className="mt-2 break-words text-2xl font-bold tracking-tight sm:text-4xl">{isKo ? "오늘의 결론" : "Today’s read"}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
             <div className="min-w-0">
               <p className={`break-words text-base font-semibold leading-6 sm:text-lg ${headlineTone}`}>{headline}</p>
               <p className="mt-2 break-words text-sm leading-6 text-slate-300">
-                신호 신뢰도 {confidence}/100, 시장 심리 {fearGreed}/100({fearGreedLabel}), 드리프트 {drift}/100 기준입니다.
+                {isKo ? "신호 신뢰도" : "Signal confidence"} {confidence}/100, {isKo ? "시장 심리" : "market sentiment"} {fearGreed}/100({fearGreedLabel}), {isKo ? "드리프트" : "drift"} {drift}/100.
               </p>
             </div>
 
@@ -225,14 +233,14 @@ function ShawnInvestDashboard({
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/55">Reasons</p>
-              <h3 className="mt-1 break-words text-lg font-semibold text-white">핵심 근거</h3>
+              <h3 className="mt-1 break-words text-lg font-semibold text-white">{isKo ? "핵심 근거" : "Key reasons"}</h3>
             </div>
             <button
               type="button"
               className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/10 bg-white/8 px-3 py-2 text-xs text-slate-100 transition hover:bg-white/12"
             >
               <RefreshCw size={14} />
-              새로고침
+              {isKo ? "새로고침" : "Refresh"}
             </button>
           </div>
 
@@ -246,7 +254,7 @@ function ShawnInvestDashboard({
                   </span>
                 </div>
                 <p className="mt-2 break-words text-xs text-slate-400">confidence {Math.round(module.confidence)}/100</p>
-                <p className="mt-2 break-words text-sm leading-6 text-slate-200">{module.action}</p>
+                <p className="mt-2 break-words text-sm leading-6 text-slate-200">{isKo ? module.action : "Source note is available in Korean."}</p>
               </div>
             ))}
           </div>
@@ -263,10 +271,10 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
   const { language } = useLanguage();
   const isKo = language === "ko";
   const text = {
-    title: isKo ? "Investment Command Center" : "Investment Command Center",
+    title: isKo ? "Assets Command Center" : "Assets Command Center",
     desc: isKo
-      ? "리포트 해석, 시그널 점검, 실행 후보 정리를 한 화면에서 이어서 처리하는 운영 허브"
-      : "An operation hub that connects report reading, signal checks, and action queue decisions in one flow.",
+      ? "리포트 읽기, 신호 점검, 다음 확인 항목을 한 화면에서 이어서 보는 공개 에셋 허브입니다."
+      : "A public assets hub for reading reports, checking signals, and reviewing next items in one flow.",
     reportViewer: isKo ? "리포트 뷰어" : "Report Viewer",
     dashboardDetail: isKo ? "대시보드 상세" : "Dashboard Detail",
     dashboardPanel: isKo ? "통합 대시보드" : "Unified Dashboard",
@@ -300,6 +308,30 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
     loadingQueue: isKo ? "후보 리스트 로딩 중" : "Loading action queue",
     routine: isKo ? "운영 루틴" : "Operation Routine",
     loadingHub: isKo ? "통합 허브 데이터를 불러오는 중입니다." : "Loading command center data...",
+    overviewTitle: isKo ? "에셋 한 화면 요약" : "Assets at a Glance",
+    overviewDesc: isKo ? "복잡한 섹션을 줄이고, 지금 확인할 지표와 다음 확인 항목만 남겼습니다." : "A simplified view of the key indicators and next items to check.",
+    details: isKo ? "자세히 보기" : "View details",
+    viewAll: isKo ? "전체 보기" : "View all",
+    flowItems: isKo
+      ? [
+          { label: "대시보드 열기", desc: "모바일형 핵심 지표 보드", href: "/invest/dashboard" },
+          { label: "리포트 보기", desc: "최신 KR/US 리포트 바로 이동", href: "/invest/reports?tab=KR" },
+          { label: "검색 실행", desc: "종목 분석 페이지 열기", href: "/invest/search" },
+        ]
+      : [
+          { label: "Open dashboard", desc: "Mobile-friendly key indicator board", href: "/invest/dashboard" },
+          { label: "View reports", desc: "Open the latest KR/US reports", href: "/invest/reports?tab=KR" },
+          { label: "Run search", desc: "Open the ticker analysis page", href: "/invest/search" },
+        ],
+    reportDesc: isKo ? "최신 리포트만 빠르게 열 수 있게 구성했습니다." : "A focused view for quickly opening recent reports.",
+    reportCountSuffix: isKo ? "개 리포트" : "reports",
+    archiveDesc: isKo ? "필터만 남기고 검색 흐름을 단순화했습니다." : "The archive flow is simplified around filters and search.",
+    resultSuffix: isKo ? "results" : "results",
+    whyTitle: isKo ? "핵심 이유 3개" : "Top three reasons",
+    marketCheck: isKo ? "시장 체크" : "Market check",
+    continueReading: isKo ? "바로 이어서 보기" : "Continue reading",
+    openReports: isKo ? "리포트 열기" : "Open reports",
+    sourceNoteKo: isKo ? "" : "Source note is available in Korean.",
   };
   const [snapshot, setSnapshot] = useState<SnapshotPayload | null>(null);
   const [reportsKR, setReportsKR] = useState<ReportItem[]>([]);
@@ -464,9 +496,9 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
               <div className="space-y-4">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.35em] text-sky-200/60">Overview</p>
-                  <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">숀투자 한 화면 요약</h2>
+                  <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">{text.overviewTitle}</h2>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
-                    복잡한 섹션을 줄이고, 지금 바로 봐야 할 지표와 다음 행동만 남겼습니다.
+                    {text.overviewDesc}
                   </p>
                 </div>
 
@@ -492,7 +524,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
                           <p className="mt-1 text-xs text-gray-400">{market.liquidity || "-"}</p>
                         </div>
                         <Link href="/invest/dashboard" className="text-xs text-sky-300 hover:text-sky-200">
-                          자세히 보기
+                          {text.details}
                         </Link>
                       </div>
                       <div className="mt-3 grid grid-cols-2 gap-2">
@@ -516,11 +548,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
                 <article className="rounded-2xl border border-white/10 bg-black/25 p-4">
                   <p className="text-xs font-semibold text-gray-400">{text.flowGuide}</p>
                   <div className="mt-3 space-y-2">
-                    {[
-                      { label: "대시보드 열기", desc: "모바일형 핵심 지표 보드", href: "/invest/dashboard" },
-                      { label: "리포트 보기", desc: "최신 KR/US 리포트 바로 이동", href: "/invest/reports?tab=KR" },
-                      { label: "검색 실행", desc: "종목 분석 페이지 열기", href: "/invest/search" },
-                    ].map((item) => (
+                    {text.flowItems.map((item) => (
                       <Link
                         key={item.label}
                         href={item.href}
@@ -537,7 +565,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-semibold text-white">{text.actionQueue}</p>
                     <Link href="/invest/dashboard?focus=watchlist" className="text-xs text-sky-300 hover:text-sky-200">
-                      전체 보기
+                      {text.viewAll}
                     </Link>
                   </div>
                   <div className="mt-3 space-y-2">
@@ -552,7 +580,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
                             {item.signal}
                           </span>
                         </div>
-                        <p className="mt-2 line-clamp-2 text-xs text-gray-300">{item.reason}</p>
+                        <p className="mt-2 line-clamp-2 text-xs text-gray-300">{isKo ? item.reason : text.sourceNoteKo}</p>
                       </div>
                     ))}
                     {!actionQueue.length ? <p className="text-xs text-gray-400">{text.loadingQueue}</p> : null}
@@ -573,7 +601,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
               <h2 className="text-lg font-semibold text-white">{text.unifiedReports}</h2>
-              <p className="mt-1 text-xs text-gray-400">최신 리포트만 빠르게 열 수 있게 구성했습니다.</p>
+              <p className="mt-1 text-xs text-gray-400">{text.reportDesc}</p>
             </div>
             <Link href="/invest/dashboard" className={investUiClass.actionButtonDefault}>
               <BarChart3 size={14} />
@@ -597,7 +625,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
             </button>
           </div>
           <div className="mb-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-gray-400">
-            총 {(reportTab === "KR" ? reportsKR : reportsUS).length}개 리포트
+            {(reportTab === "KR" ? reportsKR : reportsUS).length} {text.reportCountSuffix}
           </div>
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             {(reportTab === "KR" ? reportsKR : reportsUS).map((item) => (
@@ -629,10 +657,10 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <h2 className="text-lg font-semibold text-white">{text.unifiedArchive}</h2>
-              <p className="mt-1 text-xs text-gray-400">필터만 남기고 검색 흐름을 단순화했습니다.</p>
+              <p className="mt-1 text-xs text-gray-400">{text.archiveDesc}</p>
             </div>
             <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-gray-300">
-              {archiveItems.length} results
+              {archiveItems.length} {text.resultSuffix}
             </div>
           </div>
           <div className="mt-4 grid grid-cols-1 gap-2 lg:grid-cols-[1fr_180px_auto_auto]">
@@ -697,7 +725,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/55">Why</p>
-                  <h3 className="mt-1 text-lg font-semibold text-white">핵심 이유 3개</h3>
+                  <h3 className="mt-1 text-lg font-semibold text-white">{text.whyTitle}</h3>
                 </div>
               </div>
               <div className="space-y-3">
@@ -727,7 +755,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
                         style={{ width: `${Math.max(0, Math.min(100, Math.round(module.confidence)))}%` }}
                       />
                     </div>
-                    <p className="mt-3 break-words text-sm leading-6 text-slate-200">{module.action}</p>
+                    <p className="mt-3 break-words text-sm leading-6 text-slate-200">{isKo ? module.action : text.sourceNoteKo}</p>
                   </article>
                 ))}
               </div>
@@ -736,7 +764,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
             <section className="xl:col-span-5 min-w-0 space-y-4">
               <section className="min-w-0 overflow-hidden rounded-[1.75rem] border border-sky-400/10 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_30%),linear-gradient(180deg,_rgba(4,9,24,0.96),_rgba(10,18,36,0.98))] p-4 shadow-[0_24px_80px_rgba(2,6,23,0.45)] sm:p-5">
                 <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/55">Market</p>
-                <h3 className="mt-1 text-lg font-semibold text-white">시장 체크</h3>
+                <h3 className="mt-1 text-lg font-semibold text-white">{text.marketCheck}</h3>
                 <div className="mt-4 space-y-3">
                   {marketPulse.slice(0, 2).map((market) => (
                     <article key={market.region} className="min-w-0 overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-4">
@@ -765,10 +793,10 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/55">Reports</p>
-                    <h3 className="mt-1 break-words text-lg font-semibold text-white">바로 이어서 보기</h3>
+                    <h3 className="mt-1 break-words text-lg font-semibold text-white">{text.continueReading}</h3>
                   </div>
                   <Link href="/invest/reports?tab=KR" className="shrink-0 text-xs text-sky-300 hover:text-sky-200">
-                    리포트 열기
+                    {text.openReports}
                   </Link>
                 </div>
                 <div className="mt-4 space-y-2">

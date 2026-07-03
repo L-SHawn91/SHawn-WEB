@@ -3,7 +3,7 @@
 - project_slug: shawn-web
 - display_name: SHawn-WEB
 - status: active-repo
-- working_folder: /home/mdge/github/SHawn-WEB
+- working_folder: <local-github-root>/SHawn-WEB
 - repo_name: SHawn-WEB
 - main_session: proj-shawn-web
 - source_of_truth: filesystem-first

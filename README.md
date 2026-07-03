@@ -23,6 +23,18 @@ npm install
 npm run dev
 ```
 
+## Public release hygiene
+```bash
+npm run check:public-safety
+npm run lint
+npm run build
+```
+
+See:
+- `docs/PUBLIC_RELEASE_CHECKLIST.md`
+- `SECURITY.md`
+- `CITATION.cff`
+
 ## 🔎 Paper search regression smoke test
 ```bash
 # 로컬/배포 서버가 떠 있어야 합니다. 기본 URL은 http://localhost:3000

@@ -12,13 +12,16 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { homedir } from 'node:os';
 
 const args = new Set(process.argv.slice(2));
-const defaultDbPath = resolve(homedir(), 'SHawn/Paper-mapping/_pmap_index/corpus.db');
-const dbPath = process.env.SHAWN_WEB_PAPER_CORPUS_DB || defaultDbPath;
+const dbPath = process.env.SHAWN_WEB_PAPER_CORPUS_DB || '';
 const outJson = process.env.SHAWN_WEB_SEARCH_ONTOLOGY_JSON || '/tmp/shawn_web_search_ontology_candidate.json';
 const outJs = resolve('lib/search/searchOntologyData.js');
+
+if (!dbPath) {
+  console.error('[search-ontology] set SHAWN_WEB_PAPER_CORPUS_DB to a local read-only corpus DB path');
+  process.exit(2);
+}
 
 if (!existsSync(dbPath)) {
   console.error(`[search-ontology] corpus DB not found: ${dbPath}`);

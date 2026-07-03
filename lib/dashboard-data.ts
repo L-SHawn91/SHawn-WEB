@@ -1,11 +1,11 @@
 import { Dirent, promises as fs } from "fs";
 import path from "path";
 
-const githubRoot = "/home/mdge/github";
+const githubRoot = process.env.SHAWN_GITHUB_ROOT || path.dirname(process.cwd());
 const currentRepoRoot = process.cwd();
-const dashboardRepoRoot = "/home/mdge/github/SHawn-dashboard";
+const dashboardRepoRoot = process.env.SHAWN_DASHBOARD_REPO_ROOT || path.join(githubRoot, "SHawn-dashboard");
 const workspaceProjectsPath = path.join(dashboardRepoRoot, "workspace.projects.json");
-const obsidianVaultRoot = "/home/mdge/github/SHawn-Lab-Vault";
+const obsidianVaultRoot = process.env.SHAWN_VAULT_REPO_ROOT || path.join(githubRoot, "SHawn-Lab-Vault");
 
 export type DashboardProject = {
   slug: string;

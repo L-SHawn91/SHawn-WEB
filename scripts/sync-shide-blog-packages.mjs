@@ -4,7 +4,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_SOURCE_ROOT = '/home/mdge/Clouds/gdrive/SHide/02_projects';
+const DEFAULT_SOURCE_ROOT = process.env.SHIDE_BLOG_SOURCE_ROOT || path.resolve(process.cwd(), 'content/import-packages');
 const DEFAULT_OUTPUT_DIR = path.resolve(process.cwd(), 'content/posts');
 const DEFAULT_ASSETS_DIR = path.resolve(process.cwd(), 'public/shide-blog-assets');
 const ASSET_BASE_PATH = '/shide-blog-assets';

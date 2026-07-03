@@ -34,6 +34,8 @@ fixtures/*-report.json
 
 # Local agent/planning artifacts
 .hermes/
+.claude/
+*.tsbuildinfo
 
 # IDEs
 .vscode/

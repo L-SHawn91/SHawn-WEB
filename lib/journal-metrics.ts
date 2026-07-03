@@ -2,15 +2,14 @@
  * Journal IF + Q1-Q4 quartile lookup.
  *
  * Metric precedence:
- *   1) Server-local JCR lookup index built from SHawn JCR 2024 TSV export
- *      - JSON index: SHAWN_WEB_JCR_INDEX_JSON or ~/.shawn/cache/shawn_web_jcr_2024_index.json
- *      - Source TSV: SBS_JCR_EXPORT_TSV or ~/.shawn/cache/jcr_2024_merged_journals.tsv
- *      - JSON index is auto-rebuilt if missing or older than source TSV
- *      - Exact ISSN/eISSN and conservative title/JCR-abbreviation variants only
- *   2) OpenAlex summary_stats.2yr_mean_citedness proxy fallback
+ *   1) Public OpenAlex summary_stats.2yr_mean_citedness proxy fallback.
+ *   2) Optional server-local JCR lookup only when explicitly enabled with
+ *      ALLOW_LOCAL_JCR_METRICS=true. This keeps the public search surface on
+ *      public sources by default.
  *
- * OpenAlex values are not official Impact Factors. Official JCR values are marked
- * with journalIfIsOfficial=true and source metadata for UI/tooltips.
+ * OpenAlex values are not official Impact Factors. Local JCR values, when
+ * explicitly enabled for a private/internal deployment, are marked with
+ * journalIfIsOfficial=true and source metadata for UI/tooltips.
  */
 
 import fs from 'node:fs';
@@ -53,6 +52,7 @@ const EMPTY: JournalMetrics = {
 };
 
 const JCR_YEAR = process.env.JCR_YEAR || '2024';
+const ALLOW_LOCAL_JCR_METRICS = process.env.ALLOW_LOCAL_JCR_METRICS === 'true';
 
 type JcrIndexRecord = JournalMetrics & {
   issn?: string;
@@ -153,7 +153,7 @@ function parseDelimitedRows(filePath: string): Array<Record<string, string>> {
 
 function jcrTsvPath(): string {
   return path.resolve(
-    (process.env.SBS_JCR_EXPORT_TSV || path.join(os.homedir(), '.shawn/cache/jcr_2024_merged_journals.tsv')).replace(/^~(?=$|\/)/, os.homedir()),
+    (process.env.JCR_EXPORT_TSV || path.join(os.homedir(), '.shawn/cache/jcr_2024_merged_journals.tsv')).replace(/^~(?=$|\/)/, os.homedir()),
   );
 }
 
@@ -182,7 +182,7 @@ function buildIndexesFromRows(rows: Array<Record<string, string>>): {
       quartile,
       hIndex: 0,
       name: journalName,
-      source: 'SHawn JCR 2024 local index',
+      source: 'Local JCR index',
       metric: 'JCR_JIF',
       year: JCR_YEAR,
       isOfficial: true,
@@ -240,7 +240,7 @@ function loadJcrExport(): void {
       const tsvMtime = new Date(fs.statSync(filePath).mtimeMs).toISOString();
       const idx: JcrJsonIndex = {
         meta: {
-          source: 'SHawn JCR 2024 local index',
+          source: 'Local JCR index',
           jcrYear: JCR_YEAR,
           builtAt: new Date().toISOString(),
           issnCount: issnIndex.size,
@@ -260,6 +260,7 @@ function loadJcrExport(): void {
 }
 
 function lookupJcrExport(issn: string, name: string): JournalMetrics | null {
+  if (!ALLOW_LOCAL_JCR_METRICS) return null;
   loadJcrExport();
   for (const key of splitIssns(issn)) {
     const match = jcrIssnIndex.get(key);

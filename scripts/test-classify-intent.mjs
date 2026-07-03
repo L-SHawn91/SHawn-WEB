@@ -38,6 +38,10 @@ const intentCases = [
   { query: 'Self-patterning stem post-implantation', want: 'TOPIC', label: 'hyphenated developmental title phrase should stay TOPIC' },
   { query: 'Mechanism Lipopolysaccharide Secretion', want: 'TOPIC', label: 'mechanism/secretion title phrase should stay TOPIC' },
   { query: 'Natural Killer Pregnancy', want: 'TOPIC', label: 'immune cell title phrase should stay TOPIC' },
+  { query: 'perovskite solar cells stability review', want: 'TOPIC', label: 'materials-science topic should not become author' },
+  { query: 'cognitive behavioral therapy depression meta analysis', want: 'TOPIC', label: 'psychology/clinical topic should not become author' },
+  { query: 'transformer scaling laws large language models', want: 'TOPIC', label: 'AI topic should stay TOPIC' },
+  { query: 'inflation expectations monetary policy household survey', want: 'TOPIC', label: 'economics topic should stay TOPIC' },
 
   // Author behavior that must remain protected.
   { query: 'soohyung lee pig', want: 'AUTHOR_STRONG', label: 'Korean lowercase name + species (AUTHOR_STRONG)' },

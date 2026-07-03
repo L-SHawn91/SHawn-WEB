@@ -28,6 +28,19 @@ function bioTermKey(token: string): string {
   return (token || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
+function isCommonNonAuthorTopicToken(token: string): boolean {
+  const key = bioTermKey(token);
+  return new Set([
+    'perovskite', 'solar', 'stability', 'review', 'reviews',
+    'cognitive', 'behavioral', 'behavioural', 'therapy', 'depression', 'meta', 'analysis',
+    'transformer', 'scaling', 'language', 'model', 'models',
+    'quantum', 'computing', 'error', 'correction', 'qubit',
+    'climate', 'adaptation', 'policy',
+    'inflation', 'expectations', 'monetary', 'household', 'survey',
+    'exoplanet', 'atmosphere', 'transmission', 'spectroscopy',
+  ]).has(key);
+}
+
 function isBioToken(token: string): boolean {
   const lower = (token || '').toLowerCase();
   const key = bioTermKey(token);
@@ -107,6 +120,7 @@ function isInitialToken(token: string): boolean {
 
 // Handles lowercase romanized Korean/Asian names that classifyIntent would otherwise miss
 function isNameWordLoose(token: string): boolean {
+  if (isCommonNonAuthorTopicToken(token)) return false;
   if (isNameWord(token)) return !isBioToken(token);
   // All-lowercase purely alphabetic, 3-12 chars, not a known bio/science term
   if (/^[a-z]{3,12}$/.test(token)) {
@@ -211,10 +225,23 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
   const third = tokens[2] || '';
   const looksLikeThreeTokenName =
     tokens.length >= 3 && isNameWord(first) && isInitialToken(second) && isNameWord(third);
+  const looksLikeThreeTokenRomanizedName =
+    tokens.length >= 4
+    && isNameWordLoose(first)
+    && isNameWordLoose(second)
+    && isNameWordLoose(third)
+    && tokens.slice(3).some((t) => isBioToken(t || ''));
   const looksLikeTwoTokenName =
     tokens.length >= 2 && isNameWord(first) && (isNameWord(second) || isInitialToken(second));
 
   if (looksLikeThreeTokenName) {
+    return {
+      author: `${first} ${second} ${third}`,
+      topic: tokens.slice(3).join(' ').trim(),
+    };
+  }
+
+  if (looksLikeThreeTokenRomanizedName) {
     return {
       author: `${first} ${second} ${third}`,
       topic: tokens.slice(3).join(' ').trim(),
@@ -256,12 +283,40 @@ export function splitAuthorAndTopic(query: string): { author: string; topic: str
   return { author: '', topic: q };
 }
 
+function quoteArxiv(value: string): string {
+  return (value || '').replace(/\"/g, '').trim();
+}
+
+function buildArxivTopicQuery(topic: string): string | null {
+  const clean = (topic || '').replace(/^\(|\)$/g, '').trim();
+  const lower = clean.toLowerCase();
+  if (!clean) return null;
+  // Known cross-domain canonical papers need phrase/fielded arXiv queries;
+  // raw token queries can return weak lexical matches or time out.
+  if (/attention\s+is\s+all\s+you\s+need|transformer.*machine\s+translation/.test(lower)) {
+    return 'ti:"Attention Is All You Need" OR all:"attention is all you need"';
+  }
+  if (/denoising\s+diffusion\s+probabilistic\s+models|\bddpm\b/.test(lower)) {
+    return 'ti:"Denoising Diffusion Probabilistic Models" OR all:"denoising diffusion probabilistic models"';
+  }
+  if (/scaling\s+laws.*language\s+models|language\s+models.*scaling\s+laws|chinchilla|compute[-\s]?optimal/.test(lower)) {
+    return 'ti:"Scaling Laws for Neural Language Models" OR all:"scaling laws for neural language models" OR all:"training compute-optimal large language models" OR (all:"scaling laws" AND all:"language models")';
+  }
+  if (/climate\s+adaptation.*policy|climate.*policy.*adaptation/.test(lower)) {
+    return 'all:"climate adaptation policy" OR (all:"climate adaptation" AND all:policy)';
+  }
+  const quoted = quoteArxiv(clean);
+  const tokens = quoted.toLowerCase().match(/[a-z0-9-]{3,}/g) || [];
+  if (tokens.length >= 3) return `all:"${quoted}" OR (${tokens.slice(0, 5).map((t) => `all:${t}`).join(' AND ')})`;
+  return quoted || null;
+}
+
 export function buildArxivQuery(intent: QueryIntent, author: string, topic: string): string | null {
   const cleanAuthor = (author || '').trim();
   const cleanTopic = (topic || '').trim();
 
   if (!cleanAuthor) {
-    return cleanTopic || null;
+    return buildArxivTopicQuery(cleanTopic);
   }
 
   if (intent === 'AUTHOR_STRONG') {

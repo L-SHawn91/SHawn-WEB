@@ -1,5 +1,5 @@
 "use client";
-// i18n-exempt: legacy client page uses fixed bilingual/search UI copy; full i18n migration is separate.
+// Core search UI copy is switched by the global KOR/ENG language control.
 
 export const dynamic = 'force-dynamic';
 
@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Database, ExternalLink, Filter, Search, Sparkles } from "lucide-react";
 import { apiFetch } from "@/lib/data-source/client";
+import { useLanguage } from "@/components/providers/language-provider";
 
 type DatasetSource =
   | "ncbi"
@@ -127,9 +128,85 @@ const SOURCE_TOOLTIPS: Record<DatasetSource, string> = {
   openml: "OpenML: 머신러닝 벤치마크 데이터셋",
 };
 
-const DATASET_SCORE_TOOLTIP = "Dataset score는 최신성, 활용도(download/like), 메타데이터 품질로 계산됩니다.\nDataset는 저널 논문이 아니므로 IF/Q 지표가 직접 적용되지 않습니다.";
+const DATASET_SCORE_TOOLTIP = {
+  ko: "Dataset score는 최신성, 활용도(download/like), 메타데이터 품질로 계산됩니다.\nDataset는 저널 논문이 아니므로 IF/Q 지표가 직접 적용되지 않습니다.",
+  en: "Dataset score combines recency, usage signals (downloads/likes), and metadata quality.\nDatasets are not journal papers, so IF/Q metrics do not directly apply.",
+} as const;
+
+const datasetsCopy = {
+  ko: {
+    loadingTitle: "검색중입니다",
+    loadingDesc: "여러 데이터셋 소스를 동시에 확인하는 중입니다.",
+    title: "Dataset Search",
+    desc: "전 세계 공개 데이터셋 저장소와 레지스트리를 한 번에 검색합니다.",
+    control: "Dataset Search Control Center",
+    enterHint: "키워드 입력 후 Enter 또는 Search",
+    placeholder: "예: climate CO2 emissions, ImageNet classification, endometrium atlas",
+    search: "Search",
+    searching: "Searching...",
+    tipPrefix: "검색 팁:",
+    tipStrong: "분야 키워드 + 데이터 유형 + 기관/연도 힌트",
+    tipText: "를 함께 넣으세요. 예:",
+    tipSuffix: "공개 가능한 외부 소스만 조회합니다.",
+    sources: "Sources:",
+    context: "Context:",
+    contextPlaceholder: "field/source hint (e.g. NASA, census, GSE)",
+    year: "Year:",
+    sort: "Sort:",
+    perPage: "Per page:",
+    found: "datasets found",
+    page: "Page",
+    all: "All",
+    relatedTitle: "연관 논문 미리보기",
+    relatedPapers: "연관 논문",
+    relatedLoading: "불러오는 중...",
+    relatedEmpty: "연관 논문이 없습니다.",
+    openDataset: "Open dataset",
+    relatedPapersLink: "Related papers",
+    relatedPapersTitle: "이 데이터셋과 연관된 논문 검색",
+    prev: "Prev",
+    next: "Next",
+    empty: "No datasets found. Try different keywords or adjust filters.",
+  },
+  en: {
+    loadingTitle: "Searching",
+    loadingDesc: "Checking multiple public dataset sources at the same time.",
+    title: "Dataset Search",
+    desc: "Search public dataset repositories and registries across domains.",
+    control: "Dataset Search Control Center",
+    enterHint: "Enter keywords, then press Enter or Search",
+    placeholder: "e.g. climate CO2 emissions, ImageNet classification, endometrium atlas",
+    search: "Search",
+    searching: "Searching...",
+    tipPrefix: "Search tip:",
+    tipStrong: "field keyword + data type + source/year hint",
+    tipText: "work best together. Examples:",
+    tipSuffix: "Only public external sources are queried.",
+    sources: "Sources:",
+    context: "Context:",
+    contextPlaceholder: "field/source hint (e.g. NASA, census, GSE)",
+    year: "Year:",
+    sort: "Sort:",
+    perPage: "Per page:",
+    found: "datasets found",
+    page: "Page",
+    all: "All",
+    relatedTitle: "Preview related papers",
+    relatedPapers: "Related papers",
+    relatedLoading: "Loading...",
+    relatedEmpty: "No related papers.",
+    openDataset: "Open dataset",
+    relatedPapersLink: "Related papers",
+    relatedPapersTitle: "Search papers related to this dataset",
+    prev: "Prev",
+    next: "Next",
+    empty: "No datasets found. Try different keywords or adjust filters.",
+  },
+} as const;
 
 export default function DatasetsPage() {
+  const { language } = useLanguage();
+  const t = datasetsCopy[language];
   const [query, setQuery] = useState("");
   const [datasets, setDatasets] = useState<DatasetItem[]>([]);
   const [bySource, setBySource] = useState<Record<string, DatasetItem[]>>({});
@@ -256,8 +333,8 @@ export default function DatasetsPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#10243A]/25 backdrop-blur-md" aria-live="polite" aria-busy="true">
           <div className="sketch-card border border-white/40 bg-white/90 px-8 py-7 text-center shadow-2xl dark:border-slate-700 dark:bg-slate-900/90">
             <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[#7B6BA8]/20 border-t-[#7B6BA8]" />
-            <p className="text-lg font-bold text-[#10243A] dark:text-slate-100">검색중입니다</p>
-            <p className="mt-1 text-sm text-[#263238]/60 dark:text-slate-400">여러 데이터셋 소스를 동시에 확인하는 중입니다.</p>
+            <p className="text-lg font-bold text-[#10243A] dark:text-slate-100">{t.loadingTitle}</p>
+            <p className="mt-1 text-sm text-[#263238]/60 dark:text-slate-400">{t.loadingDesc}</p>
           </div>
         </div>
       )}
@@ -270,16 +347,16 @@ export default function DatasetsPage() {
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-[#10243A] dark:text-slate-100 mb-4 flex items-center justify-center gap-3">
             <Database className="w-10 h-10 text-[#7B6BA8]" />
-            Dataset Search
+            {t.title}
           </h1>
           <p className="text-xl text-[#263238]/70 dark:text-slate-400">
-            Search across global dataset registries and repositories
+            {t.desc}
           </p>
         </div>
         <div className="sticky top-3 z-30 mb-6 rounded-2xl border border-[#D8DEE6] dark:border-slate-700 bg-[#F7F3EA]/95 dark:bg-slate-950/95 p-4 shadow-md shadow-[#7B6BA8]/10 backdrop-blur-md">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <p className="text-sm font-semibold text-[#10243A] dark:text-slate-100">Dataset Search Control Center</p>
-            <p className="text-xs text-[#263238]/50 dark:text-slate-500">키워드 입력 후 Enter 또는 Search</p>
+            <p className="text-sm font-semibold text-[#10243A] dark:text-slate-100">{t.control}</p>
+            <p className="text-xs text-[#263238]/50 dark:text-slate-500">{t.enterHint}</p>
           </div>
           <div className="flex gap-3 flex-col md:flex-row">
             <div className="relative flex-1">
@@ -289,7 +366,7 @@ export default function DatasetsPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && searchDatasets({ page: 1 })}
-                placeholder="예: endometrium single-cell atlas"
+                placeholder={t.placeholder}
                 className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 text-[#263238] dark:text-slate-200 placeholder:text-[#263238]/40 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-[#7B6BA8] focus:border-[#7B6BA8] outline-none"
               />
             </div>
@@ -298,11 +375,11 @@ export default function DatasetsPage() {
               disabled={loading}
               className="sketch-btn px-6 py-3 bg-[#7B6BA8] hover:bg-[#6a5a97] disabled:opacity-60 text-white rounded-xl font-semibold transition-colors"
             >
-              {loading ? "Searching..." : "Search"}
+              {loading ? t.searching : t.search}
             </button>
           </div>
           <p className="mt-3 rounded-xl border border-[#7B6BA8]/20 bg-[#7B6BA8]/5 dark:bg-purple-900/10 px-3 py-2 text-xs leading-5 text-[#263238]/70 dark:text-slate-400">
-            정밀 검색 팁: <strong>조직명 + modality + accession 힌트</strong>를 함께 넣으세요. 예: <code>endometrial organoid single-cell RNA-seq GSE</code>. 넓은 질의는 여러 조직의 organoid dataset이 섞일 수 있습니다.
+            {t.tipPrefix} <strong>{t.tipStrong}</strong> {t.tipText} <code>climate CO2 emissions global</code>, <code>ImageNet classification</code>, <code>endometrial organoid GSE</code>. {t.tipSuffix}
           </p>
         </div>
 
@@ -311,7 +388,7 @@ export default function DatasetsPage() {
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
                 <Filter className="w-4 h-4 text-[#263238]/40 dark:text-slate-600" />
-                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">Sources:</span>
+                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">{t.sources}</span>
               </div>
               {SOURCE_OPTIONS.map((source) => (
                 <label key={source} className="flex items-center gap-2 cursor-pointer">
@@ -330,17 +407,17 @@ export default function DatasetsPage() {
                 </label>
               ))}
               <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">Context:</span>
+                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">{t.context}</span>
                 <input
                   type="text"
-                  placeholder="tissue/disease/accession hint (e.g. endometrium GSE)"
+                  placeholder={t.contextPlaceholder}
                   value={filters.context}
                   onChange={(e) => setFilters({ ...filters, context: e.target.value })}
                   className="w-64 px-2 py-1 rounded border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-[#263238] dark:text-slate-200 placeholder:text-[#263238]/40 dark:placeholder:text-slate-500"
                 />
               </div>
               <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">Year:</span>
+                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">{t.year}</span>
                 <input
                   type="number"
                   placeholder="From"
@@ -358,7 +435,7 @@ export default function DatasetsPage() {
                 />
               </div>
               <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">Sort:</span>
+                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">{t.sort}</span>
                 <select
                   value={sortBy}
                   onChange={(e) => {
@@ -376,7 +453,7 @@ export default function DatasetsPage() {
                 </select>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">Per page:</span>
+                <span className="text-sm font-medium text-[#263238]/70 dark:text-slate-400">{t.perPage}</span>
                 <select
                   value={pageSize}
                   onChange={(e) => {
@@ -398,7 +475,7 @@ export default function DatasetsPage() {
           {meta && (
             <div className="mt-4 text-xs text-[#263238]/40 dark:text-slate-600">
               {SOURCE_OPTIONS.map((source) => `${SOURCE_LABELS[source]}: ${meta.trackResults?.[source] || 0}`).join(" | ")} | Final:{" "}
-              {meta.trackResults?.final || 0} | Sort: {meta.sort?.by || sortBy}
+              {meta.trackResults?.final || 0} | {t.sort} {meta.sort?.by || sortBy}
             </div>
           )}
         </div>
@@ -408,11 +485,11 @@ export default function DatasetsPage() {
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-lg font-semibold text-[#10243A] dark:text-slate-100">
-                {displayedDatasets.length} datasets found
+                {displayedDatasets.length} {t.found}
               </h2>
               {pagination && !hasSourceView && (
                 <p className="text-sm text-[#263238]/50 dark:text-slate-500">
-                  Page {pagination.page} / {pagination.totalPages}
+                  {t.page} {pagination.page} / {pagination.totalPages}
                 </p>
               )}
             </div>
@@ -423,7 +500,7 @@ export default function DatasetsPage() {
                   onClick={() => setActiveSourceTab("all")}
                   className={`rounded-full px-3 py-1 text-xs font-medium transition ${activeSourceTab === "all" ? "bg-[#10243A] text-white shadow" : "border border-[#D8DEE6] dark:border-slate-700 text-[#263238]/60 dark:text-slate-400 hover:border-[#7B6BA8] hover:text-[#7B6BA8]"}`}
                 >
-                  All ({allSourceDatasets.length})
+                  {t.all} ({allSourceDatasets.length})
                 </button>
                 {sourceOrder.map((source) => {
                   const count = (bySource[source] || []).length;
@@ -454,17 +531,17 @@ export default function DatasetsPage() {
                         }}
                         onMouseLeave={() => setHoverDatasetId((id) => (id === dataset.id ? null : id))}
                         className="rounded-full border border-[#7B6BA8]/40 px-2 py-1 text-[11px] text-[#7B6BA8] transition hover:border-[#7B6BA8]"
-                        title="연관 논문 미리보기"
+                        title={t.relatedTitle}
                       >
                         <span className="inline-flex items-center gap-1"><Sparkles className="w-3 h-3" /> Related</span>
                       </button>
                       {hoverDatasetId === dataset.id && (
                         <div className="absolute right-0 z-20 mt-2 w-80 rounded-xl border border-[#D8DEE6] dark:border-slate-700 bg-white dark:bg-slate-900 p-3 text-xs shadow-xl">
-                          <p className="mb-2 font-semibold text-[#10243A] dark:text-slate-100">연관 논문</p>
+                          <p className="mb-2 font-semibold text-[#10243A] dark:text-slate-100">{t.relatedPapers}</p>
                           {relatedLoadingByDataset[dataset.id] ? (
-                            <p className="text-[#263238]/40 dark:text-slate-600">불러오는 중...</p>
+                            <p className="text-[#263238]/40 dark:text-slate-600">{t.relatedLoading}</p>
                           ) : (relatedByDataset[dataset.id] || []).length === 0 ? (
-                            <p className="text-[#263238]/40 dark:text-slate-600">연관 논문이 없습니다.</p>
+                            <p className="text-[#263238]/40 dark:text-slate-600">{t.relatedEmpty}</p>
                           ) : (
                             <ul className="max-h-64 space-y-2 overflow-y-auto pr-1">
                               {(relatedByDataset[dataset.id] || []).map((r) => (
@@ -487,7 +564,7 @@ export default function DatasetsPage() {
                       </span>
                       <span className="text-sm text-[#263238]/50 dark:text-slate-500">{dataset.updatedAt ? dataset.updatedAt.slice(0, 10) : "No Date"}</span>
                       {dataset.rankScore !== undefined && (
-                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full" title={DATASET_SCORE_TOOLTIP}>
+                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full" title={DATASET_SCORE_TOOLTIP[language]}>
                           Score: {dataset.rankScore}
                         </span>
                       )}
@@ -528,12 +605,12 @@ export default function DatasetsPage() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-sm text-[#2A9D8F] hover:text-[#238a7e] transition"
                       >
-                        Open dataset <ExternalLink className="w-3 h-3" />
+                        {t.openDataset} <ExternalLink className="w-3 h-3" />
                       </a>
                       <Link
                         href={`/papers?query=${encodeURIComponent(dataset.title)}`}
                         className="inline-flex items-center gap-1 text-sm text-[#7B6BA8] hover:text-[#6a5a97] transition"
-                        title="이 데이터셋과 연관된 논문 검색"
+                        title={t.relatedPapersTitle}
                       >
                         Related papers
                       </Link>
@@ -555,7 +632,7 @@ export default function DatasetsPage() {
                   className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-[#D8DEE6] dark:border-slate-700 text-sm text-[#263238] dark:text-slate-200 disabled:opacity-50 hover:border-[#7B6BA8]"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  Prev
+                  {t.prev}
                 </button>
                 <span className="text-sm text-[#263238]/60 dark:text-slate-400">
                   {pagination.page} / {pagination.totalPages}
@@ -570,7 +647,7 @@ export default function DatasetsPage() {
                   disabled={loading || page >= pagination.totalPages}
                   className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-[#D8DEE6] dark:border-slate-700 text-sm text-[#263238] dark:text-slate-200 disabled:opacity-50 hover:border-[#7B6BA8]"
                 >
-                  Next
+                  {t.next}
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
@@ -579,7 +656,7 @@ export default function DatasetsPage() {
         )}
 
         {displayedDatasets.length === 0 && !loading && hasSearched && (
-          <div className="text-center py-12 text-[#263238]/50 dark:text-slate-500">No datasets found. Try different keywords or adjust filters.</div>
+          <div className="text-center py-12 text-[#263238]/50 dark:text-slate-500">{t.empty}</div>
         )}
       </div>
     </div>

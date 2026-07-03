@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "SHawn-WEB"
+message: "If this public web portfolio helps your work, please cite the repository."
+type: software
+authors:
+  - family-names: "SHawn"
+repository-code: "https://github.com/L-SHawn91/SHawn-WEB"
+url: "https://shawnlab.vercel.app"
+abstract: "Public-facing SHawn Lab web surface for research, writing, and digital portfolio demos."
+license: "LicenseRef-Proprietary"

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
+import { useLanguage } from "@/components/providers/language-provider";
 import { InvestTrackBoard } from "./invest-track-board";
 
 type InvestTab = "overview" | "reports" | "dashboard" | "archive" | "search";
@@ -17,16 +18,31 @@ type ShellSnapshot = {
   signalConfidence?: number;
 };
 
-const investTabs: { key: InvestTab; label: string; href: string }[] = [
-  { key: "overview", label: "개요", href: "/invest" },
-  { key: "dashboard", label: "대시보드", href: "/invest/dashboard" },
-  { key: "reports", label: "리포트", href: "/invest/reports?tab=KR" },
-  { key: "archive", label: "아카이브", href: "/invest/archive" },
-  { key: "search", label: "검색", href: "/invest/search" },
+const investTabs: { key: InvestTab; href: string }[] = [
+  { key: "overview", href: "/invest" },
+  { key: "dashboard", href: "/invest/dashboard" },
+  { key: "reports", href: "/invest/reports?tab=KR" },
+  { key: "archive", href: "/invest/archive" },
+  { key: "search", href: "/invest/search" },
 ];
+
+const shellCopy = {
+  ko: {
+    title: "에셋 워크스페이스",
+    desc: "모바일은 핵심 정보만, 데스크탑은 비교와 탐색이 쉬운 구조로 정리했습니다.",
+    tabs: { overview: "개요", dashboard: "대시보드", reports: "리포트", archive: "아카이브", search: "검색" },
+  },
+  en: {
+    title: "Assets Workspace",
+    desc: "Mobile shows the essentials; desktop keeps comparison and exploration easy.",
+    tabs: { overview: "Overview", dashboard: "Dashboard", reports: "Reports", archive: "Archive", search: "Search" },
+  },
+} as const;
 
 export function InvestShell({ currentTab, children }: InvestShellProps) {
   const pathname = usePathname();
+  const { language } = useLanguage();
+  const t = shellCopy[language];
   const [snapshot, setSnapshot] = useState<ShellSnapshot | null>(null);
 
   useEffect(() => {
@@ -72,9 +88,9 @@ export function InvestShell({ currentTab, children }: InvestShellProps) {
             <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-end lg:gap-4">
               <div className="min-w-0">
               <p className="text-[11px] uppercase tracking-[0.25em] text-zinc-500">Shawn Invest</p>
-              <h1 className="mt-1 text-xl font-bold sm:text-2xl">투자 워크스페이스</h1>
+              <h1 className="mt-1 text-xl font-bold sm:text-2xl">{t.title}</h1>
               <p className="mt-1 text-xs text-gray-400 sm:text-sm">
-                모바일은 핵심 정보만, 데스크탑은 비교와 탐색이 쉬운 구조로 정리했습니다.
+                {t.desc}
               </p>
               </div>
               <div className="inline-flex w-fit items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2">
@@ -115,7 +131,7 @@ export function InvestShell({ currentTab, children }: InvestShellProps) {
                     data-active={isActive}
                     data-route={pathname}
                   >
-                    {tab.label}
+                    {t.tabs[tab.key]}
                   </Link>
                 );
               })}

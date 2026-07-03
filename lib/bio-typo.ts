@@ -1,6 +1,6 @@
 /**
  * Biomedical typo correction dictionary.
- * Ported from SHawn-bio-search/query_expansion.py _TYPO_CORRECTIONS
+ * Public biomedical query typo corrections used before sending to sources.
  * Applied token-by-token to the raw query before sending to sources.
  */
 

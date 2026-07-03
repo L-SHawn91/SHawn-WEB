@@ -46,7 +46,8 @@ export type SuggestedTopic = {
   count: number;
 };
 
-// Aligned with bio-search _SOURCE_WEIGHTS
+// Public academic/source reliability weights. Keep these source-facing and
+// independent from private/internal project taxonomies.
 const PUBLIC_SOURCE_WEIGHT: Record<string, number> = {
   pubmed: 1.0,
   europepmc: 0.98,
@@ -60,24 +61,30 @@ const PUBLIC_SOURCE_WEIGHT: Record<string, number> = {
 
 
 const PUBLIC_DATASET_SOURCE_WEIGHT: Record<string, number> = {
-  ncbi: 1.18,
-  ena: 1.16,
-  europepmc: 1.12,
-  arrayexpress: 1.15,
-  cellxgene: 1.14,
+  ncbi: 1.08,
+  ena: 1.07,
+  europepmc: 1.06,
+  arrayexpress: 1.07,
+  cellxgene: 1.06,
   zenodo: 1.08,
   dryad: 1.07,
-  dataverse: 1.06,
-  figshare: 1.04,
-  openalex: 1.02,
-  crossref: 1.02,
-  huggingface: 0.98,
-  openml: 0.96,
-  kaggle: 0.94,
-  github: 0.9,
+  dataverse: 1.07,
+  figshare: 1.07,
+  datagov: 1.08,
+  dataeu: 1.08,
+  openalex: 1.04,
+  crossref: 1.04,
+  huggingface: 1.04,
+  openml: 1.04,
+  kaggle: 1.04,
+  github: 1.0,
+  cngb: 1.03,
 };
 
 const STATIC_MESH_MAP: Array<[RegExp, string]> = [
+  [/\bpcos\b|polycystic\s+ovar/i, "Polycystic Ovary Syndrome"],
+  [/\basherman\b|intrauterine\s+adhesion|\biua\b/i, "Uterine Diseases"],
+  [/\blif\b(?!\w)|leukemia\s+inhibitory/i, "Leukemia Inhibitory Factor"],
   [/organoid/i, "Organoids"],
   [/endometr/i, "Endometrium"],
   [/uter/i, "Uterus"],
@@ -153,6 +160,13 @@ export function correctPublicBioQueryTypos(query: string): string {
 }
 
 const EXPANSION_SYNONYMS: Array<[RegExp, string[]]> = [
+  // Public biomedical aliases; these are query-expansion helpers only, not
+  // project/default-topic constraints.
+  [/\bpcos\b|polycystic\s+ovar/i, ["polycystic ovary syndrome", "polycystic ovarian syndrome"]],
+  [/\basherman\b|intrauterine\s+adhesion|\biua\b/i, ["intrauterine adhesion", "Asherman syndrome", "IUA"]],
+  [/\blif\b(?!\w)|leukemia\s+inhibitory/i, ["leukemia inhibitory factor", "LIF cytokine"]],
+  [/\bgranulosa\b/i, ["granulosa cell", "follicular cell"]],
+
   // General assay / modality expansion
   [/\borganoid(s)?\b/i, ["3D culture", "organotypic culture", "spheroid"]],
   [/\bscrna\b|single[-\s]?cell/i, ["single cell RNA sequencing", "single-cell transcriptomics", "scRNA-seq"]],
@@ -238,6 +252,18 @@ function extractLabeledValues(text: string, labels: string[], allLabels: string[
   return { values: uniquePublicList(values), rest: rest.replace(/\s+/g, ' ').trim() };
 }
 
+function stripInternalPublicSearchTerms(query: string): string {
+  return (query || '')
+    .replace(/\b(?:SHio|SHide|SBS|SHawn[-\s]?(?:bio[-\s]?search|bioinfo|paper[-\s]?mapping|sync|learn|dashboard)|shawn[-\s]?bio[-\s]?search|shawn[-\s]?bioinfo|shawn[-\s]?paper[-\s]?mapping)\b/gi, ' ')
+    .replace(/(?:샤이오|샤이드|숀바이오서치|숀바이오인포|숀페이퍼매핑)/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function sanitizePublicSearchQuery(query: string): string {
+  return normalizePublicBioQuery(query);
+}
+
 export function parsePublicBioQuery(query: string): PublicQueryParts {
   const normalized = normalizePublicBioQuery(query);
   let rest = normalized;
@@ -292,7 +318,7 @@ export function buildPublicKeywordSpeciesQuery(query: string, opts: { expand?: b
 }
 
 export function normalizePublicBioQuery(query: string): string {
-  const typoFixed = correctPublicBioQueryTypos(query || "");
+  const typoFixed = correctPublicBioQueryTypos(stripInternalPublicSearchTerms(query || ""));
   return typoFixed
     .normalize("NFKC")
     .replace(/([A-Za-z0-9])([가-힣])/g, "$1 $2")
@@ -328,14 +354,19 @@ export function expandPublicBioQueryLoose(query: string, maxTerms = 4): string {
 
   const baseTokens = clean.match(/[\p{L}\p{N}-]{3,}/gu) || [];
   const terms = new Set<string>(baseTokens.length > 1 ? baseTokens : [clean]);
+  const additions: string[] = [];
   for (const [pattern, synonyms] of EXPANSION_SYNONYMS) {
-    if (terms.size >= maxTerms + 1) break;
+    if (additions.length >= maxTerms) break;
     if (!pattern.test(clean)) continue;
     for (const synonym of synonyms) {
-      if (terms.size >= maxTerms + 1) break;
-      if (synonym && !clean.toLowerCase().includes(synonym.toLowerCase())) terms.add(synonym);
+      if (additions.length >= maxTerms) break;
+      const lower = synonym.toLowerCase();
+      if (!additions.some((value) => value.toLowerCase() === lower)) {
+        additions.push(synonym);
+      }
     }
   }
+  additions.forEach((term) => terms.add(term));
 
   if (terms.size <= 1) return clean;
   return Array.from(terms)
@@ -418,24 +449,81 @@ function citationVelocity(citations?: number, year?: number, currentYear = new D
   return 0.5 * absolute + 0.5 * velocity;
 }
 
-function queryTokens(query: string): string[] {
-  const generic = new Set(['and', 'or', 'the', 'with', 'from', 'into', 'dataset', 'data', 'search', 'paper', 'papers']);
+const PUBLIC_TOKEN_ALIASES: Record<string, string[]> = {
+  pcos: ['polycystic ovary syndrome', 'polycystic ovarian syndrome', 'polycystic'],
+  asherman: ['intrauterine adhesion', 'intrauterine adhesions', 'iua'],
+  iua: ['intrauterine adhesion', 'intrauterine adhesions', 'asherman'],
+  lif: ['leukemia inhibitory factor', 'lif cytokine'],
+  dhcr24: ['seladin', 'seladin-1', '24-dehydrocholesterol reductase'],
+  seladin: ['dhcr24', 'seladin-1'],
+  scrna: ['single-cell', 'single cell', 'single-cell rna', 'single cell rna', 'scrna-seq'],
+  rnaseq: ['rna-seq', 'rna sequencing', 'rna seq'],
+  'rna-seq': ['rnaseq', 'rna sequencing', 'rna seq'],
+  granulosa: ['granulosa cell', 'granulosa cells'],
+  endometrium: ['endometrial', 'uterine lining'],
+  endometrial: ['endometrium', 'uterine lining'],
+  uterus: ['uterine', 'endometrium', 'endometrial'],
+  uterine: ['uterus', 'endometrium', 'endometrial'],
+  pig: ['porcine', 'swine', 'sus scrofa'],
+  porcine: ['pig', 'swine', 'sus scrofa'],
+};
+
+export function publicQueryTokens(query: string): string[] {
+  const generic = new Set(['and', 'or', 'the', 'with', 'from', 'into', 'dataset', 'datasets', 'data', 'search', 'paper', 'papers']);
   return Array.from(new Set((query || '').toLowerCase().match(/[a-z0-9가-힣-]{3,}/g) || []))
     .map((tok) => tok === 'rnaseq' ? 'rna-seq' : tok)
     .filter((tok) => !generic.has(tok));
 }
 
-function tokenHit(text: string, token: string): boolean {
-  const prefix = token.slice(0, Math.max(5, token.length - 2));
-  return text.includes(token) || text.includes(prefix);
+function tokenVariants(token: string): string[] {
+  const clean = String(token || '').toLowerCase().trim();
+  if (!clean) return [];
+  return Array.from(new Set([clean, ...(PUBLIC_TOKEN_ALIASES[clean] || [])]));
+}
+
+function safeTermHit(text: string, term: string): boolean {
+  const normalized = (text || '').toLowerCase();
+  const clean = (term || '').toLowerCase().trim();
+  if (!normalized || !clean) return false;
+  if (clean.includes(' ')) return normalized.includes(clean);
+  if (clean.length <= 4) {
+    const escaped = clean.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i').test(normalized);
+  }
+  const prefix = clean.slice(0, Math.max(5, clean.length - 2));
+  return normalized.includes(clean) || normalized.includes(prefix);
+}
+
+export function publicTokenHit(text: string, token: string): boolean {
+  return tokenVariants(token).some((term) => safeTermHit(text, term));
+}
+
+export function publicCriticalQueryTokens(query: string): string[] {
+  const clean = normalizePublicBioQuery(query).toLowerCase();
+  const critical: string[] = [];
+  if (/\bpcos\b|polycystic\s+ovar/.test(clean)) critical.push('pcos');
+  if (/\basherman\b|\biua\b|intrauterine\s+adhesion/.test(clean)) critical.push('asherman');
+  if (/\blif\b|leukemia\s+inhibitory/.test(clean)) critical.push('lif');
+  if (/\bdhcr24\b|\bseladin/.test(clean)) critical.push('dhcr24');
+  return uniquePublicList(critical);
+}
+
+export function isPublicBiomedicalQuery(query: string): boolean {
+  const clean = normalizePublicBioQuery(query).toLowerCase();
+  if (!clean) return false;
+  return /\b(pcos|asherman|iua|lif|dhcr24|seladin|organoid|endometr\w*|uter\w*|ovary|ovarian|granulosa|implantation|decidual\w*|blastocyst|trophoblast|placenta|fibrosis|fibrotic|infertil\w*|estrogen|estradiol|progesterone|single[-\s]?cell|scrna|rna[-\s]?seq|rnaseq|transcriptom\w*|atac[-\s]?seq|chip[-\s]?seq|proteom\w*|metabolom\w*|spatial\s+transcriptom\w*|mouse|mice|murine|rat|porcine|swine|pig|bovine|zebrafish|human|homo\s+sapiens|mus\s+musculus)\b/.test(clean)
+    || /\b(?:GSE|GSM|SRP|SRS|SRX|SRR|ERP|ERS|ERX|ERR|DRP|DRS|DRX|DRR|PRJNA|PRJEB|PRJCA|E-MTAB|E-MEXP|CNP|CRA|CRR|HRA)\d+/i.test(clean);
 }
 
 function tokenFrequency(text: string, token: string): number {
   const normalized = (text || '').toLowerCase();
   if (!normalized || !token) return 0;
-  const prefix = token.slice(0, Math.max(5, token.length - 2));
   const terms = normalized.match(/[a-z0-9가-힣-]{3,}/g) || [];
-  return terms.filter((term) => term === token || term.startsWith(prefix)).length;
+  return tokenVariants(token).reduce((sum, variant) => {
+    if (variant.includes(' ')) return sum + (normalized.includes(variant) ? 1 : 0);
+    const prefix = variant.length <= 4 ? variant : variant.slice(0, Math.max(5, variant.length - 2));
+    return sum + terms.filter((term) => term === variant || (variant.length > 4 && term.startsWith(prefix))).length;
+  }, 0);
 }
 
 function bm25LikeFieldScore(text: string, token: string, boost: number, avgLen: number): number {
@@ -469,13 +557,13 @@ function phraseProximityBonus(title: string, body: string, query: string, tokens
 }
 
 function weightedQueryScore(title: string, body: string, query: string): number {
-  const tokens = queryTokens(normalizePublicBioQuery(query));
+  const tokens = publicQueryTokens(normalizePublicBioQuery(query));
   if (!tokens.length) return 0;
   const t = (title || '').toLowerCase();
   const b = (body || '').toLowerCase();
-  const titleHits = tokens.filter((tok) => tokenHit(t, tok)).length;
-  const bodyHits = tokens.filter((tok) => tokenHit(b, tok)).length;
-  const uniqueHits = tokens.filter((tok) => tokenHit(t, tok) || tokenHit(b, tok)).length;
+  const titleHits = tokens.filter((tok) => publicTokenHit(t, tok)).length;
+  const bodyHits = tokens.filter((tok) => publicTokenHit(b, tok)).length;
+  const uniqueHits = tokens.filter((tok) => publicTokenHit(t, tok) || publicTokenHit(b, tok)).length;
   const bm25 = tokens.reduce((sum, tok) => sum
     + bm25LikeFieldScore(title, tok, 2.9, 12)
     + bm25LikeFieldScore(body, tok, 1.0, 160), 0) / Math.max(1, tokens.length);
@@ -606,9 +694,16 @@ export function mergePublicPaperRecords<T extends PublicPaperLike>(papers: T[]):
 export function publicDatasetDedupeKey(item: PublicDatasetLike): string {
   const accessions = item.accessionIds || [];
   if (accessions.length) return `accession:${accessions[0]}`;
+  const title = String(item.title || "").toLowerCase().replace(/[^a-z0-9가-힣]/g, "").slice(0, 100);
+  const source = String(item.source || "").toLowerCase();
+  // Versioned mirrors (especially data.eu → Zenodo) often expose the same
+  // dataset title under many URLs. Prefer title-level dedupe for repository
+  // mirrors to avoid flooding the public UI with repeated versions.
+  if (title.length >= 24 && ["dataeu", "zenodo", "figshare", "dryad", "dataverse"].includes(source)) {
+    return `title:${title}`;
+  }
   const url = String(item.url || "").toLowerCase().trim();
   if (url) return `url:${url.replace(/[?#].*$/, "")}`;
-  const title = String(item.title || "").toLowerCase().replace(/[^a-z0-9가-힣]/g, "").slice(0, 100);
   return `title:${title}`;
 }
 
@@ -631,13 +726,13 @@ export function publicDatasetWorkflowScore(item: PublicDatasetLike, currentYear 
 
 export function publicDatasetTopicGuard(item: PublicDatasetLike, query: string): boolean {
   const q = normalizePublicBioQuery(query).toLowerCase();
-  const tokens = q.match(/[a-z0-9가-힣]{3,}/g) || [];
+  const tokens = publicQueryTokens(q);
   if (tokens.length < 2) return true;
 
   const text = `${item.title || ""} ${item.description || ""} ${(item.tags || []).join(" ")}`.toLowerCase();
   const source = String(item.source || "").toLowerCase();
 
-  const generic = ["dataset", "datasets", "data", "search", "single", "cell", "cells", "rna", "seq", "rnaseq", "sequencing", "transcriptomic", "transcriptomics"];
+  const generic = ["dataset", "datasets", "data", "search", "single", "cell", "cells", "rna", "seq", "rnaseq", "rna-seq", "sequencing", "transcriptomic", "transcriptomics"];
   const important = tokens.filter((token) => !generic.includes(token));
   const targetTokens = important.length >= 2 ? important : tokens;
 
@@ -647,22 +742,35 @@ export function publicDatasetTopicGuard(item: PublicDatasetLike, query: string):
   if (paperDerived && !accessionBacked && q.includes("dataset")) return false;
 
   const isExpandedOrQuery = /\bor\b/i.test(query);
-  const matched = targetTokens.filter((token) => text.includes(token)).length;
+  const matched = targetTokens.filter((token) => publicTokenHit(text, token)).length;
+  const biomedicalQuery = isPublicBiomedicalQuery(query);
+  if (!biomedicalQuery) {
+    if (matched >= Math.min(2, targetTokens.length)) return true;
+    return matched >= 1 && !paperDerived;
+  }
+  const criticalTokens = publicCriticalQueryTokens(query);
+  const criticalMatched = criticalTokens.filter((token) => publicTokenHit(text, token)).length;
+  if (criticalTokens.length > 0 && criticalMatched === 0) return false;
+  const speciesOnlyTokens = new Set(['human', 'mouse', 'mice', 'murine', 'mus', 'musculus', 'rat', 'rattus', 'pig', 'porcine', 'swine', 'sus', 'scrofa', 'bovine', 'cow', 'cattle', 'zebrafish']);
+  const coreTokens = targetTokens.filter((token) => !speciesOnlyTokens.has(token));
+  const coreMatched = coreTokens.filter((token) => publicTokenHit(text, token)).length;
+  if (accessionBacked && (coreMatched >= 1 || matched >= 2)) return true;
   if (isExpandedOrQuery) {
-    const assayTerms = ["organoid", "scrna", "single", "rna", "seq", "rnaseq", "transcriptomics", "atac", "chip", "spatial", "proteomics", "metabolomics"];
+    const assayTerms = ["organoid", "scrna", "single", "rna", "seq", "rnaseq", "rna-seq", "transcriptomics", "atac", "chip", "spatial", "proteomics", "metabolomics"];
     const requestedAssayTerms = targetTokens.filter((token) => assayTerms.includes(token));
-    const assayOk = requestedAssayTerms.length === 0 || requestedAssayTerms.some((token) => text.includes(token));
-    return assayOk && (matched >= 1 || accessionBacked);
+    const assayOk = requestedAssayTerms.length === 0 || requestedAssayTerms.some((token) => publicTokenHit(text, token));
+    return assayOk && matched >= 1;
   }
 
-  // Enforce all query-specific tokens (length ≥5 are specific enough)
+  // Enforce all query-specific tokens (length ≥5 are specific enough) for generic
+  // catalog rows; accession-backed biomedical records already passed above.
   for (const token of targetTokens) {
-    if (token.length >= 5 && !text.includes(token)) return false;
+    if (token.length >= 5 && !publicTokenHit(text, token)) return false;
   }
 
   if (paperDerived && !accessionBacked && matched < Math.min(2, targetTokens.length)) return false;
 
-  return matched / Math.max(1, targetTokens.length) >= 0.25 || (accessionBacked && matched >= 1);
+  return matched / Math.max(1, targetTokens.length) >= 0.25;
 }
 
 export function mergePublicDatasetRecords<T extends PublicDatasetLike>(items: T[]): T[] {

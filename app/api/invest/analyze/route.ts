@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { exec } from "child_process";
+import { execFile } from "child_process";
 import path from "path";
-import util from "util";
+import { promisify } from "util";
 import fs from "fs";
 
-const execPromise = util.promisify(exec);
+const execFilePromise = promisify(execFile);
 
-const INV_REPO_PATH = process.env.INV_REPO_PATH || "/Users/soohyunglee/GitHub/SHawn-INV";
-const SCRIPT_PATH = path.join(INV_REPO_PATH, "tools/analyze_ticker.py");
-const UV_PATH = process.env.UV_PATH || "/Users/soohyunglee/.local/bin/uv";
+const INV_REPO_PATH = process.env.INV_REPO_PATH || "";
+const SCRIPT_PATH = INV_REPO_PATH ? path.join(INV_REPO_PATH, "tools/analyze_ticker.py") : "";
+const UV_PATH = process.env.UV_PATH || "uv";
 
 type AnalyzePayload = {
   ticker: string;
@@ -204,11 +204,11 @@ async function callRemoteAnalyzerData(endpoint: string, ticker: string): Promise
 }
 
 async function callLocalAnalyzerData(ticker: string): Promise<AnalyzePayload | null> {
-  if (!fs.existsSync(INV_REPO_PATH) || !fs.existsSync(SCRIPT_PATH) || !fs.existsSync(UV_PATH)) {
+  const uvExists = path.isAbsolute(UV_PATH) ? fs.existsSync(UV_PATH) : true;
+  if (!INV_REPO_PATH || !fs.existsSync(INV_REPO_PATH) || !fs.existsSync(SCRIPT_PATH) || !uvExists) {
     return null;
   }
-  const command = `cd "${INV_REPO_PATH}" && "${UV_PATH}" run python "${SCRIPT_PATH}" "${ticker}"`;
-  const { stdout } = await execPromise(command);
+  const { stdout } = await execFilePromise(UV_PATH, ["run", "python", SCRIPT_PATH, ticker], { cwd: INV_REPO_PATH });
   return JSON.parse(stdout) as AnalyzePayload;
 }
 

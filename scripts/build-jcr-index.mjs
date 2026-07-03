@@ -2,7 +2,7 @@
 // Rebuild the SHawn-WEB JCR 2024 server-local lookup index from source TSV.
 // No network required. No secrets required.
 // Usage: node scripts/build-jcr-index.mjs
-//   SBS_JCR_EXPORT_TSV   override source TSV path
+//   JCR_EXPORT_TSV   override source TSV path
 //   SHAWN_WEB_JCR_INDEX_JSON  override output JSON path
 //   JCR_YEAR             override year label (default: 2024)
 
@@ -13,7 +13,7 @@ import path from 'node:path';
 const JCR_YEAR = process.env.JCR_YEAR || '2024';
 
 const tsvFilePath = path.resolve(
-  (process.env.SBS_JCR_EXPORT_TSV || path.join(os.homedir(), '.shawn/cache/jcr_2024_merged_journals.tsv')).replace(/^~(?=$|\/)/, os.homedir()),
+  (process.env.JCR_EXPORT_TSV || path.join(os.homedir(), '.shawn/cache/jcr_2024_merged_journals.tsv')).replace(/^~(?=$|\/)/, os.homedir()),
 );
 const indexFilePath = path.resolve(
   (process.env.SHAWN_WEB_JCR_INDEX_JSON || path.join(os.homedir(), '.shawn/cache/shawn_web_jcr_2024_index.json')).replace(/^~(?=$|\/)/, os.homedir()),
@@ -94,7 +94,7 @@ function parseDelimitedRows(filePath) {
 
 if (!fs.existsSync(tsvFilePath)) {
   console.error(`ERROR: source TSV not found: ${tsvFilePath}`);
-  console.error('Set SBS_JCR_EXPORT_TSV env var to override the path.');
+  console.error('Set JCR_EXPORT_TSV env var to override the path.');
   process.exit(1);
 }
 
@@ -121,7 +121,7 @@ for (const row of rows) {
     quartile,
     hIndex: 0,
     name: journalName,
-    source: 'SHawn JCR 2024 local index',
+    source: 'Local JCR index',
     metric: 'JCR_JIF',
     year: JCR_YEAR,
     isOfficial: true,
@@ -145,7 +145,7 @@ for (const row of rows) {
 const tsvMtime = new Date(fs.statSync(tsvFilePath).mtimeMs).toISOString();
 const output = {
   meta: {
-    source: 'SHawn JCR 2024 local index',
+    source: 'Local JCR index',
     jcrYear: JCR_YEAR,
     builtAt: new Date().toISOString(),
     issnCount: issnIndex.size,
