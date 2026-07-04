@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@/components/seo/analytics";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/providers/language-provider";
@@ -59,6 +60,7 @@ export default function RootLayout({
             {children}
             <ShawnChatUI />
             <Analytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""} />
+            <VercelAnalytics />
             <SpeedInsights />
           </LanguageProvider>
         </ThemeProvider>
