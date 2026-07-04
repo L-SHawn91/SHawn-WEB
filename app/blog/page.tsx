@@ -2,17 +2,20 @@
 import { BlogPageClient } from "@/components/blog/blog-page-client";
 import { getAllPosts } from "@/lib/mdx";
 import { getPublicCategoryLabel, getPublicTagLabels } from "@/lib/public-labels";
+import { SITE_URL } from "@/lib/site-url";
 import type { Metadata } from "next";
+
+const BLOG_URL = `${SITE_URL}/blog`;
 
 export const metadata: Metadata = {
   title: "블로그 - AI, Bio & Asset Signals",
   description: "AI, Bio, Asset Signals를 공개 글·이미지·읽기 흐름으로 정리하는 SHawn_LAB 블로그",
   alternates: {
-    canonical: "https://phdshawn.com/blog",
+    canonical: BLOG_URL,
   },
   openGraph: {
     type: "website",
-    url: "https://phdshawn.com/blog",
+    url: BLOG_URL,
     title: "SHawn_LAB 블로그",
     description: "AI, Bio, Asset Signals를 공개 글·이미지·읽기 흐름으로 정리하는 SHawn_LAB 블로그",
     siteName: "SHawn_LAB",

@@ -8,8 +8,7 @@ import type { Metadata } from 'next';
 import { RelatedPosts } from '@/components/blog/related-posts';
 import { ShareButtons } from '@/components/blog/share-buttons';
 import { getPublicCategoryLabel, getPublicTagLabels } from '@/lib/public-labels';
-
-const SITE_URL = 'https://phdshawn.com';
+import { SITE_URL } from '@/lib/site-url';
 
 export async function generateStaticParams() {
   const posts = getAllPosts();

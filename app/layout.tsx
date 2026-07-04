@@ -10,6 +10,7 @@ import { LanguageProvider } from "@/components/providers/language-provider";
 import { ShawnChatUI } from "@/components/marketing/shawn-chat-ui";
 import { Header } from "@/components/ui/header";
 import { SuppressTitleTooltips } from "@/components/ui/suppress-title-tooltips";
+import { SITE_URL } from "@/lib/site-url";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
@@ -24,11 +25,11 @@ export const metadata: Metadata = {
     template: "%s | SHawn_LAB",
   },
   description: "바이오테크놀로지, 일상 효율화 팁, 그리고 에셋 리포트를 정리합니다.",
-  metadataBase: new URL("https://phdshawn.com"),
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: "SHawn_LAB",
     description: "바이오 지식, 일상, 그리고 에셋 리포트.",
-    url: "https://phdshawn.com",
+    url: SITE_URL,
     siteName: "SHawn_LAB",
     locale: "ko_KR",
     type: "website",
