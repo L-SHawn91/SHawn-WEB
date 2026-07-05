@@ -11,6 +11,7 @@ import { ShawnChatUI } from "@/components/marketing/shawn-chat-ui";
 import { Header } from "@/components/ui/header";
 import { SuppressTitleTooltips } from "@/components/ui/suppress-title-tooltips";
 import { SITE_URL } from "@/lib/site-url";
+import { AdSenseScript } from "@/components/monetization/adsense";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
@@ -61,6 +62,7 @@ export default function RootLayout({
             {children}
             <ShawnChatUI />
             <Analytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""} />
+            <AdSenseScript />
             <VercelAnalytics />
             <SpeedInsights />
           </LanguageProvider>

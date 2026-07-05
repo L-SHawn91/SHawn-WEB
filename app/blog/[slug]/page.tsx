@@ -9,6 +9,7 @@ import { RelatedPosts } from '@/components/blog/related-posts';
 import { ShareButtons } from '@/components/blog/share-buttons';
 import { getPublicCategoryLabel, getPublicTagLabels } from '@/lib/public-labels';
 import { SITE_URL } from '@/lib/site-url';
+import { AdSlot } from '@/components/monetization/adsense';
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -153,6 +154,9 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       <div className="bw-prose prose prose-base max-w-none">
         <MDXRemote source={post.content} />
       </div>
+
+      {/* in-article ad: between body and footer; inert until AdSense env is set */}
+      <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_INARTICLE || ""} className="my-10" />
 
       {publicTags.length > 0 && (
         <footer className="mt-12 border-t border-border pt-8">
