@@ -17,6 +17,8 @@
     "reports:sync-index": "node scripts/sync-reports-index.mjs",
     "sync:shide-blog": "node scripts/sync-shide-blog-packages.mjs",
     "sync:shide-blog:dry": "node scripts/sync-shide-blog-packages.mjs --dry-run",
+    "publish:web": "node scripts/publish-web.mjs",
+    "publish:web:go": "node scripts/publish-web.mjs --publish",
     "test:shide-blog-sync": "node scripts/test-shide-blog-sync.mjs",
     "test:search": "node scripts/test-search.mjs",
     "test:search:intent": "node --experimental-strip-types scripts/test-classify-intent.mjs",
