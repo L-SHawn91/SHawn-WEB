@@ -87,14 +87,11 @@ function MotionField() {
       <div className="motion-field__grid" />
       <svg className="motion-field__line" viewBox="0 0 420 260" fill="none">
         <path d="M30 182 C95 88 168 214 234 116 C285 40 340 86 394 36" />
-        <path d="M38 76 C104 144 150 42 214 96 C270 145 326 118 386 172" />
       </svg>
       <span className="motion-node motion-node--a" />
       <span className="motion-node motion-node--b" />
       <span className="motion-node motion-node--c" />
-      <span className="motion-node motion-node--d" />
       <span className="motion-orbit motion-orbit--one" />
-      <span className="motion-orbit motion-orbit--two" />
     </div>
   );
 }
@@ -108,7 +105,6 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
       <div className="motion-backdrop" aria-hidden="true">
         <span className="motion-blob motion-blob--a" />
         <span className="motion-blob motion-blob--b" />
-        <span className="motion-blob motion-blob--c" />
       </div>
 
       <main className="relative z-10 mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
@@ -217,35 +213,26 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           display: block;
           border-radius: 9999px;
           filter: blur(28px);
-          opacity: 0.42;
+          opacity: 0.34;
           transform: translate3d(0, 0, 0);
-          animation: floatBlob 16s ease-in-out infinite alternate;
+          animation: floatBlob 20s ease-in-out infinite alternate;
         }
 
         .motion-blob--a {
           top: 110px;
           right: 8%;
-          width: 260px;
-          height: 260px;
-          background: rgba(20, 184, 166, 0.18);
+          width: 240px;
+          height: 240px;
+          background: rgba(20, 184, 166, 0.14);
         }
 
         .motion-blob--b {
           top: 360px;
           left: -90px;
-          width: 280px;
-          height: 280px;
-          background: rgba(251, 146, 60, 0.16);
+          width: 240px;
+          height: 240px;
+          background: rgba(251, 146, 60, 0.12);
           animation-delay: -6s;
-        }
-
-        .motion-blob--c {
-          bottom: 120px;
-          right: 22%;
-          width: 210px;
-          height: 210px;
-          background: rgba(14, 165, 233, 0.12);
-          animation-delay: -10s;
         }
 
         .motion-field {
@@ -270,7 +257,6 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           background-image: radial-gradient(rgba(15,23,42,0.12) 1px, transparent 1px);
           background-size: 22px 22px;
           mask-image: linear-gradient(120deg, transparent 0%, black 32%, black 72%, transparent 100%);
-          animation: gridDrift 18s linear infinite;
         }
 
         .dark .motion-field__grid {
@@ -285,17 +271,11 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
         }
 
         .motion-field__line path {
-          stroke: rgba(13, 148, 136, 0.54);
+          stroke: rgba(13, 148, 136, 0.48);
           stroke-width: 2;
           stroke-linecap: round;
-          stroke-dasharray: 9 18;
-          animation: dashFlow 6.5s linear infinite;
-        }
-
-        .motion-field__line path:nth-child(2) {
-          stroke: rgba(245, 158, 11, 0.46);
-          animation-duration: 8.5s;
-          animation-direction: reverse;
+          stroke-dasharray: 10 22;
+          animation: dashFlow 9s linear infinite;
         }
 
         .motion-node {
@@ -304,14 +284,14 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           height: 12px;
           border-radius: 9999px;
           background: #0f766e;
-          box-shadow: 0 0 0 8px rgba(13, 148, 136, 0.12), 0 0 32px rgba(13, 148, 136, 0.32);
-          animation: pulseNode 2.6s ease-in-out infinite;
+          box-shadow: 0 0 0 8px rgba(13, 148, 136, 0.1), 0 0 26px rgba(13, 148, 136, 0.26);
+          animation: pulseNode 3.4s ease-in-out infinite;
         }
 
         .motion-node--a { left: 18%; top: 34%; }
         .motion-node--b { right: 20%; top: 22%; animation-delay: -0.7s; }
         .motion-node--c { left: 42%; bottom: 24%; animation-delay: -1.4s; }
-        .motion-node--d { right: 12%; bottom: 28%; animation-delay: -2.1s; }
+
 
         .motion-orbit {
           position: absolute;
@@ -319,11 +299,11 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           height: 72px;
           border-radius: 9999px;
           border: 1px solid rgba(13, 148, 136, 0.28);
-          animation: orbitFloat 9s ease-in-out infinite;
+          animation: orbitFloat 12s ease-in-out infinite;
         }
 
         .motion-orbit--one { left: 12%; bottom: 16%; }
-        .motion-orbit--two { right: 16%; top: 18%; width: 104px; height: 104px; animation-delay: -4s; }
+
 
         .motion-fade,
         .motion-card,
@@ -346,13 +326,8 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
         }
 
         @keyframes floatBlob {
-          from { transform: translate3d(-18px, 10px, 0) scale(0.96); }
-          to { transform: translate3d(22px, -18px, 0) scale(1.06); }
-        }
-
-        @keyframes gridDrift {
-          from { background-position: 0 0; }
-          to { background-position: 88px 44px; }
+          from { transform: translate3d(-10px, 6px, 0) scale(0.98); }
+          to { transform: translate3d(14px, -10px, 0) scale(1.03); }
         }
 
         @keyframes dashFlow {
@@ -360,13 +335,13 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
         }
 
         @keyframes pulseNode {
-          0%, 100% { transform: scale(0.9); opacity: 0.68; }
-          50% { transform: scale(1.16); opacity: 1; }
+          0%, 100% { transform: scale(0.94); opacity: 0.72; }
+          50% { transform: scale(1.08); opacity: 0.96; }
         }
 
         @keyframes orbitFloat {
-          0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.42; }
-          50% { transform: translate3d(18px, -12px, 0) rotate(10deg); opacity: 0.82; }
+          0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.36; }
+          50% { transform: translate3d(10px, -8px, 0) rotate(6deg); opacity: 0.68; }
         }
 
         @keyframes fadeRise {
@@ -382,7 +357,6 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
 
         @media (prefers-reduced-motion: reduce) {
           .motion-blob,
-          .motion-field__grid,
           .motion-field__line path,
           .motion-node,
           .motion-orbit,
