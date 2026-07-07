@@ -3,6 +3,7 @@
 import { Footer } from "@/components/ui/footer";
 import { useLanguage } from "@/components/providers/language-provider";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 export type HomePost = {
   slug: string;
@@ -15,6 +16,16 @@ export type HomePost = {
 
 type HomePageClientProps = {
   recentPosts: HomePost[];
+};
+
+type Particle = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  phase: number;
+  speed: number;
+  size: number;
 };
 
 const copy = {
@@ -81,17 +92,187 @@ function formatDate(date: string) {
   return date.slice(0, 10);
 }
 
-function MotionField() {
+function createSeededRandom(seed: number) {
+  let state = seed >>> 0;
+  return () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
+}
+
+function GenerativeMotionField() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const host = canvas?.parentElement;
+    if (!canvas || !host) return;
+
+    const context = canvas.getContext("2d", { alpha: true });
+    if (!context) return;
+
+    let frameId = 0;
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let particles: Particle[] = [];
+    let reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const random = createSeededRandom(260708);
+
+    const makeParticles = () => {
+      const count = reducedMotion ? 18 : Math.max(26, Math.min(48, Math.floor(width / 9)));
+      particles = Array.from({ length: count }, () => ({
+        x: random() * width,
+        y: random() * height,
+        vx: 0,
+        vy: 0,
+        phase: random() * Math.PI * 2,
+        speed: 0.18 + random() * 0.32,
+        size: 0.75 + random() * 1.4,
+      }));
+    };
+
+    const resize = () => {
+      const rect = host.getBoundingClientRect();
+      width = Math.max(260, rect.width);
+      height = Math.max(190, rect.height);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      makeParticles();
+    };
+
+    const drawGrid = () => {
+      context.save();
+      context.globalAlpha = 0.24;
+      context.fillStyle = "#0f766e";
+      const step = 24;
+      for (let x = 18; x < width; x += step) {
+        for (let y = 18; y < height; y += step) {
+          context.beginPath();
+          context.arc(x, y, 0.9, 0, Math.PI * 2);
+          context.fill();
+        }
+      }
+      context.restore();
+    };
+
+    const fieldAngle = (x: number, y: number, time: number) => {
+      const nx = x / width - 0.5;
+      const ny = y / height - 0.5;
+      return (
+        Math.sin(nx * 4.2 + time * 0.00035) +
+        Math.cos(ny * 3.4 - time * 0.00028) +
+        Math.sin((nx + ny) * 2.6)
+      ) * 1.35;
+    };
+
+    const nodeAt = (baseX: number, baseY: number, radius: number, speed: number, time: number) => ({
+      x: baseX * width + Math.cos(time * speed) * radius,
+      y: baseY * height + Math.sin(time * speed * 0.78) * radius * 0.55,
+    });
+
+    const drawNodes = (time: number) => {
+      const nodes = [
+        nodeAt(0.2, 0.36, 10, 0.0011, time),
+        nodeAt(0.44, 0.72, 8, 0.0014, time + 900),
+        nodeAt(0.78, 0.26, 12, 0.0009, time + 1600),
+      ];
+
+      context.save();
+      context.lineWidth = 1.8;
+      context.setLineDash([10, 20]);
+      context.lineDashOffset = -time * 0.018;
+      context.strokeStyle = "rgba(13, 148, 136, 0.54)";
+      context.beginPath();
+      context.moveTo(nodes[0].x, nodes[0].y);
+      context.bezierCurveTo(width * 0.35, height * 0.44, width * 0.45, height * 0.74, nodes[1].x, nodes[1].y);
+      context.bezierCurveTo(width * 0.56, height * 0.54, width * 0.62, height * 0.31, nodes[2].x, nodes[2].y);
+      context.stroke();
+      context.setLineDash([]);
+
+      nodes.forEach((node, index) => {
+        const pulse = 1 + Math.sin(time * 0.002 + index) * 0.08;
+        context.fillStyle = "rgba(13, 148, 136, 0.12)";
+        context.beginPath();
+        context.arc(node.x, node.y, 19 * pulse, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = "rgba(15, 118, 110, 0.92)";
+        context.beginPath();
+        context.arc(node.x, node.y, 7 * pulse, 0, Math.PI * 2);
+        context.fill();
+      });
+
+      context.strokeStyle = "rgba(13, 148, 136, 0.16)";
+      context.lineWidth = 1.2;
+      context.beginPath();
+      context.ellipse(width * 0.22, height * 0.64, 42, 34, -0.45, 0, Math.PI * 2);
+      context.stroke();
+      context.restore();
+    };
+
+    const drawParticles = (time: number) => {
+      if (reducedMotion) return;
+      context.save();
+      context.fillStyle = "rgba(20, 184, 166, 0.38)";
+      for (const particle of particles) {
+        const angle = fieldAngle(particle.x, particle.y, time + particle.phase * 1000);
+        particle.vx = particle.vx * 0.9 + Math.cos(angle) * particle.speed;
+        particle.vy = particle.vy * 0.9 + Math.sin(angle) * particle.speed;
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        if (particle.x < -8) particle.x = width + 8;
+        if (particle.x > width + 8) particle.x = -8;
+        if (particle.y < -8) particle.y = height + 8;
+        if (particle.y > height + 8) particle.y = -8;
+
+        context.globalAlpha = 0.18 + Math.sin(time * 0.002 + particle.phase) * 0.08;
+        context.beginPath();
+        context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        context.fill();
+      }
+      context.restore();
+    };
+
+    const render = (time: number) => {
+      context.clearRect(0, 0, width, height);
+      drawGrid();
+      drawParticles(time);
+      drawNodes(time);
+      if (!reducedMotion) frameId = requestAnimationFrame(render);
+    };
+
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMotionChange = () => {
+      reducedMotion = media.matches;
+      makeParticles();
+      cancelAnimationFrame(frameId);
+      render(performance.now());
+      if (!reducedMotion) frameId = requestAnimationFrame(render);
+    };
+
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(host);
+    media.addEventListener("change", onMotionChange);
+    render(performance.now());
+    if (!reducedMotion) frameId = requestAnimationFrame(render);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      observer.disconnect();
+      media.removeEventListener("change", onMotionChange);
+    };
+  }, []);
+
   return (
-    <div className="motion-field" aria-hidden="true">
-      <div className="motion-field__grid" />
-      <svg className="motion-field__line" viewBox="0 0 420 260" fill="none">
-        <path d="M30 182 C95 88 168 214 234 116 C285 40 340 86 394 36" />
-      </svg>
-      <span className="motion-node motion-node--a" />
-      <span className="motion-node motion-node--b" />
-      <span className="motion-node motion-node--c" />
-      <span className="motion-orbit motion-orbit--one" />
+    <div className="motion-field" aria-hidden="true" data-motion="generative-seeded-canvas">
+      <canvas ref={canvasRef} className="motion-field__canvas" />
+      <div className="motion-field__glow" />
     </div>
   );
 }
@@ -141,7 +322,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
             </div>
           </div>
 
-          <MotionField />
+          <GenerativeMotionField />
         </section>
 
         <section className="mt-20 grid gap-3 sm:grid-cols-3" aria-label="Main sections">
@@ -213,7 +394,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           display: block;
           border-radius: 9999px;
           filter: blur(28px);
-          opacity: 0.34;
+          opacity: 0.32;
           transform: translate3d(0, 0, 0);
           animation: floatBlob 20s ease-in-out infinite alternate;
         }
@@ -240,7 +421,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           min-height: 280px;
           border: 1px solid rgba(148, 163, 184, 0.24);
           border-radius: 32px;
-          background: linear-gradient(135deg, rgba(255,255,255,0.62), rgba(255,255,255,0.18));
+          background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.22));
           box-shadow: 0 28px 90px rgba(15, 23, 42, 0.08);
           overflow: hidden;
           backdrop-filter: blur(18px);
@@ -251,59 +432,21 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           box-shadow: 0 28px 90px rgba(0, 0, 0, 0.3);
         }
 
-        .motion-field__grid {
+        .motion-field__canvas {
           position: absolute;
           inset: 0;
-          background-image: radial-gradient(rgba(15,23,42,0.12) 1px, transparent 1px);
-          background-size: 22px 22px;
-          mask-image: linear-gradient(120deg, transparent 0%, black 32%, black 72%, transparent 100%);
+          display: block;
+          width: 100%;
+          height: 100%;
         }
 
-        .dark .motion-field__grid {
-          background-image: radial-gradient(rgba(255,255,255,0.16) 1px, transparent 1px);
-        }
-
-        .motion-field__line {
+        .motion-field__glow {
           position: absolute;
-          inset: 22px 10px;
-          width: calc(100% - 20px);
-          height: calc(100% - 44px);
+          inset: auto -20% -35% 10%;
+          height: 46%;
+          background: radial-gradient(circle, rgba(20, 184, 166, 0.13), transparent 68%);
+          pointer-events: none;
         }
-
-        .motion-field__line path {
-          stroke: rgba(13, 148, 136, 0.48);
-          stroke-width: 2;
-          stroke-linecap: round;
-          stroke-dasharray: 10 22;
-          animation: dashFlow 9s linear infinite;
-        }
-
-        .motion-node {
-          position: absolute;
-          width: 12px;
-          height: 12px;
-          border-radius: 9999px;
-          background: #0f766e;
-          box-shadow: 0 0 0 8px rgba(13, 148, 136, 0.1), 0 0 26px rgba(13, 148, 136, 0.26);
-          animation: pulseNode 3.4s ease-in-out infinite;
-        }
-
-        .motion-node--a { left: 18%; top: 34%; }
-        .motion-node--b { right: 20%; top: 22%; animation-delay: -0.7s; }
-        .motion-node--c { left: 42%; bottom: 24%; animation-delay: -1.4s; }
-
-
-        .motion-orbit {
-          position: absolute;
-          width: 72px;
-          height: 72px;
-          border-radius: 9999px;
-          border: 1px solid rgba(13, 148, 136, 0.28);
-          animation: orbitFloat 12s ease-in-out infinite;
-        }
-
-        .motion-orbit--one { left: 12%; bottom: 16%; }
-
 
         .motion-fade,
         .motion-card,
@@ -330,20 +473,6 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           to { transform: translate3d(14px, -10px, 0) scale(1.03); }
         }
 
-        @keyframes dashFlow {
-          to { stroke-dashoffset: -108; }
-        }
-
-        @keyframes pulseNode {
-          0%, 100% { transform: scale(0.94); opacity: 0.72; }
-          50% { transform: scale(1.08); opacity: 0.96; }
-        }
-
-        @keyframes orbitFloat {
-          0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.36; }
-          50% { transform: translate3d(10px, -8px, 0) rotate(6deg); opacity: 0.68; }
-        }
-
         @keyframes fadeRise {
           from { opacity: 0; transform: translate3d(0, 18px, 0); }
           to { opacity: 1; transform: translate3d(0, 0, 0); }
@@ -351,15 +480,12 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
 
         @media (max-width: 1023px) {
           .motion-field {
-            min-height: 190px;
+            min-height: 220px;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .motion-blob,
-          .motion-field__line path,
-          .motion-node,
-          .motion-orbit,
           .motion-fade,
           .motion-card,
           .motion-section,
