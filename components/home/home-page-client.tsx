@@ -81,43 +81,71 @@ function formatDate(date: string) {
   return date.slice(0, 10);
 }
 
+function MotionField() {
+  return (
+    <div className="motion-field" aria-hidden="true">
+      <div className="motion-field__grid" />
+      <svg className="motion-field__line" viewBox="0 0 420 260" fill="none">
+        <path d="M30 182 C95 88 168 214 234 116 C285 40 340 86 394 36" />
+        <path d="M38 76 C104 144 150 42 214 96 C270 145 326 118 386 172" />
+      </svg>
+      <span className="motion-node motion-node--a" />
+      <span className="motion-node motion-node--b" />
+      <span className="motion-node motion-node--c" />
+      <span className="motion-node motion-node--d" />
+      <span className="motion-orbit motion-orbit--one" />
+      <span className="motion-orbit motion-orbit--two" />
+    </div>
+  );
+}
+
 export function HomePageClient({ recentPosts }: HomePageClientProps) {
   const { language } = useLanguage();
   const t = copy[language];
 
   return (
-    <div className="min-h-screen bg-[#fbf7ee] text-slate-950 dark:bg-slate-950 dark:text-slate-50">
-      <main className="mx-auto w-full max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-        <section className="max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-teal-700 dark:text-teal-300">
-            {t.eyebrow}
-          </p>
-          <h1 className="mt-6 text-4xl font-black tracking-[-0.05em] text-slate-950 dark:text-white sm:text-6xl">
-            {t.title}
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
-            {t.lead}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
-            <Link
-              href="/blog"
-              className="rounded-full bg-slate-950 px-5 py-3 text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
-            >
-              {t.primary}
-            </Link>
-            <Link
-              href="/bio"
-              className="rounded-full border border-slate-300 px-5 py-3 text-slate-800 transition hover:border-slate-500 dark:border-slate-700 dark:text-slate-100 dark:hover:border-slate-400"
-            >
-              {t.secondary}
-            </Link>
-            <Link
-              href="/invest"
-              className="rounded-full border border-slate-300 px-5 py-3 text-slate-800 transition hover:border-slate-500 dark:border-slate-700 dark:text-slate-100 dark:hover:border-slate-400"
-            >
-              {t.tertiary}
-            </Link>
+    <div className="relative min-h-screen overflow-hidden bg-[#fbf7ee] text-slate-950 dark:bg-slate-950 dark:text-slate-50">
+      <div className="motion-backdrop" aria-hidden="true">
+        <span className="motion-blob motion-blob--a" />
+        <span className="motion-blob motion-blob--b" />
+        <span className="motion-blob motion-blob--c" />
+      </div>
+
+      <main className="relative z-10 mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+        <section className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_420px]">
+          <div className="max-w-3xl">
+            <p className="motion-fade text-xs font-semibold uppercase tracking-[0.32em] text-teal-700 dark:text-teal-300">
+              {t.eyebrow}
+            </p>
+            <h1 className="motion-fade motion-delay-1 mt-6 text-4xl font-black tracking-[-0.05em] text-slate-950 dark:text-white sm:text-6xl">
+              {t.title}
+            </h1>
+            <p className="motion-fade motion-delay-2 mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+              {t.lead}
+            </p>
+            <div className="motion-fade motion-delay-3 mt-8 flex flex-wrap gap-3 text-sm font-semibold">
+              <Link
+                href="/blog"
+                className="motion-button rounded-full bg-slate-950 px-5 py-3 text-white transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+              >
+                {t.primary}
+              </Link>
+              <Link
+                href="/bio"
+                className="motion-button rounded-full border border-slate-300 bg-white/35 px-5 py-3 text-slate-800 transition hover:-translate-y-0.5 hover:border-slate-500 dark:border-slate-700 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:border-slate-400"
+              >
+                {t.secondary}
+              </Link>
+              <Link
+                href="/invest"
+                className="motion-button rounded-full border border-slate-300 bg-white/35 px-5 py-3 text-slate-800 transition hover:-translate-y-0.5 hover:border-slate-500 dark:border-slate-700 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:border-slate-400"
+              >
+                {t.tertiary}
+              </Link>
+            </div>
           </div>
+
+          <MotionField />
         </section>
 
         <section className="mt-20 grid gap-3 sm:grid-cols-3" aria-label="Main sections">
@@ -125,7 +153,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
             <Link
               key={section.href}
               href={section.href}
-              className="group rounded-3xl border border-slate-200 bg-white/55 p-6 transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white dark:border-slate-800 dark:bg-white/[0.04] dark:hover:border-slate-700"
+              className="motion-card group rounded-3xl border border-slate-200 bg-white/60 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.05)] backdrop-blur transition hover:-translate-y-1 hover:border-teal-200 hover:bg-white dark:border-slate-800 dark:bg-white/[0.04] dark:hover:border-teal-700/60"
             >
               <h2 className="text-2xl font-black tracking-[-0.04em] text-slate-950 dark:text-white">
                 {section.title}
@@ -137,12 +165,12 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           ))}
         </section>
 
-        <section className="mt-20 border-t border-slate-200 pt-10 dark:border-slate-800">
+        <section className="motion-section mt-20 border-t border-slate-200 pt-10 dark:border-slate-800">
           <div className="flex items-end justify-between gap-4">
             <h2 className="text-3xl font-black tracking-[-0.05em] text-slate-950 dark:text-white">
               {t.latestTitle}
             </h2>
-            <Link href="/blog" className="text-sm font-semibold text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100">
+            <Link href="/blog" className="text-sm font-semibold text-teal-700 transition hover:translate-x-1 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100">
               {t.viewAll} →
             </Link>
           </div>
@@ -153,7 +181,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="block py-5 transition hover:translate-x-1"
+                  className="motion-list-item block py-5 transition hover:translate-x-1"
                 >
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
                     <h3 className="text-lg font-bold leading-7 text-slate-950 dark:text-white">
@@ -175,6 +203,197 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
         </section>
       </main>
       <Footer />
+
+      <style>{`
+        .motion-backdrop {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          pointer-events: none;
+        }
+
+        .motion-blob {
+          position: absolute;
+          display: block;
+          border-radius: 9999px;
+          filter: blur(28px);
+          opacity: 0.42;
+          transform: translate3d(0, 0, 0);
+          animation: floatBlob 16s ease-in-out infinite alternate;
+        }
+
+        .motion-blob--a {
+          top: 110px;
+          right: 8%;
+          width: 260px;
+          height: 260px;
+          background: rgba(20, 184, 166, 0.18);
+        }
+
+        .motion-blob--b {
+          top: 360px;
+          left: -90px;
+          width: 280px;
+          height: 280px;
+          background: rgba(251, 146, 60, 0.16);
+          animation-delay: -6s;
+        }
+
+        .motion-blob--c {
+          bottom: 120px;
+          right: 22%;
+          width: 210px;
+          height: 210px;
+          background: rgba(14, 165, 233, 0.12);
+          animation-delay: -10s;
+        }
+
+        .motion-field {
+          position: relative;
+          min-height: 280px;
+          border: 1px solid rgba(148, 163, 184, 0.24);
+          border-radius: 32px;
+          background: linear-gradient(135deg, rgba(255,255,255,0.62), rgba(255,255,255,0.18));
+          box-shadow: 0 28px 90px rgba(15, 23, 42, 0.08);
+          overflow: hidden;
+          backdrop-filter: blur(18px);
+        }
+
+        .dark .motion-field {
+          background: linear-gradient(135deg, rgba(15,23,42,0.72), rgba(15,23,42,0.28));
+          box-shadow: 0 28px 90px rgba(0, 0, 0, 0.3);
+        }
+
+        .motion-field__grid {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(rgba(15,23,42,0.12) 1px, transparent 1px);
+          background-size: 22px 22px;
+          mask-image: linear-gradient(120deg, transparent 0%, black 32%, black 72%, transparent 100%);
+          animation: gridDrift 18s linear infinite;
+        }
+
+        .dark .motion-field__grid {
+          background-image: radial-gradient(rgba(255,255,255,0.16) 1px, transparent 1px);
+        }
+
+        .motion-field__line {
+          position: absolute;
+          inset: 22px 10px;
+          width: calc(100% - 20px);
+          height: calc(100% - 44px);
+        }
+
+        .motion-field__line path {
+          stroke: rgba(13, 148, 136, 0.54);
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-dasharray: 9 18;
+          animation: dashFlow 6.5s linear infinite;
+        }
+
+        .motion-field__line path:nth-child(2) {
+          stroke: rgba(245, 158, 11, 0.46);
+          animation-duration: 8.5s;
+          animation-direction: reverse;
+        }
+
+        .motion-node {
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          border-radius: 9999px;
+          background: #0f766e;
+          box-shadow: 0 0 0 8px rgba(13, 148, 136, 0.12), 0 0 32px rgba(13, 148, 136, 0.32);
+          animation: pulseNode 2.6s ease-in-out infinite;
+        }
+
+        .motion-node--a { left: 18%; top: 34%; }
+        .motion-node--b { right: 20%; top: 22%; animation-delay: -0.7s; }
+        .motion-node--c { left: 42%; bottom: 24%; animation-delay: -1.4s; }
+        .motion-node--d { right: 12%; bottom: 28%; animation-delay: -2.1s; }
+
+        .motion-orbit {
+          position: absolute;
+          width: 72px;
+          height: 72px;
+          border-radius: 9999px;
+          border: 1px solid rgba(13, 148, 136, 0.28);
+          animation: orbitFloat 9s ease-in-out infinite;
+        }
+
+        .motion-orbit--one { left: 12%; bottom: 16%; }
+        .motion-orbit--two { right: 16%; top: 18%; width: 104px; height: 104px; animation-delay: -4s; }
+
+        .motion-fade,
+        .motion-card,
+        .motion-section,
+        .motion-list-item {
+          animation: fadeRise 0.85s ease both;
+        }
+
+        .motion-delay-1 { animation-delay: 0.08s; }
+        .motion-delay-2 { animation-delay: 0.16s; }
+        .motion-delay-3 { animation-delay: 0.24s; }
+
+        .motion-card:nth-child(2) { animation-delay: 0.1s; }
+        .motion-card:nth-child(3) { animation-delay: 0.2s; }
+        .motion-list-item:nth-child(2) { animation-delay: 0.08s; }
+        .motion-list-item:nth-child(3) { animation-delay: 0.16s; }
+
+        .motion-button {
+          box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+        }
+
+        @keyframes floatBlob {
+          from { transform: translate3d(-18px, 10px, 0) scale(0.96); }
+          to { transform: translate3d(22px, -18px, 0) scale(1.06); }
+        }
+
+        @keyframes gridDrift {
+          from { background-position: 0 0; }
+          to { background-position: 88px 44px; }
+        }
+
+        @keyframes dashFlow {
+          to { stroke-dashoffset: -108; }
+        }
+
+        @keyframes pulseNode {
+          0%, 100% { transform: scale(0.9); opacity: 0.68; }
+          50% { transform: scale(1.16); opacity: 1; }
+        }
+
+        @keyframes orbitFloat {
+          0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.42; }
+          50% { transform: translate3d(18px, -12px, 0) rotate(10deg); opacity: 0.82; }
+        }
+
+        @keyframes fadeRise {
+          from { opacity: 0; transform: translate3d(0, 18px, 0); }
+          to { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+
+        @media (max-width: 1023px) {
+          .motion-field {
+            min-height: 190px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .motion-blob,
+          .motion-field__grid,
+          .motion-field__line path,
+          .motion-node,
+          .motion-orbit,
+          .motion-fade,
+          .motion-card,
+          .motion-section,
+          .motion-list-item {
+            animation: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
