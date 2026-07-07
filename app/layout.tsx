@@ -7,7 +7,6 @@ import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/providers/language-provider";
-import { ShawnChatUI } from "@/components/marketing/shawn-chat-ui";
 import { Header } from "@/components/ui/header";
 import { SuppressTitleTooltips } from "@/components/ui/suppress-title-tooltips";
 import { SITE_URL } from "@/lib/site-url";
@@ -59,7 +58,6 @@ export default function RootLayout({
             <SuppressTitleTooltips />
             <Header />
             {children}
-            <ShawnChatUI />
             <Analytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""} />
             <VercelAnalytics />
             <SpeedInsights />
