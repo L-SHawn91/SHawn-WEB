@@ -47,21 +47,21 @@ const copy = {
       {
         key: "ai",
         label: "AI",
-        desc: "워드프레스 매거진형",
+        desc: "Ink · Cyan",
         placeholder: "예: AI agent benchmark, model evaluation, MCP tools",
         quick: ["AI agent benchmark", "model evaluation", "MCP tools", "computer use AI"],
       },
       {
         key: "assets",
         label: "Assets",
-        desc: "리포트 아카이브형",
+        desc: "Amber · Cream",
         placeholder: "예: semiconductor cycle, power grid, inflation data",
         quick: ["semiconductor cycle", "power grid", "inflation data", "market signal report"],
       },
       {
         key: "bio",
         label: "Bio",
-        desc: "근거 탐색형",
+        desc: "Sage · Mint",
         placeholder: "예: endometrium atlas, Asherman dataset, single-cell fibrosis",
         quick: ["endometrium atlas", "Asherman dataset", "single-cell fibrosis", "organoid engraftment"],
       },
@@ -87,21 +87,21 @@ const copy = {
       {
         key: "ai",
         label: "AI",
-        desc: "WordPress magazine style",
+        desc: "Ink · Cyan",
         placeholder: "e.g. AI agent benchmark, model evaluation, MCP tools",
         quick: ["AI agent benchmark", "model evaluation", "MCP tools", "computer use AI"],
       },
       {
         key: "assets",
         label: "Assets",
-        desc: "Report archive style",
+        desc: "Amber · Cream",
         placeholder: "e.g. semiconductor cycle, power grid, inflation data",
         quick: ["semiconductor cycle", "power grid", "inflation data", "market signal report"],
       },
       {
         key: "bio",
         label: "Bio",
-        desc: "Evidence finder style",
+        desc: "Sage · Mint",
         placeholder: "e.g. endometrium atlas, Asherman dataset, single-cell fibrosis",
         quick: ["endometrium atlas", "Asherman dataset", "single-cell fibrosis", "organoid engraftment"],
       },
@@ -154,6 +154,10 @@ function GenerativeMotionField() {
     let particles: Particle[] = [];
     let reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const random = createSeededRandom(260709);
+    const paletteRgb = () => {
+      const owner = host.closest(".home-surface") as HTMLElement | null;
+      return getComputedStyle(owner ?? host).getPropertyValue("--motion-rgb").trim() || "13, 148, 136";
+    };
 
     const makeParticles = () => {
       const count = reducedMotion ? 6 : Math.max(12, Math.min(24, Math.floor(width / 28)));
@@ -184,7 +188,7 @@ function GenerativeMotionField() {
     const drawGrid = () => {
       context.save();
       context.globalAlpha = 0.12;
-      context.fillStyle = "#0f766e";
+      context.fillStyle = `rgba(${paletteRgb()}, 0.72)`;
       const step = 34;
       for (let x = 18; x < width; x += step) {
         for (let y = 18; y < height; y += step) {
@@ -213,7 +217,7 @@ function GenerativeMotionField() {
       context.lineWidth = 1.2;
       context.setLineDash([8, 18]);
       context.lineDashOffset = -time * 0.01;
-      context.strokeStyle = "rgba(13, 148, 136, 0.3)";
+      context.strokeStyle = `rgba(${paletteRgb()}, 0.34)`;
       context.beginPath();
       context.moveTo(nodes[0].x, nodes[0].y);
       context.bezierCurveTo(width * 0.32, height * 0.35, width * 0.39, height * 0.7, nodes[1].x, nodes[1].y);
@@ -223,11 +227,11 @@ function GenerativeMotionField() {
 
       nodes.forEach((node, index) => {
         const pulse = 1 + Math.sin(time * 0.0014 + index) * 0.04;
-        context.fillStyle = "rgba(13, 148, 136, 0.08)";
+        context.fillStyle = `rgba(${paletteRgb()}, 0.1)`;
         context.beginPath();
         context.arc(node.x, node.y, 14 * pulse, 0, Math.PI * 2);
         context.fill();
-        context.fillStyle = "rgba(15, 118, 110, 0.7)";
+        context.fillStyle = `rgba(${paletteRgb()}, 0.74)`;
         context.beginPath();
         context.arc(node.x, node.y, 4.2 * pulse, 0, Math.PI * 2);
         context.fill();
@@ -238,7 +242,7 @@ function GenerativeMotionField() {
     const drawParticles = (time: number) => {
       if (reducedMotion) return;
       context.save();
-      context.fillStyle = "rgba(20, 184, 166, 0.22)";
+      context.fillStyle = `rgba(${paletteRgb()}, 0.24)`;
       for (const particle of particles) {
         const angle = fieldAngle(particle.x, particle.y, time + particle.phase * 1000);
         particle.vx = particle.vx * 0.92 + Math.cos(angle) * particle.speed;
@@ -362,7 +366,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           <p className="motion-fade text-xs font-semibold uppercase tracking-[0.34em] text-[color:var(--accent-strong)]">
             {t.eyebrow}
           </p>
-          <h1 className="motion-fade motion-delay-1 mt-4 text-5xl font-black tracking-[-0.07em] text-slate-950 dark:text-white sm:text-7xl">
+          <h1 className="motion-fade motion-delay-1 mt-4 text-5xl font-black tracking-[-0.07em] text-[color:var(--title)] dark:text-white sm:text-7xl">
             {t.title}
           </h1>
           <p className="motion-fade motion-delay-2 mt-3 text-sm font-medium text-slate-500 dark:text-slate-400 sm:text-base">
@@ -404,13 +408,13 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder={activeDesign.placeholder}
-                  className="h-16 w-full rounded-[1.45rem] border border-transparent bg-slate-50 py-4 pl-12 pr-4 text-base font-semibold text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[color:var(--accent-soft)] focus:bg-white focus:ring-4 focus:ring-[color:var(--ring)] dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500"
+                  className="h-16 w-full rounded-[1.45rem] border border-transparent bg-[color:var(--input-bg)] py-4 pl-12 pr-4 text-base font-semibold text-[color:var(--title)] outline-none transition placeholder:text-[color:var(--placeholder)] focus:border-[color:var(--accent-soft)] focus:bg-[color:var(--input-focus)] focus:ring-4 focus:ring-[color:var(--ring)] dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500"
                   autoComplete="off"
                 />
               </div>
               <button
                 type="submit"
-                className="rounded-[1.45rem] bg-slate-950 px-8 py-4 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                className="rounded-[1.45rem] bg-[color:var(--cta)] px-8 py-4 text-sm font-black text-[color:var(--cta-text)] transition hover:-translate-y-0.5 hover:opacity-90 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
               >
                 {t.searchButton}
               </button>
@@ -425,7 +429,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
                   key={item}
                   type="button"
                   onClick={() => setQuery(item)}
-                  className="rounded-full border border-slate-200 bg-white/38 px-3 py-1.5 text-xs font-semibold transition hover:-translate-y-0.5 hover:border-[color:var(--accent-soft)] hover:text-slate-900 dark:border-slate-800 dark:bg-white/[0.04] dark:hover:text-white"
+                  className="cache-chip rounded-full border border-slate-200 bg-white/38 px-3 py-1.5 text-xs font-semibold transition hover:-translate-y-0.5 hover:border-[color:var(--accent-soft)] hover:text-slate-900 dark:border-slate-800 dark:bg-white/[0.04] dark:hover:text-white"
                 >
                   {item}
                 </button>
@@ -454,7 +458,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-full border border-slate-200 bg-white/45 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-[color:var(--accent-soft)] hover:bg-white dark:border-slate-800 dark:bg-white/[0.04] dark:text-slate-200"
+                  className="menu-pill rounded-full border border-slate-200 bg-white/45 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-[color:var(--accent-soft)] hover:bg-white dark:border-slate-800 dark:bg-white/[0.04] dark:text-slate-200"
                 >
                   {item.title} <span className="font-normal text-slate-400">· {item.desc}</span>
                 </Link>
@@ -467,43 +471,110 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
 
       <style>{`
         .home-surface {
+          --title: #0f172a;
           --accent: #0f766e;
           --accent-strong: #0f766e;
           --accent-soft: rgba(13, 148, 136, 0.34);
           --ring: rgba(13, 148, 136, 0.11);
+          --cta: #0f172a;
+          --cta-text: #ffffff;
+          --input-bg: #f8fafc;
+          --input-focus: #ffffff;
+          --placeholder: #94a3b8;
+          --shell-bg: rgba(255, 255, 255, 0.86);
+          --shell-border: rgba(226, 232, 240, 0.92);
+          --shell-shadow: 0 24px 90px rgba(15, 23, 42, 0.10);
+          --chip-bg: rgba(255, 255, 255, 0.42);
+          --chip-border: rgba(226, 232, 240, 0.9);
+          --strip-bg: linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.14));
+          --strip-border: rgba(148, 163, 184, 0.18);
+          --motion-rgb: 13, 148, 136;
           background:
             radial-gradient(circle at 50% 22%, var(--wash), transparent 33%),
-            #fbf7ee;
+            linear-gradient(135deg, var(--page-a), var(--page-b));
         }
 
         .home-surface[data-design="ai"] {
-          --accent: #111827;
-          --accent-strong: #0f766e;
-          --accent-soft: rgba(15, 118, 110, 0.3);
-          --ring: rgba(15, 118, 110, 0.1);
-          --wash: rgba(20, 184, 166, 0.11);
+          --title: #06111f;
+          --accent: #08111f;
+          --accent-strong: #0891b2;
+          --accent-soft: rgba(8, 145, 178, 0.34);
+          --ring: rgba(8, 145, 178, 0.14);
+          --wash: rgba(34, 211, 238, 0.16);
+          --page-a: #f8fbff;
+          --page-b: #e9f7fb;
+          --cta: #06111f;
+          --cta-text: #f8fdff;
+          --input-bg: #f1f7fb;
+          --input-focus: #ffffff;
+          --placeholder: #7390a5;
+          --shell-bg: rgba(255, 255, 255, 0.9);
+          --shell-border: rgba(8, 145, 178, 0.18);
+          --shell-shadow: 0 26px 90px rgba(8, 47, 73, 0.14);
+          --chip-bg: rgba(224, 247, 254, 0.52);
+          --chip-border: rgba(14, 116, 144, 0.18);
+          --strip-bg: linear-gradient(135deg, rgba(236, 254, 255, 0.72), rgba(15, 23, 42, 0.06));
+          --strip-border: rgba(8, 145, 178, 0.22);
+          --motion-rgb: 8, 145, 178;
         }
 
         .home-surface[data-design="assets"] {
-          --accent: #92400e;
-          --accent-strong: #a16207;
-          --accent-soft: rgba(217, 119, 6, 0.28);
-          --ring: rgba(217, 119, 6, 0.11);
-          --wash: rgba(251, 191, 36, 0.13);
+          --title: #3a2410;
+          --accent: #b45309;
+          --accent-strong: #b45309;
+          --accent-soft: rgba(217, 119, 6, 0.38);
+          --ring: rgba(217, 119, 6, 0.16);
+          --wash: rgba(251, 191, 36, 0.22);
+          --page-a: #fff7e6;
+          --page-b: #f5ead2;
+          --cta: #9a3412;
+          --cta-text: #fffaf0;
+          --input-bg: #fff9ed;
+          --input-focus: #ffffff;
+          --placeholder: #b58b59;
+          --shell-bg: rgba(255, 251, 235, 0.9);
+          --shell-border: rgba(217, 119, 6, 0.24);
+          --shell-shadow: 0 26px 90px rgba(146, 64, 14, 0.16);
+          --chip-bg: rgba(254, 243, 199, 0.62);
+          --chip-border: rgba(180, 83, 9, 0.2);
+          --strip-bg: linear-gradient(135deg, rgba(254, 243, 199, 0.74), rgba(180, 83, 9, 0.08));
+          --strip-border: rgba(217, 119, 6, 0.24);
+          --motion-rgb: 180, 83, 9;
         }
 
         .home-surface[data-design="bio"] {
+          --title: #052e26;
           --accent: #047857;
           --accent-strong: #047857;
-          --accent-soft: rgba(16, 185, 129, 0.28);
-          --ring: rgba(16, 185, 129, 0.1);
-          --wash: rgba(110, 231, 183, 0.12);
+          --accent-soft: rgba(16, 185, 129, 0.34);
+          --ring: rgba(16, 185, 129, 0.14);
+          --wash: rgba(110, 231, 183, 0.22);
+          --page-a: #f5fff9;
+          --page-b: #e4f5ea;
+          --cta: #047857;
+          --cta-text: #f7fffb;
+          --input-bg: #f0fbf5;
+          --input-focus: #ffffff;
+          --placeholder: #6f9a84;
+          --shell-bg: rgba(245, 255, 249, 0.9);
+          --shell-border: rgba(4, 120, 87, 0.2);
+          --shell-shadow: 0 26px 90px rgba(6, 95, 70, 0.14);
+          --chip-bg: rgba(209, 250, 229, 0.58);
+          --chip-border: rgba(4, 120, 87, 0.18);
+          --strip-bg: linear-gradient(135deg, rgba(209, 250, 229, 0.7), rgba(4, 120, 87, 0.07));
+          --strip-border: rgba(16, 185, 129, 0.24);
+          --motion-rgb: 4, 120, 87;
         }
 
         .dark .home-surface {
+          --page-a: #020617;
+          --page-b: #07111f;
+          --shell-bg: rgba(15, 23, 42, 0.84);
+          --input-bg: #020617;
+          --input-focus: #0f172a;
           background:
-            radial-gradient(circle at 50% 18%, rgba(20, 184, 166, 0.12), transparent 32%),
-            #020617;
+            radial-gradient(circle at 50% 18%, rgba(var(--motion-rgb), 0.14), transparent 32%),
+            linear-gradient(135deg, var(--page-a), var(--page-b));
         }
 
         .surface-glow {
@@ -515,16 +586,29 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
             radial-gradient(circle at 8% 42%, rgba(251, 146, 60, 0.08), transparent 26%);
         }
 
+        .search-shell {
+          border-color: var(--shell-border);
+          background: var(--shell-bg);
+          box-shadow: var(--shell-shadow);
+        }
+
+        .cache-chip,
+        .menu-pill {
+          border-color: var(--chip-border);
+          background: var(--chip-bg);
+          color: var(--title);
+        }
+
         .kmap-strip {
           position: relative;
           min-height: 92px;
-          border: 1px solid rgba(148, 163, 184, 0.18);
+          border: 1px solid var(--strip-border);
           border-radius: 9999px;
-          background: linear-gradient(135deg, rgba(255,255,255,0.42), rgba(255,255,255,0.12));
-          box-shadow: 0 16px 54px rgba(15, 23, 42, 0.05);
+          background: var(--strip-bg);
+          box-shadow: 0 16px 54px rgba(var(--motion-rgb), 0.08);
           overflow: hidden;
           backdrop-filter: blur(18px);
-          opacity: 0.78;
+          opacity: 0.86;
         }
 
         .dark .kmap-strip {
