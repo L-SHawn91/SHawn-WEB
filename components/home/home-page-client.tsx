@@ -28,7 +28,6 @@ type Particle = {
   size: number;
 };
 
-type SearchMode = "all" | "papers" | "datasets" | "public";
 type DesignMode = "ai" | "assets" | "bio";
 
 const CACHE_LIMIT = 6;
@@ -44,12 +43,6 @@ const copy = {
     quickLabel: "캐시 검색",
     cacheHint: "빠른검색은 저장된 캐시만 보여줍니다. 클릭하면 입력창에만 채워집니다.",
     designLabel: "디자인",
-    modes: [
-      { key: "all", label: "통합", helper: "논문 중심으로 시작하고 관련 데이터셋으로 이어집니다." },
-      { key: "papers", label: "논문", helper: "공개 문헌 검색으로 이동합니다." },
-      { key: "datasets", label: "데이터셋", helper: "공개 데이터셋 검색으로 이동합니다." },
-      { key: "public", label: "공공데이터", helper: "정부·공공 오픈데이터 맥락으로 검색합니다." },
-    ],
     designs: [
       {
         key: "ai",
@@ -90,12 +83,6 @@ const copy = {
     quickLabel: "Cached search",
     cacheHint: "Quick searches are cache-only. Selecting one only fills the input.",
     designLabel: "Design",
-    modes: [
-      { key: "all", label: "All", helper: "Start with papers and continue into related datasets." },
-      { key: "papers", label: "Papers", helper: "Go to public literature search." },
-      { key: "datasets", label: "Datasets", helper: "Go to public dataset search." },
-      { key: "public", label: "Public data", helper: "Search with government and open-data context." },
-    ],
     designs: [
       {
         key: "ai",
@@ -315,9 +302,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
   const { language } = useLanguage();
   const t = copy[language];
   const [query, setQuery] = useState("");
-  const [mode, setMode] = useState<SearchMode>("all");
   const [design, setDesign] = useState<DesignMode>("ai");
-  const activeMode = t.modes.find((item) => item.key === mode) ?? t.modes[0];
   const activeDesign = t.designs.find((item) => item.key === design) ?? t.designs[0];
   const [cachedQueries, setCachedQueries] = useState<string[]>(activeDesign.quick.slice(0, CACHE_LIMIT));
   const latestPost = recentPosts[0];
@@ -350,18 +335,14 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
     }
   };
 
-  const runSearch = (nextQuery: string, nextMode: SearchMode = mode) => {
+  const runSearch = (nextQuery: string) => {
     const trimmed = nextQuery.trim();
     if (!trimmed) return;
 
     rememberQuery(trimmed);
     const params = new URLSearchParams({ query: trimmed, q: trimmed, from: "home" });
-    if (nextMode === "public") {
+    if (design === "assets") {
       params.set("context", "public data government open data");
-      window.location.assign(`/datasets?${params.toString()}`);
-      return;
-    }
-    if (nextMode === "datasets") {
       window.location.assign(`/datasets?${params.toString()}`);
       return;
     }
@@ -434,26 +415,6 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
                 {t.searchButton}
               </button>
             </div>
-
-            <div className="mt-3 flex flex-wrap gap-2 px-1" aria-label="Search scope">
-              {t.modes.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => setMode(item.key)}
-                  className={
-                    item.key === mode
-                      ? "rounded-full bg-[color:var(--accent)] px-3.5 py-2 text-xs font-black text-white shadow-sm dark:text-slate-950"
-                      : "rounded-full border border-slate-200 bg-white/60 px-3.5 py-2 text-xs font-semibold text-slate-600 transition hover:border-[color:var(--accent-soft)] hover:text-slate-950 dark:border-slate-800 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:text-white"
-                  }
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-            <p className="mt-3 px-2 text-xs leading-5 text-slate-500 dark:text-slate-400">
-              {activeMode.helper}
-            </p>
           </form>
 
           <div className="motion-fade motion-delay-4 mt-5 flex w-full flex-col items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
