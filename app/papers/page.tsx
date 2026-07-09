@@ -787,11 +787,14 @@ export default function PapersPage() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const q = new URLSearchParams(window.location.search).get('query');
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('query') || params.get('q');
     if (!q) return;
     setChips([]);
     setQuery(q);
     setQueryHistory((prev) => [q, ...prev.filter((item) => item !== q)].slice(0, 10));
+    void searchPapers(q, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const exportBibTeX = () => {
