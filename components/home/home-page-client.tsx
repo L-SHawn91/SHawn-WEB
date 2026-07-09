@@ -32,36 +32,42 @@ type DesignMode = "ai" | "assets" | "bio";
 
 const CACHE_LIMIT = 6;
 
+const SEARCH_SOURCES: Record<DesignMode, string[]> = {
+  ai: ["semantic", "openalex", "arxiv"],
+  assets: ["datagov", "dataeu", "kaggle", "huggingface", "openml", "zenodo"],
+  bio: ["pubmed", "europepmc", "biorxiv", "openalex"],
+};
+
 const copy = {
   ko: {
     eyebrow: "SHawn_LAB",
     title: "Search",
-    lead: "논문 · 데이터셋 · 공공데이터를 한 번에 찾습니다.",
+    lead: "선택한 검색만 빠르게 찾습니다.",
     searchLabel: "검색어",
     searchButton: "검색",
     menuLabel: "메뉴",
     quickLabel: "캐시 검색",
     cacheHint: "빠른검색은 저장된 캐시만 보여줍니다. 클릭하면 입력창에만 채워집니다.",
-    designLabel: "디자인",
+    designLabel: "검색 타입",
     designs: [
       {
         key: "ai",
         label: "AI",
-        desc: "Ink · Cyan",
+        desc: "AI 논문 · arXiv/Semantic",
         placeholder: "예: AI agent benchmark, model evaluation, MCP tools",
         quick: ["AI agent benchmark", "model evaluation", "MCP tools", "computer use AI"],
       },
       {
         key: "assets",
         label: "Assets",
-        desc: "Amber · Cream",
+        desc: "공공·시장 데이터셋",
         placeholder: "예: semiconductor cycle, power grid, inflation data",
         quick: ["semiconductor cycle", "power grid", "inflation data", "market signal report"],
       },
       {
         key: "bio",
         label: "Bio",
-        desc: "Sage · Mint",
+        desc: "Bio 논문 · PubMed/PMC",
         placeholder: "예: endometrium atlas, Asherman dataset, single-cell fibrosis",
         quick: ["endometrium atlas", "Asherman dataset", "single-cell fibrosis", "organoid engraftment"],
       },
@@ -76,32 +82,32 @@ const copy = {
   en: {
     eyebrow: "SHawn_LAB",
     title: "Search",
-    lead: "Search papers, datasets, and public data from one clean entry.",
+    lead: "Search only the selected lane, fast.",
     searchLabel: "Search query",
     searchButton: "Search",
     menuLabel: "Menu",
     quickLabel: "Cached search",
     cacheHint: "Quick searches are cache-only. Selecting one only fills the input.",
-    designLabel: "Design",
+    designLabel: "Search type",
     designs: [
       {
         key: "ai",
         label: "AI",
-        desc: "Ink · Cyan",
+        desc: "AI papers · arXiv/Semantic",
         placeholder: "e.g. AI agent benchmark, model evaluation, MCP tools",
         quick: ["AI agent benchmark", "model evaluation", "MCP tools", "computer use AI"],
       },
       {
         key: "assets",
         label: "Assets",
-        desc: "Amber · Cream",
+        desc: "Public/market datasets",
         placeholder: "e.g. semiconductor cycle, power grid, inflation data",
         quick: ["semiconductor cycle", "power grid", "inflation data", "market signal report"],
       },
       {
         key: "bio",
         label: "Bio",
-        desc: "Sage · Mint",
+        desc: "Bio papers · PubMed/PMC",
         placeholder: "e.g. endometrium atlas, Asherman dataset, single-cell fibrosis",
         quick: ["endometrium atlas", "Asherman dataset", "single-cell fibrosis", "organoid engraftment"],
       },
@@ -344,9 +350,15 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
     if (!trimmed) return;
 
     rememberQuery(trimmed);
-    const params = new URLSearchParams({ query: trimmed, q: trimmed, from: "home" });
+    const params = new URLSearchParams({
+      query: trimmed,
+      q: trimmed,
+      from: "home",
+      searchMode: design,
+      sources: SEARCH_SOURCES[design].join(","),
+    });
     if (design === "assets") {
-      params.set("context", "public data government open data");
+      params.set("context", "public data market government open data");
       window.location.assign(`/datasets?${params.toString()}`);
       return;
     }
@@ -472,98 +484,50 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
       <style>{`
         .home-surface {
           --title: #0f172a;
-          --accent: #0f766e;
-          --accent-strong: #0f766e;
-          --accent-soft: rgba(13, 148, 136, 0.34);
-          --ring: rgba(13, 148, 136, 0.11);
+          --accent: #0f172a;
+          --accent-strong: #0f172a;
+          --accent-soft: rgba(15, 23, 42, 0.22);
+          --ring: rgba(15, 23, 42, 0.08);
+          --wash: rgba(15, 23, 42, 0.045);
+          --page-a: #ffffff;
+          --page-b: #f4f4f5;
           --cta: #0f172a;
           --cta-text: #ffffff;
           --input-bg: #f8fafc;
           --input-focus: #ffffff;
           --placeholder: #94a3b8;
-          --shell-bg: rgba(255, 255, 255, 0.86);
-          --shell-border: rgba(226, 232, 240, 0.92);
+          --shell-bg: rgba(255, 255, 255, 0.9);
+          --shell-border: rgba(15, 23, 42, 0.12);
           --shell-shadow: 0 24px 90px rgba(15, 23, 42, 0.10);
-          --chip-bg: rgba(255, 255, 255, 0.42);
-          --chip-border: rgba(226, 232, 240, 0.9);
-          --strip-bg: linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.14));
-          --strip-border: rgba(148, 163, 184, 0.18);
-          --motion-rgb: 13, 148, 136;
+          --chip-bg: rgba(255, 255, 255, 0.72);
+          --chip-border: rgba(15, 23, 42, 0.14);
+          --strip-bg: linear-gradient(135deg, rgba(255,255,255,0.72), rgba(15,23,42,0.035));
+          --strip-border: rgba(15, 23, 42, 0.12);
+          --motion-rgb: 15, 23, 42;
           background:
             radial-gradient(circle at 50% 22%, var(--wash), transparent 33%),
             linear-gradient(135deg, var(--page-a), var(--page-b));
         }
 
         .home-surface[data-design="ai"] {
-          --title: #06111f;
-          --accent: #08111f;
-          --accent-strong: #0891b2;
-          --accent-soft: rgba(8, 145, 178, 0.34);
-          --ring: rgba(8, 145, 178, 0.14);
-          --wash: rgba(34, 211, 238, 0.16);
-          --page-a: #f8fbff;
-          --page-b: #e9f7fb;
-          --cta: #06111f;
-          --cta-text: #f8fdff;
-          --input-bg: #f1f7fb;
-          --input-focus: #ffffff;
-          --placeholder: #7390a5;
-          --shell-bg: rgba(255, 255, 255, 0.9);
-          --shell-border: rgba(8, 145, 178, 0.18);
-          --shell-shadow: 0 26px 90px rgba(8, 47, 73, 0.14);
-          --chip-bg: rgba(224, 247, 254, 0.52);
-          --chip-border: rgba(14, 116, 144, 0.18);
-          --strip-bg: linear-gradient(135deg, rgba(236, 254, 255, 0.72), rgba(15, 23, 42, 0.06));
-          --strip-border: rgba(8, 145, 178, 0.22);
-          --motion-rgb: 8, 145, 178;
+          --accent: #0f172a;
+          --accent-strong: #111827;
+          --accent-soft: rgba(15, 23, 42, 0.26);
+          --motion-rgb: 15, 23, 42;
         }
 
         .home-surface[data-design="assets"] {
-          --title: #3a2410;
-          --accent: #b45309;
-          --accent-strong: #b45309;
-          --accent-soft: rgba(217, 119, 6, 0.38);
-          --ring: rgba(217, 119, 6, 0.16);
-          --wash: rgba(251, 191, 36, 0.22);
-          --page-a: #fff7e6;
-          --page-b: #f5ead2;
-          --cta: #9a3412;
-          --cta-text: #fffaf0;
-          --input-bg: #fff9ed;
-          --input-focus: #ffffff;
-          --placeholder: #b58b59;
-          --shell-bg: rgba(255, 251, 235, 0.9);
-          --shell-border: rgba(217, 119, 6, 0.24);
-          --shell-shadow: 0 26px 90px rgba(146, 64, 14, 0.16);
-          --chip-bg: rgba(254, 243, 199, 0.62);
-          --chip-border: rgba(180, 83, 9, 0.2);
-          --strip-bg: linear-gradient(135deg, rgba(254, 243, 199, 0.74), rgba(180, 83, 9, 0.08));
-          --strip-border: rgba(217, 119, 6, 0.24);
-          --motion-rgb: 180, 83, 9;
+          --accent: #262626;
+          --accent-strong: #27272a;
+          --accent-soft: rgba(39, 39, 42, 0.24);
+          --motion-rgb: 39, 39, 42;
         }
 
         .home-surface[data-design="bio"] {
-          --title: #052e26;
-          --accent: #047857;
-          --accent-strong: #047857;
-          --accent-soft: rgba(16, 185, 129, 0.34);
-          --ring: rgba(16, 185, 129, 0.14);
-          --wash: rgba(110, 231, 183, 0.22);
-          --page-a: #f5fff9;
-          --page-b: #e4f5ea;
-          --cta: #047857;
-          --cta-text: #f7fffb;
-          --input-bg: #f0fbf5;
-          --input-focus: #ffffff;
-          --placeholder: #6f9a84;
-          --shell-bg: rgba(245, 255, 249, 0.9);
-          --shell-border: rgba(4, 120, 87, 0.2);
-          --shell-shadow: 0 26px 90px rgba(6, 95, 70, 0.14);
-          --chip-bg: rgba(209, 250, 229, 0.58);
-          --chip-border: rgba(4, 120, 87, 0.18);
-          --strip-bg: linear-gradient(135deg, rgba(209, 250, 229, 0.7), rgba(4, 120, 87, 0.07));
-          --strip-border: rgba(16, 185, 129, 0.24);
-          --motion-rgb: 4, 120, 87;
+          --accent: #18181b;
+          --accent-strong: #27272a;
+          --accent-soft: rgba(24, 24, 27, 0.24);
+          --motion-rgb: 24, 24, 27;
         }
 
         .dark .home-surface {
@@ -583,7 +547,7 @@ export function HomePageClient({ recentPosts }: HomePageClientProps) {
           pointer-events: none;
           background:
             radial-gradient(circle at 88% 18%, var(--wash), transparent 24%),
-            radial-gradient(circle at 8% 42%, rgba(251, 146, 60, 0.08), transparent 26%);
+            radial-gradient(circle at 8% 42%, rgba(15, 23, 42, 0.035), transparent 26%);
         }
 
         .search-shell {

@@ -309,6 +309,11 @@ export default function DatasetsPage() {
     if (!q) return;
 
     const nextFilters = { ...filters };
+    const sourceParam = params.get("sources");
+    const selectedSources = sourceParam
+      ? sourceParam.split(",").map((source) => source.trim()).filter((source) => SOURCE_OPTIONS.includes(source as DatasetSource))
+      : [];
+    if (selectedSources.length) nextFilters.sources = selectedSources;
     const context = params.get("context");
     if (context) nextFilters.context = context;
 
