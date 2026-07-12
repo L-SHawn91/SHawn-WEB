@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { buttonVariants } from "./button";
 import { LanguageToggle } from "./language-toggle";
 import { ModeToggle } from "./mode-toggle";
 import { MobileNav } from "./mobile-nav";
@@ -51,13 +50,7 @@ export function Header() {
                     </nav>
                 </div>
 
-                {/* Right Actions */}
                 <div className="flex items-center gap-2">
-                    <div className="hidden lg:flex items-center gap-2">
-                        <Link href="/blog" className={buttonVariants({ size: "sm" })}>
-                            {t.nav.blog || "Blog"}
-                        </Link>
-                    </div>
                     <LanguageToggle />
                     <ModeToggle />
                     <MobileNav />

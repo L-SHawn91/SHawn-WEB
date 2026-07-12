@@ -714,7 +714,7 @@ export default function PapersPage() {
     lastChipCommitAtRef.current = Date.now();
   };
 
-  const searchPapers = async (forcedQuery?: string, forcedBuilderTerms?: string[]) => {
+  const searchPapers = async (forcedQuery?: string, forcedBuilderTerms?: string[], forcedFilters = filters) => {
     const userQuery = (forcedQuery ?? effectiveInputQuery).trim();
     if (!userQuery.trim()) return;
 
@@ -723,7 +723,7 @@ export default function PapersPage() {
     setMeta(null);
     setActiveSourceTab('all');
 
-    const parsedAuthorNames = filters.authorNames
+    const parsedAuthorNames = forcedFilters.authorNames
       .split(',')
       .map((x) => x.trim())
       .filter(Boolean);
@@ -731,16 +731,16 @@ export default function PapersPage() {
       .map((term) => term.trim())
       .filter((term) => term && !/^(AND|OR)$/i.test(term));
     const requestFilters: Record<string, unknown> = {
-      sources: filters.sources,
-      yearFrom: filters.yearFrom,
-      yearTo: filters.yearTo,
-      claim: filters.claim,
-      hypothesis: filters.hypothesis,
-      firstAuthorOnly: filters.firstAuthorOnly,
-      profileMergeThreshold: filters.profileMergeThreshold,
+      sources: forcedFilters.sources,
+      yearFrom: forcedFilters.yearFrom,
+      yearTo: forcedFilters.yearTo,
+      claim: forcedFilters.claim,
+      hypothesis: forcedFilters.hypothesis,
+      firstAuthorOnly: forcedFilters.firstAuthorOnly,
+      profileMergeThreshold: forcedFilters.profileMergeThreshold,
     };
     if (parsedAuthorNames.length) requestFilters.authorNames = parsedAuthorNames;
-    if (filters.profileIds.length) requestFilters.profileIds = filters.profileIds;
+    if (forcedFilters.profileIds.length) requestFilters.profileIds = forcedFilters.profileIds;
     if (activeBuilderTerms.length > 1) {
       requestFilters.queryBuilderTerms = activeBuilderTerms;
       requestFilters.queryBuilderOperator = 'auto';
@@ -754,7 +754,7 @@ export default function PapersPage() {
       const response = await apiFetch('/api/papers/search-parallel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: userQuery, filters: requestFilters, claim: filters.claim }),
+        body: JSON.stringify({ query: userQuery, filters: requestFilters, claim: forcedFilters.claim }),
       });
       const data = await response.json();
 
@@ -787,11 +787,20 @@ export default function PapersPage() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const q = new URLSearchParams(window.location.search).get('query');
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('query') || params.get('q');
     if (!q) return;
+    const sourceParam = params.get('sources');
+    const selectedSources = sourceParam
+      ? sourceParam.split(',').map((source) => source.trim()).filter((source) => PAPER_SOURCES.includes(source as (typeof PAPER_SOURCES)[number]))
+      : [];
+    const nextFilters = selectedSources.length ? { ...filters, sources: selectedSources } : filters;
+    setFilters(nextFilters);
     setChips([]);
     setQuery(q);
     setQueryHistory((prev) => [q, ...prev.filter((item) => item !== q)].slice(0, 10));
+    void searchPapers(q, [], nextFilters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const exportBibTeX = () => {

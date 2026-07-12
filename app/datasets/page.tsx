@@ -304,9 +304,23 @@ export default function DatasetsPage() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const q = new URLSearchParams(window.location.search).get("query");
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("query") || params.get("q");
     if (!q) return;
+
+    const nextFilters = { ...filters };
+    const sourceParam = params.get("sources");
+    const selectedSources = sourceParam
+      ? sourceParam.split(",").map((source) => source.trim()).filter((source) => SOURCE_OPTIONS.includes(source as DatasetSource))
+      : [];
+    if (selectedSources.length) nextFilters.sources = selectedSources;
+    const context = params.get("context");
+    if (context) nextFilters.context = context;
+
+    setFilters(nextFilters);
     setQuery(q);
+    void executeSearch(q, nextFilters, { page: 1 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadRelatedForDataset = async (dataset: DatasetItem) => {
