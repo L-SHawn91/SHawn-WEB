@@ -1,0 +1,238 @@
+---
+title: "Will AI Pay to Read Your Work? Cloudflare’s New Search, Agent, and Training Bot Rules"
+date: "2026-07-18"
+description: "Cloudflare now classifies AI crawlers as Search, Agent, and Training — with new defaults coming in September. Monetization Gateway remains experimental."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/18/cloudflare-ai-crawler-monetization-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1021"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/18/cloudflare-ai-crawler-monetization-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+# Will AI Pay to Read Your Work? Cloudflare's New Search, Agent, and Training Bot Rules
+
+Cloudflare now classifies AI crawlers as Search, Agent, and Training — with new defaults coming in September. Monetization Gateway remains experimental.
+
+![Comparison of traditional search results (link list) vs AI search direct answer panel.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/hero-27.webp)
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/07/18/cloudflare-ai-crawler-monetization/) / **EN · English** BILINGUAL PAIR
+
+**Date**: 2026-07-18
+
+**Topic**: Cloudflare AI traffic controls and Monetization Gateway
+
+**Sources**: blog.cloudflare.com (3 official posts, 2026-07-01)
+
+---
+
+## Introduction: The Age of Answers Without Visits
+
+What happens when you type a question into a search box?
+
+Traditionally, a search engine would crawl billions of pages, build an index, and show you a list of links. If you searched for “Paris weather,” you’d get a page of results and have to click one to find the answer. This created a quiet bargain: sites allowed search engines to read their content in exchange for visitor traffic.
+
+That bargain is breaking.
+
+AI search doesn’t just list links anymore. It reads dozens of pages, synthesizes the information, and gives you the answer directly. Ask “Paris weather” and you get today’s temperature and rain probability right there — no need to visit the source site. Convenient for users, but the original publisher never sees a visitor. No ad impressions, no subscription prompts, no product sales.
+
+Cloudflare sees this not as a technical issue but as a fundamental shift in the Internet’s economics. On July 1, 2026, they gave website owners more precise tools to decide how their content is used by automated visitors.
+
+---
+
+## 1. How Search Crawlers Traditionally Worked
+
+A web crawler — or bot — is an automated collector. It visits billions of pages on behalf of search engines, reads them, and stores what it finds in a massive database.
+
+This created a long-standing exchange:
+
+- Sites : Allow search engines to read and index their pages.
+
+- Search engines : Show those pages in results and send human visitors back.
+
+This exchange powered the open web. Small blogs, local businesses, media sites, and product shops all relied on being discoverable through search. Visitor traffic became the foundation of advertising revenue, subscriptions, and e-commerce.
+
+AI is now unbalancing that exchange.
+
+---
+
+## 2. How AI Is Reshaping Search Economics
+
+AI search doesn’t just list results — it builds answers. It reads multiple pages and presents a synthesized response. The user gets convenience; the source site loses the visit.
+
+Consider searching for “2026 semiconductor market outlook.”
+
+- Before : You get 10 news article links. You click one, visit the site, and read.
+
+- Now : The AI reads several articles and presents a summary: “Rising memory demand, supply concerns, potential price increases.” You may never visit the source.
+
+From the user’s perspective, this is faster. But from the publisher’s perspective, every direct answer is a lost visitor — and lost revenue.
+
+Cloudflare’s data shows that more than half of Internet traffic is now non-human. In some industries, human visits dropped 40% in a single year. Publishers are preparing for “Google Zero” — a future where search referrals nearly disappear.
+
+---
+
+## 3. Search AI, Agents, and Training Are Different
+
+Not all automated visits are the same. Understanding the distinction matters.
+
+**Search AI** reads pages to build search indexes or generate AI answers. When you ask a question, it finds relevant sources and may include links back to them. There is still a path from the answer to the original site.
+
+**AI Agents** go further. They don’t just find information — they compare, choose, and act on your behalf. Ask “find the cheapest flight from Seoul to Jeju” and an agent could browse multiple sites, compare prices, and proceed toward booking without you visiting each site yourself.
+
+**Training** happens behind the scenes. Crawlers collect vast amounts of text to improve language models. The result isn’t a specific answer or action — it’s a better AI model overall.
+
+The same company may run bots for all three purposes. Googlebot crawls for search indexing, but may also collect data for model training. Treating them all as “AI bots” makes it impossible for site owners to make informed choices.
+
+![Cloudflare AI crawler classification: Search (indexing), Agent (task execution), Training (model learning).](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/bot_types-1.webp)
+
+_Cloudflare AI crawler classification: Search (indexing), Agent (task execution), Training (model learning)._
+
+---
+
+## 4. Why Cloudflare Split Them Into Three Categories
+
+On July 1, 2026, Cloudflare began offering all customers — including free tier users — the ability to manage AI traffic by three distinct purposes:
+
+### Search
+
+**What it does**
+Reads pages to build search indexes and AI answers
+
+**From the site owner’s view**
+May send human visitors back to your site
+
+### Agent
+
+**What it does**
+Acts on behalf of a human to perform tasks
+
+**From the site owner’s view**
+Visits and acts without a human landing on your page
+
+### Training
+
+**What it does**
+Collects content to train or fine-tune AI models
+
+**From the site owner’s view**
+Uses your content to improve models without sending visitors
+
+Site owners can now allow or block each independently.
+
+- Keep search discoverability while blocking training? Allow Search, block Training.
+
+- Let agents operate but prevent model training? Allow Agent, block Training.
+
+- Allow all, block all, or mix and match.
+
+This is available to all Cloudflare users, including those on the free plan. Small blogs and personal sites now have the same control as large enterprises.
+
+---
+
+## 5. What’s Changing on September 15, 2026
+
+Cloudflare plans to change the default settings on September 15, 2026. This applies to pages that display ads:
+
+- Search : Allowed by default (may bring human visitors)
+
+- Agent : Blocked by default (acts on behalf of humans without sending them)
+
+- Training : Blocked by default (uses content without returning visitors)
+
+Why ad pages specifically? Cloudflare explains: “An ad is a signal that the site owner intended a person to land there and see it — something monetizable that fuels the business. On those pages, human attention is the goal, so we keep away bots that may prevent it.”
+
+This is a default change, not a new rule. Site owners can opt out anytime before September 15 in their security settings. Multi-purpose crawlers (like Googlebot that does both search and training) will be subject to the most restrictive rule applied — so if Training is blocked, they will be blocked on ad pages even if Search is allowed.
+
+**Important**: This change is scheduled for September 15, 2026. It has not taken effect yet.
+
+---
+
+## 6. The Deeper Layer: Can AI Pay for Content?
+
+Crawler controls are available now. But Cloudflare is working on something more experimental.
+
+The **Monetization Gateway** is a system that would let site owners charge automated visitors for accessing content. It is currently at the waitlist stage — not yet launched.
+
+The core technology is **x402**.
+
+### What is x402?
+
+HTTP has an obscure status code: **402 Payment Required**. Originally created for paid content, it was rarely used in practice.
+
+x402 puts it to work. Here’s how:
+
+- Request : An AI agent requests a web page or API.
+
+- Response : The server replies: “This content is paid. Price: $0.01, payable in USDC.” (HTTP 402.)
+
+- Payment : The AI agent pays with a stablecoin (like USDC), attaches proof of payment to a new request.
+
+- Delivery : The server verifies payment and serves the content.
+
+This all happens within normal HTTP requests. No redirects to checkout pages, no account signups. The payment itself is the access credential.
+
+### Why stablecoins?
+
+Traditional card payments are inefficient for micropayments. Fees and processing time make it impractical to charge a fraction of a cent per request.
+
+Stablecoins solve this. Near-zero fees, settlement in under a second, and the ability to process thousands of tiny payments automatically. This is what makes it plausible for AI agents to buy what they need without human approval for each transaction.
+
+### Current status
+
+The Monetization Gateway is **not yet launched**. It is accepting waitlist signups, and planned capabilities include:
+
+- Per-request pricing for specific API routes (GET/POST)
+
+- Variable pricing by task complexity (e.g., image generation up to $2)
+
+- Charging only unauthenticated visitors
+
+- Rule management via dashboard, API, or Terraform
+
+Cloudflare frames this as foundational to an “agent-first Internet” — where AI agents become the primary users of the web and each request becomes a transaction.
+
+![x402 protocol HTTP 402 payment flow: AI agent → payment gate → server resource.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/x402-1.webp)
+
+_x402 protocol HTTP 402 payment flow: AI agent → payment gate → server resource._
+
+---
+
+## 7. What This Means for Creators and Site Owners
+
+What should you make of all this?
+
+**Available now**: If you use Cloudflare (even the free plan), you can already manage AI traffic by purpose. Keep search visibility while limiting training. Allow agent access while protecting ad-monetized pages. The control is real and immediate.
+
+**Coming September 15**: Default settings will change for ad-displaying pages. Agent and Training access will be blocked by default. This is a configuration shift, not a new rule, and you can opt out.
+
+**Still experimental**: The Monetization Gateway and x402 micropayments are intriguing but not yet a functioning market. Stablecoin regulation, AI company willingness to pay, and pricing standards are all open questions. The infrastructure is being built; the market must still emerge.
+
+Cloudflare’s data makes one thing clear: the Internet’s economic structure is already shifting. As human visitors decline and automated traffic rises, the old model of advertising and subscriptions is under pressure. Giving creators tools to manage how their content is used is a meaningful step.
+
+![More than half of Internet traffic is now from automated programs.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/traffic_split-1.webp)
+
+_More than half of Internet traffic is now from automated programs._
+
+But this does not mean “the era of AI paying for content” has arrived. We are at the stage where the tools exist. How they work in practice depends on the experiments and participation ahead.
+
+---
+
+## References
+
+- Your site, your rules: new AI traffic options for all customers — Cloudflare, 2026-07-01
+
+- Announcing the Monetization Gateway: charge for any resource behind Cloudflare via x402 — Cloudflare, 2026-07-01
+
+- Content Independence Day, one year on: building the business model for the agentic Internet — Cloudflare, 2026-07-01
+
+---
+
+*This article explains technology trends and does not endorse or guarantee any specific service. Cloudflare features are described based on current official documentation and may change in the future.*

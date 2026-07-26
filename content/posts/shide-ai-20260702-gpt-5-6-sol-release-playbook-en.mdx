@@ -1,0 +1,263 @@
+---
+title: "GPT-5.6 release timing: why access will not open to everyone at once"
+date: "2026-07-02"
+description: "GPT-5.6 is not just a stronger model family. Its limited preview shows how frontier AI releases are now shaped by government adoption, cyber risk, export policy, and public-sect..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/02/gpt-5-6-sol-release-playbook-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "122"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/02/gpt-5-6-sol-release-playbook-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+# GPT-5.6 Won’t Open to Everyone at Once
+
+OpenAI starts with trusted partners after briefing the U.S. government.
+
+![GPT-5.6 Sol, Terra, and Luna visual](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/gpt_5_6_hero__wp1600_q82.webp)
+
+LANGUAGE
+
+한국어판 읽기
+
+[KO ↔ EN](https://shawnaiintelligence.wordpress.com/2026/07/02/gpt-5-6-sol-release-playbook/)
+
+## Why GPT-5.6 is not opening to everyone at once
+
+OpenAI says GPT-5.6 Sol, Terra, and Luna will become more broadly available in the coming weeks, but the rollout does not start with everyone. According to the system card, OpenAI briefed the U.S. government on the models’ plans and capabilities before launch. At the government’s request, initial access begins with a small group of trusted partners whose participation is shared with the government.
+
+That rollout matches the shape of the model family. GPT-5.6 is split into Sol, Terra, and Luna: a deeper reasoning tier, a balanced middle tier, and a faster tier for repeated work. This is not just one new chatbot switching on; it is a model family being released in stages for work that differs in difficulty, duration, and risk.
+
+![Sol Terra Luna tier visual](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/gpt_5_6_tiers__wp1600_q82.webp)
+
+_Sol, Terra, and Luna sit at different levels of depth and speed inside the GPT-5.6 generation._
+
+## Sol, Terra, and Luna sit on different performance tiers
+
+The important split is capability. OpenAI positions Sol as the deepest reasoning tier, Terra as the balanced middle, and Luna as the faster tier for repeated work. Read that way, the three models are not interchangeable versions of the same chatbot. They are performance tiers for work that differs in difficulty, duration, and risk.
+
+deep reasoning
+
+GPT-5.6 Sol
+
+**$5 input / $30 output**
+Per 1M tokens. 5.0× Luna on both input and output. Example job cost: about **$1.10**.
+
+balanced
+
+GPT-5.6 Terra
+
+**$2.50 input / $15 output**
+2.5× Luna. Example job cost: about **$0.55**. The middle tier for speed and performance.
+
+fast / lightweight
+
+GPT-5.6 Luna
+
+**$1 input / $6 output**
+The lightweight baseline. Example job cost: about **$0.22**. Best suited to repetitive lower-risk work.
+
+Example job cost is calculated from OpenAI pricing and assumes 100,000 input tokens plus 20,000 output tokens. This is a short analysis-job assumption; agent workflows with longer outputs can change the total cost substantially. Cache writes are 1.25× uncached input; cache reads receive the 90% cached-input discount.
+
+## The benchmarks are built around long-running work
+
+What makes the benchmarks worth reading isn’t the leaderboard but the kind of work each one puts the model through. Terminal-Bench watches whether an agent can plan, act, and iterate inside a real terminal. GeneBench follows long biology workflows. The cybersecurity suites go furthest: they ask whether the model can carry vulnerability analysis toward exploit primitives and, in the strictest setup, all the way to working code-execution exploits. Each score means something different because each one is testing a different job.
+
+agent coding
+
+Terminal-Bench 2.1
+
+**2.1 / 26 tasks modified**
+From the GitHub README. Tests whether agents can complete planning, execution, iteration, and tool use inside a terminal. OpenAI describes Sol as a new SOTA.
+
+biology workflow
+
+GeneBench v1
+
+**long-horizon biology workflow**
+OpenAI says Sol is stronger than GPT-5.5 while using fewer tokens. The public text does not provide an exact percentage, so this article does not invent one.
+
+NOTE
+
+Every figure below comes from OpenAI’s own published system card — not yet independently reproduced or verified. Read them as a direction the model is heading, not a verdict, and don’t hang a conclusion on any single score.
+
+### Biology benchmarks: stronger, but not expert replacement
+
+The biology numbers in OpenAI’s system card do show real gains — the model is noticeably better at reasoning through wet-lab troubleshooting. But one figure keeps the story honest: on ProtocolQA Open-Ended, Sol reaches 43.5%, still under the 54% that marks the 80th-percentile expert. Hold those two facts together and the honest reading is “a stronger workflow assistant,” not “a stand-in for the expert at the bench.”
+
+virology
+
+350
+
+troubleshooting questions
+
+Sol score
+
+55.5%
+
+highest among new models
+
+ProtocolQA
+
+108
+
+open-ended questions
+
+Sol vs expert
+
+43.5% vs 54%
+
+below 80th-percentile expert threshold
+
+![OpenAI GPT-5.6 system card multimodal virology benchmark chart](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/openai_gpt56_fig24_multimodal_virology-1.webp)
+
+_Original data image: OpenAI GPT-5.6 Preview System Card — multimodal virology troubleshooting benchmark, discussed here alongside Sol at 55.5%._
+
+How to read this data · biology troubleshooting
+
+Put plainly, this benchmark checks whether the model can look at a virology lab problem and point to a useful way out of it. Its 350 questions are built around real experimental context, not textbook recall, so answering well means reasoning about the actual situation rather than reciting facts.
+
+The number to hold onto is Sol at 55.5%, the highest of the new models. It’s a genuine signal that the model is getting better at biology troubleshooting — but no more than that. It rates the quality of answers on a fixed set of tasks; it says nothing about whether the model could run a lab on its own.
+
+![OpenAI GPT-5.6 system card ProtocolQA Open-Ended benchmark chart](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/openai_gpt56_fig25_protocolqa-1.webp)
+
+_Original data image: OpenAI GPT-5.6 Preview System Card — ProtocolQA Open-Ended. Sol is 43.5%, below the 54% 80th-percentile expert threshold._
+
+How to read this data · ProtocolQA
+
+This one plants serious mistakes inside lab protocols and asks the model to say what’s broken and how to fix it. All 108 questions are open-ended, so there’s no multiple-choice shortcut — the model has to work through the protocol and reason its way to the error.
+
+The comparison that matters is the expert line. OpenAI draws it from 19 PhD scientists with wet-lab experience and sets the 80th-percentile mark at 54%; Sol lands at 43.5%, still short of it. That gap is the whole point — the fair reading is “a strong assistant for experts,” not a replacement for them.
+
+### Cyber benchmarks: the work stage matters
+
+The cybersecurity benchmarks are far more concrete, and the distance between them is really a distance in how far the work has to go. ExploitBench runs across 41 V8 vulnerabilities, scoring progress with 16 capability flags over 5 seeds. ExploitGym raises the bar sharply: 869 challenges spanning 502 userspace, 181 V8, and 186 Linux-kernel vulnerabilities, where nothing counts unless the model produces a working code-execution exploit. Same broad domain, a very different definition of “done.”
+
+ExploitBench
+
+41
+
+V8 vulnerabilities
+
+Capability flags
+
+16
+
+evaluated with 5 seeds
+
+ExploitGym
+
+869
+
+502 + 181 + 186 challenges
+
+Time caps
+
+2h / 6h
+
+wall-clock caps
+
+![OpenAI GPT-5.6 system card ExploitBench chart](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/openai_gpt56_fig33_exploitbench-1.webp)
+
+_Original data image: OpenAI GPT-5.6 Preview System Card — ExploitBench. It uses 41 V8 vulnerabilities, 16 capability flags, and 5 seeds to score exploit-primitive progress._
+
+How to read this data · ExploitBench
+
+ExploitBench measures how far a model can push its analysis of a known V8 vulnerability. Across its 41 vulnerabilities it hands the model the kind of materials a real analyst would have: the source tree, the history up to the fix, a bug description, the patch diff, compiled binaries, and debugging tools.
+
+Scoring isn’t a blunt pass or fail. Sixteen capability flags track the intermediate steps — reaching the patched code, forcing a crash, building primitives like addrof/fakeobj, leaking addresses, and edging toward arbitrary read/write or control of the program counter. So the benchmark grades how deep the analysis goes, not whether a finished real-world attack succeeded.
+
+![OpenAI GPT-5.6 system card ExploitGym chart](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/openai_gpt56_fig34_exploitgym-1.webp)
+
+_Original data image: OpenAI GPT-5.6 Preview System Card — ExploitGym. It evaluates working code-execution exploits across 869 challenges._
+
+How to read this data · ExploitGym
+
+ExploitGym is the stricter test, because here progress alone earns nothing — the model has to produce an exploit that actually works. It spans 869 challenges in all: 502 userspace C/C++ vulnerabilities, 181 in V8, and 186 in the Linux kernel.
+
+Starting from a proof-of-vulnerability, the model has to break into a locked-down remote target. It only counts as a win if the model pulls back a dynamically generated flag and an agent-based judge confirms it used the intended vulnerability — get partway, even to arbitrary read/write, and you score nothing. This is exactly where the defensive upside and the misuse worry meet in the same number.
+
+## Sol is built more for long-running work than short answers
+
+Read the model tiers and the benchmarks side by side and the picture finally holds together. Sol is not primarily a short-answer model; it is the upper tier for longer, harder work. On difficult tasks, what matters is whether the model can avoid failed attempts, wasted runs, and brittle reasoning.
+
+The flip side matters just as much. For short summaries, repetitive document work, and anything low-risk, Luna or Terra is usually the more sensible pick, and reaching for Sol there is simply waste. The lesson of GPT-5.6 isn’t “always use the biggest model” — it’s “choose the tier that matches the risk and the length of the task.”
+
+![GPT-5.6 max reasoning ultra mode workflow visual](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/gpt_5_6_workflow__wp1600_q82.webp)
+
+_Max reasoning and ultra mode, the extended reasoning options in ChatGPT, push GPT-5.6 from short chat answers toward long-running workflows._
+
+## For tool-using models, safety is part of performance
+
+The moment agents start driving browsers, search, connectors, and function calls, prompt injection stops being a footnote in the safety section. Whether a model can hold its ground against malicious instructions buried in tool output becomes a plain question of reliability — a model that obeys a poisoned web page isn’t just unsafe, it’s unusable for real work.
+
+system card Table 5
+
+Connectors
+
+**Sol 1.000 · Terra 1.000 · Luna 0.999**
+All three are near-perfect on the prompt-injection defense score for connector paths.
+
+tool safety
+
+Search and Function-Calling
+
+**Sol 0.910 · Terra 0.946 · Luna 0.897**
+Terra is higher than Sol here. The largest model is not automatically best on every safety metric, which is part of the product story.
+
+## Cybersecurity reaches High, not Critical
+
+OpenAI treats Sol, Terra, and Luna as High capability in both Cybersecurity and Biological/Chemical risk under its Preparedness Framework. High is a safety and capability classification, not a marketing label. At the same time, OpenAI says cybersecurity is a meaningful step up but does not reach its highest Critical level, and none of the models reach the High threshold for AI self-improvement.
+
+So the point is not simply that the models are “dangerous.” The more important shift is that longer-running models now arrive with testing, partner coordination, and access-control decisions built into the rollout.
+
+![GPT-5.6 safety deployment visual](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/gpt_5_6_safety__wp1600_q82.webp)
+
+_Limited access and safety checks are not a side note to GPT-5.6; they are part of the launch strategy._
+
+ IN SUMMARY
+
+## The takeaway
+
+The news around GPT-5.6 is not just a benchmark chart. OpenAI plans broader access for Sol, Terra, and Luna in the coming weeks, but it starts with limited access for trusted partners. Sol, Terra, and Luna sit on different performance tiers, the benchmarks point toward terminal, biology, and cybersecurity workflows, and the rollout adds access control to the model story. GPT-5.6 is less a better chatbot than a model family built for longer work under tighter release conditions.
+
+## Public sources
+
+- OpenAI — API pricing
+
+- OpenAI — Previewing GPT-5.6 Sol (2026-06-26)
+
+- OpenAI — GPT-5.6 Preview System Card (2026)
+
+- Terminal-Bench 2.1 GitHub (2026)
+
+- ExploitGym arXiv (2026)
+
+- LAB-Bench / ProtocolQA arXiv (2024)
+
+- OpenAI — Introducing ChatGPT Gov (2025-01-28)
+
+- OpenAI — Protecting ChatGPT to the entire U.S. federal workforce (2025)
+
+- DoD CDAO — Frontier AI partnerships (2025)
+
+- White House — America’s AI Action Plan (2025-07)
+
+- Federal Register — Framework for Artificial Intelligence Diffusion (2025-01-15)
+
+- NIST — Generative AI Profile for AI RMF (2024-07-26)
+
+다음에 같이 읽기
+
+- GPT-5.6 공개 일정은 왜 단계적으로 열릴까? SOL 릴리스 흐름 읽기
+
+- Claude Science란? 과학자를 위한 AI 작업대가 시작된 이유
+
+- AI 도구 비교

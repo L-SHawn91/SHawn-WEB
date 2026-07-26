@@ -1,0 +1,544 @@
+---
+title: "Can You Trust Kimi K3 Yet? Separating the API, Open Weights, and Benchmark Claims"
+date: "2026-07-23"
+description: "Kimi K3 is already live in products and through the API. Its 2.8-trillion-parameter architecture, open-model label, and benchmark claims still need to be separated into verifiab..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/23/kimi-k3-api-open-weights-benchmarks-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1084"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/23/kimi-k3-api-open-weights-benchmarks-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+# Can You Trust Kimi K3 Yet? Separating the API, Open Weights, and Benchmark Claims
+
+Kimi K3 is already live in products and through the API. Its 2.8-trillion-parameter architecture, open-model label, and benchmark claims still need to be separated into verifiable layers.
+
+![Kimi K3 is already available for agent work and API use, while weights and licensing still require separate verification.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/hero-29.webp)
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/07/23/kimi-k3-api-open-weights-benchmarks/) / **EN · English** BILINGUAL PAIR
+
+Imagine a new car that is already available for test drives, even though its service manual and parts catalog have not arrived. The manufacturer’s lap times look impressive, but each rival car was tested with a different driver and tire setup.
+
+**Kimi K3**, introduced in mid-July 2026, is in a similar position. You can already use it through Kimi.com, Kimi Work, Kimi Code, and the official API. Yet as of July 20, MoonshotAI’s official Hugging Face listing did not show a K3 model card or downloadable weights. The launch page calls K3 an “open 3T-class model,” but readers cannot yet inspect the files and license from that official listing.
+
+That is why K3 should be evaluated in four separate layers:
+
+- Architecture: Does 2.8 trillion parameters describe the compute used for every token?
+
+- Access: What can you run through products and the API today?
+
+- Openness: Can you inspect the weights and license yourself?
+
+- Performance: Are the launch scores comparable when the agent harnesses differ?
+
+> The short answer: Kimi K3 looks strong enough to test now as an agent model. It is too early, however, to call it a fully verified open-weight release or a model that beats Claude and GPT across the board.
+
+## Why Kimi K3 became a hot topic
+
+The headline is bigger than the parameter count. Moonshot positions K3 as a frontier agent for long-horizon coding, knowledge work, and reasoning, with native vision and a 1-million-token context window.
+
+The more consequential shift is that **the model and the product stack arrived together**. This is not merely a research announcement. K3 is connected to the consumer app, a desktop workspace for knowledge work, a terminal coding agent, and a developer API. You do not need downloadable weights to begin testing its behavior on real tasks.
+
+Moonshot also makes an unusually useful concession in its own announcement. The company highlights competitive results in its evaluation suite, while saying that K3 still trails Claude Fable 5 and GPT-5.6 Sol in overall performance and user experience. That sentence is a better starting point than any “winner” headline.
+
+## A 2.8-trillion-parameter model does not activate everything at once
+
+K3’s most conspicuous number is **2.8 trillion parameters**. It does not mean that every token passes through all 2.8 trillion parameters.
+
+K3 uses a Mixture-of-Experts design. Moonshot says the system effectively activates 16 of 896 experts. Think of a department store with 896 specialist advisers: a request is routed to the 16 most relevant specialists rather than every adviser at once.
+
+This increases total model capacity without invoking every expert for every token. It does not automatically make deployment cheap. Experts still need to be placed across hardware, requests must be routed correctly, and communication bottlenecks can dominate at large scale. Moonshot itself recommends very high-bandwidth communication domains for large K3 deployments.
+
+The announced architecture combines three main ideas:
+
+- Kimi Delta Attention (KDA): an attention foundation intended to scale more efficiently across long sequences;
+
+- Attention Residuals (AttnRes): selective retrieval of representations across depth rather than uniform accumulation;
+
+- Stable LatentMoE: a mechanism intended to stabilize routing in a highly sparse expert model.
+
+[![A sparse expert design selects an active path from a large expert pool while carrying a long-context stream.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept-20.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept-20.webp)
+_A sparse expert design selects an active path from a large expert pool while carrying a long-context stream._
+
+The practical distinction is simple: **2.8 trillion describes total capacity, while 16 of 896 describes selective expert activation**. Neither number alone tells you the model’s actual latency, memory requirement, or serving cost.
+
+## A 1-million-token window is not a 1-million-token accuracy guarantee
+
+A million-token context window creates room for large repositories, document collections, and long agent histories. That fits K3’s emphasis on extended coding and knowledge-work sessions.
+
+Context capacity and context utilization are different things. Accepting one million tokens does not mean that every fact inside that window will be recalled and connected with equal reliability. Retrieval strategy, compaction, tool-return formatting, and the way an agent passes earlier reasoning back to the model can all change the result.
+
+Moonshot explicitly says that K3 was trained with preserved thinking history. If an agent harness fails to return the required history, or if a running session is switched from another model to K3, generation quality may become unstable. Selecting K3 from a model dropdown is therefore not enough to guarantee continuity in a long-running workflow.
+
+## What is available now—and what remains unverified
+
+The access routes are clear:
+
+### Kimi.com and mobile apps
+
+**What you can do now**
+General chat and agent tasks
+
+**What to check**
+Account, region, and product policies
+
+### Kimi Work
+
+**What you can do now**
+Document, research, and spreadsheet workflows
+
+**What to check**
+Moonshot specifies desktop app 3.1.0 or later
+
+### Kimi Code
+
+**What you can do now**
+Terminal and IDE coding work
+
+**What to check**
+Select K3 with /model ; validate session compatibility
+
+### Kimi API
+
+**What you can do now**
+Connect kimi-k3 to your own app or agent
+
+**What to check**
+Max reasoning today, token cost, and permission boundaries
+
+### Self-hosting
+
+**What you can do now**
+Not independently verified for this article
+
+**What to check**
+Public weights, model card, and license still need inspection
+
+The key distinction is that **API access is not the same as weight access**. An API lets you call a remote service. A weight release lets you download, inspect, and deploy files under a defined license.
+
+Moonshot calls K3 open and states that it will release the full model weights by July 27, 2026. That is a stated target, not a verified release; the files and license still need direct inspection.
+
+- Supported: “Moonshot announced K3 as an open 3T-class model.”
+
+- Not yet verified: “We inspected the K3 weights and license.”
+
+- Unsupported: “K3 is fully open source and commercially unrestricted.”
+
+The license name and its rights should be checked from the actual model card and files once they are public.
+
+## The API is already practical
+
+The K3 API works through an OpenAI-compatible client by changing the base URL and model identifier. A minimal example should load the key from an environment variable rather than hard-code it:
+
+`import os from openai import OpenAI client = OpenAI( api_key=os.environ[ "MOONSHOT_API_KEY" ], base_url=( "https://api." "moonshot.ai/v1" ), ) response = ( client.chat.completions .create( model="kimi-k3", reasoning_effort=( "max" ), messages=[&#123; "role": "user", "content": ( "Classify " "the failing " "tests in " "this repo." ), &#125;], ) ) print( response.choices[0] .message.content )`
+
+The current guide also documents image input, streaming, tool calls, and structured output. One caution is buried in the pricing page: Moonshot says its web-search function is being updated and that the related documentation is outdated. If search matters to your workflow, test the current behavior rather than relying on that page.
+
+## K3 is cheapest at equal billed-token volume—but cost per successful task is separate
+
+A useful price comparison starts with **the same billed-token volume**, not a vague claim about value. The official API rates checked on July 20, 2026 are:
+
+### Kimi K3
+
+**Standard input / 1M**
+$3.00
+
+**Cached input / 1M**
+$0.30
+
+**Output / 1M**
+$15.00
+
+**Long-context rule**
+The official K3 price page lists no separate long-context surcharge
+
+### Claude Fable 5
+
+**Standard input / 1M**
+$10.00
+
+**Cached input / 1M**
+$1.00
+
+**Output / 1M**
+$50.00
+
+**Long-context rule**
+Standard rates apply across the full 1M-token window
+
+### GPT-5.6 Sol
+
+**Standard input / 1M**
+$5.00
+
+**Cached input / 1M**
+$0.50
+
+**Output / 1M**
+$30.00
+
+**Long-context rule**
+Above 272K input tokens, the full request uses $10 input, $1 cached input, and $45 output
+
+At list price, K3’s standard input, cached input, and output rates are all **70% below Fable 5**. Against GPT-5.6 Sol in its short-context tier, K3 is **40% lower** for input and cached input and **50% lower** for output. Sol switches the entire request to its long-context tier above 272K input tokens, widening the gap for very long prompts.
+
+### Cost per request at equal billed-token volume
+
+### 100K input + 10K output, uncached
+
+**Kimi K3**
+$0.45
+
+**Claude Fable 5**
+$1.50
+
+**GPT-5.6 Sol**
+$0.80
+
+### 100K input + 10K output, all input cached
+
+**Kimi K3**
+$0.18
+
+**Claude Fable 5**
+$0.60
+
+**GPT-5.6 Sol**
+$0.35
+
+### 1M input + 100K output, uncached
+
+**Kimi K3**
+$4.50
+
+**Claude Fable 5**
+$15.00
+
+**GPT-5.6 Sol**
+$14.50
+
+### 1M input + 100K output, all input cached
+
+**Kimi K3**
+$1.80
+
+**Claude Fable 5**
+$6.00
+
+**GPT-5.6 Sol**
+$5.50
+
+### 20K input + 100K output, uncached
+
+**Kimi K3**
+$1.56
+
+**Claude Fable 5**
+$5.20
+
+**GPT-5.6 Sol**
+$3.10
+
+### Ten-request agent session: write a 100K shared prefix once, reuse it nine times, then add 10K fresh input and 20K output per request
+
+**Kimi K3**
+$3.870
+
+**Claude Fable 5**
+$13.150
+
+**GPT-5.6 Sol**
+$7.575
+
+[![Official API list prices and modeled costs at the same billed-token composition. Taxes, tools, and retries are excluded. Sol long-context rates apply to the full request above 272K input tokens. The two all-cached rows exclude first-write cost; the ten-request session includes one write and nine reads. Sources: Moonshot AI, Anthropic, OpenAI. Accessed July 20, 2026.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/price_matrix_v3.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/price_matrix_v3.webp)
+_Official API list prices and modeled costs at the same billed-token composition. Taxes, tools, and retries are excluded. Sol long-context rates apply to the full request above 272K input tokens. The two all-cached rows exclude first-write cost; the ten-request session includes one write and nine reads. Sources: Moonshot AI, Anthropic, OpenAI. Accessed July 20, 2026._
+
+Four boundaries matter:
+
+- The two all-input-cached rows are idealized repeated requests. They exclude the first cache-write charge. Fable 5 lists $12.50/1M for a five-minute cache write and $20/1M for a one-hour write; Sol lists $6.25/1M in its short-context tier.
+
+- The ten-request row models a 100K shared prefix written on the first request and reused on the next nine. Fresh input totals 100K and output totals 200K. The 90% prefix reuse is a calculation assumption—not an expected hit rate for the reader’s system or a generalization of Kimi’s own workload claim. TTL expiry or prefix changes alter the result.
+
+- The same source text does not necessarily produce the same token count across providers. Tokenizers differ. The table normalizes billed tokens to expose the price structure.
+
+- Taxes, regional processing, batch or priority tiers, search and tool calls, retries, and additional tokens generated across an agent loop are excluded.
+
+K3 is the lowest raw-token-cost option in all six scenarios. A 100K-input, 10K-output uncached request is $0.45 on K3, $0.80 on Sol, and $1.50 on Fable 5. In purely theoretical cost terms, K3 could consume **1.78 times** as many equal-token attempts as Sol, or **3.33 times** as many as Fable 5, before matching their spend. For the 1M-input, 100K-output workload, the break-even multiple versus Sol rises to about **3.22 times**.
+
+That is not proof that K3 has the best performance per dollar. The operational metric is closer to:
+
+> Cost per successful task = model and tool cost per attempt × attempts + human correction cost
+
+If K3 requires more retries, edits, or session recovery, its list-price advantage shrinks. If it reaches the same quality in a similar number of attempts, the price advantage is substantial. A real evaluation should therefore hold the repository, document set, permissions, and time limit constant while recording **success rate, revision count, total tokens, tool charges, and human review time**.
+
+## Performance: 14 scores show competitiveness, not one universal ranking
+
+Transcribing every K3, Fable 5, and GPT-5.6 Sol value from Moonshot’s official launch graphics produces the tables below. These are **model-plus-harness system scores published by Moonshot**, not an independent evaluation under one controlled setup. The largest values are intentionally not marked as universal winners.
+
+### Coding evaluations
+
+### DeepSWE
+
+**Kimi K3**
+67.5
+
+**Claude Fable 5**
+70.0
+
+**GPT-5.6 Sol**
+73.0
+
+### Terminal Bench 2.1
+
+**Kimi K3**
+88.3
+
+**Claude Fable 5**
+84.6
+
+**GPT-5.6 Sol**
+88.8
+
+### FrontierSWE
+
+**Kimi K3**
+81.2
+
+**Claude Fable 5**
+86.6
+
+**GPT-5.6 Sol**
+71.3
+
+### Program Bench
+
+**Kimi K3**
+77.8
+
+**Claude Fable 5**
+76.8
+
+**GPT-5.6 Sol**
+77.6
+
+### Kimi Code Bench 2.0 (internal)
+
+**Kimi K3**
+72.9
+
+**Claude Fable 5**
+76.9
+
+**GPT-5.6 Sol**
+64.8
+
+### SWE Marathon
+
+**Kimi K3**
+42.0
+
+**Claude Fable 5**
+35.0
+
+**GPT-5.6 Sol**
+39.0
+
+### General, productivity, and visual-agent evaluations
+
+### GDPval-AA v2 Elo
+
+**Kimi K3**
+1668.0
+
+**Claude Fable 5**
+1760.0
+
+**GPT-5.6 Sol**
+1748.0
+
+### AA-Briefcase Elo
+
+**Kimi K3**
+1548.0
+
+**Claude Fable 5**
+1583.0
+
+**GPT-5.6 Sol**
+1495.0
+
+### Automation Bench
+
+**Kimi K3**
+30.8
+
+**Claude Fable 5**
+29.1
+
+**GPT-5.6 Sol**
+29.7
+
+### JobBench
+
+**Kimi K3**
+52.9
+
+**Claude Fable 5**
+57.4
+
+**GPT-5.6 Sol**
+46.5
+
+### SpreadsheetBench 2
+
+**Kimi K3**
+34.8
+
+**Claude Fable 5**
+34.7
+
+**GPT-5.6 Sol**
+32.4
+
+### BrowseComp
+
+**Kimi K3**
+91.2
+
+**Claude Fable 5**
+88.0
+
+**GPT-5.6 Sol**
+90.4
+
+### CharXiv with tool
+
+**Kimi K3**
+91.3
+
+**Claude Fable 5**
+93.5
+
+**GPT-5.6 Sol**
+89.1
+
+### ZeroBench with tool, Pass@5
+
+**Kimi K3**
+41.0
+
+**Claude Fable 5**
+46.0
+
+**GPT-5.6 Sol**
+35.0
+
+[![Original crop of the Program Bench panel in Moonshot](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/mechanism-3.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/mechanism-3.webp)
+_Original crop of the Program Bench panel in Moonshot’s Kimi K3 launch post. Harnesses can differ by model, so this is not a universal ranking. Source: Moonshot AI._
+
+The directional signal is clear. K3 has the highest value among the three on Program Bench, SWE Marathon, Automation Bench, SpreadsheetBench 2, and BrowseComp. Fable 5 leads on FrontierSWE, Kimi Code Bench 2.0, GDPval-AA v2, AA-Briefcase, JobBench, CharXiv, and ZeroBench. GPT-5.6 Sol leads on DeepSWE and Terminal Bench 2.1.
+
+A win count would still be misleading. Moonshot’s footnotes disclose that:
+
+- K3 uses KimiCode or Claude Code depending on the evaluation;
+
+- some competitor values select the highest result across multiple harnesses rather than one matched head-to-head setup;
+
+- K3’s notes report reasoning_effort=max , temperature 1.0, and top-p 1.0, while reasoning budgets, token limits, and parallel-agent counts are not standardized across competitors;
+
+- Fable 5 results mix Claude Code, Terminus 2, and external leaderboards, with potential fallback behavior in some evaluations;
+
+- GPT-5.6 Sol uses Codex in several rows, and some results may include cyberguard effects;
+
+- Kimi Code Bench 2.0 is an internal Moonshot evaluation;
+
+- the same named benchmark can move when the harness or settings change—K3’s KimiCode and public mini-SWE-agent DeepSWE results are discussed separately.
+
+The strongest supported conclusion is therefore that **K3 shows frontier-level competitive signals across coding, productivity, and visual-agent work, leading selected rows**. The table does not support saying that K3 is generally more capable than Claude and GPT. Moonshot itself says K3 still trails Fable 5 and GPT-5.6 Sol in overall performance and user experience.
+
+Putting price and performance together yields a more precise judgment: **K3 is the lowest-cost model at equal billed-token volume and leads selected agent evaluations, while Fable 5 and Sol retain advantages on other important tests and in the overall experience acknowledged by Moonshot.** The evidence supports “frontier-level capability at a much lower list price,” not “the best model at the lowest price.”
+
+## Three limitations Moonshot discloses
+
+The most useful section of the launch post may be its final limitation list.
+
+### 1. Sensitivity to thinking history
+
+Quality may become unstable when the harness does not preserve the required history or when a session is switched from another model to K3. Integrators need to test session-state compatibility, not just API syntax.
+
+### 2. Excessive proactiveness
+
+Moonshot says training for difficult, long-horizon tasks can make K3 take unexpected decisions when instructions are ambiguous or minor issues appear. File deletion, external transmission, purchasing, and deployment should sit behind explicit prohibitions and approval gates.
+
+### 3. A remaining user-experience gap
+
+The company acknowledges that K3 still has a noticeable user-experience gap relative to Fable 5 and GPT-5.6 Sol. Benchmark strength does not guarantee stable dialogue, reliable interpretation of revisions, or consistent long-session behavior.
+
+## Who should test K3 now?
+
+K3 is a reasonable immediate test for:
+
+- teams evaluating long coding sessions in large repositories;
+
+- knowledge work that combines many documents and visual inputs;
+
+- environments that can swap OpenAI-compatible endpoints quickly;
+
+- organizations with clear agent permissions, logs, and cost caps;
+
+- public or non-sensitive workloads allowed to use a vendor API.
+
+It is more prudent to wait for the weights and documentation when:
+
+- on-premises or self-hosted deployment is mandatory;
+
+- the product requires an inspected model license and redistribution rights first;
+
+- research, customer, medical, or financial data cannot leave the controlled environment;
+
+- an existing long-running session would be handed from another model to K3;
+
+- high-risk automation must never expand ambiguous instructions on its own.
+
+[![Four separate K3 adoption questions: API access, weights, license, and evaluation harness.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing-25.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing-25.webp)
+_Four separate K3 adoption questions: API access, weights, license, and evaluation harness._
+
+## Final judgment: the real K3 story is larger than “2.8T”
+
+The 2.8-trillion-parameter headline is useful for attention. The deployment story is really about **16-of-896 expert routing, the operational reality of a million-token session, an API that is already live, weights and licensing that still require direct inspection, and benchmark tables built from different agent harnesses**.
+
+The best way to test K3 is not a one-prompt showdown. Give multiple models the same repository or document set, the same permissions, and the same time and cost limits. Record not only correctness, but also revision count, unexpected actions, session recovery, and token use.
+
+Kimi K3 is genuinely hot. “Hot” and “fully verified” are not synonyms. **Test the API now, verify openness from the files and license, and read every benchmark together with its execution conditions.** That is the fairest way to judge K3 today.
+
+## Official sources
+
+- Kimi K3 announcement
+
+- Kimi K3 API quickstart
+
+- Kimi K3 API pricing
+
+- Kimi API model list
+
+- MoonshotAI on Hugging Face
+
+- PerceptionBench description
+
+- Claude Fable 5 announcement
+
+- Anthropic API pricing
+
+- GPT-5.6 Sol model page
+
+- OpenAI API pricing
+
+*Pricing, model-list, weight, and license status were checked on July 20, 2026. Verify the latest official documentation before deployment.*

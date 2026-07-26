@@ -1,82 +1,485 @@
 ---
-title: "Claude Science: 과학자를 위한 AI 작업대가 시작됐다"
+title: "Claude Science explained: is it an AI workbench for scientists?"
 date: "2026-07-02"
-description: "Anthropic이 Claude Science를 공개했다. 이름만 보면 과학 질문에 답해주는 Claude 버전처럼 들릴 수 있다. 하지만 공식 설명을 보면 핵심은 조금 다르다. Claude Science는 과학자가 자주 쓰는 도구와 패키지를 한곳에 묶고, 계산 자원에 접근하게 하며, 나중에 확인 가능한 결과물을 남기..."
-category: "AI Notes"
-tags: ["AI","Field Notes","Automation"]
+description: "Plain-English guide to Anthropic Claude Science, Claude for Life Sciences, practical biomedical research use cases, and source references."
+category: "Bio Notes"
+tags: ["Bio","Science","Evidence","bio"]
 featured: false
-image: "/shide-blog-assets/shide-ai-20260702-claude-science/image-01.webp"
-source: "WordPress blog package"
-sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/02/claude-science-ai-workbench/"
+image: ""
+source: "SHawn Bio WordPress"
+sourceUrl: "https://shawnbiohub.wordpress.com/2026/07/02/claude-science-ai-workbench-en/"
 wordpressStatus: "publish"
+wordpressSite: "shawnbiohub.wordpress.com"
+wordpressId: "71"
 ---
 
+> 원문 링크: [WordPress 원문](https://shawnbiohub.wordpress.com/2026/07/02/claude-science-ai-workbench-en/)
 
-> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/02/claude-science-ai-workbench/)
+ENG VERSION  AI × SCIENCE
 
-## Claude Science는 무엇인가
+# Claude Science: Is it an AI workbench for scientists?
 
-Anthropic이 `Claude Science`를 공개했다. 이름만 보면 과학 질문에 답해주는 Claude 버전처럼 들릴 수 있다. 하지만 공식 설명을 보면 핵심은 조금 다르다. Claude Science는 과학자가 자주 쓰는 도구와 패키지를 한곳에 묶고, 계산 자원에 접근하게 하며, 나중에 확인 가능한 결과물을 남기는 AI workbench에 가깝다.
+A plain-English guide to Anthropic’s Claude Science, how it differs from Claude for Life Sciences, and where it may fit in biomedical research workflows.
 
-여기서 workbench라는 말이 중요하다. 일반적인 챗봇은 질문을 받으면 설명을 한다. 논문을 요약해주고, 코드 아이디어를 제안하고, 표를 만들어준다. 그런데 과학 연구는 설명만으로 끝나지 않는다. 논문을 읽고, 데이터를 불러오고, 코드를 실행하고, 그래프를 만들고, 결과가 어디서 나왔는지 다시 확인해야 한다.
+![Claude Science AI workbench hero image](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/07/hero_wp.webp)
 
-Claude Science가 겨냥하는 지점은 바로 이 간격이다. AI가 과학 지식을 말해주는 것을 넘어, 연구자가 실제로 쓰는 작업 흐름 안으로 들어가려는 것이다.
+[KOR](https://shawnbiohub.wordpress.com/2026/07/02/claude-science-ai-workbench/)
 
-![Claude Science: 과학자를 위한 AI 작업대가 시작됐다 visual 1](/shide-blog-assets/shide-ai-20260702-claude-science/image-02.webp)
+[ENG](https://shawnbiohub.wordpress.com/2026/07/02/claude-science-ai-workbench-en/)
 
-## 왜 그냥 과학 챗봇이 아닌가
+**Key point:** Claude Science should not be read as “AI replacing scientists.” It is better understood as a research workbench that tries to connect literature, data, code, figures, and review into one traceable workflow.
 
-과학 분야에서 AI가 유용하려면 단순히 똑똑한 답을 잘하는 것만으로는 부족하다. 연구자는 답보다 근거를 더 중요하게 본다. 어떤 데이터에서 나온 결과인지, 어떤 코드가 실행됐는지, 어떤 가정이 들어갔는지, 같은 과정을 다시 따라갈 수 있는지가 중요하다.
+AI-for-science headlines can be confusing because they often mix model capabilities, product packaging, scientific databases, compute environments, and drug-discovery expectations. Claude Science sits at the intersection of those ideas, but its product framing is fairly specific.
 
-그래서 Claude Science의 핵심 단어는 세 가지로 정리할 수 있다. 도구 통합, 계산 자원, 그리고 auditable artifacts다. 여기서 auditable artifacts는 나중에 확인할 수 있는 작업 산출물이라는 뜻에 가깝다. 연구자가 AI의 말을 그냥 믿는 것이 아니라, AI가 만든 분석 흐름과 결과물을 다시 검토할 수 있어야 한다는 의미다.
+## Why is a science AI workbench getting attention now?
 
-이 차이는 꽤 크다. 과학자에게 필요한 AI는 “그럴듯한 설명을 잘하는 모델”이 아니라 “내가 검토할 수 있는 연구 보조자”에 가깝기 때문이다.
+Scientific research is not only about the exciting moment of discovery. In practice, a lot of the work is repetitive: converting file formats, cleaning data, running code, searching literature, refining figures, checking references. In biomedicine especially, database structures differ and analysis tools vary by field, so researchers constantly move between different environments.
 
-![Claude Science: 과학자를 위한 AI 작업대가 시작됐다 visual 2](/shide-blog-assets/shide-ai-20260702-claude-science/image-03.webp)
+Take single-cell RNA-seq analysis as an example: literature search happens on PubMed, raw data comes from a repository like GEO, analysis runs in R or Python, result figures get polished in a separate tool, and the manuscript gets written in yet another editor. Even within a single study, the tools end up scattered across many places.
 
-## Anthropic이 과학 쪽으로 넓히는 흐름
+This “scattered research flow” is exactly what Claude Science targets. Rather than having AI make every scientific judgment, the goal is to cut the time lost moving between tools, leave a record of how results were produced, and let repetitive work continue more smoothly.
 
-Claude Science는 갑자기 튀어나온 제품이라기보다, Anthropic이 올해 보여준 과학 방향의 연장선에 있다. Anthropic은 Science Blog를 따로 열고, AI와 과학 연구의 접점을 다루기 시작했다. 여기에는 생물학 agent를 위해 데이터 인프라가 더 agent-friendly해야 한다는 글, Claude를 화학 작업에 맞추려는 시도, bioinformatics benchmark인 BioMysteryBench 평가 등이 포함된다.
+## What is Claude Science?
 
-이 흐름을 한 줄로 보면 이렇다. AI가 과학자의 질문에 답하는 수준에서, 과학자의 작업 환경을 직접 다루는 방향으로 이동하고 있다.
+Anthropic describes Claude Science as an AI workbench for scientists. In practical terms, it is designed to integrate tools and packages researchers already use, produce auditable artifacts, and provide flexible access to computing resources.
 
-특히 생물학이나 화학처럼 도구·데이터·형식이 복잡한 분야에서는 이 변화가 중요하다. 연구자는 PDF 하나만 보는 것이 아니라, 데이터베이스, notebook, 분석 패키지, 시각화 도구, 실험 메타데이터를 함께 본다. AI가 이 흐름을 이해하지 못하면 결국 답변은 그럴듯해도 실제 연구에는 쓰기 어렵다.
+That means a researcher could move from literature search to analysis, from notebook to figure, and from result to manuscript-style output with more of the process recorded along the way. The important idea is not just speed, but traceability.
 
-![Claude Science: 과학자를 위한 AI 작업대가 시작됐다 visual 3](/shide-blog-assets/shide-ai-20260702-claude-science/image-04.webp)
+ Concept
+ Plain meaning
+ Why it matters
 
-## 실제 연구에서는 어떻게 쓰일 수 있나
+ AI workbench
+ A workspace for literature, data, code, figures, and review.
+ It reduces friction between tools that are usually scattered.
 
-예를 들어 연구자가 “이 공개 데이터에서 특정 유전자군의 변화가 보이는지 확인해줘”라고 요청한다고 해보자. 일반 챗봇은 분석 방법을 설명하거나, 사용자가 붙여넣은 표 안에서만 계산을 도와줄 수 있다.
+ Auditable artifacts
+ Outputs that can be traced back to code, environment, and conversation history.
+ Researchers need to reproduce and defend figures and numbers.
 
-작업대형 AI는 조금 다른 경험을 목표로 한다. 관련 문헌을 읽고, 데이터 구조를 확인하고, 분석 notebook을 만들고, 필요한 패키지를 불러오고, 결과 그래프를 생성한 뒤, 마지막에 어떤 파일과 코드가 만들어졌는지 남겨야 한다. 물론 모든 단계를 자동으로 믿어서는 안 된다. 하지만 최소한 연구자가 다시 열어보고 검토할 수 있는 상태로 만들어야 한다.
+ Scientific connectors
+ Links to literature, databases, notebooks, R/Python-style workflows, and research infrastructure.
+ A general chatbot becomes closer to an actual research workflow.
 
-이런 관점에서 Claude Science는 과학자용 AI의 방향을 보여준다. 답변형 AI에서 검토 가능한 작업형 AI로 가는 방향이다.
+ Reviewer agent
+ A checking layer for citations, calculations, and figure-code consistency.
+ AI-generated work still needs verification before it can be trusted.
 
-![Claude Science: 과학자를 위한 AI 작업대가 시작됐다 visual 4](/shide-blog-assets/shide-ai-20260702-claude-science/image-05.webp)
+![Claude Science workflow image](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/07/process_wp.webp)
 
-## 좋은 점만 있는 것은 아니다
+_Claude Science is best read as a workflow that connects reading, data, code, figures, and review._
 
-과학 연구에서 AI가 더 깊이 들어올수록 위험도 커진다. 첫째, AI가 틀린 해석을 자신 있게 말할 수 있다. 둘째, 분석 코드가 겉으로는 돌아가도 통계적으로 맞지 않을 수 있다. 셋째, 데이터 출처와 전처리 과정이 흐려지면 결과를 재현하기 어렵다. 넷째, 민감한 임상·생명과학 데이터에서는 보안과 권한 문제가 중요해진다.
+## What is confirmed by official sources?
 
-그래서 과학용 AI 제품에서 중요한 것은 멋진 데모보다 검증 가능성이다. AI가 무엇을 했는지 기록으로 남기는가. 사람이 중간에 승인할 수 있는가. 결과를 다시 읽어올 수 있는가. 잘못된 분석을 되돌릴 수 있는가. 이 질문들이 앞으로 더 중요해질 것이다.
+The product definitions in this article are based primarily on Anthropic’s official announcements: “Claude Science, an AI workbench for scientists” and “Claude for Life Sciences.” External articles can provide context, but the definitions below come from the official material.
 
-## Claude Science가 보여주는 AI 제품 경쟁의 다음 단계
+ Official-source point
+ Plain-English interpretation
+ Caution
 
-최근 AI 제품 경쟁은 점점 “채팅창 밖”으로 이동하고 있다. Claude Code가 코딩 작업의 흐름을 바꿨다면, Claude Science는 연구자의 작업대로 들어가려는 시도에 가깝다. 공통점은 하나다. AI가 대답만 하는 것이 아니라, 특정 직업군의 실제 업무 흐름 안으로 들어가고 있다는 점이다.
+ Claude Science is introduced as an AI workbench for scientists.
+ It is an app-like research environment, not simply a new life-science-only model.
+ Do not read it as automatic scientific discovery.
 
-Claude Science가 성공하려면 모델 성능만으로는 부족하다. 과학자가 쓰는 도구와 잘 연결되어야 하고, 결과물을 검토하기 쉬워야 하며, 재현성과 보안의 기본값이 좋아야 한다. 반대로 이 조건이 갖춰지면 과학자에게 AI는 단순한 검색 도우미가 아니라 연구 운영 보조자에 가까워질 수 있다.
+ It connects fragmented tools such as PubMed, Jupyter, R, and cluster terminals.
+ The product is aimed at researchers who move across many tools in one project.
+ Real access depends on accounts, connectors, institutional permissions, and security rules.
 
-## 지금 볼 포인트
+ It can be accessed locally on macOS or Linux, or on a remote machine via SSH or an HPC login node.
+ It is designed with serious computing environments in mind.
+ Sensitive or patient data still requires institutional review and access control.
 
-Claude Science를 볼 때는 “과학 질문을 얼마나 잘 맞히나”만 보면 부족하다. 더 중요한 질문은 따로 있다. 실제 연구 흐름에서 어디까지 이어지는가. 결과를 사람이 검토할 수 있는가. 데이터와 코드의 흔적이 남는가. 민감한 연구 환경에서 안전하게 쓸 수 있는가.
+ It includes more than 60 curated skills and connectors for genomics, single-cell, proteomics, structural biology, cheminformatics, and more.
+ It aims to be more workflow-aware than a generic chatbot.
+ Each analysis still needs field-specific quality control.
 
-이 기준으로 보면 Claude Science는 과학 AI가 어느 방향으로 가고 있는지를 보여주는 신호에 가깝다. 과학자를 대신하는 AI라기보다, 과학자의 작업대를 함께 정리하고 실행하고 검토하게 만드는 AI에 가깝다.
+ A reviewer agent checks citations and calculations.
+ It can help catch errors in references, numbers, or figure-code alignment.
+ It does not replace coauthor review, peer review, or researcher responsibility.
 
-## 공개 출처
+## Claude Science vs. Claude for Life Sciences
 
-- Anthropic, Claude Science, an AI workbench for scientists, is now available: https://www.anthropic.com/news/claude-science-ai-workbench
-- Claude Science beta product page: https://claude.com/product/claude-science
-- Anthropic, Introducing our Science Blog: https://www.anthropic.com/news/introducing-anthropic-science
-- Anthropic, Paving the way for AI agents in biology: https://www.anthropic.com/research/agents-in-biology
-- Anthropic, Making Claude a chemist: https://www.anthropic.com/research/making-claude-a-chemist
-- Anthropic, Evaluating Claude’s bioinformatics research capabilities with BioMysteryBench: https://www.anthropic.com/research/Evaluating-Claude-For-Bioinformatics-With-BioMysteryBench
+These two names are closely related, but they are not the same thing. Claude for Life Sciences is best understood as a life-science-focused expansion of Claude’s connectors, skills, prompt support, and enterprise support. Claude Science is a more explicit workbench-style app that wraps scientific work into a single environment.
+
+ Aspect
+ Claude for Life Sciences
+ Claude Science
+
+ Official emphasis
+ Connectors, Agent Skills, prompt library, and support for life-science users.
+ An AI workbench app for scientific research workflows.
+
+ Examples mentioned
+ Benchling, BioRender, PubMed, Wiley Scholar Gateway, Synapse.org, 10x Genomics, Databricks, Snowflake.
+ PubMed, Jupyter, R, cluster terminal, SSH/HPC, 60+ skills/connectors, reviewer agent.
+
+ How a user might feel it
+ “Claude connects better to my life-science tools.”
+ “My literature, data, code, figures, and review can live in one research workflow.”
+
+ Best question to ask
+ Does Claude connect to the scientific systems my team already uses?
+ Can I move a research question from search to analysis to figure to review in one traceable workflow?
+
+## Core functions to watch
+
+CONNECT
+
+Literature and tools
+
+Connect papers, scientific databases, notebooks, and research software.
+
+ANALYZE
+
+Code and computation
+
+Run or organize analysis rather than only discussing it in chat.
+
+REPRODUCE
+
+Traceable outputs
+
+Keep code, environment, and conversation context attached to figures and tables.
+
+CHECK
+
+Reviewer layer
+
+Flag citation, calculation, and figure-code inconsistencies before humans review the work.
+
+### 1. An attempt to bring research tools into one place
+
+According to the official announcement, Claude Science offers more than 60 curated skills and connectors for scientific fields such as genomics, single-cell analysis, proteomics, structural biology, and cheminformatics. What matters here is less “AI gives you the answer” and more “AI connects and operates the tools researchers already use.”
+
+The Claude for Life Sciences announcement also mentioned scientific connections to tools such as Benchling, BioRender, PubMed, Wiley’s Scholar Gateway, Synapse.org, and 10x Genomics. These connections can be read as an effort to handle experimental records, papers, data, visualization, and single-cell/spatial analysis more through natural language.
+
+### 2. Making figures and tables while keeping the code behind them
+
+In science, what matters more than a good-looking figure is how that figure was made. Claude Science’s product description emphasizes keeping the code, execution environment, and conversation history attached whenever a figure, table, or notebook is produced.
+
+This matters quite a bit for researchers. You need to be able to remake the same figure months later, and if a reviewer asks about a number, you need to be able to explain where it came from. The more a result comes from AI, the more this kind of traceability matters.
+
+### 3. A move toward connecting compute resources and research environments
+
+Anthropic states that Claude Science can work within lab infrastructure such as a researcher’s laptop, a Linux server, or an HPC login node. This framing appears aimed at scientific fields where the research environment and compute resources matter for handling large-scale or sensitive data.
+
+That said, actual data security, access permissions, institutional policy, and cloud usage terms can vary by lab or organization. Rather than simplifying this to “the data is safe,” it is worth checking what environment and what permissions the tool actually runs under.
+
+### 4. A function that looks for errors like a background reviewer
+
+Claude Science’s product page states that a background reviewer can flag incorrect citations, untraceable numbers, and figures that do not match the underlying code. This is an important direction for AI in science: verifying where an answer came from matters as much as producing the answer itself.
+
+But having this feature does not mean verification is complete. In science, final judgment still rests with the researcher, co-authors, institutional review, and peer review together. It is safer to treat AI review as a supporting layer, not a substitute.
+
+![Core Claude Science functions](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/07/framework_wp.webp)
+
+_Connection, analysis, reproducibility, and review are the four practical lenses for reading Claude Science._
+
+## How it compares with similar tools
+
+The useful question is not “which tool wins?” but “which research stage is this tool designed for?” Some products are stronger at hypothesis generation, some at literature review, some at structure prediction, and some at R&D data management.
+
+![Comparison map of science AI tools](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/07/comparison_map_wp.webp)
+
+_Science AI tools differ by role: hypothesis generation, literature review, structure prediction, lab data, and workbench-style workflows._
+
+ Tool or platform
+ Plain description
+ How it differs from Claude Science
+ Best-fit use
+
+ Google AI Co-Scientist
+ A multi-agent research system for generating and developing hypotheses.
+ More focused on hypothesis generation than end-to-end research workflow packaging.
+ Exploring possible research directions or candidate ideas.
+
+ FutureHouse agents
+ Science-focused agents for literature search, deep review, and research planning.
+ More like a set of specialized research agents than one unified workbench.
+ Checking what has already been studied or building a deep literature map.
+
+ Elicit
+ A literature review tool for paper search, summarization, extraction, and evidence tables.
+ More sharply focused on literature review, less on compute, figures, or scientific infrastructure.
+ Creating paper lists and evidence tables quickly.
+
+ AlphaFold Server
+ A structure-prediction tool for proteins and molecular interactions.
+ Narrower but stronger for structure biology questions.
+ Checking predicted structures or molecular interactions.
+
+ Benchling AI
+ AI inside a biotech R&D notebook and structured data platform.
+ Closer to experiment records, organization data, and R&D operations.
+ Teams already managing experiments and records in Benchling.
+
+ General AI chat/search tools
+ Broad tools for quick answers, explanations, and drafts.
+ Usually less connected to scientific databases, compute environments, and auditable artifacts.
+ Fast background understanding or early drafting.
+
+## The right tool depends on your research stage
+
+The more similar tools there seem to be, the easier it gets once you separate them by research stage. If you are still at the idea stage, a hypothesis-generation tool may help. If the question is already set and you need to gather literature evidence, a literature-review tool may fit better. If protein structure is the core issue, a structure-prediction tool becomes central. If experimental records and organizational data matter, an R&D platform becomes important.
+
+ Research stage
+ Well-suited tool type
+ Question to check
+
+ Idea / hypothesis generation
+ AI Co-Scientist-type tools
+ How does the proposed hypothesis connect to existing literature?
+
+ Literature review / building an evidence table
+ Literature-focused tools such as Elicit, FutureHouse Falcon/Owl
+ Are citations and evidence traceable?
+
+ Analysis, figures, reproducing code
+ Scientific workbenches such as Claude Science
+ Are code, environment, conversation history, and figure-generation steps preserved?
+
+ Molecular structure / interactions
+ Structure-prediction tools such as AlphaFold Server
+ How will the predicted result feed into experimental design or interpretation?
+
+ Running experimental records / organizational data
+ R&D platforms such as Benchling AI
+ Do records, permissions, data model, and audit trail match organizational policy?
+
+So when evaluating Claude Science, it should not be judged as “beats every scientific tool.” A better question is how much value its ability to connect literature, analysis, code, figures, and review into one flow actually delivers to real researchers. Conversely, if your purpose is very specific, a tool built for that specific purpose may be the better fit.
+
+## Practical use cases in biomedical research
+
+The most realistic use cases are not “AI discovers a drug by itself.” They are workflow-support cases: organizing evidence, running analysis, making figures, keeping records, and checking whether the output can be traced.
+
+ Situation
+ Officially related capability
+ Practical use
+ Caution
+
+ Early target or disease-mechanism review
+ PubMed, Wiley Scholar Gateway, literature analysis.
+ Collect papers, compare claims, list models, and identify missing experiments.
+ Read the original papers, figures, methods, and statistics.
+
+ Single-cell or spatial analysis
+ 10x Genomics connector, single-cell-rna-qc skill, genomics/single-cell skills.
+ Guide QC, filtering, clustering, marker checks, and figure generation while keeping notebooks and outputs together.
+ Cell annotation and disease interpretation still require expert review.
+
+ Lab notebook and R&D data context
+ Benchling connector and links back to source experiments, notebooks, and records.
+ Track which experiment, sample, or record produced a number or interpretation.
+ Permissions, audit logs, and data governance matter more than convenience.
+
+ Figure and manuscript drafting
+ BioRender connector, figure/manuscript generation, auditable artifacts.
+ Turn analysis into figures, tables, and manuscript-style explanations with traceability.
+ Visual quality is not enough; axes, legends, numbers, and statistics must match the data.
+
+ Large bio-data exploration
+ Databricks, Snowflake, SSH/HPC, cluster terminal context.
+ Explore large omics tables or compute-heavy analyses through a more unified interface.
+ Patient data and proprietary data require strict access control.
+
+ Final consistency check
+ Reviewer agent, citation/calculation checks.
+ Check citations, numbers, and figure-code alignment before human review.
+ AI review is a pre-check, not a substitute for peer or expert review.
+
+## A realistic research workflow example
+
+### 1. Start from a literature question
+
+Imagine asking whether a gene is linked to progestin resistance in endometrial cancer. A literature connector can help gather papers and organize each claim, model system, limitation, and opposing result. The workbench value is that this does not have to remain a static summary; it can feed into an analysis plan and a figure or report.
+
+### 2. Move into omics analysis
+
+For single-cell RNA-seq or spatial transcriptomics, a typical workflow includes file handling, QC, clustering, marker checking, plotting, and interpretation. Claude Science-style skills could help keep these steps more protocol-like, but the biological interpretation still depends on data quality, batch-effect checks, and domain expertise.
+
+### 3. Check structures or candidate molecules
+
+In structural biology or cheminformatics, native viewing of proteins, molecules, and structures could help researchers connect visual inspection with analysis notes. But structure prediction or docking-like reasoning does not prove binding, activity, safety, or therapeutic value. It is a narrowing step, not final evidence.
+
+### 4. Convert results into a traceable report
+
+The final output of research is often a figure, table, notebook, or manuscript. Auditable artifacts matter because readers and reviewers need to know which data, code, and assumptions produced each figure or number.
+
+## What looks promising, and what should be checked
+
+ Promising point
+ Why it matters
+ What to check
+
+ Tool integration
+ It may reduce tool-switching across papers, data, code, and figures.
+ Which connectors are actually available to your team?
+
+ Reproducibility
+ Code, environment, and conversation history can make later review easier.
+ Are the records complete and readable enough for another person?
+
+ Scientific skills/connectors
+ It can be closer to real research workflows than a generic chatbot.
+ Does the skill match your field, data type, and quality-control standard?
+
+ Reviewer agent
+ It may catch citation and calculation mistakes earlier.
+ Does it catch the right errors, and does it miss important ones?
+
+ Beta release
+ Real user feedback can improve the platform quickly.
+ Access, stability, and quality may change over time.
+
+## A one-line takeaway for general readers
+
+Claude Science is less a story about “AI replacing scientists” and more an attempt to help scientists carry their day-to-day research work through more smoothly in one place. Its core is tying together searching literature, analyzing data, making figures, keeping code and environment records, and checking citations and numbers.
+
+For a tool like this to matter in real research settings, three things need to hold. First, results need to be reproducible. Second, data and permission management need to be clear. Third, humans need to be able to review the interpretations AI produces. The more these three hold, the closer AI gets to being a working partner that supports the research flow, rather than just a plausible-sounding conversational partner.
+
+## Five-minute checklist
+
+ 1  **Product type:** Is this a new model, or a research workbench built around Claude?
+
+ 2  **Target users:** Is it for general users, or for researchers and scientific teams?
+
+ 3  **Reproducibility:** Are code, environment, data flow, and figures traceable?
+
+ 4  **Verification:** Can citations, calculations, and figure-code links be checked?
+
+ 5  **Deployment fit:** Does it match the lab’s data, server, security, and permission model?
+
+![Claude Science reader checklist](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/07/summary_checklist_wp.webp)
+
+_Read Claude Science through traceability, verification, data access, security, and human review._
+
+## Frequently asked questions
+
+### Is Claude Science a new AI model?
+
+Based on the official material, it is better described as an app or workbench for scientific workflows around Claude, not simply a separate life-science-only model.
+
+### Does it automatically discover drugs?
+
+No. It may help narrow candidates, organize evidence, run analysis, and prepare figures or reports. Therapeutic efficacy and safety still require experiments, clinical studies, and regulatory review.
+
+### Can it replace scientists?
+
+No. It can assist repetitive and technical workflow steps, but question design, data-quality judgment, biological interpretation, and responsible conclusions remain human responsibilities.
+
+### Why does reproducibility matter so much?
+
+Scientific results need to be checkable again later. Knowing which code, environment, and data produced a figure is what lets other researchers — or your future self — review the same result.
+
+### Will this apply to every lab right away?
+
+It is still in beta, so the actual scope of use will depend on an institution’s security policy, data environment, access permissions, and research field. It is a direction worth watching, but real-world applicability still needs to be checked carefully.
+
+## Key materials we checked together
+
+ Source
+ What was verified
+ How this article used it
+
+ Anthropic official announcement: Claude Science, an AI workbench for scientists
+ Definition of Claude Science, beta release, PubMed/Jupyter/R/cluster-terminal workflow, SSH/HPC access, 60+ scientific skills/connectors, reviewer agent, auditable artifacts
+ Used as the basis for describing Claude Science as a “scientific workbench app” rather than a new model.
+
+ Anthropic official announcement: Claude for Life Sciences
+ Benchling, BioRender, PubMed, Wiley Scholar Gateway, Synapse.org, 10x Genomics, Databricks, Snowflake, single-cell-rna-qc skill, prompt library, dedicated support
+ Used as the basis for describing Claude for Life Sciences as expanded life-science connectors, skills, and support.
+
+ Anthropic official post: How scientists are using Claude to accelerate research and discovery
+ Context on how scientists use Claude for literature search, code writing, analysis support, and research-automation workflows
+ Referenced to describe real research use as “assisting repetitive tasks and research flow” without overstating it.
+
+ Anthropic research post: Long-running Claude for scientific computing
+ Discussion of long scientific-computing runs, progress files, test criteria, and agentic workflows in HPC/SLURM environments
+ Used only as supporting context for understanding Claude Science’s SSH/HPC direction.
+
+ External industry coverage
+ The meaning of the product launch and market reaction
+ Used only as background for readers following the news, not as a substitute for the official definitions.
+
+## Suggested next reads
+
+Series 01
+
+What it really means when AI “reads” a paper
+
+Separating summarization, evidence tracing, and citation verification.
+
+Series 02
+
+The hype and reality of AI drug-discovery news
+
+Distinguishing candidate proposals, preclinical work, and clinical entry.
+
+Series 03
+
+Why research reproducibility matters
+
+Unpacking what it means to record code, environment, data, and figures.
+
+Series 04
+
+What changes when BioRender, PubMed, and Benchling connect
+
+Looking at what tool integration means for researchers in the life sciences.
+
+**Disclosure**
+This article is an educational industry explainer based on public sources. It is not medical advice, investment advice, or a recommendation to adopt a specific product. Real research, clinical, or security use should be reviewed under the relevant institutional policies.
+
+SHawn Bio Evidence Notes · By [Suhyeong Lee](https://shawnbiohub.wordpress.com/about/) · Based on Anthropic official announcements · Last reviewed 2026-07-03 · No sponsorship or affiliation
+
+## References
+
+These public sources were used to verify the product definitions, feature descriptions, and comparison points in this article. They are provided for reader verification, not as medical, investment, or procurement advice.
+
+ Source
+ Reference
+ Used for
+
+ Anthropic
+ [Claude Science, an AI workbench for scientists](https://www.anthropic.com/news/claude-science-ai-workbench)
+ Claude Science definition, beta release, workbench framing, auditable artifacts, skills/connectors, reviewer agent.
+
+ Anthropic
+ [Claude for Life Sciences](https://www.anthropic.com/news/claude-for-life-sciences)
+ Life-sciences connectors, Agent Skills, prompt library, dedicated support, Benchling/BioRender/PubMed/10x/Databricks/Snowflake context.
+
+ Anthropic
+ [How scientists are using Claude to accelerate research and discovery](https://www.anthropic.com/news/accelerating-scientific-research)
+ Public examples of Claude in scientific work and research-support workflows.
+
+ Anthropic Research
+ [Long-running Claude for scientific computing](https://www.anthropic.com/research/long-running-Claude)
+ Context for long scientific computing workflows, progress tracking, and HPC/SLURM-style environments.
+
+ Google Research
+ [Accelerating scientific breakthroughs with an AI co-scientist](https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/)
+ Comparison point for hypothesis-generation oriented AI for science.
+
+ FutureHouse
+ [FutureHouse](https://www.futurehouse.org/)
+ Comparison point for science-focused agent systems and literature/research automation.
+
+ Elicit
+ [Elicit](https://elicit.com/)
+ Comparison point for literature review, paper search, data extraction, and evidence tables.
+
+ AlphaFold Server
+ [AlphaFold Server](https://alphafoldserver.com/)
+ Comparison point for structure-focused molecular prediction workflows.
+
+ Benchling
+ [Benchling AI](https://www.benchling.com/ai)
+ Comparison point for R&D data, experiment records, and organization-level biotech workflows.
+
+다음에 같이 읽기
+
+- Claude Science란? 과학자를 위한 AI 워크벤치인지 숫자와 용도로 보기
+
+- Palsonify란? Vertex가 Crinetics를 인수한 이유와 말단비대증 치료제 시장
+
+- 비만치료제 읽기

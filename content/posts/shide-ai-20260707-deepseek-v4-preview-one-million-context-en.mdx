@@ -1,0 +1,122 @@
+---
+title: "DeepSeek V4 Preview: why one-million-token context changes AI work"
+date: "2026-07-07"
+description: "AI NOTES · ENENGLISH EDITION A plain-language look at DeepSeek V4 Preview through context length, Pro/Flash routing, and API use. KO · 한국어/EN · EnglishBILINGUAL PAIR The number ..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/07/deepseek-v4-preview-one-million-context-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "384"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/07/deepseek-v4-preview-one-million-context-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+A plain-language look at DeepSeek V4 Preview through context length, Pro/Flash routing, and API use.
+
+![DeepSeek V4 overview](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/hero-9.webp)
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/07/07/deepseek-v4-preview-one-million-context/) / **EN · English** BILINGUAL PAIR
+
+The number that stands out in DeepSeek’s V4 Preview is 1M context. A one-million-token context window is no longer presented as an edge experiment. It sits near the center of the official model story.
+
+The important point is not simply that DeepSeek released another model. The more interesting shift is how the model is meant to be used. V4 is described through two lanes, Pro and Flash, and the announcement combines long context, thinking modes, API access, and open weights in the same package. For developers and AI tool users, model choice is becoming less about picking one “best” model and more about routing each task by depth, speed, cost, and verification risk.
+
+## What the official announcement says
+
+According to DeepSeek’s official documentation, the V4 Preview was announced on April 24, 2026. The announcement introduces two main variants.
+
+- `DeepSeek-V4-Pro`: described as 1.6T total parameters with 49B active parameters.
+
+- `DeepSeek-V4-Flash`: described as 284B total parameters with 13B active parameters.
+
+- Both are available through the official API.
+
+- The official messaging puts one-million-token context at the front of the release.
+
+- DeepSeek also points readers to open weights.
+
+The direction matters more than the raw numbers. Pro is positioned for deeper and heavier work. Flash is positioned for speed and cost efficiency. That makes the release less like a single model launch and more like a routing system for different classes of work.
+
+## Pro and Flash are two different lanes
+
+Pro is the lane to watch for long analysis, complex coding, multi-step reasoning, and agentic workflows. The official announcement emphasizes agentic coding, reasoning, and broad world knowledge around this variant.
+
+Flash is the practical lane. The official description highlights faster responses and lower-cost API use. It also says Flash comes close to Pro in reasoning capability and performs on par with Pro on simpler agent tasks. That makes it a more realistic choice for repeated work such as summarization, classification, first drafts, and lightweight code assistance.
+
+![Pro and Flash lanes](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept-3.webp)
+
+_Pro and Flash lanes_
+
+This distinction matters in real workflows. A system that processes dozens of documents per day does not need to send every call to the deepest model. But a high-stakes code change, policy interpretation, or long report review may deserve a heavier model or a thinking-mode route.
+
+## Why one-million-token context matters
+
+A one-million-token context window does not only mean “you can paste more text.” In practice, it changes three things.
+
+First, the conversation can hold more of the working material. Long meeting notes, product specs, code excerpts, policy documents, and previous decisions can stay in one working frame.
+
+Second, agent workflows can preserve more intermediate state. When automation requires several checks instead of one-shot output, the model can keep more of the earlier reasoning trail and source material available.
+
+Third, source hygiene becomes more important. A longer context can include more useful evidence, but it can also preserve stale or irrelevant material. Long context is not a substitute for curation. It makes curation more important.
+
+## What to watch in the API details
+
+DeepSeek’s pricing page lists separate prices for V4 Flash and V4 Pro. Per one million tokens, Flash is listed at $0.14 for cache-miss input, $0.0028 for cache-hit input, and $0.28 for output. Pro is listed at $0.435 for cache-miss input, $0.003625 for cache-hit input, and $0.87 for output.
+
+The cache-hit line is the part to watch. For products or automations that reuse the same source material, caching can change the economics. For workflows that constantly upload new long documents, input cost and verification cost still matter.
+
+The same pricing page also lists JSON output, tool calls, chat prefix completion, and FIM completion. FIM is described as non-thinking-mode only. That means the right question is not only “which model is smarter?” The better question is whether the job needs reasoning, structured output, code completion, or low-latency repetition.
+
+## The workflow becomes a routing problem
+
+A practical DeepSeek V4 workflow starts by classifying the task. Does it need deep reasoning or not? Should it run through an API call or through open weights in a controlled environment? Does the result need a human approval step before it is used?
+
+![Workflow overview](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/workflow-1.webp)
+
+_Workflow overview_
+
+That final human check becomes more important, not less, when the context window grows. A model that can read more material still does not automatically solve source freshness, permission, or policy issues. Long-context workflows need records of what was included and which outputs were trusted.
+
+## What this means for normal users
+
+For general users, DeepSeek V4 Preview is a signal that AI tools are moving from short Q&A toward longer work sessions. The unit of work is becoming a bundle of documents, decisions, edits, and checks rather than one prompt and one answer.
+
+That changes how AI tools should be evaluated. It is not enough to ask whether a model is the most capable in a leaderboard sense. It also matters whether the system can handle long context reliably, route quick and deep tasks differently, expose an API path, support an open-weights path, and leave enough evidence for review.
+
+## The caution
+
+DeepSeek’s performance claims should be read as company statements and benchmark framing unless independently verified for a specific use case. Real results can differ across languages, domains, tools, and deployment environments.
+
+Open weights also do not mean easy operation. Running large models well requires hardware, serving infrastructure, security controls, and cost management. Openness and operational simplicity are separate questions.
+
+## Takeaway
+
+DeepSeek V4 Preview is best read as a workflow announcement, not just a model announcement. It combines long context, Pro/Flash routing, API access, and open weights. The practical question is no longer “which single model should I use?” It is “which lane should each task take, and how will the output be checked?”
+
+## References
+
+- DeepSeek API Docs — DeepSeek V4 Preview Release: https://api-docs.deepseek.com/news/news260424
+
+- DeepSeek API Docs — Models & Pricing: https://api-docs.deepseek.com/quick_start/pricing
+
+- DeepSeek API Docs — Thinking Mode / reasoning model guide: https://api-docs.deepseek.com/guides/reasoning_model
+
+- DeepSeek on Hugging Face: https://huggingface.co/deepseek-ai
+
+- DeepSeek-V4-Pro-DSpark on Hugging Face: https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark
+
+- DeepSeek-V4-Flash-DSpark on Hugging Face: https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-DSpark
+
+다음에 같이 읽기
+
+- DeepSeek V4란? 100만 토큰 문맥이 AI 작업 방식을 바꾸는 이유
+
+- DeepSeek V4 Flash란? 저가 모델보다 중요한 선택형 AI 스택
+
+- AI 도구 비교

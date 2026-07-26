@@ -1,0 +1,355 @@
+---
+title: "오픈 이미지·영상 모델 파인튜닝, 이제 ‘변환 스크립트’가 아니라 인프라 경쟁이다"
+date: "2026-07-19"
+description: "NeMo AutoModel과 Diffusers의 결합을 Wan 2.1 실행 흐름, GPU 비용, 라이선스, 도입 판단까지 쉽게 풀어 설명합니다."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/19/nemo-automodel-diffusers-finetuning/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1040"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/19/nemo-automodel-diffusers-finetuning/)
+
+AI NOTES · KO  KOREAN EDITION
+
+# 오픈 이미지·영상 모델 파인튜닝, 이제 ‘변환 스크립트’가 아니라 인프라 경쟁이다
+
+NVIDIA NeMo  AutoModel과  Hugging Face  Diffusers가   같은   체크포인트   형식   위에   분산훈련   경로를   연결했습니다.   다만   도구   라이선스,   모델   권리,  GPU  현실은   따로   봐야   합니다.
+
+![Diffusers 체크포인트가 NeMo AutoModel 분산훈련 경로를 거쳐 이미지·영상 결과로 이어지는 구조.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/hero-28.webp)
+
+**KO · 한국어** / [EN · English](https://shawnaiintelligence.wordpress.com/2026/07/19/nemo-automodel-diffusers-finetuning-en/) BILINGUAL PAIR · PUBLISHED
+
+## 먼저 결론
+
+NeMo  AutoModel과   Diffusers의   결합이   중요한   이유는   “어떤   모델   하나가   더   좋아졌다”가   아닙니다.  **Hugging  Face에서   받는  Diffusers  형식의   체크포인트를   별도   훈련   포맷으로   바꾸지   않고,   같은   계열의   분산   학습·체크포인트·추론   흐름에   연결하려는   기반이   생겼다 ** 는   점이   핵심입니다.
+
+ 다만   이것을   “노트북에   설치하면   누구나   영상   모델을   쉽게   학습한다”로   읽으면   틀립니다.   공식  End-to-End  문서는  Wan 2.1  1.3B를   예로   들어도   데이터   전처리,  `.meta`  캐시,  YAML  설정,  `torchrun`, FSDP2,  영구   체크포인트   저장을   요구합니다.   즉,   모델   변환   노동은   줄지만  ** GPU·데이터·실험   관리의   어려움은   그대로   남습니다. **
+
+ 이   글은   다음   질문까지   한   번에   답합니다.
+
+- 예전에는 무엇이 불편했고, 이번에는 정확히 무엇이 달라졌나?
+
+- Wan 2.1 T2V 1.3B를 예로 들면 설치부터 결과 확인까지 어떤 순서로 움직이나?
+
+- 40GB A100 한 장 과 8× H100 이라는 수치는 왜 서로 모순이 아닌가?
+
+- 클라우드 GPU를 쓰면 대략 얼마의 비용 범위를 생각해야 하나?
+
+- Apache-2.0이면 모델과 결과물까지 자유롭게 써도 되나?
+
+- 개인 연구자, 스타트업, 대규모 팀 중 누가 지금 도입할 만한가?
+
+> 한 문장 판단: Diffusers는 모델을 공통 형식으로 읽고 실행하는 층이고, NeMo AutoModel은 그 위에 대규모 학습 운용 층을 더합니다. 편의 기능이라기보다 훈련 인프라의 표준화에 가깝습니다.
+
+## 일상적인 비유로 이해하기
+
+ Diffusers를   여러   브랜드의   컨테이너를   읽을   수   있는  ** 표준   화물   규격 ** 이라고   생각해보겠습니다.   모델   제작자가   달라도   체크포인트를   비슷한   인터페이스로   불러오고   추론할   수   있게   해줍니다.
+
+ 하지만   화물   규격이   같다고   해서   항만   운영이   저절로   해결되지는   않습니다.   여러   GPU에   짐을   어떻게   나눌지,   중간   상태를   언제   저장할지,   노드가   늘어나면   통신을   어떻게   맞출지,   실험을   어떻게   재현할지는   별도의   문제입니다.  NeMo  AutoModel이   맡으려는   부분이   이  ** 항만   운영   시스템 ** 입니다.
+
+ 따라서   이번   변화는   “새로운   생성   모델”이   아니라   다음   두   층이   연결된   사건입니다.
+
+- 모델 생태계 층 — Diffusers: 체크포인트 로딩, 파이프라인 구성, 추론 및 후속 도구 생태계
+
+- 훈련 운용 층 — NeMo AutoModel: FSDP2 기반 분산 학습, 병렬화, 데이터 캐시, 체크포인트, 다중 노드 실행
+
+![체크포인트와 훈련 레시피가 별도 변환 없이 같은 형식으로 이어지는 개념.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept-19.webp)
+
+_체크포인트와 훈련 레시피가 별도 변환 없이 같은 형식으로 이어지는 개념._
+
+## 이전 방식과 새 방식은 무엇이 다른가
+
+### 모델 로딩
+
+** 프로젝트별   훈련   코드   중심 **
+ 저장소마다   다른   스크립트와   구조를   해석
+
+**Diffusers + NeMo AutoModel  흐름 **
+ 지원되는  Diffusers  체크포인트를   공통   진입점으로   사용
+
+### 포맷 변환
+
+** 프로젝트별   훈련   코드   중심 **
+ 훈련용   포맷과   추론용   포맷   사이   변환이   자주   필요
+
+**Diffusers + NeMo AutoModel  흐름 **
+ 별도   체크포인트   변환을   줄이는   방향
+
+### 분산 학습
+
+** 프로젝트별   훈련   코드   중심 **
+ FSDP·병렬화·런처를   프로젝트별로   구성
+
+**Diffusers + NeMo AutoModel  흐름 **
+ FSDP2와   병렬화   구성을   재사용   가능한   recipe로   제공
+
+### 데이터 처리
+
+** 프로젝트별   훈련   코드   중심 **
+ 매   step에서   인코딩하거나   별도   캐시   코드를   작성
+
+**Diffusers + NeMo AutoModel  흐름 **
+ 이미지·영상을   미리  .meta  latent로   변환
+
+### 새 모델 도입
+
+** 프로젝트별   훈련   코드   중심 **
+ 전체   훈련   스크립트를   다시   만드는   경우가   많음
+
+**Diffusers + NeMo AutoModel  흐름 **
+ 전처리   handler와  model  adapter를   추가하고   공통  recipe stack  재사용
+
+### 남는 어려움
+
+** 프로젝트별   훈련   코드   중심 **
+ 코드,   데이터,  GPU,  라이선스   모두   부담
+
+**Diffusers + NeMo AutoModel  흐름 **
+ 변환·연결   부담은   감소하지만   데이터·GPU·평가·라이선스는   여전히   부담
+
+ 여기서   “지원되는  Diffusers  모델”이라는   제한이   중요합니다.   모든  Hub  체크포인트가   자동으로   훈련되는   것은   아닙니다.   공식   발표   시점의  ready-to-use  recipe는  Wan 2.1/2.2, FLUX.1/2, HunyuanVideo 1.5, Qwen-Image  등으로   한정됩니다.   AutoModel의  diffusion  경로도   현재  **flow-matching  계열을   대상으로   합니다. **
+
+## Wan 2.1 1.3B로 따라가는 5단계 실행 지도
+
+ 다음은  NVIDIA  공식  End-to-End  문서의   구조를   초보자가   이해하기   쉽게   줄인   것입니다.  ** 제가   이   글을   위해   실제  GPU  학습을   완료했다는   뜻은   아닙니다. ** NeMo  AutoModel은  Beta/Nightly  문서가   함께   운영되므로   실행   전   공식   문서와   repository의   최신   경로를   다시   확인해야   합니다.
+
+### 1단계 — 설치 환경을 고른다
+
+ 직접   설치하는   최소   명령은   다음   형태입니다.
+
+`uv venv source .venv/bin/activate uv pip install "nemo-automodel[diffusion,diffusion-media]"`
+
+CUDA, PyTorch, TransformerEngine  조합에서   충돌이   생기면   공식  Docker  이미지가   더   재현   가능한   출발점입니다.
+
+`docker pull nvcr.io/nvidia/nemo-automodel:26.06.00 docker run --gpus all -it --rm --shm-size=8g \ -v "$PWD/checkpoints:/workspace/checkpoints" \ nvcr.io/nvidia/nemo-automodel:26.06.00`
+
+`--rm`  컨테이너   안에만   체크포인트를   저장하면   종료   시   결과를   잃을   수   있습니다.   그래서   위   예시는   host의  `checkpoints`  폴더를  bind  mount합니다.   공식   이미지는  diffusion media  dependency가   기본   포함되지   않을   수   있으므로   문서   지시에   따라  `/opt/Automodel` 에서   추가   설치해야   할   수   있습니다.
+
+### 2단계 — 원본 영상을 .meta 캐시로 바꾼다
+
+ 훈련   때마다   VAE와  text  encoder를   반복   실행하면  GPU  시간이   낭비됩니다.   AutoModel은   원본   이미지·영상을   먼저   latent와  text  embedding으로   바꿔  `.meta`  파일에   저장합니다.
+
+Wan 2.1  영상   예시는   다음   흐름입니다.
+
+`python -m tools.diffusion.preprocessing_multiprocess video \ --video_dir /data/videos \ --output_dir /cache \ --processor wan \ --resolution_preset 512p \ --caption_format sidecar`
+
+ 실무에서는   이   단계   전에   다음을   먼저   점검해야   합니다.
+
+- 영상 파일마다 대응하는 caption이 있는가?
+
+- 해상도·프레임 길이·비율이 지나치게 섞여 있지 않은가?
+
+- 얼굴·브랜드·저작물 등 학습 권리를 확보했는가?
+
+- 전처리 결과를 다시 만들 수 있도록 원본과 설정을 보존했는가?
+
+### 3단계 — YAML에서 다섯 곳을 맞춘다
+
+ 처음   볼   때는   YAML이   길지만,   핵심은   다음   다섯   묶음입니다.
+
+`model: pretrained_model_name_or_path: Wan-AI/Wan2.1-T2V-1.3B-Diffusers mode: finetune step_scheduler: global_batch_size: 8 local_batch_size: 1 ckpt_every_steps: 1000 data: dataloader: cache_dir: /cache model_type: wan base_resolution: [512, 512] optim: learning_rate: 5e-6 fsdp: dp_size: 8 checkpoint: enabled: true checkpoint_dir: /workspace/checkpoints`
+
+`dp_size` 와   실제  GPU  프로세스   수가   다르면   실행이   깨집니다.  8 GPU  recipe를  4  GPU에서   쓸   때는   단순히  `torchrun`  숫자만   바꾸지   말고  global batch, gradient accumulation,  메모리   여유와   학습   안정성까지   다시   계산해야   합니다.
+
+### 4단계 — torchrun 으로 학습을 시작한다
+
+ 공식  8 GPU  예시는   다음   형태입니다.
+
+`torchrun --nproc-per-node=8 \ examples/diffusion/finetune/finetune.py \ -c examples/diffusion/finetune/wan2_1_t2v_flow.yaml`
+
+ 이   명령이   시작됐다고   성공한   것은   아닙니다.   첫   체크포인트가   저장되는지,   loss가   발산하지   않는지,   데이터   샘플이   의도한   caption과   연결되는지,   재시작   시   restore가   되는지를   별도로   확인해야   합니다.
+
+### 5단계 — fine-tuned checkpoint로 결과를 비교한다
+
+`GEN_CFG=  CKPT=  PROMPT='["A dog running on a beach"]' python examples/diffusion/generate/generate.py \ -c "$GEN_CFG" \ --model.checkpoint "$CKPT" \ --inference.prompts "$PROMPT"`
+
+ 평가는   “예쁜   한   장이   나왔는가?”로   끝내면   안   됩니다.   같은   seed와   prompt로  base  model과  fine-tuned  model을   비교하고,   학습   대상은   잘   반영됐지만   일반적인   장면   생성   능력이   무너진   것은   아닌지   확인해야   합니다.
+
+## 40GB A100 한 장 과 8× H100 이 모두 등장하는 이유
+
+ 서로   다른   질문의   답이기   때문입니다.
+
+### Wan 2.1 T2V 1.3B가 단일 A100 40GB에 맞는다는 사례
+
+** 실제로   말해주는   것 **
+ 작은  1.3B  모델의   제한된   구성   또는   LoRA·추론·실험   가능성
+
+** 말해주지   않는   것 **
+ 모든  full fine-tuning  recipe가   한   장에서   안정적으로   끝난다는   보장
+
+### 공식 E2E 문서의 4 GPU minimum, 8 GPU recommended
+
+** 실제로   말해주는   것 **
+ 문서가   가정하는   일반적인  fine-tuning  운용   규모
+
+** 말해주지   않는   것 **
+ 모든   데이터셋·해상도·batch에서   필요한   절대   규칙
+
+### 8× H100 80GB throughput
+
+** 실제로   말해주는   것 **
+ 1개   노드에서   측정한   특정   환경의   성능
+
+** 말해주지   않는   것 **
+ 다른   클라우드,   네트워크,  precision,  데이터에서의   보편적   속도   약속
+
+ 즉,   “모델이   메모리에   들어간다”와   “원하는   batch·해상도·속도로   학습이   안정적으로   돈다”는   다른   문제입니다.  single-GPU  수치는   입문   실험의   가능성을   말할   수   있지만,   운영   예산을   잡을   때는   공식   recipe와   실제   configuration을   기준으로   봐야   합니다.
+
+![데이터 준비, 레시피 설정, 분산훈련, 생성으로 이어지는 파인튜닝 흐름.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/mechanism-2.webp)
+
+_데이터 준비, 레시피 설정, 분산훈련, 생성으로 이어지는 파인튜닝 흐름._
+
+## 클라우드 GPU 비용을 어떻게 계산할까
+
+ 가격은   지역·재고·세금·스토리지·예약   조건에   따라   계속   바뀝니다.   아래는  ** 2026년   7월   20일   Lambda의   공개  list  price를   이용한   단순   산술   예시 ** 이며,  NeMo  작업의   실제   견적이나   제휴   추천이   아닙니다.
+
+### 1× A100 40GB
+
+** 공개   단가   기준 **
+$1.99/GPU·h
+
+** 10시간   단순   계산 **
+$19.90
+
+** 해석 **
+ 설치·전처리·추론·제한적   실험의   저비용   출발점.  full FT  가능성을   자동   보장하지   않음
+
+### 4× A100 40GB
+
+** 공개   단가   기준 **
+$7.96/h
+
+** 10시간   단순   계산 **
+$79.60
+
+** 해석 **
+ 공식  minimum  규모를   단순   가격으로   옮긴   예시
+
+### 8× H100 80GB
+
+** 공개   단가   기준 **
+$31.92/h
+
+** 10시간   단순   계산 **
+$319.20
+
+** 해석 **
+8 GPU  노드의   단순  compute  비용.   스토리지·준비·실패·재실행   비용   별도
+
+ 실제   예산은   다음처럼   계산해야   합니다.
+
+`총비용 ≈ GPU 수 × 시간당 단가 × (전처리 + 시험 실행 + 본 학습 + 평가 + 실패 재실행 시간) + 영구 스토리지 + 다운로드/전송 + 로그·모니터링 비용`
+
+ 가장   흔한   실수는   “본   학습   10시간”만   계산하는   것입니다.   환경   설치와   데이터   전처리,   잘못된   YAML로   끝난   실행,  checkpoint  비교,   최종   생성   평가까지   포함하면   청구   시간은   더   길어질   수   있습니다.
+
+## 라이선스는 네 장의 문서로 나눠 봐야 한다
+
+ Apache-2.0이라는   한   줄만   보고   상업   이용   가능성을   판단하면   위험합니다.
+
+### 훈련 도구 코드
+
+** 무엇을   확인하나 **
+ 수정·재배포·고지   의무
+
+** 이번   사례의   의미 **
+NeMo AutoModel  도구   코드는  Apache-2.0
+
+### 모델/checkpoint
+
+** 무엇을   확인하나 **
+ 사용   지역,   상업   이용,   재배포,   제한   용도
+
+** 이번   사례의   의미 **
+Wan·FLUX·Hunyuan  등   각  model  card와   LICENSE가   별도
+
+### 학습 데이터
+
+** 무엇을   확인하나 **
+ 저작권,   초상권,   개인정보,   계약
+
+** 이번   사례의   의미 **
+ 도구   라이선스가   데이터   권리를   대신하지   않음
+
+### 결과물과 배포
+
+** 무엇을   확인하나 **
+ 서비스   약관,  adapter/checkpoint  배포   조건
+
+** 이번   사례의   의미 **
+base model  조건과   결합해   판단
+
+ 특히  HunyuanVideo  1.5의   공식   라이선스는   라이선스   적용   지역에서  ** 대한민국을   제외 ** 합니다.   따라서   한국에서   해당   체크포인트를   다운로드해   파인튜닝하거나   배포하는   경로를   이   글은   권하지   않습니다.   기술적으로   recipe가   존재한다는   사실과   법적으로   사용   가능한지는   별개입니다.
+
+## 누가 지금 도입하면 좋은가
+
+### 개인 연구자·개인 크리에이터
+
+- 목표가 한 번의 캐릭터 LoRA나 짧은 영상 실험이라면 먼저 기존 Diffusers training script 또는 관리형 서비스를 비교하는 편이 낫습니다.
+
+- 분산 학습 자체를 배우거나 이후 모델을 계속 교체할 계획이라면 AutoModel recipe를 작은 Wan 1.3B 사례로 학습할 가치가 있습니다.
+
+- 데이터 권리와 GPU 비용을 설명할 수 없다면 아직 시작하지 않는 편이 안전합니다.
+
+### 스타트업·제품 팀
+
+- 여러 모델을 반복적으로 fine-tune하고, checkpoint를 Diffusers 생태계로 다시 연결해야 한다면 도입 가치가 큽니다.
+
+- 단, “지원 모델이 늘어날 것이다”라는 기대만으로 핵심 제품을 Beta/Nightly API에 고정하면 유지보수 비용이 생깁니다.
+
+- 첫 PoC는 한 모델·한 데이터셋·한 node에서 checkpoint restore까지 검증하는 것이 좋습니다.
+
+### 대규모 학습 팀
+
+- FSDP2, tensor/context/pipeline parallelism, multi-node orchestration을 이미 다루고 있다면 가장 직접적인 대상입니다.
+
+- 이 경우 핵심 평가는 설치 편의가 아니라 throughput, failure recovery, observability, storage I/O와 scheduler 통합입니다.
+
+## 시작 전에 통과해야 할 체크리스트
+
+- [ ] 목표 모델이 현재 공식 recipe에서 지원되는가?
+
+- [ ] 모델 라이선스가 사용 지역과 상업 목적에 맞는가?
+
+- [ ] 학습 데이터의 저작권·초상권·개인정보 근거가 있는가?
+
+- [ ] 전처리 결과와 checkpoint를 지울 수 없는 storage에 저장하는가?
+
+- [ ] torchrun GPU 수와 fsdp.dp_size 가 일치하는가?
+
+- [ ] base와 fine-tuned 결과를 같은 prompt·seed로 비교하는가?
+
+- [ ] 실패·재시작·평가 시간을 포함한 GPU 예산을 잡았는가?
+
+## 마지막 판단
+
+NeMo  AutoModel과   Diffusers의   결합은   오픈   생성   모델의   경쟁   기준을   바꿉니다.   앞으로는   “모델   weight가   공개됐는가”만큼  ** 그   모델을   공통   형식으로   불러오고,   데이터   전처리부터   분산   학습·체크포인트·추론까지   재사용   가능한   구조로   돌릴   수   있는가 ** 가   중요해집니다.
+
+ 하지만   이는   클릭   한   번짜리   민주화가   아닙니다.   변환   스크립트와  model-specific glue  code를   줄여주는   대신,   데이터   품질·GPU   예산·분산   운용·라이선스   판단을   더   명확하게   드러냅니다.
+
+> 도입 기준: 한 번의 취미 실험이라면 더 단순한 경로가 나을 수 있습니다. 여러 Diffusers 모델을 반복적으로 학습하고 규모를 늘려야 한다면 AutoModel이 제공하는 공통 recipe와 checkpoint 경로를 검토할 이유가 충분합니다.
+
+![도입 전에 라이선스, 하드웨어, 벤치마크, 준비도를 함께 확인하는 네 가지 점검.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing-24.webp)
+
+_도입 전에 라이선스, 하드웨어, 벤치마크, 준비도를 함께 확인하는 네 가지 점검._
+
+## 레퍼런스
+
+- Hugging Face × NVIDIA 공동 발표
+
+- NeMo AutoModel diffusion fine-tuning E2E 문서
+
+- NeMo AutoModel GitHub
+
+- Hugging Face Diffusers GitHub
+
+- HunyuanVideo 1.5 공식 라이선스
+
+- Lambda GPU Cloud 공개 가격
+
+* 기준일:  2026-07-20. NeMo AutoModel diffusion  문서는  Beta/Nightly  상태이며   지원   모델,  container tag, recipe  경로와   가격은   변경될   수   있습니다.   실행   전   공식   문서를   다시   확인하세요. *

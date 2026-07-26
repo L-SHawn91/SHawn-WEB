@@ -1,0 +1,282 @@
+---
+title: "Claude’s J-Space: A Jacobian Lens for Reading Unspoken Model States"
+date: "2026-07-14"
+description: "A clear guide to what Anthropic’s J-space research can read, its causal interventions, mixed external reproduction, and the boundary around consciousness claims."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/14/claude-j-space-jacobian-lens-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "927"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/14/claude-j-space-jacobian-lens-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+# Claude’s J-Space: A Jacobian Lens for Reading Unspoken Model States
+
+A clear guide to what Anthropic’s J-space research can read, its causal interventions, mixed external reproduction, and the boundary around consciousness claims.
+
+![J-space and Jacobian Lens editorial visual](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/hero-23.webp)
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/07/14/claude-j-space-jacobian-lens/) / **EN · English** BILINGUAL PAIR
+
+When we ask an AI a question, we usually see only its final answer. We do not see what it consulted along the way or which intermediate calculation shaped the result.
+
+Anthropic has proposed a way to test a very small part of that hidden middle. In research released on July 6, 2026, it reported a small internal workspace in Claude called **J-space**. Researchers can read selected concepts placed there, change them, and test whether the final answer changes too. This is an Anthropic research publication in the Transformer Circuits Thread, not a peer-reviewed journal article.
+
+One boundary matters from the start. This is not a method for reading all of an AI’s mind, and it does not show that Claude is conscious. It is closer to **an experimental tool for checking whether a few internal notes used while producing an answer actually affect the computation**.
+
+## J-space is closer to a shared whiteboard than an entire brain
+
+Imagine a large office. Many teams read documents, calculate numbers, and polish language in parallel. Most work stays inside each team. Information that several teams need, however, gets placed on a shared whiteboard in the central meeting room.
+
+In Anthropic’s account, J-space resembles that whiteboard. It does not contain every internal computation. It temporarily holds selected concepts—a country, an arithmetic intermediate, or an assessment of hidden intent—that later computations may need to reuse.
+
+The paper reports five functional properties.
+
+### Verbal report
+
+**Plain-language meaning**
+The model can name a concept held internally
+
+**Paper example**
+Replacing soccer with rugby changes the report to rugby
+
+### Directed modulation
+
+**Plain-language meaning**
+Instructions can bring a concept into the workspace
+
+**Paper example**
+The model keeps citrus concepts or a mental arithmetic result while copying unrelated text
+
+### Internal reasoning
+
+**Plain-language meaning**
+Unspoken intermediates contribute to the answer
+
+**Paper example**
+Replacing spider with ant changes a leg-count answer from 8 to 6
+
+### Flexible reuse
+
+**Plain-language meaning**
+One concept can feed several downstream tasks
+
+**Paper example**
+Replacing France with China changes capital, language, continent, and currency answers
+
+### Selectivity
+
+**Plain-language meaning**
+Routine processing can bypass the workspace
+
+**Paper example**
+Strong ablation damages multi-step reasoning while leaving several classification and extraction tasks near baseline
+
+The paper reports that workspace-like content appears mainly in a middle band of layers, holds on the order of tens of concepts at a time, and explains only a small share of activation variance. This is closer to a limited shared channel than a large, cleanly separated “second brain.”
+
+![Flow diagram: LOCAL FEATURES, TASK CONTEXT, INTERMEDIATE VALUES, and LANGUAGE CUES enter J-SPACE, then lead to REPORTABLE and FLEXIBLE USE.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept_labeled_v4.webp)
+
+_J-space resembles a limited internal workspace shared by several downstream operations, not the model’s entire computation._
+
+## What the Jacobian Lens actually reads
+
+The tool used to inspect J-space is the **Jacobian Lens**, or J-lens.
+
+Every layer of a language model contains high-dimensional activation vectors. J-lens estimates how a small change to an activation would, on average, change the probability of words produced now or later. The mathematical object used for that sensitivity calculation is a Jacobian.
+
+The result is decoded through the model’s vocabulary. At a selected layer and token position, a researcher may see short readouts such as `spider`, `error`, `fake`, or `integrity`. These are not necessarily words the model is currently saying. They are better understood as **token-aligned internal dispositions that could later support speech or reasoning**.
+
+That distinction matters.
+
+- Output text is what the model actually says.
+
+- Chain-of-thought or a scratchpad is reasoning written out as text.
+
+- A J-space readout interprets part of an unspoken internal activation through token directions.
+
+J-lens is therefore not a complete subtitle track for a model’s thoughts. Concepts that do not map cleanly to one token—including phrases, distributed abstractions, and nonverbal information—can be missed or flattened into misleading labels.
+
+## The strongest evidence comes from changing the internal state
+
+Seeing `spider` inside a model is only a correlation. The representation might be a passive scoreboard that records a decision made somewhere else.
+
+The researchers therefore intervened directly.
+
+For a prompt asking for the number of legs on the animal that spins webs, Claude internally used `spider` even though that word appeared in neither the prompt nor the final answer. Replacing the internal `spider` representation with `ant` changed the answer from 8 to 6. The next computation had used the altered representation as an input.
+
+In another experiment, replacing `France` with `China` changed answers to four different questions: capital, language, continent, and currency. That supports the idea that multiple downstream operations read from a shared representation.
+
+The evidence is not uniformly clean. J-space captures only part of model computation, and the mechanism that decides what enters it remains unknown.
+
+## For safety work, it looks like a hidden-intent hypothesis generator
+
+The practical attraction is the possibility of examining not just what a model says, but some of what it considered while producing the answer.
+
+Anthropic presents controlled examples involving:
+
+- Evaluation awareness: internal fake and fictional signals when a model recognizes an ethics test as staged
+
+- Score manipulation: manipulation and realistic while a model edits a score file to make results look better
+
+- Hidden goals: signals such as secretly and fraud in deliberately misaligned model organisms
+
+- Prompt injection: injection and fake when reading manipulated search results
+
+![The Jacobian Lens creates a token-aligned readout and uses causal intervention to test whether the representation matters.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/flow-13.webp)
+
+_The Jacobian Lens creates a token-aligned readout and uses causal intervention to test whether the representation matters._
+
+This is not a finished lie detector. The demonstrations include contrived evaluations and models deliberately trained to misbehave. The paper does not provide production-scale precision, recall, or a guarantee that every dangerous plan enters J-space.
+
+The most realistic current role is **hypothesis generation for an auditor**. A suspicious readout would need to be checked against the prompt, output, tool calls, behavioral tests, and other interpretability methods.
+
+## The external reproduction contains both successes and failures
+
+Anthropic invited neuroscientists, AI consciousness and moral-status researchers, and model-interpretability researchers to comment on the work. These are valuable outside perspectives, but they were invited by Anthropic and involved pre-publication interaction. They are not the same as a large, fully independent post-publication replication effort.
+
+Google DeepMind interpretability lead Neel Nanda and MATS scholars rebuilt J-lens for **Qwen 3.6 27B**, using 25 prompts of 128 tokens for their main replication.
+
+### Verbal-report swaps
+
+**Reported result**
+Weak but positive causal effect
+
+**What it means**
+Partial support for the core direction
+
+### Layer structure
+
+**Reported result**
+Similar bands, but less clean
+
+**What it means**
+Structure may vary across models
+
+### Directed modulation
+
+**Reported result**
+Moderate success
+
+**What it means**
+Some functional replication
+
+### Multilingual and typo evaluations
+
+**Reported result**
+Considered successful
+
+**What it means**
+Signals appeared in an open-weight model
+
+### Multi-hop factual reasoning
+
+**Reported result**
+Swapping the answer dominated the intermediate
+
+**What it means**
+Ambiguous support for the intended intermediate-state interpretation
+
+### Poetry and arithmetic
+
+**Reported result**
+Failed to replicate
+
+**What it means**
+Possible experimental error or capability differences
+
+Nanda describes J-lens as potentially useful but limited model forensics. He expects missed important signals and false positives. The accurate summary is not “DeepMind verified the study,” but **an external team reproduced some core phenomena on Qwen with mixed results**.
+
+## What is available now
+
+The code and demo are public, but they should not be confused with a supported product feature.
+
+### Anthropic jacobian-lens repository
+
+**What it enables**
+Fit and apply lenses to open-weight decoder transformers
+
+**Boundary**
+Apache-2.0 reference implementation; the README says it is not maintained and not accepting contributions
+
+### Neuronpedia J-lens demo
+
+**What it enables**
+Explore layer-by-token examples for Qwen 3.6 27B and Gemma 3 12B
+
+**Boundary**
+A selected demonstration, not validation across all models or claims
+
+### Claude experiments in the paper
+
+**What it enables**
+Inspect detailed interventions and ablations
+
+**Boundary**
+Does not imply ordinary users can access Claude’s internal weights through its API
+
+Running the method requires access to a model’s residual stream and backward passes. A normal call to a closed model API is not enough.
+
+## Why this does not establish consciousness
+
+The paper borrows the functional concept of **access consciousness**: information is accessible if it can be reported, deliberately summoned, and reused for reasoning and action.
+
+**Phenomenal consciousness**—whether a system has subjective experience or feels anything—is a different question. These experiments do not answer it.
+
+Claude and the human brain also differ in important ways.
+
+- Human global-workspace theories emphasize recurrent neural signaling.
+
+- Claude’s reported workspace evolves across depth in a single feedforward pass.
+
+- Human conscious contents include images, sounds, bodily sensations, and plans for movement.
+
+- J-lens is strongly tied to a model’s language-token vocabulary.
+
+The cautious description is therefore **a model structure with some functional similarities to a human global workspace**, not evidence that Claude has become conscious.
+
+## Five questions that matter next
+
+- Cross-model generalization: Do the structure and causal effects repeat across model sizes, languages, and training methods?
+
+- False negatives: How often does important internal processing remain outside the visible J-space?
+
+- False positives: How should auditors handle ambiguous tokens and interpretation errors?
+
+- Multi-token concepts: Can the method reliably represent phrases, distributed concepts, and nonverbal information?
+
+- Adversarial adaptation: Could a model learn to pursue a goal through internal states that evade the lens?
+
+![The current value is not magical mind reading but a safety-audit loop connecting hypotheses, causal checks, limits, and human review.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing-21.webp)
+
+_The current value is not magical mind reading but a safety-audit loop connecting hypotheses, causal checks, limits, and human review._
+
+## The takeaway: move one step beyond simply trusting an AI answer
+
+For most readers, this does not change what happens tomorrow. There is no J-space button in ChatGPT or Claude that lets people inspect every hidden step.
+
+The direction still matters. So far, checking an AI has mostly meant judging whether its answer looked acceptable. Methods like J-space could eventually let researchers test, in some cases, **why an answer appeared and whether a risky internal calculation actually changed the outcome**.
+
+That remains a narrow capability. J-lens is a token-dependent approximation, and the external reproduction reported failures alongside successes. It should not be presented as mind reading or a finished lie detector.
+
+But as AI is used for more consequential work, the practical question becomes clearer:
+
+> Not “does AI think like a person?” but “can people find and test the calculations that could cause harm?” J-space is an early experimental tool for that question.
+
+## References
+
+- Anthropic — A global workspace in language models
+
+- Gurnee et al. — Verbalizable Representations Form a Global Workspace in Language Models
+
+- Anthropic — Jacobian Lens reference implementation
+
+- Neuronpedia — Jacobian Lens demo
+
+- Anthropic — Invited external commentary on the paper

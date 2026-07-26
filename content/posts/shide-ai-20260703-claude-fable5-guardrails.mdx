@@ -1,0 +1,124 @@
+---
+title: "Claude Fable 5란? 재개방과 사용 제한을 같이 봐야 하는 이유"
+date: "2026-07-03"
+description: "수출통제 이후 돌아온 Anthropic의 새 모델은 안전 분류기와 Opus 4.8 fallback을 함께 달았다."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/03/claude-fable5-guardrails/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "246"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/03/claude-fable5-guardrails/)
+
+AI NOTES · KO  KOREAN EDITION
+
+# Claude Fable 5, 다시 열렸지만 그냥 풀린 건 아니다
+
+수출통제 이후 돌아온 Anthropic의 새 모델은 안전 분류기와 Opus 4.8 fallback, 그리고 장기 작업 벤치마크를 함께 봐야 한다.
+
+![Claude Fable 5 guardrails visual](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/hero_summary_ko-2.webp)
+
+**KO · 한국어** / [EN · English](https://shawnaiintelligence.wordpress.com/2026/07/03/claude-fable5-guardrails-en/) BILINGUAL PAIR
+
+수출통제 이후 돌아온 Anthropic의 새 모델은 안전 분류기와 Opus 4.8 fallback을 함께 달았다.
+
+## 다시 열린 모델이지만, 핵심은 ‘그냥 복귀’가 아니다
+
+Anthropic의 Claude Fable 5는 단순히 새 모델 하나가 추가된 사건이 아니다. 6월 9일 공개됐다가, 6월 12일 미국 정부의 수출통제 조치 이후 전 사용자 접근이 중단됐고, 6월 30일 통제가 해제되면서 7월 1일부터 다시 열렸다. 이 과정 때문에 Fable 5의 뉴스 포인트는 성능표보다 “강한 모델을 어떤 조건으로 다시 열 수 있느냐”에 가까워졌다.
+
+Anthropic은 Fable 5를 자사가 일반 공개한 모델 중 가장 강한 모델이라고 설명한다. 특히 코딩, 전문 업무, 장기 에이전트 작업 같은 영역에서 강하다고 말한다. 하지만 동시에 이 모델은 안전 분류기, fallback, 데이터 보존, 접근 제한 같은 운영 장치와 함께 나온다. 성능만 커진 것이 아니라, 모델을 쓰게 하는 방식도 같이 바뀐 셈이다.
+
+## Fable 5는 어떤 모델인가
+
+![Fable 5는 짧은 답변보다 코딩·분석·검토·장기 에이전트 작업에 초점을 둔다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/model_use_generated.webp)
+
+_Fable 5는 짧은 답변보다 코딩·분석·검토·장기 에이전트 작업에 초점을 둔다._
+
+Fable 5를 한 문장으로 소개하면, Anthropic이 넓은 사용자에게 열어둔 가장 강한 장기 작업용 Claude 모델이다. 제품 페이지와 개발자 문서는 이 모델을 “ambitious coding and professional work”, “demanding reasoning and long-horizon agentic work”에 맞춘 모델로 설명한다. 짧은 질문에 빠르게 답하는 모델이라기보다, 여러 단계로 이어지는 코딩·분석·검토 작업을 오래 끌고 가는 쪽에 초점이 있다.
+
+그래서 Fable 5의 소개는 “얼마나 똑똑한가”에서 끝나지 않는다. 이 모델은 Fable 5로 직접 답하는 구간과, 사이버보안·생물학처럼 민감한 요청에서 Opus 4.8 fallback으로 넘어가는 구간이 함께 설계되어 있다. 즉 Fable 5는 성능 모델이면서 동시에 routing과 안전장치가 붙은 제품이다.
+
+## 벤치마크는 장기 작업 능력을 중심으로 봐야 한다
+
+![원문 벤치마크 이미지: Anthropic 공식 발표의 Claude Mythos 5 / Fable 5 비교표.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/benchmark_table-5.webp)
+
+_원문 벤치마크 이미지: Anthropic 공식 발표의 Claude Mythos 5 / Fable 5 비교표._
+
+Anthropic의 공식 벤치마크 표에서 Fable 5와 Mythos 5는 같은 열로 묶여 비교된다. 표는 SWE-Bench Pro, FrontierCode, GDPval-AA, AutomationBench, OSWorld-Verified, Legal Agent Benchmark, Humanity’s Last Exam, BioMysteryBench, Terminal-Bench 2.1, ExploitBench, HealthBench Professional 같은 항목을 함께 보여준다. 여기서 읽을 포인트는 단순히 “점수가 높다”가 아니라, 평가 항목이 코딩·문서해석·도구사용·컴퓨터사용·바이오·사이버처럼 길고 복잡한 작업으로 이동했다는 점이다.
+
+공식 표에서 Claude Mythos 5 / Fable 5는 SWE-Bench Pro 80.3%, FrontierCode Diamond 29.3%, GDPval-AA 1932, GDP.pdf 29.8%, Blueprint-Bench 2 38.6%, AutomationBench 17.4%, OSWorld-Verified 85.0%, Legal Agent Benchmark 13.3%, Humanity’s Last Exam 59.0% / 64.5%, BioMysteryBench 46.1% / 83.9%, Terminal-Bench 2.1 88.0%, ExploitBench 78.0%, HealthBench Professional 66.0%로 제시된다. 다만 별표가 붙은 일부 벤치마크는 사이버보안·생물학 관련 안전장치 때문에 Fable 5가 fallback 영향을 받아 Mythos 5와 차이가 날 수 있다는 주석이 붙어 있다.
+
+독립 벤치마크 사이트인 Artificial Analysis도 Fable 5를 별도로 다룬다. 해당 페이지 기준 Fable 5는 Artificial Analysis Intelligence Index에서 60점, 162개 모델 중 1위로 표시되고, 출력 속도는 약 72.6 tokens/s, context window는 1M tokens로 제시된다. 이 수치는 독립 평가의 한 snapshot이므로 절대적인 결론이 아니라, Fable 5가 장기 추론·agentic work 쪽 상위 모델로 평가되고 있다는 참고 자료로 읽는 편이 안전하다.
+
+## Fable 5와 Mythos 5는 같은 계열이지만 공개 방식이 다르다
+
+Anthropic은 Fable 5를 “일반 사용을 위해 안전하게 만든 Mythos-class 모델”이라고 설명한다. 반면 Mythos 5는 같은 underlying model을 공유하지만, 일부 영역에서 안전장치가 풀린 버전이고 Project Glasswing을 통해 제한적으로 제공된다. 쉽게 말하면 Fable 5는 넓은 사용자를 위한 모델이고, Mythos 5는 Project Glasswing을 통해 미국 정부와 협력하는 제한된 집단을 위한 모델에 가깝다.
+
+여기서 중요한 점은 모델 이름보다 접근 조건이다. Fable 5는 다시 글로벌 사용자에게 열렸지만, 위험한 요청이 들어오면 그대로 처리하지 않는다. Anthropic은 사이버보안과 생물학 관련 일부 요청을 안전 분류기로 잡고, 필요하면 Claude Opus 4.8로 응답을 돌리는 구조를 붙였다.
+
+## 안전장치는 답변을 막는 것보다, 다른 모델로 돌리는 방식에 가깝다
+
+![민감한 요청은 safety classifier를 지나 Fable 5 또는 Opus fallback 경로로 나뉜다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/fallback_route_generated.webp)
+
+_민감한 요청은 safety classifier를 지나 Fable 5 또는 Opus fallback 경로로 나뉜다._
+
+Fable 5의 특징은 일부 요청에서 답이 그냥 나오지 않을 수 있다는 점이다. Anthropic은 cybersecurity와 biology 영역의 위험 요청을 감지하기 위해 safety classifier를 쓰고, flagged query는 Opus 4.8로 자동 routing될 수 있다고 설명한다. 사용자는 Fable 5를 부른다고 생각했지만, 실제 응답은 더 보수적인 모델에서 나올 수 있다.
+
+이 방식은 모델 출시에서 중요한 변화다. 예전에는 “이 모델이 얼마나 똑똑한가”가 중심 질문이었다면, 이제는 “어떤 요청에서 어느 모델이 실제로 답하는가”도 함께 봐야 한다. Anthropic은 안전장치가 평균적으로 세션의 5% 미만에서 작동한다고 밝혔다. 다만 보수적으로 조정된 분류기인 만큼, 무해한 요청이 걸릴 가능성도 있다.
+
+## 수출통제와 재배포는 Fable 5의 성능만큼 큰 뉴스다
+
+핵심 변화
+
+강한 모델은 이제 성능표와 함께 접근 조건, fallback, 안전 검증을 같이 들고 나온다.
+
+Fable 5의 복귀는 “더 똑똑한 모델”보다 “어떻게 안전하게 다시 열 것인가”에 가깝다.
+
+Fable 5와 Mythos 5는 6월 12일 미국 정부 수출통제 대상이 됐다. Anthropic은 외국 국적자를 실시간으로 안정적으로 구분할 방법이 없었기 때문에, 두 모델 접근을 전 사용자에게 일시 중단했다고 설명했다. 이후 6월 30일 수출통제가 해제됐고, Fable 5는 7월 1일부터 Claude Platform, Claude.ai, Claude Code, Claude Cowork에서 다시 제공되기 시작했다. Anthropic은 복귀에 앞서 보고된 안전장치 우회 사례를 미국 정부·Amazon 등 파트너와 검토하고, 개선된 안전 분류기를 훈련했다고 밝혔다. 또한 Amazon, Microsoft, Google 등 Glasswing 파트너와 함께 jailbreak 심각도를 평가하는 업계 공동 프레임워크를 제안했다.
+
+강한 모델은 단순히 “출시했다”로 끝나지 않는다. 정부 협의, 수출통제, trusted access, safety classifier, fallback 같은 장치가 모델 성능과 한 묶음으로 따라붙는다. Fable 5의 복귀는 AI 모델이 점점 제품이자 규제 대상, 그리고 인프라가 되고 있다는 신호다.
+
+## 벤치마크 숫자는 회사 발표와 독립 지표를 나눠 읽어야 한다
+
+Anthropic의 공식 표는 Fable 5가 여러 항목에서 앞서는 그림을 보여준다. 하지만 이 표는 Anthropic의 발표 자료이고, 일부 항목은 Mythos 5와 Fable 5를 같은 열로 묶는다. 그래서 숫자를 볼 때는 “Fable 5 단독의 모든 상황”으로 읽기보다, 같은 underlying model 계열이 어떤 능력을 보였고 Fable 5는 어떤 안전장치와 함께 제공되는지를 같이 봐야 한다.
+
+반대로 Artificial Analysis 같은 독립 지표는 비교 관점을 넓혀준다. 다만 여기서도 Fable 5는 `Opus 4.8 fallback`이 붙은 모델로 표시된다. 따라서 벤치마크의 핵심은 “무조건 최고”가 아니라, Fable 5가 장기 작업·agentic coding·컴퓨터 사용·전문 업무에서 강한 상위 모델로 포지셔닝되고, 동시에 안전장치 때문에 실제 응답 경로가 달라질 수 있다는 점이다.
+
+## 개발자가 실제로 봐야 할 변화
+
+개발자 입장에서 Fable 5는 단순히 더 강한 모델 ID가 아니다. Anthropic 문서는 Fable 5를 쓰는 integration이 refusal, fallback, billing rule을 처리해야 한다고 설명한다. 즉 API 호출은 성공했더라도, 요청 성격에 따라 Fable 5가 아니라 Opus 4.8 fallback 응답이 올 수 있다.
+
+이건 제품 설계에 영향을 준다. 사용자는 왜 어떤 요청이 거절됐는지, 왜 모델이 바뀌었는지, 비용과 로그가 어떻게 기록되는지 알아야 한다. 장기 작업 agent를 만들수록 이런 routing과 audit trail은 UX 문제가 아니라 신뢰성 문제가 된다.
+
+## 한 줄로 정리하면
+
+![Fable 5의 복귀는 성능, 접근 관리, 안전장치, fallback이 한 묶음이 되는 장면이다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing_generated.webp)
+
+_Fable 5의 복귀는 성능, 접근 관리, 안전장치, fallback이 한 묶음이 되는 장면이다._
+
+Claude Fable 5의 핵심은 “다시 열렸다”는 사실 하나가 아니다. Anthropic은 가장 강한 일반 공개 모델이라고 주장하는 Fable 5를, 수출통제와 접근 중단을 거친 뒤 안전 분류기와 Opus 4.8 fallback을 붙여 다시 열었다. 강한 모델일수록 성능표보다 접근 조건, fallback, 안전 검증이 함께 뉴스가 된다.
+
+## 공개 출처
+
+• Anthropic — Claude Fable 5 and Claude Mythos 5: [https://www.anthropic.com/news/claude-fable-5-mythos-5](https://www.anthropic.com/news/claude-fable-5-mythos-5)
+
+• Anthropic — Redeploying Fable 5: [https://www.anthropic.com/news/redeploying-fable-5](https://www.anthropic.com/news/redeploying-fable-5)
+
+• Anthropic — Claude Fable product page: [https://www.anthropic.com/claude/fable](https://www.anthropic.com/claude/fable)
+
+• Claude Platform Docs — Introducing Claude Fable 5 and Claude Mythos 5: [https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5](https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5)
+
+• Artificial Analysis — Claude Fable 5 benchmark page: [https://artificialanalysis.ai/models/claude-fable-5](https://artificialanalysis.ai/models/claude-fable-5)
+
+다음에 같이 읽기
+
+- Claude Fable 5 is back: why the guardrails matter
+
+- Claude Tag explained: bringing Claude into team chat workflows
+
+- AI 도구 비교

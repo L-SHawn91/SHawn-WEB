@@ -1,0 +1,111 @@
+---
+title: "Microsoft Flint: A Human-Editable Intermediate Language for AI-Generated Charts"
+date: "2026-07-15"
+description: "Flint is not an error-proof chart generator. It records visualization intent in a compact spec that people can inspect and edit before compilation to multiple rendering backends."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/15/microsoft-flint-ai-chart-language-2026-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "905"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/15/microsoft-flint-ai-chart-language-2026-en/)
+
+Flint is not an error-proof chart generator. It records visualization intent in a compact spec that people can inspect and edit before compilation to multiple rendering backends.
+
+언어 선택 / Choose a language
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/?p=904)[EN · English](https://shawnaiintelligence.wordpress.com/?p=905)
+
+Ask an AI to “make a bar chart from this data,” and a finished image pops out. It is convenient, but there is a catch. The reasons behind the picture — why that axis was chosen, why that color, where the baseline sits — get buried inside the image. Judging whether the result is actually correct turns out to be surprisingly hard when all you have is the final picture.
+
+**Flint**, an open-source research project from Microsoft Research, aims to fill exactly this gap. Instead of drawing the picture directly, Flint first records a short specification that says, in effect, “this chart is built with this intent, in this way.” A person can read and edit that spec, and only then is it compiled into a real rendering tool. Think of it as a recipe card handed over before the dish is cooked, rather than a finished plate dropped in front of you — you get to check the seasoning before anything hits the pan.
+
+## What Flint Actually Is: An Intermediate Language, Not an Image
+
+The core identity of Flint is that it is a **visualization intermediate language**. Just as source code in programming often passes through an intermediate representation before becoming machine code, Flint inserts a human-readable specification layer between a natural-language request and the final chart.
+
+This distinction matters. Flint is not an “error-proof chart generator.” Its goal is to capture the visualization intent produced by an AI in the form of a spec, so that a person can inspect and revise it. In other words, the value Flint offers is not a perfect picture but verifiability.
+
+The spec is designed to be compact enough for people to read with their eyes and edit by hand. Because it states explicitly which data maps to which axis, which scale is used, and how color and layout are handled, there is less need to guess intent from the finished image alone.
+
+[![A supporting visual built from the locked official-source claims. Tap the image to open the primary source.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/official_2.webp)](https://www.microsoft.com/en-us/research/blog/flint-a-visualization-language-for-the-ai-era/)
+_A supporting visual built from the locked official-source claims. Tap the image to open the primary source._
+
+## Semantic Types: Giving a Chart Its Own Context
+
+A concept worth watching in Flint is **semantic types**. According to Microsoft Research, semantic types can guide parsing, scales, baselines, formatting, color, and layout.
+
+What does that mean in practice? If the spec knows whether a value is a proportion or an absolute number, a time or a category, it can make more sensible choices — whether to anchor the axis baseline at zero, whether to format numbers as percentages, whether to use an ordered color palette, and so on.
+
+So semantic types are a mechanism for embedding the context “what kind of data is this number” directly into the spec. For a human reviewer, this information means you can confirm “why it was drawn this way” from the spec itself rather than reverse-engineering it from the image. This is the design intent presented by Microsoft Research, not an outside interpretation.
+
+## One Spec, Many Renderers: The Backend Separation
+
+Another defining feature of Flint is that it separates the specification from rendering. According to the project page, Flint compiles to three backends: **Vega-Lite, ECharts, and Chart.js**.
+
+The advantage of this structure is intuitive. Write a chart spec once, and you can export it to ECharts for a web dashboard, Vega-Lite for a paper or report, and Chart.js for a lightweight page. There is no need to rebuild from scratch for each tool.
+
+Because the spec is not bound to a single library, visualization intent and the actual implementation tool can be managed separately. Even if the renderer changes, the spec can be reused as is.
+
+ Item
+ What the project page states
+
+ Chart types supported
+ 46
+
+ Examples provided
+ 83
+
+ Backends supported
+ Vega-Lite, ECharts, Chart.js
+
+ Role of semantic types
+ Guide parsing, scales, baselines, formatting, color, layout
+
+ Release form
+ Open source (flint-chart, flint-chart-mcp)
+
+## 46 Chart Types and 83 Examples: What the Coverage Means
+
+The project page states that Flint covers **46 chart types** and provides **83 examples**. These numbers suggest that Flint was designed with a fairly broad range of visualization needs in mind, rather than as an experimental toy.
+
+That said, reading these figures as “it perfectly supports every chart” would be over-interpretation. The 46 types and 83 examples represent the scope the project currently documents — an indicator of coverage breadth, not a guarantee of quality or a declaration of completeness.
+
+The fact that examples ship alongside the language is practical for working analysts. Rather than writing a spec from scratch, you can pick a similar example and swap in your own data and semantic types.
+
+## How to Read the LLM-Judge Scores
+
+The Microsoft Research blog reports **LLM-judge scores** for the models it tested — that is, evaluations in which a large language model, not a human, grades the output.
+
+Two rules apply when handling these scores. First, all evaluation numbers should be attributed to **Microsoft Research’s measurements under specific conditions**. Second, those numbers should not be generalized to situations at large. They come from the tested models and settings; they do not mean the same results reproduce across every model or every dataset.
+
+LLM-judge evaluation has the advantage of being fast and scalable, but it also carries the limitation that the judge is itself a model. So these scores are safer to read as a signal that “this direction is promising” than as an absolute guarantee of performance.
+
+## The Open-Source Pieces: flint-chart and flint-chart-mcp
+
+Flint is released as open source, and the repository includes two strands: **flint-chart** and **flint-chart-mcp**. The former is the body of the Flint language and its compilation capabilities; the latter is a component for Model Context Protocol (MCP) integration.
+
+There is a boundary worth stating clearly here. The fact that Flint is open source does **not** mean it has been integrated into a commercial product such as Power BI. Nor does Flint guarantee **zero-error output**. Neither of these is a claim the project makes, so take care not to fold them into any introduction or citation.
+
+The presence of an MCP component suggests scenarios in which an AI agent or tool calls Flint through a protocol. Still, this is a description of a published component’s existence, not a statement confirming integration with any particular product.
+
+## What Is Fact and What Remains an Open Question
+
+To summarize, the **confirmed facts** are these. Microsoft Research introduced Flint as a visualization intermediate language; the project page specifies 46 chart types, 83 examples, and three backends; a design was presented in which semantic types can guide everything from parsing to layout; the research blog reports LLM-judge scores; and flint-chart and flint-chart-mcp are released as open source.
+
+The **company (lab) claims** concern the utility of semantic types and the evaluation scores. The evaluation numbers in particular should be attributed to Microsoft Research’s conditional measurements. The **realm of interpretation** is the expectation that “this approach raises human verifiability” — a reasonable direction, but not a verified conclusion.
+
+There are also **open conditions**. How comfortably Flint specs actually edit in the field, and how quality holds up across diverse models and datasets, are questions to be settled through use and follow-up research. This article does not recommend adopting any particular tool or guarantee its performance; it is educational information meant to explain the concepts and boundaries of a published research project.
+
+## References
+
+- Flint: A visualization language for the AI era — Microsoft Research blog
+
+- Flint project page
+
+- flint-chart GitHub repository

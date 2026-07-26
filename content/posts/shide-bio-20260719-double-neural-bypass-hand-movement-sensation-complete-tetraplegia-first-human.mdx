@@ -1,0 +1,184 @@
+---
+title: "A ‘Double Neural Bypass’ Let One Person Move and Feel His Own Hand—What the First-in-Human Study Really Shows"
+date: "2026-07-19"
+description: "A hybrid brain–body interface enabled one person with complete tetraplegia to grasp, self-feed, and receive touch feedback. Some narrower gains persisted with the system off—but..."
+category: "Bio Notes"
+tags: ["Bio","Science","Evidence","bio"]
+featured: false
+image: ""
+source: "SHawn Bio WordPress"
+sourceUrl: "https://shawnbiohub.wordpress.com/2026/07/19/double-neural-bypass-hand-movement-sensation-complete-tetraplegia-first-human/"
+wordpressStatus: "publish"
+wordpressSite: "shawnbiohub.wordpress.com"
+wordpressId: "745"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnbiohub.wordpress.com/2026/07/19/double-neural-bypass-hand-movement-sensation-complete-tetraplegia-first-human/)
+
+[ENG](https://shawnbiohub.wordpress.com/2026/07/19/double-neural-bypass-hand-movement-sensation-complete-tetraplegia-first-human/)[KOR](https://shawnbiohub.wordpress.com/2026/07/19/double-neural-bypass-hand-movement-sensation-complete-tetraplegia-first-human-kor/)
+
+*The header image is an original, AI-generated conceptual illustration created for this article—not a photograph, participant image, or figure from the study.*
+
+**A man with severe, chronic tetraplegia used signals recorded from his motor cortex to open and close his own hand, grasp delicate objects, drink from a cup, and feed himself. Sensors also sent touch information back into his somatosensory cortex. In narrower tests, some gains in elbow strength and wrist sensation remained when the active system was no longer assisting him. This is a striking engineering and rehabilitation result—but it comes from one participant using an invasive, laboratory-operated investigational system, not from a trial proving a treatment for paralysis.**[1,2]
+
+To understand why this work matters, it helps to begin with a simple picture of movement.
+
+## The basic problem: intention cannot reach the hand
+
+A voluntary movement normally follows a loop. The brain forms an intention, motor areas send commands down the spinal cord, peripheral nerves activate muscles, and sensory signals travel back to the brain. Touch and force feedback then help the brain correct the movement: tighten the grip if an object slips, relax it if the object is fragile.
+
+A high cervical spinal cord injury can interrupt this traffic in both directions. The brain may still generate a meaningful command, and the arm’s muscles may still be partly excitable, yet the command cannot pass through the damaged segment well enough to produce useful movement. Sensory information from the hand may likewise fail to reach conscious perception.
+
+The study by Chandrasekaran and colleagues tried to build an electronic detour around more than one broken link. The researchers call it a **double neural bypass (DNB)** because the system does not only read a motor intention and drive movement. It also writes sensory information back into the brain and pairs brain, spinal, peripheral, and task training signals in an attempt to support longer-lasting recovery.[1]
+
+## Five things to know first
+
+- This was a first-in-human report in one participant. He was 42 at enrollment, 13 months after a diving injury that caused C4 sensory/C5 motor AIS A tetraplegia.[1]
+
+- The system combined several technologies, not one implant. It included cortical electrode arrays, neural decoding, muscle stimulation, a hand orthosis, force sensors, spinal stimulation, and patterned cortical stimulation.
+
+- With the active system, he controlled his own hand and received artificial touch feedback. He performed tasks including drinking and self-feeding under study conditions.[1]
+
+- Some effects outlasted active assistance, but they were limited. Proximal elbow strength and right wrist sensitivity improved; voluntary finger control and fingertip sensation did not simply return.[1]
+
+- This is not an approved therapy or evidence of a cure. The registered trial is an open-label, single-cohort early-feasibility study planning to enroll up to seven participants; aggregate results have not been posted.[2]
+
+## What is a brain–computer interface?
+
+A **brain–computer interface (BCI)** records patterns of neural activity and translates them into commands. Here, two microelectrode arrays implanted in the left primary motor cortex recorded activity associated with intended movement. A recurrent neural network called a **long short-term memory (LSTM)** model classified four states: rest, hand opening, hand closing, and reaching.
+
+The decoder did not read thoughts in a general sense. It learned a small, defined vocabulary of movement-related neural patterns. The final “locked” decoder used features from 10 selected electrodes and was not retrained during the evaluation period. It remained usable for more than five months and reached reported accuracies as high as 84.6% in individual sessions.[1]
+
+Decoding an intention is only the first half of the motor problem. The system still needs a way to make the person’s hand move.
+
+## How the decoded signal moved the participant’s own hand
+
+The DNB used **neuromuscular electrical stimulation (NMES)** through electrode patches on the forearm. When the decoder detected an intention to open or close the hand, electrical pulses activated responsive finger muscles.
+
+Not every muscle responded adequately. Nerve-conduction findings suggested lower motor neuron dysfunction, so stimulation alone could not generate a sufficiently strong, reliable grasp. The researchers therefore added a custom 3D-printed **active orthosis**. Artificial tendons in the device flexed the index and middle fingers, while a force sensor measured the resulting grip.
+
+That distinction matters. The participant controlled his own hand, but the movement was produced by a hybrid chain: brain signal, decoder, external stimulation, and—when needed—the powered orthosis. This is an impressive assistive neuroprosthesis, not the same as normal voluntary hand function returning unaided.
+
+[![Original Figure 1 from the Nature Medicine paper showing the double neural bypass system, cortical implants, decoder signals, and sensory percept locations](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/07/double-neural-bypass-nature-medicine-figure-1.webp)](https://www.nature.com/articles/s41591-026-04498-0#Fig1)
+_Original Figure 1 from Chandrasekaran et al., Nature Medicine (2026), used under CC BY 4.0. The image is resized and compressed without redrawing; labels are the authors’ original English labels. [1]_
+
+## Closing the loop: sending touch back to the brain
+
+Vision can tell us where a cup is, but fine grasping also depends on touch. Without force feedback, a controller may fail to hold an object or may squeeze too hard.
+
+The participant had microelectrode arrays not only in motor cortex but also in **primary somatosensory cortex (S1)**, the cortical region that represents touch. Force sensors on the hand or orthosis measured contact. The system converted that signal into **intracortical microstimulation (ICMS)** of S1. Stimulation at selected electrodes evoked percepts mainly around the thumb and index finger.
+
+This created a closed loop:
+
+- Motor cortex activity indicated the intention to grasp.
+
+- The decoder triggered stimulation and/or the orthosis to close the hand.
+
+- A sensor measured contact force.
+
+- S1 stimulation generated a touch-like percept.
+
+- The participant could use that information while acting.
+
+Earlier bidirectional BCIs had shown that artificial touch can improve control of a robotic arm. This study extended the idea to the participant’s own hand within a more complex brain–body system.[3–5]
+
+## Why reinforcement learning entered the loop
+
+The motor decoder was good at recognizing the start of a grasp, but it did not continuously regulate force well. Direct control could undersqueeze or oversqueeze an object.
+
+The researchers therefore nested a **reinforcement-learning (RL)** controller inside the system. Reinforcement learning is a method in which an algorithm learns which actions keep it within a rewarded target. In this case, the LSTM detected the user’s grasp intention, while the RL agent continuously adjusted the orthosis to hold force within a predefined safe range.
+
+The demonstration used a fragile hollow eggshell. Across five sessions per condition, successful force control was reported in **87% with the RL agent and 27% without it**. These are small, within-participant experimental comparisons, not clinical response rates. The task also involved one object type and one target-force condition.[1]
+
+In a separate object-presence test, the participant was visually blinded. With S1 feedback, he lifted the eggshell only when an object was present and achieved 100% success across four stimulation-on blocks; without that feedback, performance across three blocks was around chance. The result supports the functional value of artificial touch in this setup, but the sample is far too small for a broad efficacy claim.[1]
+
+## Assistance while on, recovery while off
+
+The most interesting—and easiest to overstate—part of the paper is that not every reported gain disappeared when the active bypass was off.
+
+The system included **transcutaneous spinal cord stimulation (tSCS)**: electrical stimulation delivered through the skin over targeted cervical spinal roots. Unlike an epidural spinal implant, this portion was non-invasive. The participant paired tSCS with repeated activity-based training.
+
+Before tSCS began, the researchers measured elbow force over 20 weeks. Relative to the pre-tSCS median, elbow-flexion force increased after about 15 weeks by 61% on the right and 25% on the left. By about 35 weeks, the increases reached 86% and 62%, respectively. He became able to bring both hands to his face.[1]
+
+These were **proximal-arm** gains measured without the BCI driving the movement. But tSCS alone did not restore voluntary strength in the severely affected hand muscles, and it did not improve distal tactile loss. The assistive bypass remained necessary for hand opening, closing, and functional grasping.
+
+This separation is crucial:
+
+- In-use assistance: decoded cortical intent plus NMES/orthosis produced hand movement; sensor-triggered S1 stimulation produced artificial touch.
+
+- Off-system change: repeated stimulation and training were associated with stronger elbow flexion and later with improved sensation at a specific wrist region.
+
+Calling both effects “recovery” without that distinction would make the result sound broader than it was.
+
+## The experimental attempt to rebuild wrist sensation
+
+For persistent sensory change, the team added a protocol called **cortical mirroring**. They first identified S1 activity patterns associated with imagined or physical touch. They then replayed selected spatial patterns through S1 stimulation while pairing them with peripheral stimulation, tSCS, and sensorimotor imagery.
+
+The target areas included the thumb, index finger, and radial wrist. After the intervention began, the participant could correctly detect and localize lighter monofilament forces at the right wrist, reaching an effective force of 10 g during testing. The authors report that the gain persisted for more than two months after stimulation stopped. In a separate press-and-hold task, average wrist localization accuracy was 81% over 11 sessions.[1]
+
+But the spatial limit was clear: **he reported no sensation at the index pad, index volar surface, or thumb pad on either hand across the experimental phases.** Post-intervention tests also included occasions when a sensation was felt but localized incorrectly. The durable sensory finding was therefore a partial improvement at the right radial wrist—not restoration of normal hand sensation.
+
+[![Original Figure 5 from the Nature Medicine paper showing the cortical mirroring intervention and right-wrist sensory assessments](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/07/double-neural-bypass-nature-medicine-figure-5.webp)](https://www.nature.com/articles/s41591-026-04498-0#Fig5)
+_Original Figure 5 from Chandrasekaran et al., Nature Medicine (2026), used under CC BY 4.0. The image is resized and compressed without redrawing; labels and statistical annotations are the authors’ original content. [1]_
+
+## What the study genuinely adds
+
+The advance is not that each component appeared for the first time. Intracortical BCIs have previously controlled stimulated muscles, artificial touch has improved robotic-arm use, and cervical spinal stimulation has shown early upper-limb effects.[3–6]
+
+What is new is the **integration** of assistive and therapeutic layers around the participant’s own hand:
+
+- stable decoding of a small set of movement intentions;
+
+- stimulation and an orthosis to execute the movement;
+
+- sensor-to-cortex feedback to represent touch;
+
+- RL to regulate fragile grasping;
+
+- spinal and patterned cortical stimulation paired with training;
+
+- both immediate task performance and narrower, off-system changes examined over a multiyear study.
+
+That architecture addresses a real limitation of many neuroprostheses. A device that only moves can remain visually demanding and imprecise. A rehabilitation intervention that only amplifies residual pathways may not help muscles below a severe lesion. Combining assistance with repeated, targeted neuromodulation is scientifically compelling.
+
+## Why this is not yet a treatment for paralysis
+
+The evidence is still at the beginning of translation.
+
+First, **there was one participant**. A longitudinal baseline strengthens the observation, but it cannot show how often the result will reproduce across injury levels, anatomy, time since injury, age, or lower motor neuron damage. It also cannot fully separate stimulation effects from intensive training, repeated testing, time, or measurement variation.
+
+Second, the system is demanding. It required a craniotomy, implanted cortical arrays with percutaneous connections, external stimulators, electrode patches, sensors, an orthosis, custom software, and trained laboratory personnel. The authors themselves describe it as highly specialized. Home use, autonomous setup, long-term implant reliability, infection risk, adverse-event profiles, and maintenance burden remain central questions.[1]
+
+Third, the active hand functions were task-specific. The decoder represented four states, and the precision experiment used one delicate object and one force target. Real life requires many grips, rapidly changing forces, arm positions, wet or deformable objects, and safe performance without expert supervision.
+
+Fourth, the registered study is still recruiting. NCT03680872 is an unmasked, single-group early-feasibility device trial with planned enrollment of up to seven participants and completion estimated in 2028. The research operates under an Investigational Device Exemption (IDE), not marketing approval; the registry lists an unapproved investigational device and has no posted aggregate results.[1,2]
+
+Finally, broader uses—including stroke—remain hypotheses. Different injuries preserve different pathways and impose different surgical risk–benefit balances.
+
+## Funding and competing interests are relevant context
+
+The study was funded by the New York State Department of Health Spinal Cord Injury Research Board and the Feinstein Institutes for Medical Research, with additional support from Blackrock Neurotech and Good Shepherd Rehabilitation Network. Corresponding author Chad E. Bouton reported financial interests in two neurotechnology companies and multiple patents in neuroprosthetics-related fields; the other authors declared no competing interests.[1]
+
+These disclosures do not invalidate the results. They are part of the context readers need when judging an early device platform with potential commercial translation.
+
+## The clearest conclusion
+
+> The double neural bypass showed that one person with complete tetraplegia could use a sophisticated brain–body system to move and feel his own hand in real time, while targeted stimulation and training were associated with narrower gains that persisted outside active use. It did not show that paralysis has been reversed, that normal hand function returned, or that this investigational approach is ready for routine care.
+
+The next decisive evidence will not be a more dramatic demonstration. It will be reproducibility across participants, prospectively defined outcomes, transparent safety reporting, simpler and more durable hardware, and performance in everyday settings.
+
+## References
+
+- Chandrasekaran S, Wandelt SK, Jangam A, et al. A neuroprosthesis for restoring hand movement and sensation in a person with complete tetraplegia. Nature Medicine. 2026;32:2591–2601. Article · DOI
+
+- ClinicalTrials.gov. Restoring Motor and Sensory Hand Function in Tetraplegia Using a Neural Bypass System (NCT03680872). ClinicalTrials.gov
+
+- Bouton CE, Shaikhouni A, Annetta NV, et al. Restoring cortical control of functional movement in a human with quadriplegia. Nature. 2016;533:247–250. PubMed · DOI
+
+- Ajiboye AB, Willett FR, Young DR, et al. Restoration of reaching and grasping movements through brain-controlled muscle stimulation in a person with tetraplegia. Lancet. 2017;389:1821–1830. PubMed · DOI
+
+- Flesher SN, Downey JE, Weiss JM, et al. A brain–computer interface that evokes tactile sensations improves robotic arm control. Science. 2021;372:831–836. PubMed · DOI
+
+- Moritz C, et al. Non-invasive spinal cord electrical stimulation for arm and hand function in chronic tetraplegia: a safety and efficacy trial. Nature Medicine. 2024;30:1276–1283. PubMed · DOI
+
+This article is for scientific and educational information only. It is not medical advice or investment advice. Treatment decisions should be discussed with qualified healthcare professionals.

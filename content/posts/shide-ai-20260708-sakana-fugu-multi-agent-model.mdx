@@ -1,0 +1,187 @@
+---
+title: "Sakana Fugu 깊게 읽기: Fable 5 시대에 왜 멀티 에이전트가 뜨는가"
+date: "2026-07-08"
+description: "Sakana Fugu는 새 LLM 하나가 아니라 여러 모델을 한 API 뒤에서 조율하는 시스템이다. 공식 벤치마크, Fable 5와의 비교 가능 지점, 가격·라우팅·접근 제한까지 함께 읽는다."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: ""
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/08/sakana-fugu-multi-agent-model/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "564"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/08/sakana-fugu-multi-agent-model/)
+
+[EN · English](https://shawnaiintelligence.wordpress.com/2026/07/08/sakana-fugu-multi-agent-model-en/) KO · 한국어
+
+AI Notes · model orchestration
+
+# Sakana Fugu 깊게 읽기
+
+Fugu가 핫한 이유는 “또 하나의 큰 모델”이 나왔기 때문이 아니다. 여러 프론티어 모델을 한 API 뒤에서 조율하고, 벤치마크·가격·접근 리스크까지 제품화했기 때문이다.
+
+![Generated visual: Fugu를 “하나의 API 뒤에 있는 모델 오케스트레이터”로 읽는 구조도.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/sakana_fugu_deep_orchestrator_map_deep-1.webp)
+
+_Generated visual: Fugu를 “하나의 API 뒤에 있는 모델 오케스트레이터”로 읽는 구조도._
+
+## 핵심부터: Fugu는 모델 이름이 아니라 조율 방식의 제품화다
+
+Sakana Fugu를 단순히 “새로운 일본 LLM”으로 읽으면 핵심을 놓친다. Fugu는 하나의 모델처럼 호출되지만, 내부적으로는 여러 폐쇄형·오픈 모델을 task별로 선택하고, 필요하면 여러 agent를 동시에 움직이며, 검증 단계까지 포함하는 **multi-agent system as a model**에 가깝다.
+
+그래서 Fugu의 뉴스 포인트는 성능표 하나가 아니다. “가장 강한 단일 모델을 고르는 시대”에서 “상황에 맞는 모델 조합을 자동으로 고르는 시대”로 제품 축이 이동하고 있다는 신호다. 특히 Fable 5처럼 강하지만 접근 제한·안전장치·fallback이 붙은 모델이 등장한 직후라, Fugu의 메시지는 더 선명해진다.
+
+**왜 지금 핫이슈인가**
+
+- 단일 벤더 의존을 줄인다. Fugu는 “single-vendor dependency 없이 frontier-level performance”를 내세운다.
+
+- 긴 작업에 맞춰져 있다. 코드 리뷰, 자동 연구, 보안 평가처럼 여러 단계가 필요한 작업에서 가치를 주장한다.
+
+- 수치가 공격적이다. 공식 발표에서 GPQA-D 95.5, LiveCodeBench 92.9, Terminal-Bench 2.1 80.2, Fugu Ultra 기준 82.1 등을 제시한다.
+
+- 제품 구조가 새롭다. 어떤 모델을 썼는지는 공개하지 않지만, 한 API·한 청구 구조·모델 풀 조율을 제공한다.
+
+## 공식 벤치마크 숫자: Fugu가 앞서는 항목과 아닌 항목이 같이 보인다
+
+Sakana AI의 공식 성능표는 Fugu와 Fugu Ultra를 여러 프론티어 모델과 나란히 비교한다. 중요한 점은 “모든 항목에서 무조건 Fugu가 이긴다”가 아니라, **Fugu가 강한 영역과 단일 최상위 모델이 여전히 강한 영역이 분리되어 보인다**는 것이다.
+
+ 벤치마크
+ Fugu 공식표 수치
+ 비교 기준
+ 읽는 법
+
+ Terminal-Bench 2.1
+ Fugu Ultra 82.1 / Fugu 80.2
+ Fable 5 80.4
+ 터미널 기반 장기 agentic coding에서는 Fugu Ultra가 높고, Fugu와 Fable 5는 거의 붙어 있다.
+
+ LiveCodeBench
+ Fugu Ultra 93.2 / Fugu 92.9
+ Fable 5 89.8
+ 라이브 코딩형 평가에서는 Fugu 계열이 앞서는 그림이다.
+
+ GPQA-D
+ Fugu Ultra 95.5 / Fugu 95.5
+ Mythos Preview 94.6
+ 전문 지식형 QA에서는 Fugu가 소폭 우위로 제시된다.
+
+ CharXiv Reasoning
+ Fugu Ultra 86.6 / Fugu 85.1
+ Mythos Preview 86.1
+ Fugu Ultra는 높지만 Fugu는 Mythos Preview보다 낮다.
+
+ SWE-Bench Pro
+ Fugu Ultra 73.7 / Fugu 59.0
+ Fable 5 80.0
+ 여기서는 Fable 5가 분명히 앞선다. Fugu가 만능이라는 해석은 위험하다.
+
+ Humanity’s Last Exam (text)
+ Fugu Ultra 50.0 / Fugu 48.5
+ Fable 5 53.3
+ 일반 고난도 추론 텍스트에서는 Fable 5가 더 높다.
+
+ CTI-REALM
+ Fugu Ultra 69.4 / Fugu 67.5
+ Opus 4.8 69.6 / Mythos Preview 68.5
+ 사이버 위협 인텔리전스류에서는 Opus 4.8이 약간 높게 보인다.
+
+출처: Sakana AI 공식 Fugu release/technical report 성능표. 표의 baseline 일부는 provider-reported score가 포함될 수 있어, 독립 동일 조건 재현표가 아니라 “공식 발표 기준 비교”로 읽는 것이 안전하다.
+
+![Official chart from Sakana AI / SakanaAI fugu repository: Fugu, Fugu Ultra and frontier model benchmark comparison.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/official_performance_1_official-1.webp)
+
+_Official chart from Sakana AI / SakanaAI fugu repository: Fugu, Fugu Ultra and frontier model benchmark comparison._
+
+## Fable 5와 비교하면: “누가 더 세냐”보다 제품 철학이 다르다
+
+사용자 입장에서 가장 궁금한 비교는 Fable 5다. Fable 5는 Anthropic이 넓은 사용자에게 연 강한 장기 작업용 모델이고, 공식표에서 SWE-Bench Pro 80.3%, Terminal-Bench 2.1 88.0%, ExploitBench 78.0%, HealthBench Professional 66.0% 같은 수치를 제시했다. 다만 Fable 5 표는 Claude Mythos 5 / Fable 5를 같은 열로 묶고, 사이버·바이오 항목의 별표는 안전장치와 fallback 영향이 있을 수 있다는 주석을 단다.
+
+반면 Fugu는 “한 모델이 직접 모든 걸 잘한다”보다 “여러 모델을 언제 어떻게 조합하느냐”를 판다. 그래서 Fable 5와 Fugu를 1:1 모델 점수만으로 비교하면 절반만 보게 된다. 겹치는 벤치마크에서는 Fable 5가 강한 항목도 있고, Fugu/Fugu Ultra가 강한 항목도 있다. 하지만 더 큰 차이는 **Fable 5는 단일 프론티어 모델+가드레일**, **Fugu는 모델 풀+오케스트레이터**라는 점이다.
+
+![Generated visual: Fugu의 오케스트레이터형 접근과 Fable 5의 단일 모델+가드레일 접근을 비교한 편집용 도식.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/sakana_fugu_vs_fable5_field_map_deep-1.webp)
+
+_Generated visual: Fugu의 오케스트레이터형 접근과 Fable 5의 단일 모델+가드레일 접근을 비교한 편집용 도식._
+
+ 항목
+ Sakana Fugu
+ Claude Fable 5
+
+ 기본 구조
+ 모델 풀을 한 API 뒤에서 조율
+ 강한 단일 Claude 계열 모델을 직접 사용
+
+ 강점
+ 모델 조합, 긴 workflow, vendor 분산, task별 routing
+ SWE-Bench Pro·Terminal-Bench 등 강한 장기 작업 성능
+
+ 겹치는 숫자
+ Terminal-Bench 2.1: Fugu Ultra 82.1 / Fugu 80.2, LiveCodeBench: Fugu 92.9
+ Terminal-Bench 2.1: Anthropic 공식표 88.0, SWE-Bench Pro: 80.3
+
+ 주의점
+ 어떤 underlying model을 썼는지 공개하지 않음; EU/EEA 미제공; Fugu Ultra pool은 고정
+ 안전 분류기·fallback·접근 조건이 제품 경험에 포함됨
+
+ 결론
+ 복잡한 작업을 여러 agent가 나눠 처리하는 제품 실험
+ 최상위 단일 모델의 성능과 통제 체계를 보여주는 사례
+
+직접 비교는 겹치는 benchmark와 공개된 회사 발표 수치에 한정된다. 서로 다른 평가·접근 조건·fallback 구조를 가진 제품이므로 “절대 순위”보다 사용 시나리오 중심으로 읽어야 한다.
+
+## 가격과 운영 숫자도 중요하다
+
+Fugu가 제품으로 흥미로운 이유는 성능뿐 아니라 가격 구조다. 일반 Fugu는 agent가 하나만 active일 때 해당 underlying model의 표준 요율을 내고, 여러 agent가 active여도 모델별 요금을 쌓지 않고 “관여한 가장 높은 tier model 기준 단일 요율”로 청구한다고 설명한다. 즉 멀티 에이전트가 곧바로 모델 비용의 단순 합산이 되지 않도록 설계했다는 뜻이다.
+
+ 제품 수치
+ 내용
+
+ Fugu Ultra fixed token plan
+ input $5 / 1M tokens, output $30 / 1M tokens, cached input $0.50 / 1M tokens
+
+ Long context surcharge
+ context > 272K일 때 input $10, output $45, cached input $1.00 / 1M tokens
+
+ Subscription
+ Standard $20/month, Pro $100/month, Max $200/month
+
+ Update cadence
+ 새 frontier model이 공개되면 약 2주간 training/evaluation 후 Fugu 업데이트를 목표로 한다고 설명
+
+ Beta signal
+ 공식 launch 글은 close to 500 early users의 feedback을 언급
+
+ Availability
+ EU/EEA에서는 GDPR 및 지역 규제 대응 전까지 미제공
+
+출처: Sakana Fugu product page / release page FAQ 및 pricing section. 가격·가용성은 변동될 수 있다.
+
+## 가장 큰 장점이자 리스크: 라우팅은 강력하지만 보이지 않는다
+
+Fugu의 매력은 사용자가 직접 “이번에는 어느 모델, 다음에는 어느 verifier”를 손으로 고르지 않아도 된다는 점이다. 하지만 동시에 Sakana는 각 query에서 어떤 underlying model을 선택했고 어떻게 조율했는지는 proprietary라 공개하지 않는다고 설명한다. 사용자 입장에서는 편하지만, 기업 도입에서는 auditability, data policy, compliance 질문이 남는다.
+
+다행히 일반 Fugu에서는 특정 provider나 model을 opt out할 수 있다고 설명한다. 반면 Fugu Ultra는 성능을 위해 full agent pool을 쓰며 pool이 고정된다. 즉 Fugu는 “편한 자동화”와 “조직별 통제” 사이에서 두 제품층을 나눈 구조다.
+
+## 그래서 어디에 맞나
+
+Fugu가 특히 어울리는 영역은 답이 한 번에 끝나지 않는 작업이다. 코드 리뷰처럼 여러 파일과 failure mode를 봐야 하는 일, paper reproduction처럼 구현·실험·오류 분석을 반복해야 하는 일, 보안 평가처럼 scope를 지키면서 증거와 재테스트 절차까지 남겨야 하는 일이다. 공식 release도 자동 연구, Rubik’s Cube, mechanical design, 일본어 필기 분석, one-shot chess, financial time series prediction 같은 긴 workflow 사례를 전면에 둔다.
+
+**한 줄 판단**
+
+Fable 5가 “강한 단일 모델을 어떤 가드레일로 열 것인가”의 사례라면, Sakana Fugu는 “강한 모델들이 계속 늘어나는 환경에서 누가 조합과 검증을 맡을 것인가”의 사례다. 그래서 Fugu는 모델 성능 경쟁인 동시에, AI workflow 운영체제 경쟁으로 읽어야 한다.
+
+## 공개 출처
+
+- Sakana AI — Sakana Fugu release
+
+- Sakana AI — Sakana Fugu product page
+
+- SakanaAI/fugu GitHub repository
+
+- arXiv — Sakana Fugu Technical Report
+
+- Anthropic — Claude Fable 5 and Claude Mythos 5
+
+- Anthropic — Redeploying Fable 5
+
+- Claude Platform Docs — Introducing Claude Fable 5 and Claude Mythos 5
