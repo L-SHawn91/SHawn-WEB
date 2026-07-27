@@ -1,43 +1,57 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v1",
-  "generated_at": "2026-07-26T18:30:51.630Z",
+  "generated_at": "2026-07-27T18:30:14.488Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 64,
-      "fetched": 64,
-      "written": 64,
-      "updated": 60,
-      "created": 4,
+      "remote_total": 66,
+      "fetched": 66,
+      "written": 66,
+      "updated": 64,
+      "created": 2,
       "items": [
+        {
+          "id": 1226,
+          "title": "The Hugging Face AI-Agent–Driven Intrusion: Lessons from a Guardrail Lockout",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/07/27/huggingface-breach-guardrail-lockout-en/",
+          "target": "content/posts/shide-ai-20260727-huggingface-breach-guardrail-lockout-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1225,
+          "title": "Hugging Face 침해가 남긴 교훈: AI 에이전트 시대의 사고 대응과 가드레일 락아웃",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/07/27/huggingface-breach-guardrail-lockout/",
+          "target": "content/posts/shide-ai-20260727-huggingface-breach-guardrail-lockout.mdx",
+          "mode": "created"
+        },
         {
           "id": 1153,
           "title": "Physical AI Leaves the Data Center: What NVIDIA Cosmos 3 Edge Changes",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/26/nvidia-cosmos-3-edge-physical-ai-en/",
           "target": "content/posts/shide-ai-20260726-nvidia-cosmos-3-edge-physical-ai-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1152,
           "title": "로봇 AI가 데이터센터를 벗어났다: NVIDIA Cosmos 3 Edge는 무엇이 다른가",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/26/nvidia-cosmos-3-edge-physical-ai/",
           "target": "content/posts/shide-ai-20260726-nvidia-cosmos-3-edge-physical-ai.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1084,
           "title": "Can You Trust Kimi K3 Yet? Separating the API, Open Weights, and Benchmark Claims",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/23/kimi-k3-api-open-weights-benchmarks-en/",
           "target": "content/posts/shide-ai-20260723-kimi-k3-api-open-weights-benchmarks-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1083,
           "title": "2.8조 파라미터 Kimi K3, 지금 믿어도 될까: API·오픈웨이트·벤치마크를 분리해서 보는 법",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/23/kimi-k3-api-open-weights-benchmarks/",
           "target": "content/posts/shide-ai-20260723-kimi-k3-api-open-weights-benchmarks.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1041,
@@ -774,214 +788,228 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 127,
-      "fetched": 127,
-      "written": 127,
-      "updated": 98,
-      "created": 29,
+      "remote_total": 129,
+      "fetched": 129,
+      "written": 129,
+      "updated": 127,
+      "created": 2,
       "items": [
+        {
+          "id": 1483,
+          "title": "2026년 7월 식품가격 인상 라운드 정리: 8월 출고가 조정은 시작일이 정해져 있다",
+          "link": "https://shawnassets.wordpress.com/2026/07/28/food-price-hike-wave-2026/",
+          "target": "content/posts/shide-assets-20260728-food-price-hike-wave-2026.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1484,
+          "title": "July 2026 Food Price Hike Wave in Korea: What Was Announced, What Usually Follows",
+          "link": "https://shawnassets.wordpress.com/2026/07/28/food-price-hike-wave-2026-en/",
+          "target": "content/posts/shide-assets-20260728-food-price-hike-wave-2026-en.mdx",
+          "mode": "created"
+        },
         {
           "id": 1348,
           "title": "Bank of Korea Raises Policy Rate to 2.75%: First Hike Since October 2025",
           "link": "https://shawnassets.wordpress.com/2026/07/27/bok-rate-hike-275-2026-en/",
           "target": "content/posts/shide-assets-20260727-bok-rate-hike-275-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1347,
           "title": "한국은행 기준금리 2.75%로 인상: 2025년 10월 이후 첫 인상",
           "link": "https://shawnassets.wordpress.com/2026/07/27/bok-rate-hike-275-2026/",
           "target": "content/posts/shide-assets-20260727-bok-rate-hike-275-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1341,
           "title": "Korea Extends Fuel Tax Cut Through September: Gasoline -15%, Diesel -25%",
           "link": "https://shawnassets.wordpress.com/2026/07/27/fuel-tax-cut-extension-sept-2026-en/",
           "target": "content/posts/shide-assets-20260727-fuel-tax-cut-extension-sept-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1340,
           "title": "유류세 인하 9월 말까지 연장: 휘발유 -15%, 경유 -25% 유지",
           "link": "https://shawnassets.wordpress.com/2026/07/27/fuel-tax-cut-extension-sept-2026/",
           "target": "content/posts/shide-assets-20260727-fuel-tax-cut-extension-sept-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1334,
           "title": "Korea Raises Leveraged ETF/ETN Minimum Deposit to KRW 30M: Effective July 31",
           "link": "https://shawnassets.wordpress.com/2026/07/27/leverage-etf-deposit-30m-2026-en/",
           "target": "content/posts/shide-assets-20260727-leverage-etf-deposit-30m-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1333,
           "title": "레버리지 ETF·ETN 기본예탁금 3천만원으로 상향: 7월 31일 시행",
           "link": "https://shawnassets.wordpress.com/2026/07/27/leverage-etf-deposit-30m-2026/",
           "target": "content/posts/shide-assets-20260727-leverage-etf-deposit-30m-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1327,
           "title": "Indonesia Halal Certification Mandate: What K-Food and K-Beauty Exporters Must Know Before October 17",
           "link": "https://shawnassets.wordpress.com/2026/07/26/indonesia-halal-certification-2026-en/",
           "target": "content/posts/shide-assets-20260726-indonesia-halal-certification-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1326,
           "title": "인도네시아 할랄 인증 의무화: 10월 17일 시행, K-푸드·K-뷰티 수출기업이 알아야 할 것",
           "link": "https://shawnassets.wordpress.com/2026/07/26/indonesia-halal-certification-2026/",
           "target": "content/posts/shide-assets-20260726-indonesia-halal-certification-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1319,
           "title": "Yeosu Petrochemical Restructuring No.2 Approved: Four-Company Integration and KRW 800B Self-Rescue Plan",
           "link": "https://shawnassets.wordpress.com/2026/07/26/yeosu-petrochemical-restructuring-2026-en/",
           "target": "content/posts/shide-assets-20260726-yeosu-petrochemical-restructuring-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1318,
           "title": "여수 석유화학 구조조정 2호 승인: 4개사 통합과 8,000억 자구안",
           "link": "https://shawnassets.wordpress.com/2026/07/26/yeosu-petrochemical-restructuring-2026/",
           "target": "content/posts/shide-assets-20260726-yeosu-petrochemical-restructuring-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1311,
           "title": "From KRW 1B to KRW 3B: How Korea Small Public Offering Threshold Change Affects Startup Fundraising",
           "link": "https://shawnassets.wordpress.com/2026/07/26/small-public-offering-threshold-2026-en/",
           "target": "content/posts/shide-assets-20260726-small-public-offering-threshold-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1310,
           "title": "소액공모 한도 10억에서 30억으로: 스타트업 자금조달에 무엇이 바뀌나",
           "link": "https://shawnassets.wordpress.com/2026/07/26/small-public-offering-threshold-2026/",
           "target": "content/posts/shide-assets-20260726-small-public-offering-threshold-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1299,
           "title": "53 Summer Products Recalled: Lead, Phthalates, and Buoyancy Failures From 1,117 Safety Inspections",
           "link": "https://shawnassets.wordpress.com/2026/07/26/summer-product-recall-53-2026-en/",
           "target": "content/posts/shide-assets-20260726-summer-product-recall-53-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1298,
           "title": "여름용품 53개 리콜: 1,117개 안전성 조사에서 드러난 납·프탈레이트·부력 문제",
           "link": "https://shawnassets.wordpress.com/2026/07/26/summer-product-recall-53-2026/",
           "target": "content/posts/shide-assets-20260726-summer-product-recall-53-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1271,
           "title": "Where Korea’s KRW 150 Billion K-Culture Fund Is Meant to Invest: AI, IP, and Content Innovation",
           "link": "https://shawnassets.wordpress.com/2026/07/25/k-culture-value-up-fund-2026-en/",
           "target": "content/posts/shide-assets-20260725-k-culture-value-up-fund-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1270,
           "title": "K-컬처 1,500억 원 펀드, 실제로 어디에 투자되나: AI·IP 1,000억과 콘텐츠 혁신 500억의 구조",
           "link": "https://shawnassets.wordpress.com/2026/07/25/k-culture-value-up-fund-2026/",
           "target": "content/posts/shide-assets-20260725-k-culture-value-up-fund-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1292,
           "title": "2026년 7월 24일 한국 시장 마감 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/24/2026-07-24-1545-korea-market-close-signal/",
           "target": "content/posts/shide-assets-20260724-2026-07-24-1545-korea-market-close-signal.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1285,
           "title": "2026년 7월 24일 한국 장전 시장 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/24/2026-07-24-0845-korea-preopen-market-signal/",
           "target": "content/posts/shide-assets-20260724-2026-07-24-0845-korea-preopen-market-signal.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1261,
           "title": "한국 시장 마감 신호 — 2026.07.23 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/23/market-close-note-1545-20260723/",
           "target": "content/posts/shide-assets-20260723-market-close-note-1545-20260723.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1219,
           "title": "Did Kimi K3 Shake the KOSPI? Three Forces Behind the July 20 Chip Sell-off",
           "link": "https://shawnassets.wordpress.com/2026/07/23/kimi-k3-kospi-selloff-causality-2026-en/",
           "target": "content/posts/shide-assets-20260723-kimi-k3-kospi-selloff-causality-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1218,
           "title": "Kimi K3가 코스피를 흔들었나: 7월 20일 반도체 급락을 세 갈래로 분해했습니다",
           "link": "https://shawnassets.wordpress.com/2026/07/23/kimi-k3-kospi-selloff-causality-2026/",
           "target": "content/posts/shide-assets-20260723-kimi-k3-kospi-selloff-causality-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1250,
           "title": "2026년 7월 23일 한국 장전 시장 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/23/2026-07-23-0845-korea-preopen-market-signal/",
           "target": "content/posts/shide-assets-20260723-2026-07-23-0845-korea-preopen-market-signal.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1246,
           "title": "한국 시장 마감 신호 — 2026.07.22 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/22/market-close-note-1545-20260722/",
           "target": "content/posts/shide-assets-20260722-market-close-note-1545-20260722.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1242,
           "title": "2026년 7월 22일 장전 시장 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/22/2026-07-22-0845-korea-preopen-market-signal/",
           "target": "content/posts/shide-assets-20260722-2026-07-22-0845-korea-preopen-market-signal.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1233,
           "title": "한국 시장 마감 신호 노트 — 2026.07.21 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/21/market-close-note-1545-20260721/",
           "target": "content/posts/shide-assets-20260721-market-close-note-1545-20260721.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1212,
           "title": "2026년 7월 21일 장전 시장 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/21/2026-07-21-0845-korea-preopen-market-signal/",
           "target": "content/posts/shide-assets-20260721-2026-07-21-0845-korea-preopen-market-signal.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1208,
           "title": "한국 시장 마감 신호 노트 — 2026.07.20 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/20/market-close-note-1545-20260720/",
           "target": "content/posts/shide-assets-20260720-market-close-note-1545-20260720.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1059,
           "title": "Seoul and 15 Gyeonggi Areas Are Now Regulated: A Homebuyer’s Guide to Mortgages and Residency",
           "link": "https://shawnassets.wordpress.com/2026/07/20/seoul-gyeonggi-regulated-housing-areas-2026-en/",
           "target": "content/posts/shide-assets-20260720-seoul-gyeonggi-regulated-housing-areas-2026-en.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1058,
           "title": "서울 전역·경기 15개 규제지역, 집 살 때 대출과 실거주가 이렇게 달라집니다",
           "link": "https://shawnassets.wordpress.com/2026/07/20/seoul-gyeonggi-regulated-housing-areas-2026/",
           "target": "content/posts/shide-assets-20260720-seoul-gyeonggi-regulated-housing-areas-2026.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 944,
@@ -1673,9 +1701,9 @@
     }
   ],
   "totals": {
-    "remote": 234,
-    "written": 234,
-    "updated": 201,
-    "created": 33
+    "remote": 238,
+    "written": 238,
+    "updated": 234,
+    "created": 4
   }
 }
