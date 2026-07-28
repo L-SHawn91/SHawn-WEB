@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-07-28T08:05:14.984Z",
+  "generated_at": "2026-07-28T18:30:40.033Z",
   "mode": "write",
   "sources": [
     {
@@ -8,8 +8,8 @@
       "remote_total": 68,
       "fetched": 68,
       "scanned": 68,
-      "unchanged": 67,
-      "updated": 1,
+      "unchanged": 68,
+      "updated": 0,
       "created": 0,
       "removed": 0,
       "items": [
@@ -25,7 +25,7 @@
           "title": "Claude Opus 5, 반값보다 중요한 건 ‘작업당 비용’이다",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/28/anthropic-opus-5-efficiency-pricing/",
           "target": "content/posts/shide-ai-20260728-anthropic-opus-5-efficiency-pricing.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1226,
@@ -493,41 +493,69 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 47,
-      "fetched": 47,
-      "scanned": 47,
-      "unchanged": 43,
-      "updated": 4,
-      "created": 0,
+      "remote_total": 51,
+      "fetched": 51,
+      "scanned": 51,
+      "unchanged": 47,
+      "updated": 0,
+      "created": 4,
       "removed": 0,
       "items": [
+        {
+          "id": 1193,
+          "title": "최소잔존질환 기반 적응형 다라투무맙 전략, 신규 골수종 2상 결과 게시",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/29/mrd-driven-myeloma-treatment-results-kor/",
+          "target": "content/posts/shide-bio-20260729-mrd-driven-myeloma-treatment-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1191,
+          "title": "MRD-driven adaptive daratumumab strategy posts phase 2 results in newly diagnosed myeloma",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/29/mrd-driven-myeloma-treatment-results/",
+          "target": "content/posts/shide-bio-20260729-mrd-driven-myeloma-treatment-results.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1189,
+          "title": "크레토스티모젠 면역치료, BCG 불응 방광암에서 75% 완전관해 달성",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/29/cretostimogene-bcg-unresponsive-bladder-cancer-kor/",
+          "target": "content/posts/shide-bio-20260729-cretostimogene-bcg-unresponsive-bladder-cancer-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1187,
+          "title": "Cretostimogene immunotherapy achieves 75% complete response in BCG-unresponsive bladder cancer",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/29/cretostimogene-bcg-unresponsive-bladder-cancer/",
+          "target": "content/posts/shide-bio-20260729-cretostimogene-bcg-unresponsive-bladder-cancer.mdx",
+          "mode": "created"
+        },
         {
           "id": 1083,
           "title": "JX-594 진행성 흑색종 1/2상: 10명 등록, 5명만 효능 평가",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/jx594-oncolytic-vaccinia-melanoma-kor/",
           "target": "content/posts/shide-bio-20260728-jx594-oncolytic-vaccinia-melanoma-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1081,
           "title": "JX-594 in Advanced Melanoma: Why Five Evaluable Patients Change the Conclusion",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/jx594-oncolytic-vaccinia-melanoma/",
           "target": "content/posts/shide-bio-20260728-jx594-oncolytic-vaccinia-melanoma.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1079,
           "title": "T-DM1 이후 HER2+ 유방암: CBR 19.2%의 의미",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/ibrutinib-trastuzumab-her2-breast-cancer-kor/",
           "target": "content/posts/shide-bio-20260728-ibrutinib-trastuzumab-her2-breast-cancer-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1077,
           "title": "Ibrutinib Plus Trastuzumab After T-DM1: What a 19.2% Clinical Benefit Rate Really Means",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/ibrutinib-trastuzumab-her2-breast-cancer/",
           "target": "content/posts/shide-bio-20260728-ibrutinib-trastuzumab-her2-breast-cancer.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 746,
@@ -834,27 +862,27 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 129,
-      "fetched": 129,
-      "scanned": 129,
-      "unchanged": 129,
-      "updated": 0,
+      "remote_total": 104,
+      "fetched": 104,
+      "scanned": 104,
+      "unchanged": 78,
+      "updated": 26,
       "created": 0,
-      "removed": 0,
+      "removed": 25,
       "items": [
         {
           "id": 1483,
-          "title": "2026년 7월 식품가격 인상 라운드 정리: 8월 출고가 조정은 시작일이 정해져 있다",
+          "title": "2026년 8월 식품가격 인상, 발표 숫자보다 장바구니가 덜 단순한 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/28/food-price-hike-wave-2026/",
           "target": "content/posts/shide-assets-20260728-food-price-hike-wave-2026.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1484,
-          "title": "July 2026 Food Price Hike Wave in Korea: What Was Announced, What Usually Follows",
+          "title": "Korea’s August 2026 Food Price Changes: Why Announcements and Checkout Prices Diverge",
           "link": "https://shawnassets.wordpress.com/2026/07/28/food-price-hike-wave-2026-en/",
           "target": "content/posts/shide-assets-20260728-food-price-hike-wave-2026-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1348,
@@ -1302,63 +1330,42 @@
           "title": "Korea Market Note — July 13, 2026 (Monday Close)",
           "link": "https://shawnassets.wordpress.com/2026/07/13/market-note-20260713-1545-kr-close/",
           "target": "content/posts/shide-assets-20260713-market-note-20260713-1545-kr-close.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 928,
-          "title": "한국장 개시 20분 – 유가 충격 반도체 급락, 대형주 중소형주 극단적 차별화 (2026-07-13)",
-          "link": "https://shawnassets.wordpress.com/2026/07/13/kr-open-reaction-20260713/",
-          "target": "content/posts/shide-assets-20260713-kr-open-reaction-20260713.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 926,
-          "title": "한국장 개장 흐름 — 2026년 7월 13일 오전",
-          "link": "https://shawnassets.wordpress.com/2026/07/13/market-check-routine-20260713-0913/",
-          "target": "content/posts/shide-assets-20260713-market-check-routine-20260713-0913.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 925,
-          "title": "한국장 개장 10분 신호 — 2026.07.13 (월) 09:10",
-          "link": "https://shawnassets.wordpress.com/2026/07/13/2026-07-13-0910-kr-open-market-signal-note/",
-          "target": "content/posts/shide-assets-20260713-2026-07-13-0910-kr-open-market-signal-note.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 923,
           "title": "한국장 장전 신호 — 2026.07.13 (월) 08:45",
           "link": "https://shawnassets.wordpress.com/2026/07/13/2026-07-13-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260713-2026-07-13-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 908,
           "title": "Why Korea’s Summer Electricity Bill Is a Cost-of-Living Signal in the AI Era",
           "link": "https://shawnassets.wordpress.com/2026/07/12/summer-electricity-bill-ai-korea-2026-en/",
           "target": "content/posts/shide-assets-20260712-summer-electricity-bill-ai-korea-2026-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 907,
           "title": "여름 전기요금, AI 시대에 생활비 신호가 된 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/12/summer-electricity-bill-ai-korea-2026-ko/",
           "target": "content/posts/shide-assets-20260712-summer-electricity-bill-ai-korea-2026-ko.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 878,
           "title": "El Niño 2026 and Korea’s Food Prices: The Path from Crops to the Grocery Basket",
           "link": "https://shawnassets.wordpress.com/2026/07/11/el-nino-2026-korea-food-prices-en/",
           "target": "content/posts/shide-assets-20260711-el-nino-2026-korea-food-prices-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 877,
           "title": "2026 엘니뇨, 곡물·식용유 가격이 식탁 물가로 오는 경로",
           "link": "https://shawnassets.wordpress.com/2026/07/11/el-nino-2026-korea-food-prices-ko/",
           "target": "content/posts/shide-assets-20260711-el-nino-2026-korea-food-prices-ko.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 865,
@@ -1372,20 +1379,6 @@
           "title": "HLB 리보세라닙 FDA 세 번째 CRL: 임상 3상 효능과 제조소 cGMP를 분리해 봐야 하는 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/11/hlb-rivoceranib-third-fda-crl-cgmp-ko/",
           "target": "content/posts/shide-assets-20260711-hlb-rivoceranib-third-fda-crl-cgmp-ko.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 860,
-          "title": "2026-07-10 23:50 미국 첫 시간 시장 신호 — 재확인",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-2350-us-first-hour-market-signal-recheck/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-2350-us-first-hour-market-signal-recheck.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 859,
-          "title": "US First-Hour Market Signal Note — 2026-07-10 23:40 KST",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-2340-us-first-hour-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-2340-us-first-hour-market-signal-note.mdx",
           "mode": "unchanged"
         },
         {
@@ -1403,13 +1396,6 @@
           "mode": "unchanged"
         },
         {
-          "id": 834,
-          "title": "한국장 마감 점검 — 다음 장 확인 루틴 (2026.07.10)",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/%ed%95%9c%ea%b5%ad%ec%9e%a5-%eb%a7%88%ea%b0%90-%ec%a0%90%ea%b2%80-%eb%8b%a4%ec%9d%8c-%ec%9e%a5-%ed%99%95%ec%9d%b8-%eb%a3%a8%ed%8b%b4-2026-07-10/",
-          "target": "content/posts/shide-assets-20260710-ed-95-9c-ea-b5-ad-ec-9e-a5-eb-a7-88-ea-b0-90-ec-a0-90-ea-b2-80-eb-8b-a4-ec-9d-8c-ec-9e-a5-ed-99-95-ec-9d-b8-eb-a3-a8-ed-8b-b4-2026-07-10.mdx",
-          "mode": "unchanged"
-        },
-        {
           "id": 830,
           "title": "Market Close Note — 2026-07-10 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/10/market-close-note-1545-20260710/",
@@ -1417,200 +1403,74 @@
           "mode": "unchanged"
         },
         {
-          "id": 811,
-          "title": "한국 시장 신호 노트 — 2026.07.10 12:20",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/korea-market-signal-note-20260710-1220/",
-          "target": "content/posts/shide-assets-20260710-korea-market-signal-note-20260710-1220.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 721,
-          "title": "2026-07-10 09:20 한국 개장 후 시장 신호 점검",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0920-kr-open-reaction-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0920-kr-open-reaction-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 716,
-          "title": "2026.07.10 09:13 Public Market Signal Note",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0913-kr-market-check-routine-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0913-kr-market-check-routine-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 711,
-          "title": "2026.07.10 09:10 Public Market Signal Note",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0910-kr-open-candidate-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0910-kr-open-candidate-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 707,
-          "title": "2026-07-10 09:03 한국 개장 직후 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0903-kr-open-reset-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0903-kr-open-reset-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
           "id": 702,
           "title": "2026.07.10 08:45 Public Market Signal Note",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 698,
-          "title": "2026.07.10 06:45 Public Market Signal Note",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0645-kr-prerisk-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0645-kr-prerisk-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 693,
-          "title": "2026-07-09 23:40 미국 첫 시간 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-2340-us-first-hour-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-2340-us-first-hour-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 689,
-          "title": "미국 개장 전 시장 신호: 반도체 반등과 환율 경계",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/market-signal-20260709-2220-us-preopen/",
-          "target": "content/posts/shide-assets-20260709-market-signal-20260709-2220-us-preopen.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 655,
           "title": "The Gap Created by U.S. AI Chip Export Controls: DeepSeek and Huawei Are Signals, Not Nvidia Replacements",
           "link": "https://shawnassets.wordpress.com/2026/07/09/us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-en/",
           "target": "content/posts/shide-assets-20260709-us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 654,
           "title": "미국 수출통제가 만든 빈자리: DeepSeek·Huawei는 엔비디아 대체가 아니라 중국 AI칩 자립 압박의 신호다",
           "link": "https://shawnassets.wordpress.com/2026/07/09/us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-ko/",
           "target": "content/posts/shide-assets-20260709-us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-ko.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 663,
-          "title": "2026-07-09 16:35 다음 한국장 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-1635-kr-next-day-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-1635-kr-next-day-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 640,
-          "title": "2026-07-09 15:45 한국장 마감 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-1545-kr-close-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-1545-kr-close-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 636,
-          "title": "2026-07-09 09:20 한국 개장 후 시장 신호 점검",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0920-kr-open-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0920-kr-open-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 632,
-          "title": "2026-07-09 09:13 한국 개장 후 시장 신호 재확인",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0913-kr-open-delta-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0913-kr-open-delta-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 628,
-          "title": "2026-07-09 09:10 한국 개장 초반 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0910-kr-open-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0910-kr-open-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 624,
-          "title": "2026-07-09 09:03 한국 개장 직후 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0903-kr-open-reset-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0903-kr-open-reset-market-signal-note.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 620,
           "title": "2026-07-09 08:45 한국 장전 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 608,
-          "title": "2026-07-09 06:45 한국장 전 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0645-kr-prerisk-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0645-kr-prerisk-market-signal-note.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 583,
           "title": "New U.S. Strikes After Ceasefire Collapse: Iran–US Clash, Hormuz Risk, Oil Prices, and Inflation",
           "link": "https://shawnassets.wordpress.com/2026/07/09/iran-us-conflict-current-impact-20260709-en/",
           "target": "content/posts/shide-assets-20260709-iran-us-conflict-current-impact-20260709-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 582,
           "title": "미군 추가 공습 재개, 휴전 종료 선언: 이란-미국 재충돌이 유가·호르무즈·물가를 흔든다",
           "link": "https://shawnassets.wordpress.com/2026/07/09/iran-us-conflict-current-impact-20260709-ko/",
           "target": "content/posts/shide-assets-20260709-iran-us-conflict-current-impact-20260709-ko.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 578,
-          "title": "2026-07-08 23:40 미국 첫 시간 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-2340-us-first-hour-market-signal-note/",
-          "target": "content/posts/shide-assets-20260708-2026-07-08-2340-us-first-hour-market-signal-note.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 574,
-          "title": "2026-07-08 22:20 미국 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-2220-us-market-signal-note/",
-          "target": "content/posts/shide-assets-20260708-2026-07-08-2220-us-market-signal-note.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 532,
           "title": "Why Tariffs Became a Political Weapon Again",
           "link": "https://shawnassets.wordpress.com/2026/07/08/tariffs-political-weapon-20260708-en/",
           "target": "content/posts/shide-assets-20260708-tariffs-political-weapon-20260708-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 531,
           "title": "관세는 왜 다시 정치의 무기가 됐을까",
           "link": "https://shawnassets.wordpress.com/2026/07/08/tariffs-political-weapon-20260708-ko/",
           "target": "content/posts/shide-assets-20260708-tariffs-political-weapon-20260708-ko.mdx",
-          "mode": "unchanged"
-        },
-        {
-          "id": 483,
-          "title": "2026-07-08 16:35 다음 한국장 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1635-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
-          "target": "content/posts/shide-assets-20260708-2026-07-08-1635-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 455,
           "title": "Risk Aversion Held Into the Close; the Next Check Is Overnight Signals",
           "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1545-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
           "target": "content/posts/shide-assets-20260708-2026-07-08-1545-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 405,
           "title": "Why Samsung and SK Hynix Falling Does Not Mean AI Is Over",
           "link": "https://shawnassets.wordpress.com/2026/07/08/samsung-sk-hynix-ai-not-over-market-check-20260708-en/",
           "target": "content/posts/shide-assets-20260708-samsung-sk-hynix-ai-not-over-market-check-20260708-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 404,
@@ -1620,18 +1480,11 @@
           "mode": "unchanged"
         },
         {
-          "id": 396,
-          "title": "2026-07-08 12:20 한국 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1220-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
-          "target": "content/posts/shide-assets-20260708-2026-07-08-1220-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
-          "mode": "unchanged"
-        },
-        {
           "id": 357,
           "title": "Why can the index rise while my stock does nothing?",
           "link": "https://shawnassets.wordpress.com/2026/07/08/index-up-my-stock-flat-20260708-en/",
           "target": "content/posts/shide-assets-20260708-index-up-my-stock-flat-20260708-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 356,
@@ -1666,21 +1519,21 @@
           "title": "Semiconductor equipment cycle explained: reading the next capex signal",
           "link": "https://shawnassets.wordpress.com/2026/07/05/semiconductor-equipment-leading-signal-20260704-en/",
           "target": "content/posts/shide-assets-20260705-semiconductor-equipment-leading-signal-20260704-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 217,
           "title": "반도체 장비 사이클이란? 다음 투자 흐름을 먼저 읽는 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/05/semiconductor-equipment-leading-signal-20260704/",
           "target": "content/posts/shide-assets-20260705-semiconductor-equipment-leading-signal-20260704.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 224,
           "title": "Gold versus the dollar explained: safe assets, FX, and market stress",
           "link": "https://shawnassets.wordpress.com/2026/07/05/gold-dollar-war-20260705-en/",
           "target": "content/posts/shide-assets-20260705-gold-dollar-war-20260705-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 223,
@@ -1694,7 +1547,7 @@
           "title": "Why jeonse becomes monthly rent: housing costs, interest rates, and sticky prices",
           "link": "https://shawnassets.wordpress.com/2026/07/03/jeonse-monthly-rent-housing-cost-20260703-en/",
           "target": "content/posts/shide-assets-20260703-jeonse-monthly-rent-housing-cost-20260703-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 187,
@@ -1708,14 +1561,14 @@
           "title": "AI rally crack explained: why Samsung and SK Hynix fell together",
           "link": "https://shawnassets.wordpress.com/2026/07/03/samsung-sk-hynix-ai-rally-crack-20260703-en/",
           "target": "content/posts/shide-assets-20260703-samsung-sk-hynix-ai-rally-crack-20260703-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 124,
           "title": "AI 랠리 균열이란? 삼성전자·SK하이닉스가 같이 흔들린 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/03/samsung-sk-hynix-ai-rally-crack-20260703/",
           "target": "content/posts/shide-assets-20260703-samsung-sk-hynix-ai-rally-crack-20260703.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 99,
@@ -1729,7 +1582,7 @@
           "title": "AI 전력 인프라란? 반도체 다음 병목이 전력망인 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/02/ai-power-infrastructure-data-center-grid-20260702/",
           "target": "content/posts/shide-assets-20260702-ai-power-infrastructure-data-center-grid-20260702.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 89,
@@ -1744,17 +1597,192 @@
           "link": "https://shawnassets.wordpress.com/2026/07/02/semiconductor-trend-capital-flow-20260702/",
           "target": "content/posts/shide-assets-20260702-semiconductor-trend-capital-flow-20260702.mdx",
           "mode": "unchanged"
+        },
+        {
+          "id": "396",
+          "title": "2026-07-08 12:20 한국 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1220-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
+          "target": "content/posts/shide-assets-20260708-2026-07-08-1220-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "483",
+          "title": "2026-07-08 16:35 다음 한국장 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1635-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
+          "target": "content/posts/shide-assets-20260708-2026-07-08-1635-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "574",
+          "title": "2026-07-08 22:20 미국 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-2220-us-market-signal-note/",
+          "target": "content/posts/shide-assets-20260708-2026-07-08-2220-us-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "578",
+          "title": "2026-07-08 23:40 미국 첫 시간 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-2340-us-first-hour-market-signal-note/",
+          "target": "content/posts/shide-assets-20260708-2026-07-08-2340-us-first-hour-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "608",
+          "title": "2026-07-09 06:45 한국장 전 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0645-kr-prerisk-market-signal-note/",
+          "target": "content/posts/shide-assets-20260709-2026-07-09-0645-kr-prerisk-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "624",
+          "title": "2026-07-09 09:03 한국 개장 직후 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0903-kr-open-reset-market-signal-note/",
+          "target": "content/posts/shide-assets-20260709-2026-07-09-0903-kr-open-reset-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "628",
+          "title": "2026-07-09 09:10 한국 개장 초반 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0910-kr-open-market-signal-note/",
+          "target": "content/posts/shide-assets-20260709-2026-07-09-0910-kr-open-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "632",
+          "title": "2026-07-09 09:13 한국 개장 후 시장 신호 재확인",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0913-kr-open-delta-market-signal-note/",
+          "target": "content/posts/shide-assets-20260709-2026-07-09-0913-kr-open-delta-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "636",
+          "title": "2026-07-09 09:20 한국 개장 후 시장 신호 점검",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0920-kr-open-market-signal-note/",
+          "target": "content/posts/shide-assets-20260709-2026-07-09-0920-kr-open-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "640",
+          "title": "2026-07-09 15:45 한국장 마감 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-1545-kr-close-market-signal-note/",
+          "target": "content/posts/shide-assets-20260709-2026-07-09-1545-kr-close-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "663",
+          "title": "2026-07-09 16:35 다음 한국장 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-1635-kr-next-day-market-signal-note/",
+          "target": "content/posts/shide-assets-20260709-2026-07-09-1635-kr-next-day-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "693",
+          "title": "2026-07-09 23:40 미국 첫 시간 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-2340-us-first-hour-market-signal-note/",
+          "target": "content/posts/shide-assets-20260709-2026-07-09-2340-us-first-hour-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "689",
+          "title": "미국 개장 전 시장 신호: 반도체 반등과 환율 경계",
+          "link": "https://shawnassets.wordpress.com/2026/07/09/market-signal-20260709-2220-us-preopen/",
+          "target": "content/posts/shide-assets-20260709-market-signal-20260709-2220-us-preopen.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "698",
+          "title": "2026.07.10 06:45 Public Market Signal Note",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0645-kr-prerisk-market-signal-note/",
+          "target": "content/posts/shide-assets-20260710-2026-07-10-0645-kr-prerisk-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "707",
+          "title": "2026-07-10 09:03 한국 개장 직후 시장 신호 노트",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0903-kr-open-reset-market-signal-note/",
+          "target": "content/posts/shide-assets-20260710-2026-07-10-0903-kr-open-reset-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "711",
+          "title": "2026.07.10 09:10 Public Market Signal Note",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0910-kr-open-candidate-market-signal-note/",
+          "target": "content/posts/shide-assets-20260710-2026-07-10-0910-kr-open-candidate-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "716",
+          "title": "2026.07.10 09:13 Public Market Signal Note",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0913-kr-market-check-routine-note/",
+          "target": "content/posts/shide-assets-20260710-2026-07-10-0913-kr-market-check-routine-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "721",
+          "title": "2026-07-10 09:20 한국 개장 후 시장 신호 점검",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0920-kr-open-reaction-market-signal-note/",
+          "target": "content/posts/shide-assets-20260710-2026-07-10-0920-kr-open-reaction-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "859",
+          "title": "US First-Hour Market Signal Note — 2026-07-10 23:40 KST",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-2340-us-first-hour-market-signal-note/",
+          "target": "content/posts/shide-assets-20260710-2026-07-10-2340-us-first-hour-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "860",
+          "title": "2026-07-10 23:50 미국 첫 시간 시장 신호 — 재확인",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-2350-us-first-hour-market-signal-recheck/",
+          "target": "content/posts/shide-assets-20260710-2026-07-10-2350-us-first-hour-market-signal-recheck.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "834",
+          "title": "한국장 마감 점검 — 다음 장 확인 루틴 (2026.07.10)",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/%ed%95%9c%ea%b5%ad%ec%9e%a5-%eb%a7%88%ea%b0%90-%ec%a0%90%ea%b2%80-%eb%8b%a4%ec%9d%8c-%ec%9e%a5-%ed%99%95%ec%9d%b8-%eb%a3%a8%ed%8b%b4-2026-07-10/",
+          "target": "content/posts/shide-assets-20260710-ed-95-9c-ea-b5-ad-ec-9e-a5-eb-a7-88-ea-b0-90-ec-a0-90-ea-b2-80-eb-8b-a4-ec-9d-8c-ec-9e-a5-ed-99-95-ec-9d-b8-eb-a3-a8-ed-8b-b4-2026-07-10.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "811",
+          "title": "한국 시장 신호 노트 — 2026.07.10 12:20",
+          "link": "https://shawnassets.wordpress.com/2026/07/10/korea-market-signal-note-20260710-1220/",
+          "target": "content/posts/shide-assets-20260710-korea-market-signal-note-20260710-1220.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "925",
+          "title": "한국장 개장 10분 신호 — 2026.07.13 (월) 09:10",
+          "link": "https://shawnassets.wordpress.com/2026/07/13/2026-07-13-0910-kr-open-market-signal-note/",
+          "target": "content/posts/shide-assets-20260713-2026-07-13-0910-kr-open-market-signal-note.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "928",
+          "title": "한국장 개시 20분 – 유가 충격 반도체 급락, 대형주 중소형주 극단적 차별화 (2026-07-13)",
+          "link": "https://shawnassets.wordpress.com/2026/07/13/kr-open-reaction-20260713/",
+          "target": "content/posts/shide-assets-20260713-kr-open-reaction-20260713.mdx",
+          "mode": "removed"
+        },
+        {
+          "id": "926",
+          "title": "한국장 개장 흐름 — 2026년 7월 13일 오전",
+          "link": "https://shawnassets.wordpress.com/2026/07/13/market-check-routine-20260713-0913/",
+          "target": "content/posts/shide-assets-20260713-market-check-routine-20260713-0913.mdx",
+          "mode": "removed"
         }
       ]
     }
   ],
   "totals": {
-    "remote": 244,
-    "scanned": 244,
-    "unchanged": 239,
-    "updated": 5,
-    "created": 0,
-    "removed": 0,
-    "changed": 5
+    "remote": 223,
+    "scanned": 223,
+    "unchanged": 193,
+    "updated": 26,
+    "created": 4,
+    "removed": 25,
+    "changed": 55
   }
 }
