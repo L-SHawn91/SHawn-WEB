@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-07-28T07:04:19.509Z",
+  "generated_at": "2026-07-28T08:05:14.984Z",
   "mode": "write",
   "sources": [
     {
@@ -8,8 +8,8 @@
       "remote_total": 68,
       "fetched": 68,
       "scanned": 68,
-      "unchanged": 0,
-      "updated": 68,
+      "unchanged": 67,
+      "updated": 1,
       "created": 0,
       "removed": 0,
       "items": [
@@ -18,11 +18,11 @@
           "title": "Claude Opus 5 Bets on Efficiency, Not Capability: What Half the Price and a Cost-Capability Toggle Actually Mean",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/28/anthropic-opus-5-efficiency-pricing-en/",
           "target": "content/posts/shide-ai-20260728-anthropic-opus-5-efficiency-pricing-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1241,
-          "title": "Claude Opus 5, 반값이라는데 정말 싼 걸까? 가격과 effort(생각량) 설정을 쉽게 풀었습니다",
+          "title": "Claude Opus 5, 반값보다 중요한 건 ‘작업당 비용’이다",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/28/anthropic-opus-5-efficiency-pricing/",
           "target": "content/posts/shide-ai-20260728-anthropic-opus-5-efficiency-pricing.mdx",
           "mode": "updated"
@@ -32,462 +32,462 @@
           "title": "The Hugging Face AI-Agent–Driven Intrusion: Lessons from a Guardrail Lockout",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/27/huggingface-breach-guardrail-lockout-en/",
           "target": "content/posts/shide-ai-20260727-huggingface-breach-guardrail-lockout-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1225,
           "title": "Hugging Face 침해가 남긴 교훈: AI 에이전트 시대의 사고 대응과 가드레일 락아웃",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/27/huggingface-breach-guardrail-lockout/",
           "target": "content/posts/shide-ai-20260727-huggingface-breach-guardrail-lockout.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1153,
           "title": "Physical AI Leaves the Data Center: What NVIDIA Cosmos 3 Edge Changes",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/26/nvidia-cosmos-3-edge-physical-ai-en/",
           "target": "content/posts/shide-ai-20260726-nvidia-cosmos-3-edge-physical-ai-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1152,
           "title": "로봇 AI가 데이터센터를 벗어났다: NVIDIA Cosmos 3 Edge는 무엇이 다른가",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/26/nvidia-cosmos-3-edge-physical-ai/",
           "target": "content/posts/shide-ai-20260726-nvidia-cosmos-3-edge-physical-ai.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1084,
           "title": "Can You Trust Kimi K3 Yet? Separating the API, Open Weights, and Benchmark Claims",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/23/kimi-k3-api-open-weights-benchmarks-en/",
           "target": "content/posts/shide-ai-20260723-kimi-k3-api-open-weights-benchmarks-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1083,
           "title": "2.8조 파라미터 Kimi K3, 지금 믿어도 될까: API·오픈웨이트·벤치마크를 분리해서 보는 법",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/23/kimi-k3-api-open-weights-benchmarks/",
           "target": "content/posts/shide-ai-20260723-kimi-k3-api-open-weights-benchmarks.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1041,
           "title": "Open Image and Video Fine-Tuning Is Becoming an Infrastructure Problem",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/19/nemo-automodel-diffusers-finetuning-en/",
           "target": "content/posts/shide-ai-20260719-nemo-automodel-diffusers-finetuning-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1040,
           "title": "오픈 이미지·영상 모델 파인튜닝, 이제 ‘변환 스크립트’가 아니라 인프라 경쟁이다",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/19/nemo-automodel-diffusers-finetuning/",
           "target": "content/posts/shide-ai-20260719-nemo-automodel-diffusers-finetuning.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1021,
           "title": "Will AI Pay to Read Your Work? Cloudflare’s New Search, Agent, and Training Bot Rules",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/18/cloudflare-ai-crawler-monetization-en/",
           "target": "content/posts/shide-ai-20260718-cloudflare-ai-crawler-monetization-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1020,
           "title": "AI가 내 글을 읽을 때 돈을 내게 될까: Cloudflare가 바꾸는 검색·에이전트·학습 크롤러",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/18/cloudflare-ai-crawler-monetization/",
           "target": "content/posts/shide-ai-20260718-cloudflare-ai-crawler-monetization.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 993,
           "title": "Google Vids Personal Avatars: AI Video Where You’re the Star — No Camera Needed",
           "link": "",
           "target": "content/posts/shide-ai-20260718-google-vids-google-ai-omni-personal-avatars-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 992,
           "title": "구글 Vids의 개인 아바타: 카메라 없이 ‘내가 출연하는’ AI 영상이 시작됐다",
           "link": "",
           "target": "content/posts/shide-ai-20260718-google-vids-google-ai-omni-personal-avatars.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 911,
           "title": "AI Server Bottlenecks Go Beyond GPUs: What Samsung’s PM1763 Says About Storage",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/17/samsung-pm1763-ai-ssd-bottleneck-2026-en/",
           "target": "content/posts/shide-ai-20260717-samsung-pm1763-ai-ssd-bottleneck-2026-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 910,
           "title": "AI 서버 병목은 GPU만이 아니다: 삼성 PM1763이 보여준 SSD의 역할",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/17/samsung-pm1763-ai-ssd-bottleneck-2026-ko/",
           "target": "content/posts/shide-ai-20260717-samsung-pm1763-ai-ssd-bottleneck-2026-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 965,
           "title": "JADEPUFFER Agentic Ransomware: A Human Started It, an AI Agent Ran the Attack Chain",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/17/jadepuffer-agentic-ransomware-en/",
           "target": "content/posts/shide-ai-20260717-jadepuffer-agentic-ransomware-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 964,
           "title": "JADEPUFFER 랜섬웨어 사건: AI 에이전트는 어디까지 실행했나",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/17/jadepuffer-agentic-ransomware/",
           "target": "content/posts/shide-ai-20260717-jadepuffer-agentic-ransomware.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 905,
           "title": "Microsoft Flint: A Human-Editable Intermediate Language for AI-Generated Charts",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/15/microsoft-flint-ai-chart-language-2026-en/",
           "target": "content/posts/shide-ai-20260715-microsoft-flint-ai-chart-language-2026-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 904,
           "title": "Microsoft Flint, AI가 만든 차트를 사람이 검증할 수 있게 하는 중간 언어",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/15/microsoft-flint-ai-chart-language-2026-ko/",
           "target": "content/posts/shide-ai-20260715-microsoft-flint-ai-chart-language-2026-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 947,
           "title": "Write Once, Get a Voice: Turning a Blog Post into Audio with ElevenLabs",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/14/elevenlabs-blog-to-audio-20260714-en/",
           "target": "content/posts/shide-ai-20260714-elevenlabs-blog-to-audio-20260714-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 944,
           "title": "글만 쓰면 목소리가 생긴다: ElevenLabs로 블로그 글을 오디오로 바꾸는 법",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/14/elevenlabs-blog-to-audio-20260714/",
           "target": "content/posts/shide-ai-20260714-elevenlabs-blog-to-audio-20260714.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 927,
           "title": "Claude’s J-Space: A Jacobian Lens for Reading Unspoken Model States",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/14/claude-j-space-jacobian-lens-en/",
           "target": "content/posts/shide-ai-20260714-claude-j-space-jacobian-lens-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 926,
           "title": "Claude의 J-space 공개: AI가 말하지 않은 내부 상태를 읽는 Jacobian Lens",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/14/claude-j-space-jacobian-lens/",
           "target": "content/posts/shide-ai-20260714-claude-j-space-jacobian-lens.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 880,
           "title": "GPT-Live Launch: ChatGPT Voice Can Listen, Speak, and Delegate Deeper Work",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/13/gpt-live-chatgpt-voice-split-stack-en/",
           "target": "content/posts/shide-ai-20260713-gpt-live-chatgpt-voice-split-stack-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 879,
           "title": "GPT‑Live 출시: ChatGPT 음성이 듣고 말하면서 뒤에서 GPT‑5.5에 일을 맡긴다",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/13/gpt-live-chatgpt-voice-split-stack/",
           "target": "content/posts/shide-ai-20260713-gpt-live-chatgpt-voice-split-stack.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 855,
           "title": "AI Infrastructure Strategy 2026: Deployment Portability Comes Before the Best Model",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/12/portable-ai-infrastructure-strategy-2026-en/",
           "target": "content/posts/shide-ai-20260712-portable-ai-infrastructure-strategy-2026-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 854,
           "title": "AI 인프라 전략 2026: 최고 모델보다 옮겨 다닐 수 있는 배포 구조가 먼저다",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/12/portable-ai-infrastructure-strategy-2026/",
           "target": "content/posts/shide-ai-20260712-portable-ai-infrastructure-strategy-2026.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 821,
           "title": "AI Coding Benchmarks Need an Audit: What the SWE-Bench Pro Dispute Actually Means",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/12/coding-ai-benchmark-signal-noise-en/",
           "target": "content/posts/shide-ai-20260712-coding-ai-benchmark-signal-noise-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 820,
           "title": "코딩 AI 벤치마크를 그대로 믿으면 안 되는 이유: SWE-Bench Pro ‘약 30% 문제’가 남긴 경고",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/12/coding-ai-benchmark-signal-noise/",
           "target": "content/posts/shide-ai-20260712-coding-ai-benchmark-signal-noise.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 791,
           "title": "Mistral Studio Turns Prompts and AI Skills Into Versioned Assets — and That Changes How Teams Run AI",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/11/mistral-prompt-skill-system-of-record-en/",
           "target": "content/posts/shide-ai-20260711-mistral-prompt-skill-system-of-record-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 790,
           "title": "Mistral Studio가 프롬프트와 AI 스킬을 버전 관리한다: 이제 ‘좋은 문장’보다 운영 기록이 중요하다",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/11/mistral-prompt-skill-system-of-record/",
           "target": "content/posts/shide-ai-20260711-mistral-prompt-skill-system-of-record.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 743,
           "title": "ChatGPT Work and the next AI tool test: can you safely hand it a real project?",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/10/chatgpt-work-agentic-office-en/",
           "target": "content/posts/shide-ai-20260710-chatgpt-work-agentic-office-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 742,
           "title": "ChatGPT Work가 말하는 다음 AI 도구의 기준: 답변보다 ‘일을 맡기는 구조’가 중요해진다",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/10/chatgpt-work-agentic-office/",
           "target": "content/posts/shide-ai-20260710-chatgpt-work-agentic-office.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 684,
           "title": "Data for Agents: why the agent race is also a data race",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/09/data-for-agents-open-datasets-en/",
           "target": "content/posts/shide-ai-20260709-data-for-agents-open-datasets-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 683,
           "title": "에이전트 경쟁은 모델보다 데이터에서 갈린다: NVIDIA·Hugging Face의 ‘Data for Agents’ 읽기",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/09/data-for-agents-open-datasets/",
           "target": "content/posts/shide-ai-20260709-data-for-agents-open-datasets.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 668,
           "title": "GPT‑5.6 Is Public: Sol, Terra, Luna, Pricing, Ultra, and What Changed",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/09/gpt-56-public-release-sol-terra-luna-en/",
           "target": "content/posts/shide-ai-20260709-gpt-56-public-release-sol-terra-luna-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 667,
           "title": "GPT‑5.6 정식 출시: Sol·Terra·Luna, 무엇이 달라졌나",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/09/gpt-56-public-release-sol-terra-luna/",
           "target": "content/posts/shide-ai-20260709-gpt-56-public-release-sol-terra-luna.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 628,
           "title": "AI Browsers Are Useful — and Risky: What Prompt Injection Looks Like on the Open Web",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/08/ai-browsers-prompt-injection-open-web-en/",
           "target": "content/posts/shide-ai-20260708-ai-browsers-prompt-injection-open-web-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 627,
           "title": "AI 브라우저는 편하지만 위험합니다: 웹에서 프롬프트 인젝션이 생기는 방식",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/08/ai-browsers-prompt-injection-open-web/",
           "target": "content/posts/shide-ai-20260708-ai-browsers-prompt-injection-open-web.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 607,
           "title": "How to Choose an AI Tool Before You Trust the Benchmark Table",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/08/ai-tools-before-benchmark-en/",
           "target": "content/posts/shide-ai-20260708-ai-tools-before-benchmark-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 606,
           "title": "What an MCP Server Is: How AI Tools Connect to External Work",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/08/mcp-server-ai-tools-en/",
           "target": "content/posts/shide-ai-20260708-mcp-server-ai-tools-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 587,
           "title": "Sakana Fugu Deep Dive: Why Multi-Agent Orchestration Is Hot in the Fable 5 Era",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/08/sakana-fugu-multi-agent-model-en/",
           "target": "content/posts/shide-ai-20260708-sakana-fugu-multi-agent-model-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 564,
           "title": "Sakana Fugu 깊게 읽기: Fable 5 시대에 왜 멀티 에이전트가 뜨는가",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/08/sakana-fugu-multi-agent-model/",
           "target": "content/posts/shide-ai-20260708-sakana-fugu-multi-agent-model.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 431,
           "title": "MCP 서버란? AI 도구가 외부 일을 하는 방식",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/08/mcp-server-ai-tools/",
           "target": "content/posts/shide-ai-20260708-mcp-server-ai-tools.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 442,
           "title": "Google AI Managed Agents explained: background agents and MCP tool connections",
           "link": "",
           "target": "content/posts/shide-ai-20260708-google-ai-managed-agents-background-mcp-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 441,
           "title": "Google AI Managed Agents란? 백그라운드 AI 에이전트와 MCP 연결 흐름",
           "link": "",
           "target": "content/posts/shide-ai-20260708-google-ai-managed-agents-background-mcp.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 423,
           "title": "AI 도구 비교 기준: 성능표보다 먼저 봐야 할 것들",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/08/ai-tools-before-benchmark/",
           "target": "content/posts/shide-ai-20260708-ai-tools-before-benchmark.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 398,
           "title": "Mistral Vibe explained: coding agents across terminal, IDE, and background work",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/07/mistral-vibe-for-code-en/",
           "target": "content/posts/shide-ai-20260707-mistral-vibe-for-code-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 397,
           "title": "Mistral Vibe란? Claude Code와 다른 AI 코딩 에이전트 흐름",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/07/mistral-vibe-for-code/",
           "target": "content/posts/shide-ai-20260707-mistral-vibe-for-code.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 384,
           "title": "DeepSeek V4 Preview: why one-million-token context changes AI work",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/07/deepseek-v4-preview-one-million-context-en/",
           "target": "content/posts/shide-ai-20260707-deepseek-v4-preview-one-million-context-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 383,
           "title": "DeepSeek V4란? 100만 토큰 문맥이 AI 작업 방식을 바꾸는 이유",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/07/deepseek-v4-preview-one-million-context/",
           "target": "content/posts/shide-ai-20260707-deepseek-v4-preview-one-million-context.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 376,
           "title": "LeRobot v0.6.0 explained: robot AI as a toolchain, not just a demo",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/07/lerobot-v060-robot-ai-toolchain-en/",
           "target": "content/posts/shide-ai-20260707-lerobot-v060-robot-ai-toolchain-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 375,
           "title": "LeRobot v0.6.0이란? 로봇 AI 도구 체인이 중요한 이유",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/07/lerobot-v060-robot-ai-toolchain/",
           "target": "content/posts/shide-ai-20260707-lerobot-v060-robot-ai-toolchain.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 367,
           "title": "DeepSeek V4 Flash explained: a configurable AI stack, not just a cheap model",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/04/deepseek-v4-flash-en/",
           "target": "content/posts/shide-ai-20260704-deepseek-v4-flash-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 366,
           "title": "DeepSeek V4 Flash란? 저가 모델보다 중요한 선택형 AI 스택",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/04/deepseek-v4-flash/",
           "target": "content/posts/shide-ai-20260704-deepseek-v4-flash.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 348,
           "title": "Claude Tag explained: bringing Claude into team chat workflows",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/03/claude-tag-team-chat-en/",
           "target": "content/posts/shide-ai-20260703-claude-tag-team-chat-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 347,
           "title": "Claude Tag란? 팀 채팅 안으로 들어오는 AI 협업 흐름",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/03/claude-tag-team-chat/",
           "target": "content/posts/shide-ai-20260703-claude-tag-team-chat.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 247,
           "title": "Claude Fable 5 is back: why the guardrails matter",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/03/claude-fable5-guardrails-en/",
           "target": "content/posts/shide-ai-20260703-claude-fable5-guardrails-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 246,
           "title": "Claude Fable 5란? 재개방과 사용 제한을 같이 봐야 하는 이유",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/03/claude-fable5-guardrails/",
           "target": "content/posts/shide-ai-20260703-claude-fable5-guardrails.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 224,
           "title": "ChatGPT adoption explained: AI is becoming everyday infrastructure",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/03/chatgpt-adoption-ai-infrastructure-en/",
           "target": "content/posts/shide-ai-20260703-chatgpt-adoption-ai-infrastructure-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 223,
           "title": "ChatGPT 확산이 뜻하는 것: AI가 생활 인프라가 되는 이유",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/03/chatgpt-adoption-ai-infrastructure/",
           "target": "content/posts/shide-ai-20260703-chatgpt-adoption-ai-infrastructure.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 122,
           "title": "GPT-5.6 release timing: why access will not open to everyone at once",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/02/gpt-5-6-sol-release-playbook-en/",
           "target": "content/posts/shide-ai-20260702-gpt-5-6-sol-release-playbook-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 121,
           "title": "GPT-5.6 공개 일정은 왜 단계적으로 열릴까? SOL 릴리스 흐름 읽기",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/02/gpt-5-6-sol-release-playbook/",
           "target": "content/posts/shide-ai-20260702-gpt-5-6-sol-release-playbook.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 105,
           "title": "Google AI Computer Use explained: AI leaving the chat window",
           "link": "",
           "target": "content/posts/shide-ai-20260702-google-ai-computer-use.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 103,
           "title": "Claude Science explained: an AI workbench for scientists",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/02/claude-science-ai-workbench-en/",
           "target": "content/posts/shide-ai-20260702-claude-science-ai-workbench-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 95,
           "title": "Claude Science란? 과학자를 위한 AI 작업대가 시작된 이유",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/02/claude-science-ai-workbench/",
           "target": "content/posts/shide-ai-20260702-claude-science-ai-workbench.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 47,
           "title": "Google AI Computer Use란? AI가 채팅창 밖으로 나오는 이유",
           "link": "",
           "target": "content/posts/shide-ai-20260702-ai-chat-window-google-google-ai.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         }
       ]
     },
@@ -496,8 +496,8 @@
       "remote_total": 47,
       "fetched": 47,
       "scanned": 47,
-      "unchanged": 25,
-      "updated": 22,
+      "unchanged": 43,
+      "updated": 4,
       "created": 0,
       "removed": 0,
       "items": [
@@ -506,28 +506,28 @@
           "title": "JX-594 진행성 흑색종 1/2상: 10명 등록, 5명만 효능 평가",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/jx594-oncolytic-vaccinia-melanoma-kor/",
           "target": "content/posts/shide-bio-20260728-jx594-oncolytic-vaccinia-melanoma-kor.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1081,
           "title": "JX-594 in Advanced Melanoma: Why Five Evaluable Patients Change the Conclusion",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/jx594-oncolytic-vaccinia-melanoma/",
           "target": "content/posts/shide-bio-20260728-jx594-oncolytic-vaccinia-melanoma.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1079,
           "title": "T-DM1 이후 HER2+ 유방암: CBR 19.2%의 의미",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/ibrutinib-trastuzumab-her2-breast-cancer-kor/",
           "target": "content/posts/shide-bio-20260728-ibrutinib-trastuzumab-her2-breast-cancer-kor.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1077,
           "title": "Ibrutinib Plus Trastuzumab After T-DM1: What a 19.2% Clinical Benefit Rate Really Means",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/ibrutinib-trastuzumab-her2-breast-cancer/",
           "target": "content/posts/shide-bio-20260728-ibrutinib-trastuzumab-her2-breast-cancer.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 746,
@@ -632,42 +632,42 @@
           "title": "FT839, 기성품 CAR-T를 자가면역 임상으로: CD19·CD38 동시 표적의 의미",
           "link": "https://shawnbiohub.wordpress.com/2026/07/13/ft839-autoimmune-car-t-cd19-cd38-kor/",
           "target": "content/posts/shide-bio-20260713-ft839-autoimmune-car-t-cd19-cd38-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 605,
           "title": "FT839 Moves Off-the-Shelf CAR-T Into Autoimmune Trials: What CD19/CD38 Targeting Is Trying to Do",
           "link": "https://shawnbiohub.wordpress.com/2026/07/13/ft839-autoimmune-car-t-cd19-cd38-eng/",
           "target": "content/posts/shide-bio-20260713-ft839-autoimmune-car-t-cd19-cd38-eng.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 604,
           "title": "QRX003가 박리피부증후군 임상에 들어간다: IND 허가는 왜 출발선일까",
           "link": "https://shawnbiohub.wordpress.com/2026/07/12/qrx003-peeling-skin-syndrome-phase-2-kor/",
           "target": "content/posts/shide-bio-20260712-qrx003-peeling-skin-syndrome-phase-2-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 603,
           "title": "QRX003 Enters a Peeling Skin Syndrome Trial: Why IND Clearance Is Only the Starting Line",
           "link": "https://shawnbiohub.wordpress.com/2026/07/12/qrx003-peeling-skin-syndrome-phase-2-eng/",
           "target": "content/posts/shide-bio-20260712-qrx003-peeling-skin-syndrome-phase-2-eng.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 602,
           "title": "피검사로 대장암 검진이 쉬워질까? Freenome 새 데이터 핵심 보기",
           "link": "https://shawnbiohub.wordpress.com/2026/07/11/freenome-simplescreen-crc-blood-test-kor/",
           "target": "content/posts/shide-bio-20260711-freenome-simplescreen-crc-blood-test-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 601,
           "title": "Can a Blood Test Make Colorectal Cancer Screening Easier? What Freenome’s New Data Shows",
           "link": "https://shawnbiohub.wordpress.com/2026/07/11/freenome-simplescreen-crc-blood-test-eng/",
           "target": "content/posts/shide-bio-20260711-freenome-simplescreen-crc-blood-test-eng.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 640,
@@ -688,56 +688,56 @@
           "title": "소변 단백질이 줄었다는 건 무슨 뜻일까: IgA 신증 치료제 TRUTAKNA 데이터로 쉽게 읽기",
           "link": "https://shawnbiohub.wordpress.com/2026/07/09/trutakna-iga-nephropathy-proteinuria-kor/",
           "target": "content/posts/shide-bio-20260709-trutakna-iga-nephropathy-proteinuria-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 509,
           "title": "TRUTAKNA for IgA Nephropathy: A Data-Backed Guide to Proteinuria",
           "link": "https://shawnbiohub.wordpress.com/2026/07/09/trutakna-iga-nephropathy-proteinuria-fda-approval/",
           "target": "content/posts/shide-bio-20260709-trutakna-iga-nephropathy-proteinuria-fda-approval.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 485,
           "title": "다낭성난소증후군은 “물혹” 이야기만이 아닙니다",
           "link": "https://shawnbiohub.wordpress.com/2026/07/09/pcos-beyond-many-cysts-kor/",
           "target": "content/posts/shide-bio-20260709-pcos-beyond-many-cysts-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 484,
           "title": "PCOS Is Not Just “Many Cysts”: Why Hormones, Insulin, and Long-Term Health Matter",
           "link": "https://shawnbiohub.wordpress.com/2026/07/09/pcos-beyond-many-cysts-hormones-insulin-health/",
           "target": "content/posts/shide-bio-20260709-pcos-beyond-many-cysts-hormones-insulin-health.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 462,
           "title": "흉선을 다시 만들 수 있을까? United Therapeutics가 Thymmune을 산 이유",
           "link": "https://shawnbiohub.wordpress.com/2026/07/08/united-therapeutics-thymmune-thymus-regeneration-kor/",
           "target": "content/posts/shide-bio-20260708-united-therapeutics-thymmune-thymus-regeneration-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 461,
           "title": "Can We Rebuild the Thymus? Why United Therapeutics Bought Thymmune",
           "link": "https://shawnbiohub.wordpress.com/2026/07/08/united-therapeutics-thymmune-thymus-regeneration/",
           "target": "content/posts/shide-bio-20260708-united-therapeutics-thymmune-thymus-regeneration.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 442,
           "title": "자궁내막증 진단, 왜 NICE는 비침습 검사를 먼저 써보려 할까?",
           "link": "https://shawnbiohub.wordpress.com/2026/07/08/endometriosis-diagnosis-nice-noninvasive-tests-kor/",
           "target": "content/posts/shide-bio-20260708-endometriosis-diagnosis-nice-noninvasive-tests-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 441,
           "title": "Endometriosis Diagnosis: Why NICE Is Testing New Non-Invasive Options",
           "link": "https://shawnbiohub.wordpress.com/2026/07/08/endometriosis-diagnosis-nice-noninvasive-tests/",
           "target": "content/posts/shide-bio-20260708-endometriosis-diagnosis-nice-noninvasive-tests.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 429,
@@ -765,14 +765,14 @@
           "title": "Are Obesity Medicines Moving from Injections to Pills? What Foundayo Data Really Says",
           "link": "https://shawnbiohub.wordpress.com/2026/07/07/foundayo-orforglipron-obesity-pill-eng/",
           "target": "content/posts/shide-bio-20260707-foundayo-orforglipron-obesity-pill-eng.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 269,
           "title": "비만치료제가 주사에서 알약으로 가는 중? Foundayo 핵심 데이터 쉽게 보기",
           "link": "https://shawnbiohub.wordpress.com/2026/07/07/lilly-foundayo-orforglipron-obesity-pill-kor/",
           "target": "content/posts/shide-bio-20260707-lilly-foundayo-orforglipron-obesity-pill-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 244,
@@ -793,42 +793,42 @@
           "title": "Divarasib explained: did a KRAS G12C lung cancer drug beat existing medicines?",
           "link": "https://shawnbiohub.wordpress.com/2026/07/03/roche-divarasib-kras-g12c-head-to-head-eng/",
           "target": "content/posts/shide-bio-20260703-roche-divarasib-kras-g12c-head-to-head-eng.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 224,
           "title": "KRAS G12C 폐암 신약 divarasib란? 아직 안 보이는 임상 숫자들",
           "link": "https://shawnbiohub.wordpress.com/2026/07/03/roche-divarasib-kras-g12c-head-to-head-kor/",
           "target": "content/posts/shide-bio-20260703-roche-divarasib-kras-g12c-head-to-head-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 159,
           "title": "Satri-cel explained: China solid-tumor CAR-T news and the cautious numbers",
           "link": "https://shawnbiohub.wordpress.com/2026/07/03/china-solid-tumor-car-t-satri-cel-eng/",
           "target": "content/posts/shide-bio-20260703-china-solid-tumor-car-t-satri-cel-eng.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 158,
           "title": "고형암 CAR-T satri-cel이란? 중국 첫 승인 뉴스의 숫자와 한계",
           "link": "https://shawnbiohub.wordpress.com/2026/07/03/china-solid-tumor-car-t-satri-cel-kor/",
           "target": "content/posts/shide-bio-20260703-china-solid-tumor-car-t-satri-cel-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 71,
           "title": "Claude Science explained: is it an AI workbench for scientists?",
           "link": "https://shawnbiohub.wordpress.com/2026/07/02/claude-science-ai-workbench-en/",
           "target": "content/posts/shide-ai-20260702-claude-science.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 42,
           "title": "Claude Science란? 과학자를 위한 AI 워크벤치인지 숫자와 용도로 보기",
           "link": "https://shawnbiohub.wordpress.com/2026/07/02/claude-science-ai-workbench/",
           "target": "content/posts/bio-20260702-claude-science-ai-workbench.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         }
       ]
     },
@@ -837,8 +837,8 @@
       "remote_total": 129,
       "fetched": 129,
       "scanned": 129,
-      "unchanged": 54,
-      "updated": 75,
+      "unchanged": 129,
+      "updated": 0,
       "created": 0,
       "removed": 0,
       "items": [
@@ -973,21 +973,21 @@
           "title": "2026년 7월 24일 한국 시장 마감 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/24/2026-07-24-1545-korea-market-close-signal/",
           "target": "content/posts/shide-assets-20260724-2026-07-24-1545-korea-market-close-signal.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1285,
           "title": "2026년 7월 24일 한국 장전 시장 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/24/2026-07-24-0845-korea-preopen-market-signal/",
           "target": "content/posts/shide-assets-20260724-2026-07-24-0845-korea-preopen-market-signal.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1261,
           "title": "한국 시장 마감 신호 — 2026.07.23 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/23/market-close-note-1545-20260723/",
           "target": "content/posts/shide-assets-20260723-market-close-note-1545-20260723.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1219,
@@ -1008,42 +1008,42 @@
           "title": "2026년 7월 23일 한국 장전 시장 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/23/2026-07-23-0845-korea-preopen-market-signal/",
           "target": "content/posts/shide-assets-20260723-2026-07-23-0845-korea-preopen-market-signal.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1246,
           "title": "한국 시장 마감 신호 — 2026.07.22 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/22/market-close-note-1545-20260722/",
           "target": "content/posts/shide-assets-20260722-market-close-note-1545-20260722.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1242,
           "title": "2026년 7월 22일 장전 시장 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/22/2026-07-22-0845-korea-preopen-market-signal/",
           "target": "content/posts/shide-assets-20260722-2026-07-22-0845-korea-preopen-market-signal.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1233,
           "title": "한국 시장 마감 신호 노트 — 2026.07.21 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/21/market-close-note-1545-20260721/",
           "target": "content/posts/shide-assets-20260721-market-close-note-1545-20260721.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1212,
           "title": "2026년 7월 21일 장전 시장 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/21/2026-07-21-0845-korea-preopen-market-signal/",
           "target": "content/posts/shide-assets-20260721-2026-07-21-0845-korea-preopen-market-signal.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1208,
           "title": "한국 시장 마감 신호 노트 — 2026.07.20 15:45",
           "link": "https://shawnassets.wordpress.com/2026/07/20/market-close-note-1545-20260720/",
           "target": "content/posts/shide-assets-20260720-market-close-note-1545-20260720.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1059,
@@ -1064,21 +1064,21 @@
           "title": "With the Won Near 1,500 per Dollar, How to Recalculate a 2026 Summer Travel Budget",
           "link": "https://shawnassets.wordpress.com/2026/07/19/summer-travel-budget-korea-fx-oil-2026-en/",
           "target": "content/posts/shide-assets-20260719-summer-travel-budget-korea-fx-oil-2026-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 943,
           "title": "원·달러 1,500원 근처, 2026 여름휴가 예산을 다시 계산하는 법",
           "link": "https://shawnassets.wordpress.com/2026/07/19/summer-travel-budget-korea-fx-oil-2026-ko/",
           "target": "content/posts/shide-assets-20260719-summer-travel-budget-korea-fx-oil-2026-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1052,
           "title": "미국 첫 시간 시장 신호 · 2026-07-17 23:40 KST",
           "link": "https://shawnassets.wordpress.com/2026/07/17/%eb%af%b8%ea%b5%ad-%ec%b2%ab-%ec%8b%9c%ea%b0%84-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%c2%b7-2026-07-17-2340-kst/",
           "target": "content/posts/shide-assets-20260717-eb-af-b8-ea-b5-ad-ec-b2-ab-ec-8b-9c-ea-b0-84-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-c2-b7-2026-07-17-2340-kst.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1048,
@@ -1127,14 +1127,14 @@
           "title": "Korea–Mongolia CEPA Reaches Agreement in Principle: What It Could Change for Critical Minerals",
           "link": "https://shawnassets.wordpress.com/2026/07/16/korea-mongolia-cepa-critical-minerals-2026-en/",
           "target": "content/posts/shide-assets-20260716-korea-mongolia-cepa-critical-minerals-2026-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 937,
           "title": "한–몽 CEPA 원칙적 타결, 핵심광물 공급망에는 무엇이 달라질까?",
           "link": "https://shawnassets.wordpress.com/2026/07/16/korea-mongolia-cepa-critical-minerals-2026-ko/",
           "target": "content/posts/shide-assets-20260716-korea-mongolia-cepa-critical-minerals-2026-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1023,
@@ -1197,7 +1197,7 @@
           "title": "7월 15일 장전 시장 신호 — 미 반도체 강세에 힘입은 기술적 반등 지속",
           "link": "https://shawnassets.wordpress.com/2026/07/15/2026-07-15-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260715-2026-07-15-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1010,
@@ -1232,7 +1232,7 @@
           "title": "Market Signal: Morning Reversal Alert — July 14, 2026",
           "link": "https://shawnassets.wordpress.com/2026/07/14/2026-07-14-0920-kr-open-market-signal/",
           "target": "content/posts/shide-assets-20260714-2026-07-14-0920-kr-open-market-signal.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 978,
@@ -1253,14 +1253,14 @@
           "title": "How a Hormuz Oil Shock Reaches Fuel Prices and Living Costs in Korea",
           "link": "https://shawnassets.wordpress.com/2026/07/14/hormuz-oil-korea-costs-2026-en/",
           "target": "content/posts/shide-assets-20260714-hormuz-oil-korea-costs-2026-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 931,
           "title": "호르무즈 유가 충격, 한국 기름값과 생활비에는 어떻게 번질까?",
           "link": "https://shawnassets.wordpress.com/2026/07/14/hormuz-oil-korea-costs-2026-ko/",
           "target": "content/posts/shide-assets-20260714-hormuz-oil-korea-costs-2026-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 976,
@@ -1295,14 +1295,14 @@
           "title": "Korea Market Signal — 7월 13일 장 마감",
           "link": "https://shawnassets.wordpress.com/2026/07/13/2026-07-13-1630-market-check-routine/",
           "target": "content/posts/shide-assets-20260713-2026-07-13-1630-market-check-routine.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 962,
           "title": "Korea Market Note — July 13, 2026 (Monday Close)",
           "link": "https://shawnassets.wordpress.com/2026/07/13/market-note-20260713-1545-kr-close/",
           "target": "content/posts/shide-assets-20260713-market-note-20260713-1545-kr-close.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 928,
@@ -1337,49 +1337,49 @@
           "title": "Why Korea’s Summer Electricity Bill Is a Cost-of-Living Signal in the AI Era",
           "link": "https://shawnassets.wordpress.com/2026/07/12/summer-electricity-bill-ai-korea-2026-en/",
           "target": "content/posts/shide-assets-20260712-summer-electricity-bill-ai-korea-2026-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 907,
           "title": "여름 전기요금, AI 시대에 생활비 신호가 된 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/12/summer-electricity-bill-ai-korea-2026-ko/",
           "target": "content/posts/shide-assets-20260712-summer-electricity-bill-ai-korea-2026-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 878,
           "title": "El Niño 2026 and Korea’s Food Prices: The Path from Crops to the Grocery Basket",
           "link": "https://shawnassets.wordpress.com/2026/07/11/el-nino-2026-korea-food-prices-en/",
           "target": "content/posts/shide-assets-20260711-el-nino-2026-korea-food-prices-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 877,
           "title": "2026 엘니뇨, 곡물·식용유 가격이 식탁 물가로 오는 경로",
           "link": "https://shawnassets.wordpress.com/2026/07/11/el-nino-2026-korea-food-prices-ko/",
           "target": "content/posts/shide-assets-20260711-el-nino-2026-korea-food-prices-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 865,
           "title": "HLB’s Third FDA CRL for Rivoceranib: Why Phase 3 Efficacy and Manufacturing cGMP Are Separate Questions",
           "link": "https://shawnassets.wordpress.com/2026/07/11/hlb-rivoceranib-third-fda-crl-cgmp-en/",
           "target": "content/posts/shide-assets-20260711-hlb-rivoceranib-third-fda-crl-cgmp-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 864,
           "title": "HLB 리보세라닙 FDA 세 번째 CRL: 임상 3상 효능과 제조소 cGMP를 분리해 봐야 하는 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/11/hlb-rivoceranib-third-fda-crl-cgmp-ko/",
           "target": "content/posts/shide-assets-20260711-hlb-rivoceranib-third-fda-crl-cgmp-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 860,
           "title": "2026-07-10 23:50 미국 첫 시간 시장 신호 — 재확인",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-2350-us-first-hour-market-signal-recheck/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-2350-us-first-hour-market-signal-recheck.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 859,
@@ -1393,21 +1393,21 @@
           "title": "SK hynix’s Nasdaq ADR Listing: What the $26.5 Billion Offering Means for HBM and Korean Shareholders",
           "link": "https://shawnassets.wordpress.com/2026/07/10/sk-hynix-nasdaq-adr-listing-hbm-korean-shareholders-en/",
           "target": "content/posts/shide-assets-20260710-sk-hynix-nasdaq-adr-listing-hbm-korean-shareholders-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 843,
           "title": "SK하이닉스 나스닥 ADR 상장: 265억 달러 조달이 HBM·한국 주주에게 의미하는 것",
           "link": "https://shawnassets.wordpress.com/2026/07/10/sk-hynix-nasdaq-adr-listing-hbm-korean-shareholders-ko/",
           "target": "content/posts/shide-assets-20260710-sk-hynix-nasdaq-adr-listing-hbm-korean-shareholders-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 834,
           "title": "한국장 마감 점검 — 다음 장 확인 루틴 (2026.07.10)",
           "link": "https://shawnassets.wordpress.com/2026/07/10/%ed%95%9c%ea%b5%ad%ec%9e%a5-%eb%a7%88%ea%b0%90-%ec%a0%90%ea%b2%80-%eb%8b%a4%ec%9d%8c-%ec%9e%a5-%ed%99%95%ec%9d%b8-%eb%a3%a8%ed%8b%b4-2026-07-10/",
           "target": "content/posts/shide-assets-20260710-ed-95-9c-ea-b5-ad-ec-9e-a5-eb-a7-88-ea-b0-90-ec-a0-90-ea-b2-80-eb-8b-a4-ec-9d-8c-ec-9e-a5-ed-99-95-ec-9d-b8-eb-a3-a8-ed-8b-b4-2026-07-10.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 830,
@@ -1421,182 +1421,182 @@
           "title": "한국 시장 신호 노트 — 2026.07.10 12:20",
           "link": "https://shawnassets.wordpress.com/2026/07/10/korea-market-signal-note-20260710-1220/",
           "target": "content/posts/shide-assets-20260710-korea-market-signal-note-20260710-1220.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 721,
           "title": "2026-07-10 09:20 한국 개장 후 시장 신호 점검",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0920-kr-open-reaction-market-signal-note/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-0920-kr-open-reaction-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 716,
           "title": "2026.07.10 09:13 Public Market Signal Note",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0913-kr-market-check-routine-note/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-0913-kr-market-check-routine-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 711,
           "title": "2026.07.10 09:10 Public Market Signal Note",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0910-kr-open-candidate-market-signal-note/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-0910-kr-open-candidate-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 707,
           "title": "2026-07-10 09:03 한국 개장 직후 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0903-kr-open-reset-market-signal-note/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-0903-kr-open-reset-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 702,
           "title": "2026.07.10 08:45 Public Market Signal Note",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 698,
           "title": "2026.07.10 06:45 Public Market Signal Note",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0645-kr-prerisk-market-signal-note/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-0645-kr-prerisk-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 693,
           "title": "2026-07-09 23:40 미국 첫 시간 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-2340-us-first-hour-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-2340-us-first-hour-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 689,
           "title": "미국 개장 전 시장 신호: 반도체 반등과 환율 경계",
           "link": "https://shawnassets.wordpress.com/2026/07/09/market-signal-20260709-2220-us-preopen/",
           "target": "content/posts/shide-assets-20260709-market-signal-20260709-2220-us-preopen.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 655,
           "title": "The Gap Created by U.S. AI Chip Export Controls: DeepSeek and Huawei Are Signals, Not Nvidia Replacements",
           "link": "https://shawnassets.wordpress.com/2026/07/09/us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-en/",
           "target": "content/posts/shide-assets-20260709-us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 654,
           "title": "미국 수출통제가 만든 빈자리: DeepSeek·Huawei는 엔비디아 대체가 아니라 중국 AI칩 자립 압박의 신호다",
           "link": "https://shawnassets.wordpress.com/2026/07/09/us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-ko/",
           "target": "content/posts/shide-assets-20260709-us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 663,
           "title": "2026-07-09 16:35 다음 한국장 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-1635-kr-next-day-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-1635-kr-next-day-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 640,
           "title": "2026-07-09 15:45 한국장 마감 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-1545-kr-close-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-1545-kr-close-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 636,
           "title": "2026-07-09 09:20 한국 개장 후 시장 신호 점검",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0920-kr-open-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-0920-kr-open-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 632,
           "title": "2026-07-09 09:13 한국 개장 후 시장 신호 재확인",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0913-kr-open-delta-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-0913-kr-open-delta-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 628,
           "title": "2026-07-09 09:10 한국 개장 초반 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0910-kr-open-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-0910-kr-open-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 624,
           "title": "2026-07-09 09:03 한국 개장 직후 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0903-kr-open-reset-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-0903-kr-open-reset-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 620,
           "title": "2026-07-09 08:45 한국 장전 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 608,
           "title": "2026-07-09 06:45 한국장 전 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0645-kr-prerisk-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-0645-kr-prerisk-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 583,
           "title": "New U.S. Strikes After Ceasefire Collapse: Iran–US Clash, Hormuz Risk, Oil Prices, and Inflation",
           "link": "https://shawnassets.wordpress.com/2026/07/09/iran-us-conflict-current-impact-20260709-en/",
           "target": "content/posts/shide-assets-20260709-iran-us-conflict-current-impact-20260709-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 582,
           "title": "미군 추가 공습 재개, 휴전 종료 선언: 이란-미국 재충돌이 유가·호르무즈·물가를 흔든다",
           "link": "https://shawnassets.wordpress.com/2026/07/09/iran-us-conflict-current-impact-20260709-ko/",
           "target": "content/posts/shide-assets-20260709-iran-us-conflict-current-impact-20260709-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 578,
           "title": "2026-07-08 23:40 미국 첫 시간 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-2340-us-first-hour-market-signal-note/",
           "target": "content/posts/shide-assets-20260708-2026-07-08-2340-us-first-hour-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 574,
           "title": "2026-07-08 22:20 미국 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-2220-us-market-signal-note/",
           "target": "content/posts/shide-assets-20260708-2026-07-08-2220-us-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 532,
           "title": "Why Tariffs Became a Political Weapon Again",
           "link": "https://shawnassets.wordpress.com/2026/07/08/tariffs-political-weapon-20260708-en/",
           "target": "content/posts/shide-assets-20260708-tariffs-political-weapon-20260708-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 531,
           "title": "관세는 왜 다시 정치의 무기가 됐을까",
           "link": "https://shawnassets.wordpress.com/2026/07/08/tariffs-political-weapon-20260708-ko/",
           "target": "content/posts/shide-assets-20260708-tariffs-political-weapon-20260708-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 483,
           "title": "2026-07-08 16:35 다음 한국장 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1635-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
           "target": "content/posts/shide-assets-20260708-2026-07-08-1635-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 455,
@@ -1610,49 +1610,49 @@
           "title": "Why Samsung and SK Hynix Falling Does Not Mean AI Is Over",
           "link": "https://shawnassets.wordpress.com/2026/07/08/samsung-sk-hynix-ai-not-over-market-check-20260708-en/",
           "target": "content/posts/shide-assets-20260708-samsung-sk-hynix-ai-not-over-market-check-20260708-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 404,
           "title": "삼성전자·SK하이닉스 하락을 ‘AI 끝’으로 보면 안 되는 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/08/samsung-sk-hynix-ai-not-over-market-check-20260708/",
           "target": "content/posts/shide-assets-20260708-samsung-sk-hynix-ai-not-over-market-check-20260708.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 396,
           "title": "2026-07-08 12:20 한국 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1220-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
           "target": "content/posts/shide-assets-20260708-2026-07-08-1220-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 357,
           "title": "Why can the index rise while my stock does nothing?",
           "link": "https://shawnassets.wordpress.com/2026/07/08/index-up-my-stock-flat-20260708-en/",
           "target": "content/posts/shide-assets-20260708-index-up-my-stock-flat-20260708-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 356,
           "title": "지수는 오르는데 내 주식은 왜 그대로일까",
           "link": "https://shawnassets.wordpress.com/2026/07/08/index-up-my-stock-flat-20260708/",
           "target": "content/posts/shide-assets-20260708-index-up-my-stock-flat-20260708.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 246,
           "title": "Why prices do not fall right away when oil gets cheaper: FX, distribution, and price lag",
           "link": "https://shawnassets.wordpress.com/2026/07/07/oil-price-living-cost-lag-20260707-en/",
           "target": "content/posts/shide-assets-20260707-oil-price-living-cost-lag-20260707-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 245,
           "title": "기름값이 내려도 물가가 안 내려가는 이유: 환율·유통·가격 지연",
           "link": "https://shawnassets.wordpress.com/2026/07/07/oil-price-living-cost-lag-20260707/",
           "target": "content/posts/shide-assets-20260707-oil-price-living-cost-lag-20260707.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 242,
@@ -1666,84 +1666,84 @@
           "title": "Semiconductor equipment cycle explained: reading the next capex signal",
           "link": "https://shawnassets.wordpress.com/2026/07/05/semiconductor-equipment-leading-signal-20260704-en/",
           "target": "content/posts/shide-assets-20260705-semiconductor-equipment-leading-signal-20260704-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 217,
           "title": "반도체 장비 사이클이란? 다음 투자 흐름을 먼저 읽는 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/05/semiconductor-equipment-leading-signal-20260704/",
           "target": "content/posts/shide-assets-20260705-semiconductor-equipment-leading-signal-20260704.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 224,
           "title": "Gold versus the dollar explained: safe assets, FX, and market stress",
           "link": "https://shawnassets.wordpress.com/2026/07/05/gold-dollar-war-20260705-en/",
           "target": "content/posts/shide-assets-20260705-gold-dollar-war-20260705-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 223,
           "title": "금과 달러 전쟁이란? 안전자산과 환율을 같이 보는 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/05/gold-dollar-war-20260705/",
           "target": "content/posts/shide-assets-20260705-gold-dollar-war-20260705.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 188,
           "title": "Why jeonse becomes monthly rent: housing costs, interest rates, and sticky prices",
           "link": "https://shawnassets.wordpress.com/2026/07/03/jeonse-monthly-rent-housing-cost-20260703-en/",
           "target": "content/posts/shide-assets-20260703-jeonse-monthly-rent-housing-cost-20260703-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 187,
           "title": "전세가 월세로 바뀌는 이유: 금리 인하에도 주거비가 안 내려가는 구조",
           "link": "https://shawnassets.wordpress.com/2026/07/03/jeonse-monthly-rent-housing-cost-20260703/",
           "target": "content/posts/shide-assets-20260703-jeonse-monthly-rent-housing-cost-20260703.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 125,
           "title": "AI rally crack explained: why Samsung and SK Hynix fell together",
           "link": "https://shawnassets.wordpress.com/2026/07/03/samsung-sk-hynix-ai-rally-crack-20260703-en/",
           "target": "content/posts/shide-assets-20260703-samsung-sk-hynix-ai-rally-crack-20260703-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 124,
           "title": "AI 랠리 균열이란? 삼성전자·SK하이닉스가 같이 흔들린 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/03/samsung-sk-hynix-ai-rally-crack-20260703/",
           "target": "content/posts/shide-assets-20260703-samsung-sk-hynix-ai-rally-crack-20260703.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 99,
           "title": "AI power infrastructure explained: why the grid is the next bottleneck after chips",
           "link": "https://shawnassets.wordpress.com/2026/07/02/ai-power-infrastructure-data-center-grid-20260702-en/",
           "target": "content/posts/shide-assets-20260702-ai-power-infrastructure-data-center-grid-20260702-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 98,
           "title": "AI 전력 인프라란? 반도체 다음 병목이 전력망인 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/02/ai-power-infrastructure-data-center-grid-20260702/",
           "target": "content/posts/shide-assets-20260702-ai-power-infrastructure-data-center-grid-20260702.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 89,
           "title": "Why AI money rushes into semiconductors: capital flow and chip-cycle signals",
           "link": "https://shawnassets.wordpress.com/2026/07/02/semiconductor-trend-capital-flow-20260702-en/",
           "target": "content/posts/shide-assets-20260702-semiconductor-trend-capital-flow-20260702-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 38,
           "title": "AI 자금은 왜 반도체로 몰리나? 투자 흐름과 장비 사이클 읽기",
           "link": "https://shawnassets.wordpress.com/2026/07/02/semiconductor-trend-capital-flow-20260702/",
           "target": "content/posts/shide-assets-20260702-semiconductor-trend-capital-flow-20260702.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         }
       ]
     }
@@ -1751,10 +1751,10 @@
   "totals": {
     "remote": 244,
     "scanned": 244,
-    "unchanged": 79,
-    "updated": 165,
+    "unchanged": 239,
+    "updated": 5,
     "created": 0,
     "removed": 0,
-    "changed": 165
+    "changed": 5
   }
 }
