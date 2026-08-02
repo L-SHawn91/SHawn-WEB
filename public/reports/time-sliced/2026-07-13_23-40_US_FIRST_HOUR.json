@@ -1,0 +1,27 @@
+{
+  "report_type": "market_signal_note",
+  "slot": "2340_us_first_hour",
+  "published_at_kst": "2026-07-13T23:40:38+09:00",
+  "market_gate": "NYSE/Nasdaq — Market Open",
+  "title": "US Market First-Hour Signal Note — July 13, 2026",
+  "summary": "Semiconductors lead decline but stabilize quickly. Not a broad panic — gold fell, bonds calm. Korea gap-down expected July 14.",
+  "key_signals": {
+    "QQQ": {"level": 717.31, "change_pct": -1.13},
+    "SOXX": {"level": 564.63, "change_pct": -2.87},
+    "SMH": {"level": 597.57, "change_pct": -2.20},
+    "NVDA": {"level": 208.18, "change_pct": -1.32},
+    "EWY": {"level": 171.35, "change_pct": -6.63},
+    "VIX": {"level": 16.29, "change_pct": 8.38},
+    "WTI": {"level": 74.71, "change_pct": 4.62},
+    "USD_KRW": {"level": 1494.88, "change_pct": -0.27}
+  },
+  "next_checkpoints": [
+    {"time_kst": "2026-07-14 06:45", "label": "KR Pre-Risk — US close review"},
+    {"time_kst": "2026-07-14 08:45", "label": "KR Pre-Open — indicative prices"},
+    {"time_kst": "2026-07-14 09:00-09:30", "label": "KR Open — failed-recovery monitor"}
+  ],
+  "wordpress_url": "https://shawnassets.wordpress.com/2026/07/13/us-first-hour-check-20260713/",
+  "wordpress_post_id": 972,
+  "no_trade_instruction": true,
+  "visual_status": "visual_unverified"
+}

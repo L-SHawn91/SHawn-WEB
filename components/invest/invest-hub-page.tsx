@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   BarChart3,
@@ -13,12 +12,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { InvestLayout, InvestCard, investUiClass } from "@/components/invest/invest-layout";
-import {
-  InvestQuoteKpiCards,
-  InvestQuoteKpiNotice,
-  type QuoteKpiSnapshot,
-} from "@/components/invest/invest-kpi-components";
-import { InvestSignalConfidenceCard } from "@/components/invest/invest-confidence-card";
+import { type QuoteKpiSnapshot } from "@/components/invest/invest-kpi-components";
 import { useLanguage } from "@/components/providers/language-provider";
 
 type ReportItem = {
@@ -56,7 +50,7 @@ type MarketCard = {
 type WatchItem = {
   symbol: string;
   name?: string;
-  signal: "Buy" | "Hold" | "Trim";
+  signal: "Focus" | "Watch" | "Caution";
   score: number;
   reason: string;
   region: "k" | "us";
@@ -72,9 +66,9 @@ type SnapshotPayload = QuoteKpiSnapshot & {
 };
 
 const signalTone: Record<WatchItem["signal"], string> = {
-  Buy: "text-emerald-200 bg-emerald-500/10 border-emerald-400/30",
-  Hold: "text-sky-200 bg-sky-500/10 border-sky-400/30",
-  Trim: "text-rose-200 bg-rose-500/10 border-rose-400/30",
+  Focus: "text-emerald-700 bg-emerald-50 border-emerald-200",
+  Watch: "text-sky-700 bg-sky-50 border-sky-200",
+  Caution: "text-rose-700 bg-rose-50 border-rose-200",
 };
 
 function shortTitle(raw?: string): string {
@@ -87,7 +81,7 @@ function changeTone(change?: string): string {
   const value = String(change || "");
   if (value.startsWith("+")) return "text-emerald-300";
   if (value.startsWith("-")) return "text-rose-300";
-  return "text-gray-400";
+  return "text-slate-300";
 }
 
 function formatClockLabel(value?: string): string {
@@ -111,6 +105,28 @@ function formatDateLabel(value?: string): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}.${month}.${day}`;
+}
+
+function humanizePortalSource(raw?: string, isKo = true): string {
+  const value = String(raw || "").trim();
+  const lower = value.toLowerCase();
+  if (!value || value === "-") return isKo ? "근거 출처 없음" : "No source record";
+  if (lower.includes("public/reports") || lower.includes("reports/index") || lower.includes("reports/*.json")) {
+    return isKo ? "로컬 리포트 스냅샷" : "Local report snapshot";
+  }
+  if (lower.includes("naver") || lower.includes("stooq")) return isKo ? "Naver/Stooq 지연 데이터" : "Naver/Stooq delayed data";
+  if (lower.includes("yahoo")) return isKo ? "Yahoo 지연 데이터" : "Yahoo delayed data";
+  if (lower.includes("fallback")) return isKo ? "폴백 스냅샷" : "Fallback snapshot";
+  if (lower.includes("snapshot")) return isKo ? "스냅샷 기록" : "Snapshot record";
+  if (value.length > 32) return isKo ? "설정된 데이터 소스" : "Configured data source";
+  return value;
+}
+
+function reportKindLabel(raw?: string, isKo = true): string {
+  const value = String(raw || "").toUpperCase();
+  if (value.includes("KR")) return isKo ? "국내 레이더" : "KR Radar";
+  if (value.includes("US")) return isKo ? "미국 다이제스트" : "US Digest";
+  return isKo ? "데이터 다이제스트" : "Data Digest";
 }
 
 function buildSparklinePath(seedText: string): string {
@@ -150,9 +166,9 @@ function ShawnInvestDashboard({
     .slice(0, 3);
   const headline =
     confidence >= 70
-      ? (isKo ? "공격적 진입보다 강한 종목 선별에 유리한 구간" : "A zone better suited to selective review than aggressive entry")
+      ? (isKo ? "공격적 판단보다 강한 관찰 후보 선별에 유리한 구간" : "A zone better suited to selective review than aggressive action")
       : confidence >= 50
-        ? (isKo ? "추세는 유지되지만 선택과 비중 조절이 중요한 구간" : "Trend remains intact, but selection and sizing matter")
+        ? (isKo ? "추세는 유지되지만 선택과 노출 위험 점검이 중요한 구간" : "Trend remains intact, but selection and exposure-risk checks matter")
         : (isKo ? "보수적으로 확인하고 리스크 관리가 우선인 구간" : "A conservative review zone where risk checks come first");
   const headlineTone =
     confidence >= 70 ? "text-emerald-300" : confidence >= 50 ? "text-sky-300" : "text-amber-300";
@@ -198,7 +214,7 @@ function ShawnInvestDashboard({
     <section className="overflow-hidden rounded-[1.8rem] border border-sky-400/10 bg-[radial-gradient(circle_at_top_left,_rgba(30,64,175,0.18),_transparent_30%),linear-gradient(180deg,_rgba(3,7,18,0.96),_rgba(8,15,32,0.98))] p-4 text-white shadow-[0_30px_120px_rgba(2,6,23,0.7)] sm:rounded-[2rem] sm:p-6">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
         <section className="min-w-0 overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur sm:p-5">
-          <p className="text-[11px] uppercase tracking-[0.35em] text-sky-200/65">Shawn Invest</p>
+          <p className="text-[11px] uppercase tracking-[0.35em] text-sky-200/70">Shawn Invest</p>
           <h2 className="mt-2 break-words text-2xl font-bold tracking-tight sm:text-4xl">{isKo ? "오늘의 결론" : "Today’s read"}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
             <div className="min-w-0">
@@ -232,7 +248,7 @@ function ShawnInvestDashboard({
         <section className="min-w-0 overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur sm:p-5">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/55">Reasons</p>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/65">Reasons</p>
               <h3 className="mt-1 break-words text-lg font-semibold text-white">{isKo ? "핵심 근거" : "Key reasons"}</h3>
             </div>
             <button
@@ -267,23 +283,29 @@ function ShawnInvestDashboard({
 type InvestPanel = "overview" | "reports" | "archive" | "dashboard";
 
 function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
-  const searchParams = useSearchParams();
   const { language } = useLanguage();
   const isKo = language === "ko";
+  const [queryString, setQueryString] = useState("");
+  const searchParams = useMemo(() => new URLSearchParams(queryString), [queryString]);
+
+  useEffect(() => {
+    setQueryString(window.location.search);
+  }, []);
+
   const text = {
-    title: isKo ? "Assets Command Center" : "Assets Command Center",
+    title: isKo ? "SHawn 마켓 레이더" : "SHawn Market Radar",
     desc: isKo
-      ? "리포트 읽기, 신호 점검, 다음 확인 항목을 한 화면에서 이어서 보는 공개 에셋 허브입니다."
-      : "A public assets hub for reading reports, checking signals, and reviewing next items in one flow.",
+      ? "리포트, 데이터 기준시각, 출처 상태를 한 화면에서 확인하는 공개형 Assets 데이터 포털입니다."
+      : "A public Assets data portal for reports, timestamps, and source status in one view.",
     reportViewer: isKo ? "리포트 뷰어" : "Report Viewer",
     dashboardDetail: isKo ? "대시보드 상세" : "Dashboard Detail",
     dashboardPanel: isKo ? "통합 대시보드" : "Unified Dashboard",
     search: isKo ? "종목 검색" : "Ticker Search",
     archive: isKo ? "히스토리 아카이브" : "History Archive",
     decisionFrame: isKo ? "의사결정 프레임" : "Decision Framework",
-    operationMode: isKo ? "운영 모드" : "Mode",
+    operationMode: isKo ? "데이터 상태" : "Data status",
     stream: isKo ? "최신 리포트 스트림" : "Latest Report Stream",
-    actionQueue: isKo ? "실행 후보 큐" : "Action Queue",
+    actionQueue: isKo ? "관찰 항목" : "Observation Items",
     unifiedReports: isKo ? "통합 리포트 뷰" : "Unified Report View",
     reportTabKr: isKo ? "국내 리포트" : "KR Reports",
     reportTabUs: isKo ? "미국 리포트" : "US Reports",
@@ -305,11 +327,11 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
     allModules: isKo ? "전체 모듈" : "All Modules",
     watchlistFull: isKo ? "모듈 해석" : "Module Notes",
     loadingModules: isKo ? "모듈 데이터 로딩 중" : "Loading module data",
-    loadingQueue: isKo ? "후보 리스트 로딩 중" : "Loading action queue",
+    loadingQueue: isKo ? "후보 리스트 로딩 중" : "Loading observation queue",
     routine: isKo ? "운영 루틴" : "Operation Routine",
     loadingHub: isKo ? "통합 허브 데이터를 불러오는 중입니다." : "Loading command center data...",
-    overviewTitle: isKo ? "에셋 한 화면 요약" : "Assets at a Glance",
-    overviewDesc: isKo ? "복잡한 섹션을 줄이고, 지금 확인할 지표와 다음 확인 항목만 남겼습니다." : "A simplified view of the key indicators and next items to check.",
+    overviewTitle: isKo ? "Market Radar / Data Digest" : "Market Radar / Data Digest",
+    overviewDesc: isKo ? "투자 지시가 아니라 공개 가능한 시장 데이터 요약, 리포트 근거, 출처 상태를 정리합니다." : "A reference-only market data portal for source-backed reports and status signals.",
     details: isKo ? "자세히 보기" : "View details",
     viewAll: isKo ? "전체 보기" : "View all",
     flowItems: isKo
@@ -349,8 +371,8 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
     try {
       const [snapshotRes, krRes, usRes] = await Promise.all([
         fetch("/api/invest/snapshot?mode=balanced", { cache: "no-store" }),
-        fetch("/api/reports?type=KR&limit=12&offset=0", { cache: "no-store" }),
-        fetch("/api/reports?type=US&limit=12&offset=0", { cache: "no-store" }),
+        fetch("/api/reports?type=KR&limit=1000&offset=0", { cache: "no-store" }),
+        fetch("/api/reports?type=US&limit=1000&offset=0", { cache: "no-store" }),
       ]);
 
       if (snapshotRes.ok) {
@@ -407,7 +429,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
     setArchiveLoading(true);
     try {
       const params = new URLSearchParams();
-      params.set("limit", "60");
+      params.set("limit", "1000");
       params.set("offset", "0");
       if (archiveQuery.trim()) params.set("q", archiveQuery.trim());
       if (archiveDate) params.set("date", archiveDate);
@@ -466,10 +488,10 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
               ? "dashboard"
               : "overview"
       }
-      title={text.title}
-      description={text.desc}
+      title={activePanel === "overview" ? "" : text.title}
+      description={activePanel === "overview" ? undefined : text.desc}
       actions={
-        <>
+        activePanel === "overview" ? null : <>
           <Link href="/invest/reports?tab=KR" className={investUiClass.actionButtonDefault}>
             <FileText size={14} />
             {text.reportViewer}
@@ -491,106 +513,51 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
     >
       {showOverview ? (
         <>
-          <section className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(14,165,233,0.12),_transparent_28%),linear-gradient(180deg,_rgba(9,9,11,0.94),_rgba(15,23,42,0.94))] p-4 sm:p-6">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-              <div className="space-y-4">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.35em] text-sky-200/60">Overview</p>
-                  <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">{text.overviewTitle}</h2>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
-                    {text.overviewDesc}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                  <div className="sm:col-span-2 xl:col-span-1">
-                    <InvestSignalConfidenceCard
-                      confidence={snapshot?.signalConfidence}
-                      updatedAt={snapshot?.updatedAt}
-                      compact
-                    />
-                  </div>
-                  <div className="sm:col-span-2 xl:col-span-3 hidden sm:block">
-                    <InvestQuoteKpiCards snapshot={snapshot || undefined} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  {marketPulse.slice(0, 2).map((market) => (
-                    <article key={market.region} className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-semibold text-white">{market.flag} {market.region}</p>
-                          <p className="mt-1 text-xs text-gray-400">{market.liquidity || "-"}</p>
-                        </div>
-                        <Link href="/invest/dashboard" className="text-xs text-sky-300 hover:text-sky-200">
-                          {text.details}
-                        </Link>
-                      </div>
-                      <div className="mt-3 grid grid-cols-2 gap-2">
-                        <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                          <p className="text-[11px] text-gray-400">{market.indexA.label}</p>
-                          <p className="mt-1 text-base font-semibold text-white">{market.indexA.value}</p>
-                          <p className={`text-xs ${changeTone(market.indexA.change)}`}>{market.indexA.change}</p>
-                        </div>
-                        <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                          <p className="text-[11px] text-gray-400">{market.indexB.label}</p>
-                          <p className="mt-1 text-base font-semibold text-white">{market.indexB.value}</p>
-                          <p className={`text-xs ${changeTone(market.indexB.change)}`}>{market.indexB.change}</p>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+          <section className="rounded-[1.35rem] border border-zinc-200 bg-white p-5 shadow-[0_8px_28px_rgba(15,23,42,0.04)] sm:p-7">
+            <div className="flex min-w-0 flex-col gap-5">
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#2f6f73]">Market Radar</p>
+                <h2 className="mt-2 break-words text-3xl font-extrabold leading-tight tracking-tight text-zinc-950 sm:text-5xl">
+                  SHawn Assets
+                </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600 sm:text-base">
+                  {isKo ? "공개 가능한 시장 데이터와 리포트만 빠르게 확인합니다." : "A fast public view of market data and reports."}
+                </p>
               </div>
 
-              <div className="space-y-3">
-                <article className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                  <p className="text-xs font-semibold text-gray-400">{text.flowGuide}</p>
-                  <div className="mt-3 space-y-2">
-                    {text.flowItems.map((item) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        className="block rounded-xl border border-white/10 bg-white/5 px-3 py-3 transition hover:border-white/20 hover:bg-white/8"
-                      >
-                        <p className="text-sm font-semibold text-white">{item.label}</p>
-                        <p className="mt-1 text-xs text-gray-400">{item.desc}</p>
-                      </Link>
-                    ))}
-                  </div>
-                </article>
+              <Link href="/invest/search" className="flex min-h-[50px] min-w-0 items-center justify-between gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-4 text-sm font-medium text-zinc-500 transition hover:border-[#2f6f73]/40 hover:bg-white hover:text-[#2f6f73]">
+                <span className="flex min-w-0 flex-1 items-center gap-3">
+                  <Search size={18} className="shrink-0" />
+                  <span className="truncate">{isKo ? "종목 · 리포트 · 테마 검색" : "Search ticker · report · theme"}</span>
+                </span>
+                <span className="shrink-0 rounded-full bg-[#2f6f73] px-3 py-2 text-xs font-semibold text-white">{text.search}</span>
+              </Link>
 
-                <article className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-white">{text.actionQueue}</p>
-                    <Link href="/invest/dashboard?focus=watchlist" className="text-xs text-sky-300 hover:text-sky-200">
-                      {text.viewAll}
-                    </Link>
-                  </div>
-                  <div className="mt-3 space-y-2">
-                    {actionQueue.slice(0, 3).map((item) => (
-                      <div key={`${item.region}-${item.symbol}`} className="rounded-xl border border-white/10 bg-white/5 p-3">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <p className="text-sm font-semibold text-white">{item.name || item.symbol}</p>
-                            <p className="text-[11px] text-gray-400">{item.symbol} · {item.region.toUpperCase()}</p>
-                          </div>
-                          <span className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-semibold ${signalTone[item.signal]}`}>
-                            {item.signal}
-                          </span>
-                        </div>
-                        <p className="mt-2 line-clamp-2 text-xs text-gray-300">{isKo ? item.reason : text.sourceNoteKo}</p>
-                      </div>
-                    ))}
-                    {!actionQueue.length ? <p className="text-xs text-gray-400">{text.loadingQueue}</p> : null}
-                  </div>
-                </article>
-
-                <div className="hidden xl:block">
-                  <InvestQuoteKpiNotice snapshot={snapshot || undefined} />
-                </div>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 border-t border-zinc-100 pt-4 text-xs text-zinc-500">
+                <span>{reportsKR.length + reportsUS.length} {isKo ? "리포트" : "reports"}</span>
+                <span>{humanizePortalSource(snapshot?.quoteSource?.sourceName, isKo)}</span>
+                <span>{formatClockLabel(snapshot?.updatedAt)}</span>
+                <span>{isKo ? "투자 조언 아님" : "not advice"}</span>
               </div>
+            </div>
+          </section>
+
+          <section className="rounded-[1.35rem] border border-zinc-200 bg-white p-5 shadow-[0_8px_28px_rgba(15,23,42,0.035)] sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#2f6f73]">Latest</p>
+                <h3 className="mt-1 text-lg font-bold text-zinc-950">{text.stream}</h3>
+              </div>
+              <Link href="/invest/reports?tab=KR" className="text-xs font-semibold text-[#2f6f73] hover:underline">{text.viewAll}</Link>
+            </div>
+            <div className="mt-4 divide-y divide-zinc-100">
+              {[...reportsKR.slice(0, 3), ...reportsUS.slice(0, 1)].slice(0, 4).map((item) => (
+                <Link key={`${item.path || item.title}-${item.time || ""}`} href={item.path || "/invest/reports?tab=KR"} target="_blank" className="block py-3 transition hover:bg-zinc-50">
+                  <p className="line-clamp-1 text-sm font-semibold text-zinc-950">{shortTitle(item.title)}</p>
+                  <p className="mt-1 text-xs text-zinc-500">{formatDateLabel(item.date)} {item.time || ""} · {reportKindLabel(item.type, isKo)}</p>
+                </Link>
+              ))}
+              {reportsKR.length + reportsUS.length === 0 ? <p className="py-5 text-sm text-zinc-500">{text.loadingHub}</p> : null}
             </div>
           </section>
         </>
@@ -600,31 +567,31 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
         <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 className="text-lg font-semibold text-white">{text.unifiedReports}</h2>
-              <p className="mt-1 text-xs text-gray-400">{text.reportDesc}</p>
+              <h2 className="text-lg font-semibold text-zinc-950">{text.unifiedReports}</h2>
+              <p className="mt-1 text-xs text-zinc-500">{text.reportDesc}</p>
             </div>
             <Link href="/invest/dashboard" className={investUiClass.actionButtonDefault}>
               <BarChart3 size={14} />
               {text.openDetail}
             </Link>
           </div>
-          <div className="mb-4 inline-flex rounded-lg border border-white/10 bg-zinc-950/60 p-1">
+          <div className="mb-4 inline-flex rounded-full border border-zinc-200 bg-zinc-100 p-1">
             <button
               type="button"
               onClick={() => setReportTab("KR")}
-              className={`rounded px-3 py-1.5 text-xs ${reportTab === "KR" ? "bg-white text-black" : "text-gray-300"}`}
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${reportTab === "KR" ? "bg-white text-[#2f6f73] shadow-sm" : "text-zinc-600"}`}
             >
               {text.reportTabKr}
             </button>
             <button
               type="button"
               onClick={() => setReportTab("US")}
-              className={`rounded px-3 py-1.5 text-xs ${reportTab === "US" ? "bg-white text-black" : "text-gray-300"}`}
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${reportTab === "US" ? "bg-white text-[#2f6f73] shadow-sm" : "text-zinc-600"}`}
             >
               {text.reportTabUs}
             </button>
           </div>
-          <div className="mb-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-gray-400">
+          <div className="mb-4 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-500">
             {(reportTab === "KR" ? reportsKR : reportsUS).length} {text.reportCountSuffix}
           </div>
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -633,20 +600,20 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
                 key={`${item.path || item.title}-${item.time || ""}`}
                 href={item.path || "#"}
                 target="_blank"
-                className="rounded-2xl border border-white/10 bg-black/20 p-4 transition hover:border-white/30 hover:bg-white/[0.03]"
+                className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-[0_8px_28px_rgba(25,25,25,0.04)] transition hover:border-[#2f6f73]/30 hover:bg-zinc-50"
               >
-                <p className="line-clamp-1 text-sm font-semibold text-white">{shortTitle(item.title)}</p>
-                <p className="mt-2 text-xs text-gray-400">{item.date} {item.time || ""}</p>
+                <p className="line-clamp-1 text-sm font-semibold text-zinc-950">{shortTitle(item.title)}</p>
+                <p className="mt-2 text-xs text-zinc-500">{item.date} {item.time || ""}</p>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-gray-300">
+                  <span className="rounded-full border border-zinc-200 bg-zinc-50 px-2 py-1 text-[11px] text-zinc-600">
                     {item.type || reportTab}
                   </span>
-                  <p className="text-xs text-sky-300">{text.open}</p>
+                  <p className="text-xs font-semibold text-[#2f6f73]">{text.open}</p>
                 </div>
               </Link>
             ))}
             {(reportTab === "KR" ? reportsKR : reportsUS).length === 0 ? (
-              <p className="text-xs text-gray-400">{text.loadingHub}</p>
+              <p className="text-xs text-zinc-500">{text.loadingHub}</p>
             ) : null}
           </div>
         </section>
@@ -656,10 +623,10 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
         <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 className="text-lg font-semibold text-white">{text.unifiedArchive}</h2>
-              <p className="mt-1 text-xs text-gray-400">{text.archiveDesc}</p>
+              <h2 className="text-lg font-semibold text-zinc-950">{text.unifiedArchive}</h2>
+              <p className="mt-1 text-xs text-zinc-500">{text.archiveDesc}</p>
             </div>
-            <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-gray-300">
+            <div className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs text-zinc-600">
               {archiveItems.length} {text.resultSuffix}
             </div>
           </div>
@@ -668,13 +635,13 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
               value={archiveQuery}
               onChange={(e) => setArchiveQuery(e.target.value)}
               placeholder={text.queryPlaceholder}
-              className="rounded-xl border border-gray-700 bg-zinc-950 px-3 py-2.5 text-sm text-gray-100"
+              className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900"
             />
             <input
               type="date"
               value={archiveDate}
               onChange={(e) => setArchiveDate(e.target.value)}
-              className="rounded-xl border border-gray-700 bg-zinc-950 px-3 py-2.5 text-sm text-gray-100"
+              className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900"
               aria-label={text.date}
             />
             <button type="button" onClick={() => void loadArchive()} className={investUiClass.actionButtonDefault}>
@@ -699,19 +666,19 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
                 key={`${item.path || item.title}-${item.time || ""}`}
                 href={item.path || "#"}
                 target="_blank"
-                className="rounded-2xl border border-white/10 bg-black/20 p-4 transition hover:border-white/30 hover:bg-white/[0.03]"
+                className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-[0_8px_28px_rgba(25,25,25,0.04)] transition hover:border-[#2f6f73]/30 hover:bg-zinc-50"
               >
-                <p className="line-clamp-1 text-sm font-semibold text-white">{shortTitle(item.title)}</p>
+                <p className="line-clamp-1 text-sm font-semibold text-zinc-950">{shortTitle(item.title)}</p>
                 <div className="mt-3 flex items-center justify-between gap-2">
-                  <p className="text-xs text-gray-400">{item.date} {item.time || ""}</p>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-gray-300">
+                  <p className="text-xs text-zinc-500">{item.date} {item.time || ""}</p>
+                  <span className="rounded-full border border-zinc-200 bg-zinc-50 px-2 py-1 text-[11px] text-zinc-600">
                     {item.type || "-"}
                   </span>
                 </div>
               </Link>
             ))}
-            {archiveLoading ? <p className="text-xs text-gray-400">{text.loadingHub}</p> : null}
-            {!archiveLoading && archiveItems.length === 0 ? <p className="text-xs text-gray-400">{text.noArchiveResult}</p> : null}
+            {archiveLoading ? <p className="text-xs text-zinc-500">{text.loadingHub}</p> : null}
+            {!archiveLoading && archiveItems.length === 0 ? <p className="text-xs text-zinc-500">{text.noArchiveResult}</p> : null}
           </div>
         </section>
       ) : null}
@@ -724,7 +691,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
             <section className="xl:col-span-7 min-w-0 overflow-hidden rounded-[1.75rem] border border-sky-400/10 bg-[radial-gradient(circle_at_top_left,_rgba(30,64,175,0.16),_transparent_28%),linear-gradient(180deg,_rgba(4,9,24,0.96),_rgba(10,18,36,0.98))] p-4 shadow-[0_24px_80px_rgba(2,6,23,0.45)] sm:p-5">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/55">Why</p>
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/65">Why</p>
                   <h3 className="mt-1 text-lg font-semibold text-white">{text.whyTitle}</h3>
                 </div>
               </div>
@@ -763,7 +730,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
 
             <section className="xl:col-span-5 min-w-0 space-y-4">
               <section className="min-w-0 overflow-hidden rounded-[1.75rem] border border-sky-400/10 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_30%),linear-gradient(180deg,_rgba(4,9,24,0.96),_rgba(10,18,36,0.98))] p-4 shadow-[0_24px_80px_rgba(2,6,23,0.45)] sm:p-5">
-                <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/55">Market</p>
+                <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/65">Market</p>
                 <h3 className="mt-1 text-lg font-semibold text-white">{text.marketCheck}</h3>
                 <div className="mt-4 space-y-3">
                   {marketPulse.slice(0, 2).map((market) => (
@@ -792,7 +759,7 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
               <section className="min-w-0 overflow-hidden rounded-[1.75rem] border border-sky-400/10 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_30%),linear-gradient(180deg,_rgba(4,9,24,0.96),_rgba(10,18,36,0.98))] p-4 shadow-[0_24px_80px_rgba(2,6,23,0.45)] sm:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/55">Reports</p>
+                    <p className="text-[11px] uppercase tracking-[0.28em] text-sky-200/65">Reports</p>
                     <h3 className="mt-1 break-words text-lg font-semibold text-white">{text.continueReading}</h3>
                   </div>
                   <Link href="/invest/reports?tab=KR" className="shrink-0 text-xs text-sky-300 hover:text-sky-200">
@@ -818,9 +785,9 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
         </section>
       ) : null}
 
-      {loading ? (
+      {loading && !showOverview ? (
         <section className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-          <p className="text-sm text-gray-400">{text.loadingHub}</p>
+          <p className="text-sm text-zinc-500">{text.loadingHub}</p>
         </section>
       ) : null}
     </InvestLayout>
@@ -828,19 +795,9 @@ function InvestHubContent({ forcedPanel }: { forcedPanel?: InvestPanel }) {
 }
 
 export default function InvestHubPage() {
-  return <InvestHubPageInner />;
+  return <InvestHubContent />;
 }
 
 export function InvestHubPageInner({ forcedPanel }: { forcedPanel?: InvestPanel } = {}) {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-black text-white">
-          <div className="mx-auto max-w-7xl px-6 py-16 text-sm text-gray-400">Loading invest hub...</div>
-        </div>
-      }
-    >
-      <InvestHubContent forcedPanel={forcedPanel} />
-    </Suspense>
-  );
+  return <InvestHubContent forcedPanel={forcedPanel} />;
 }

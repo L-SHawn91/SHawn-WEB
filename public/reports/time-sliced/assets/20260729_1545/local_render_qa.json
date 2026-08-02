@@ -1,0 +1,68 @@
+{
+  "desktop_1440": {
+    "scrollWidth": 1425,
+    "clientWidth": 1425,
+    "overflow": 0,
+    "titleLines": 2,
+    "images": [
+      {
+        "src": "assets/20260729_1545/shawn_investment_assets_icon.png",
+        "loaded": true,
+        "width": 58,
+        "height": 58,
+        "ratio": 1,
+        "objectFit": "fill"
+      },
+      {
+        "src": "assets/20260729_1545/market_signal_generated_visual_hero.png",
+        "loaded": true,
+        "width": 978,
+        "height": 551,
+        "ratio": 1.77495,
+        "objectFit": "contain"
+      },
+      {
+        "src": "assets/20260729_1545/market_signal_linear_graph_animation.gif",
+        "loaded": true,
+        "width": 656,
+        "height": 369.88,
+        "ratio": 1.77357,
+        "objectFit": "contain"
+      }
+    ],
+    "screenshot": "desktop_1440.png"
+  },
+  "mobile_390": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflow": 0,
+    "titleLines": 2,
+    "images": [
+      {
+        "src": "assets/20260729_1545/shawn_investment_assets_icon.png",
+        "loaded": true,
+        "width": 58,
+        "height": 58,
+        "ratio": 1,
+        "objectFit": "fill"
+      },
+      {
+        "src": "assets/20260729_1545/market_signal_generated_visual_hero.png",
+        "loaded": true,
+        "width": 312,
+        "height": 176.38,
+        "ratio": 1.76896,
+        "objectFit": "contain"
+      },
+      {
+        "src": "assets/20260729_1545/market_signal_linear_graph_animation.gif",
+        "loaded": true,
+        "width": 312,
+        "height": 176.38,
+        "ratio": 1.76896,
+        "objectFit": "contain"
+      }
+    ],
+    "screenshot": "mobile_390.png"
+  }
+}

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국장 중간 점검 — 2026.07.16 12:20</title>
+<style>
+:root {
+  --cream: #F5F0E8;
+  --forest: #2D4A3E;
+  --sage: #7D9B76;
+  --gold: #C4A35A;
+  --dark: #1A1A1A;
+  --card-bg: #FFFFFF;
+  --text: #2D2D2D;
+  --muted: #6B7280;
+  --danger: #B91C1C;
+  --warn: #D97706;
+  --ok: #059669;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; }
+.container { max-width: 720px; margin: 0 auto; padding: 24px 16px; }
+.hero { background: var(--forest); color: white; border-radius: 16px; padding: 32px 24px; margin-bottom: 24px; }
+.hero h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+.hero .date { font-size: 0.875rem; opacity: 0.8; }
+.hero .summary { font-size: 0.95rem; margin-top: 12px; line-height: 1.5; opacity: 0.95; }
+.gold-rule { height: 3px; background: var(--gold); border-radius: 2px; margin: 16px 0; }
+.meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.meta-card { background: var(--card-bg); border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.meta-card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.meta-card .value { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
+.meta-card .value.down { color: var(--danger); }
+.signal-card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.signal-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--forest); }
+.signal-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #F3F4F6; }
+.signal-row:last-child { border-bottom: none; }
+.signal-name { font-weight: 600; font-size: 0.9rem; }
+.signal-value { font-weight: 700; font-size: 0.95rem; }
+.signal-value.down { color: var(--danger); }
+.signal-value.up { color: var(--ok); }
+.signal-note { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.scenario-card { background: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left: 4px solid var(--sage); }
+.scenario-card.warn { border-left-color: var(--warn); }
+.scenario-card.danger { border-left-color: var(--danger); }
+.scenario-label { font-weight: 700; font-size: 0.9rem; }
+.scenario-prob { font-size: 0.8rem; color: var(--muted); }
+.scenario-range { font-weight: 600; margin: 4px 0; }
+.scenario-cond { font-size: 0.85rem; color: var(--muted); }
+.check-list { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.check-list h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--forest); }
+.check-list li { font-size: 0.9rem; padding: 4px 0; margin-left: 20px; }
+.footer { background: var(--dark); color: #9CA3AF; border-radius: 12px; padding: 20px; font-size: 0.8rem; line-height: 1.6; margin-top: 24px; }
+.footer strong { color: #D1D5DB; }
+@media (max-width: 390px) {
+  .container { padding: 16px 12px; }
+  .hero { padding: 24px 16px; }
+  .hero h1 { font-size: 1.25rem; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="hero">
+  <div class="date">2026년 7월 16일 목요일 · 12:20 KST</div>
+  <h1>한국장 중간 점검: 대형 반도체 집중 하락, 중소형주 분리 움직임</h1>
+  <div class="gold-rule"></div>
+  <div class="summary">
+    KOSPI -6.22%로 FAILED_RECOVERY gate(6,807)를 일시 붕괴 후 12:20 기준 탈환.
+    삼성전자·SK하이닉스 mega-cap 집중 하락이 지수 하락 주도.
+    중소형주는 상대적 선방 — 원익IPS -1.51%로 강한 V-반등.
+    개인 투자자 저가 유입이 gate 방어 주도.
+    Constitution Day(7/17) 휴장 전 마지막 거래일.
+  </div>
+</div>
+
+<div class="meta-grid">
+  <div class="meta-card">
+    <div class="label">시장 국면</div>
+    <div class="value">pre-holiday mega-cap 집중 갭다운</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">수급</div>
+    <div class="value">개인 유입 · 외국인 이탈</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">글로벌 맥락</div>
+    <div class="value">VIX 15.67 · US 선물 flat</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">다음 세션</div>
+    <div class="value">7/20(월) · 7/17 휴장</div>
+  </div>
+</div>
+
+<div class="signal-card">
+  <h3>📊 주요 가격 신호</h3>
+  <div class="signal-row">
+    <div>
+      <div class="signal-name">KOSPI</div>
+      <div class="signal-note">FAILED_RECOVERY gate(6,807) 탈환</div>
+    </div>
+    <div class="signal-value down">6,830.98 (-6.22%)</div>
+  </div>
+  <div class="signal-row">
+    <div>
+      <div class="signal-name">KOSDAQ</div>
+      <div class="signal-note">KOSPI 대비 선방 · 중소형주 decoupling</div>
+    </div>
+    <div class="signal-value down">795.12 (-4.14%)</div>
+  </div>
+  <div class="signal-row">
+    <div>
+      <div class="signal-name">삼성전자</div>
+      <div class="signal-note">7/13 저점 252,500 방어 중</div>
+    </div>
+    <div class="signal-value down">256,500 (-8.23%)</div>
+  </div>
+  <div class="signal-row">
+    <div>
+      <div class="signal-name">SK하이닉스</div>
+      <div class="signal-note">저점 대비 +30,000 반등</div>
+    </div>
+    <div class="signal-value down">1,857,000 (-10.81%)</div>
+  </div>
+  <div class="signal-row">
+    <div>
+      <div class="signal-name">원익IPS</div>
+      <div class="signal-note">OPEN -8.83% → -1.51% · 강한 V-반등</div>
+    </div>
+    <div class="signal-value down">140,550 (-1.51%)</div>
+  </div>
+</div>
+
+<div class="signal-card">
+  <h3>🔭 오후 시나리오</h3>
+  <div class="scenario-card">
+    <div class="scenario-label">gate 방어 횡보 <span class="scenario-prob">· 주요</span></div>
+    <div class="scenario-range">KOSPI 6,780 ~ 6,850</div>
+    <div class="scenario-cond">개인 투자자 유입 지속 · 외국인 투자자 이탈 진정 · pre-holiday 거래량 감소</div>
+  </div>
+  <div class="scenario-card">
+    <div class="scenario-label">gate 상단 회복 <span class="scenario-prob">· 제한적</span></div>
+    <div class="scenario-range">KOSPI 6,850 ~ 6,920</div>
+    <div class="scenario-cond">외국인 투자자 이탈 축소 · 기관 저가 유입</div>
+  </div>
+  <div class="scenario-card warn">
+    <div class="scenario-label">gate 재붕괴 <span class="scenario-prob">· 경계</span></div>
+    <div class="scenario-range">KOSPI 6,720 ~ 6,780</div>
+    <div class="scenario-cond">외국인·기관 이탈 재가속 · 프로그램 물량 확대</div>
+  </div>
+</div>
+
+<div class="check-list">
+  <h3>✅ 확인 루틴 (15:45 마감까지)</h3>
+  <ol>
+    <li>KOSPI 6,807 방어선 유지 여부</li>
+    <li>외국인·기관 오후 수급 강도 변화</li>
+    <li>중소형주 decoupling 지속 여부 (KOSDAQ vs KOSPI)</li>
+    <li>14:00 이후 pre-holiday 추가 매물 출현</li>
+    <li>7/20(월) 재개장 갭 리스크 — 3일 공백</li>
+  </ol>
+</div>
+
+<div class="footer">
+  <strong>시장 신호 관찰 노트</strong><br>
+  이 자료는 시장 데이터를 바탕으로 한 관찰 노트이며 투자 조언이 아닙니다.
+  과거 패턴이 미래 결과를 보장하지 않습니다.
+  모든 투자 판단은 본인의 책임입니다.
+  <br><br>
+  데이터 출처: Naver Finance (실시간 KRX) · Yahoo Finance (US 선물/VIX)<br>
+  생성 시점: 2026-07-16 12:20 KST
+</div>
+
+</div>
+</body>
+</html>

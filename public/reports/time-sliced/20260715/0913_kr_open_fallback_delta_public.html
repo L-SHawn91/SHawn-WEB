@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KR Market Check Routine — 2026-07-15 09:39</title>
+<style>
+:root {
+  --forest: #1a3c34;
+  --cream: #faf7f2;
+  --sage: #8b9d83;
+  --gold: #c4a35a;
+  --dark: #0f1f1c;
+  --card-bg: #ffffff;
+  --text: #2d2d2d;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --rise: #1a7a4c;
+  --fall: #c0392b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  line-height: 1.6;
+  word-break: keep-all;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.hero {
+  background: var(--forest);
+  color: var(--cream);
+  padding: 32px 24px;
+  border-radius: 16px;
+  margin-top: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: var(--gold);
+}
+.hero h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+.hero .date { font-size: 0.875rem; color: var(--sage); }
+.hero .conclusion { 
+  margin-top: 16px; padding: 12px 16px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  border-left: 3px solid var(--gold);
+}
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+.meta-chip {
+  background: var(--card-bg);
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  font-size: 0.85rem;
+}
+.meta-chip .label { color: var(--text-muted); font-size: 0.75rem; }
+.meta-chip .value { font-weight: 600; margin-top: 4px; }
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+.kpi-card {
+  background: var(--card-bg);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.kpi-card .name { font-size: 0.8rem; color: var(--text-muted); }
+.kpi-card .price { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
+.kpi-card .change { font-size: 0.9rem; margin-top: 2px; font-weight: 600; }
+.rise { color: var(--rise); }
+.fall { color: var(--fall); }
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--forest);
+  margin: 24px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--sage);
+}
+.flow-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+}
+.flow-chip {
+  background: var(--card-bg);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.flow-chip .amount { font-weight: 600; }
+.delta-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+.delta-table th, .delta-table td {
+  padding: 10px 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+.delta-table th { 
+  background: var(--forest); 
+  color: var(--cream); 
+  font-weight: 600; 
+  text-align: center;
+}
+.delta-table td:first-child { text-align: left; font-weight: 500; }
+.delta-table td:last-child { text-align: center; }
+.limits {
+  background: var(--dark);
+  color: var(--cream);
+  padding: 20px;
+  border-radius: 12px;
+  margin: 24px 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.limits h3 { color: var(--gold); font-size: 0.85rem; margin-bottom: 8px; }
+@media (max-width: 390px) {
+  body { padding: 0 12px; }
+  .hero { padding: 24px 16px; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .meta-grid { grid-template-columns: 1fr 1fr; }
+  .delta-table { font-size: 0.78rem; }
+  .delta-table th, .delta-table td { padding: 6px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Market Check Routine</h1>
+  <div class="date">2026.07.15 09:39 KST · KRX OPEN</div>
+  <div class="conclusion">
+    강세장 유지. 09:30→09:39 자연스러운 consolidation 진행 중.<br>
+    구조적 순유입 기반 견고 — 외국인 +6,996억·기관 +1,489억
+  </div>
+</div>
+
+<div class="meta-grid">
+  <div class="meta-chip"><div class="label">Market Phase</div><div class="value">Active Trading</div></div>
+  <div class="meta-chip"><div class="label">Breadth</div><div class="value">789↑ / 103↓ / 12−</div></div>
+  <div class="meta-chip"><div class="label">VIX</div><div class="value">16.50 (risk-on)</div></div>
+  <div class="meta-chip"><div class="label">USD/KRW</div><div class="value">1,490.18</div></div>
+</div>
+
+<div class="section-title">Index Snapshot</div>
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="name">KOSPI</div>
+    <div class="price">7,304.91</div>
+    <div class="change rise">+6.53%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="name">KOSPI200</div>
+    <div class="price">1,167.85</div>
+    <div class="change rise">+6.92%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="name">KOSDAQ</div>
+    <div class="price">821.54</div>
+    <div class="change rise">+4.79%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="name">KODEX Leverage</div>
+    <div class="price">140,695</div>
+    <div class="change rise">+13.85%</div>
+  </div>
+</div>
+
+<div class="section-title">Semiconductor Axis</div>
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="name">Samsung Electronics</div>
+    <div class="price">277,250</div>
+    <div class="change rise">+5.42%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="name">SK Hynix</div>
+    <div class="price">2,125,000</div>
+    <div class="change rise">+11.08%</div>
+  </div>
+</div>
+
+<div class="section-title">Investor Flow (KRW billions)</div>
+<div class="flow-row">
+  <div class="flow-chip"><span style="color:var(--rise);">Foreign</span> <span class="amount">+6,996</span></div>
+  <div class="flow-chip"><span style="color:var(--rise);">Institution</span> <span class="amount">+1,489</span></div>
+  <div class="flow-chip"><span style="color:var(--fall);">Individual</span> <span class="amount">−8,387</span></div>
+  <div class="flow-chip"><span style="color:var(--rise);">Program</span> <span class="amount">+5,869</span></div>
+</div>
+
+<div class="section-title">Delta from 09:30 (consolidation check)</div>
+<div style="overflow-x:auto;">
+<table class="delta-table">
+  <tr><th>Asset</th><th>09:30</th><th>09:39</th><th>Delta</th></tr>
+  <tr><td>KOSPI</td><td>7,334.79</td><td>7,304.91</td><td class="fall">−0.41%</td></tr>
+  <tr><td>Samsung Elec</td><td>279,500</td><td>277,250</td><td class="fall">−0.81%</td></tr>
+  <tr><td>SK Hynix</td><td>2,141,000</td><td>2,125,000</td><td class="fall">−0.75%</td></tr>
+  <tr><td>Wonik IPS</td><td>139,800</td><td>139,700</td><td>−0.07%</td></tr>
+</table>
+</div>
+<p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">정상 consolidation 범위 내. +7% 급등 후 자연스러운 profit-taking. 구조적 순유입 기반 손상 없음.</p>
+
+<div class="section-title">US Futures (overnight reference)</div>
+<div class="flow-row">
+  <div class="flow-chip">S&P 500 <span class="amount">7,602</span> ↗</div>
+  <div class="flow-chip">Nasdaq 100 <span class="amount">29,919</span> ↗</div>
+  <div class="flow-chip">VIX <span class="amount">16.50</span></div>
+</div>
+
+<div class="section-title">Next Check</div>
+<div style="background:var(--card-bg);padding:16px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin:12px 0 24px;">
+  <strong>12:20 KST Midday</strong><br>
+  <span style="font-size:0.85rem;color:var(--text-muted);">KOSPI 7,200 유지 여부, 오전 profit-taking 깊이, 외국인 순유입 지속성 확인</span>
+</div>
+
+<div class="limits">
+  <h3>Data Limits & Disclaimer</h3>
+  <p>Data: Naver live KRX cash market + Yahoo US futures. Real-time snapshots only — not guaranteed predictions. This is a market data note for informational purposes. Not financial advice, not a trading recommendation. Past patterns do not guarantee future results. All investment decisions involve risk.</p>
+</div>
+
+</body>
+</html>

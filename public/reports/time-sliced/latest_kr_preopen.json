@@ -1,0 +1,50 @@
+{
+  "schema": "market_signal_note.v1",
+  "slot": "0845_kr_preopen",
+  "date": "2026-07-14",
+  "kst": "2026-07-14T08:45:00+09:00",
+  "market_status": "PREOPEN",
+  "market_gate": "KRX",
+  "public_labels": {
+    "title": "Oil Shock 심화 — 장전 신호 확인",
+    "subtitle": "WTI $79 임박·미국 반도체 추가 약세. 갭다운 출발 후 방어선 확인이 우선",
+    "summary": "WTI가 $79.06까지 추가 급등하며 $80 돌파가 임박했습니다. 미국 반도체는 전일 오후 추가 -2%p 하락했고, NQ 선물도 미세 약세입니다. 한국 증시는 갭다운 출발이 확실시되며, FAILED_RECOVERY(약세→반등→재붕괴) 패턴 감시가 오늘 최우선 과제입니다. USD/KRW 안정(1,497원대)과 VIX 20 미만이 systemic crisis는 아님을 시사하나, oil shock 심화가 추가 하방 압력으로 작용할 전망입니다."
+  },
+  "signals": {
+    "ES_futures": {"value": "7,547.25", "change_pct": "-0.21%", "signal": "안정"},
+    "NQ_futures": {"value": "29,367.50", "change_pct": "-0.37%", "signal": "약세"},
+    "WTI_crude": {"value": "$79.06", "change_pct": "+1.18%", "signal": "위험"},
+    "USD_KRW": {"value": "1,497.36", "change_pct": "+0.02%", "signal": "안정"},
+    "VIX": {"value": "17.16", "change_pct": "+14.2%", "signal": "상승"},
+    "US10Y": {"value": "4.609%", "change_pct": "+4bp", "signal": "안정"},
+    "SOXX_prev_close": {"value": "553.61", "change_pct": "-4.77%", "signal": "약세"},
+    "KOSPI_prev_close": {"value": "6,806.93", "change_pct": "-8.95%", "signal": "crash"}
+  },
+  "scenario_focus": [
+    "WTI $80 돌파 시 oil crisis 심화",
+    "SK하이닉스 1,700,000원 방어선 — 붕괴 시 서킷브레이커 가능",
+    "FAILED_RECOVERY(약세→반등→재붕괴) 패턴 감시",
+    "외국인·프로그램 매매 방향",
+    "USD/KRW 1,500 재돌파 여부"
+  ],
+  "next_checks": [
+    {"time": "09:03 KST", "label": "개장 리셋"},
+    {"time": "09:10 KST", "label": "초반 방향 판정"},
+    {"time": "09:20 KST", "label": "반응 확인"},
+    {"time": "12:20 KST", "label": "장중 점검"}
+  ],
+  "data_limits": [
+    "KOSPI200 직접 선물 데이터 미확보 — KPI200·KODEX200 프록시로 대체",
+    "ES/NQ 선물은 아시아 세션 저유동성 — 방향 참고용",
+    "US 반도체·WTI는 전일 정규장 종가 기준",
+    "VIX/US10Y/DXY는 CNBC 지연 데이터"
+  ],
+  "disclaimer": "이 자료는 시장 신호 확인 목적의 공개 정보입니다. 투자 권유나 종목 추천이 아닙니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다. 과거 패턴이 미래 결과를 보장하지 않습니다.",
+  "public_safety_scan": "pass",
+  "visual_assets": {
+    "hero": "pending",
+    "graph": "pending",
+    "icon": "pending"
+  },
+  "wordpress_status": "blocked — WordPress credentials not available in current environment"
+}

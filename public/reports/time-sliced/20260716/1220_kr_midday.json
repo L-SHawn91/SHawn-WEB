@@ -1,0 +1,38 @@
+{
+  "schema": "market_signal_public.v1",
+  "content_class": "reference",
+  "slot": "1220_kr_midday",
+  "date": "2026-07-16",
+  "kst_time": "12:20",
+  "market": "KRX",
+  "title": "한국장 중간 점검: 대형 반도체 집중 하락, 중소형주 분리 움직임",
+  "summary": "KOSPI -6.22%로 FAILED_RECOVERY gate(6,807)를 일시 붕괴 후 12:20 기준 탈환. 삼성전자·SK하이닉스 mega-cap 집중 하락이 지수 하락 주도. 중소형주는 상대적 선방 — 원익IPS -1.51%로 강한 V-반등. 개인 투자자 저가 유입이 gate 방어 주도. Constitution Day(7/17) 휴장 전 마지막 거래일로 pre-holiday 차익실현 집중.",
+  "key_signals": [
+    {"label": "KOSPI", "value": "6,830.98", "change_pct": "-6.22%", "note": "FAILED_RECOVERY gate(6,807) 탈환. 10:00 붕괴 → 12:20 회복"},
+    {"label": "KOSDAQ", "value": "795.12", "change_pct": "-4.14%", "note": "KOSPI 대비 선방. 중소형주 decoupling"},
+    {"label": "삼성전자", "value": "256,500", "change_pct": "-8.23%", "note": "7/13 저점 252,500 방어 중"},
+    {"label": "SK하이닉스", "value": "1,857,000", "change_pct": "-10.81%", "note": "MU shock 직격탄. 10:26 저점 대비 +30,000 반등"},
+    {"label": "원익IPS", "value": "140,550", "change_pct": "-1.51%", "note": "OPEN -8.83% → -1.51%. 중소형주 강한 V-반등"}
+  ],
+  "market_context": {
+    "regime": "pre-holiday mega-cap concentration gap-down",
+    "breadth": "상승종목 우세(09:03 기준 479>381). 지수 하락은 대형 반도체 집중",
+    "foreign_flow": "외국인 투자자 이탈 우위. 개인 투자자 저가 유입",
+    "global_context": "VIX 15.67(안정). US 선물 flat. 글로벌 systemic shock 아님",
+    "next_session": "7/20(월). 7/17 Constitution Day 휴장"
+  },
+  "scenarios": [
+    {"label": "gate 방어 횡보", "probability": "주요", "range": "6,780~6,850", "condition": "개인 투자자 유입 지속. 외국인 투자자 이탈 진정"},
+    {"label": "gate 상단 회복", "probability": "제한적", "range": "6,850~6,920", "condition": "외국인 투자자 이탈 축소. 기관 저가 유입"},
+    {"label": "gate 재붕괴", "probability": "경계", "range": "6,720~6,780", "condition": "외국인·기관 이탈 재가속"}
+  ],
+  "check_routine": [
+    "KOSPI 6,807 방어선 유지 여부",
+    "외국인·기관 오후 수급 강도 변화",
+    "중소형주 decoupling 지속 여부",
+    "14:00 이후 pre-holiday 추가 매물",
+    "7/20(월) 재개장 갭 리스크"
+  ],
+  "disclaimer": "이 자료는 시장 신호 관찰 노트이며 투자 조언이 아닙니다. 과거 패턴이 미래 결과를 보장하지 않습니다. 모든 투자 판단은 본인의 책임입니다.",
+  "no_trade_instruction": true
+}

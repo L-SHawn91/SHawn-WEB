@@ -3,6 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 
 type ReportItem = {
+  schema_version?: string;
   date?: string;
   time?: string;
   type?: string;
@@ -11,7 +12,17 @@ type ReportItem = {
   json_path?: string;
   filename?: string;
   timestamp?: string;
+  content_class?: string;
+  disclaimer?: boolean;
+  data_quality?: string;
 };
+
+const REPORTS_CONTRACT = {
+  schema_version: "market_digest.web.index.v1",
+  content_class: "reference",
+  disclaimer: "For education and commentary only, not investment advice.",
+  source: "SHawn-INV web export; SHawn-WEB is a read-only reader surface",
+} as const;
 
 let _cache: { mtimeMs: number; items: ReportItem[] } | null = null;
 
@@ -39,7 +50,7 @@ export async function GET(req: Request) {
   const type = (url.searchParams.get("type") || "").trim().toUpperCase(); // KR | US | ""
   const date = (url.searchParams.get("date") || "").trim(); // YYYY-MM-DD
   const offset = Math.max(0, asInt(url.searchParams.get("offset"), 0));
-  const limit = Math.min(200, Math.max(1, asInt(url.searchParams.get("limit"), 50)));
+  const limit = Math.min(1000, Math.max(1, asInt(url.searchParams.get("limit"), 1000)));
 
   try {
     let items = await loadIndex();
@@ -69,6 +80,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(
       {
+        contract: REPORTS_CONTRACT,
         items: page,
         total,
         offset,

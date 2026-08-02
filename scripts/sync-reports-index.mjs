@@ -34,6 +34,7 @@ function buildEntry(file, parsed, fromFile = {}) {
   const timestamp = parsedDate?.timestamp || meta.timestamp || new Date().toISOString();
 
   return {
+    schema_version: "market_digest.web.v1",
     date,
     time,
     type,
@@ -42,6 +43,9 @@ function buildEntry(file, parsed, fromFile = {}) {
     filename,
     timestamp,
     json_path: `/reports/${filename}`,
+    content_class: "reference",
+    disclaimer: true,
+    data_quality: meta.data_quality || "public-summary",
     source: "auto-sync",
   };
 }
@@ -81,6 +85,19 @@ async function main() {
   const sorted = filtered.sort((a, b) => String(b.timestamp || "").localeCompare(String(a.timestamp || "")));
 
   await fs.writeFile(INDEX_PATH, `${JSON.stringify(sorted, null, 2)}\n`, "utf-8");
+  const latest = {
+    schema_version: "market_digest.web.latest.v1",
+    content_class: "reference",
+    generated_at: sorted[0]?.timestamp || new Date().toISOString(),
+    items: Object.fromEntries(
+      ["KR", "US", "MORNING", "EVENING"].map((type) => [type, sorted.find((item) => item.type === type) || null])
+    ),
+    compliance: {
+      disclaimer: "For education and commentary only, not investment advice.",
+      no_trade_instruction: true,
+    },
+  };
+  await fs.writeFile(path.join(REPORT_ROOT, "latest.json"), `${JSON.stringify(latest, null, 2)}\n`, "utf-8");
   console.log(`updated index.json with ${sorted.length} items`);
 }
 

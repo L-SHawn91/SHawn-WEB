@@ -1,0 +1,63 @@
+{
+  "schema": "market_signal_note.v1",
+  "content_class": "public_market_note",
+  "title": "2026-07-08 23:40 미국 첫 시간 시장 신호 노트",
+  "slug": "2026-07-08-2340-us-first-hour-market-signal-note",
+  "generated_at_kst": "2026-07-08T23:47:17+09:00",
+  "market_gate": "Nasdaq public market-info open-day evidence: Market Open, isBusinessDay=true",
+  "summary": "미국 정규장 첫 시간에는 반도체 ETF가 QQQ보다 강하게 회복했지만, EWY와 변동성·선물 온도계는 아직 조심스러운 확인 루틴을 요구한다.",
+  "key_points": [
+    "QQQ -0.38%, SOXX +0.85%, SMH +0.70%로 반도체 ETF가 상대적으로 강했다.",
+    "개별 반도체는 NVDA +0.14%, AMD -0.74%, MU +0.32%, TSM +0.49%, ASML +0.26%, AVGO +4.56%로 엇갈렸다.",
+    "EWY -2.26%는 한국 시장 프록시가 아직 약하다는 보조 신호다.",
+    "선물 온도계는 NQ -0.35%, ES -0.60%, YM -1.19%, RTY -0.92%, VIX 선물 +4.03%로 조심스러운 쪽에 남았다.",
+    "매크로 보조 지표는 US10Y 4.585, VIX 약 +10%, DXY +0.10%, USD/KRW 약 1508.6이다."
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "SOXX·SMH 강세가 정규장 중반까지 유지",
+      "reading": "반도체 충격 완화 여부를 다시 확인한다"
+    },
+    {
+      "condition": "EWY 약세와 USD/KRW 불안이 동시에 지속",
+      "reading": "한국 시장 프록시는 낮은 신뢰도로 읽는다"
+    },
+    {
+      "condition": "NQ·ES·RTY와 VIX 온도계가 함께 안정",
+      "reading": "다음 한국 장전의 경계 강도를 한 단계 낮출 수 있다"
+    },
+    {
+      "condition": "VIX·금리 상승과 선물 약세가 재확대",
+      "reading": "성장주 온도계는 다시 보수적으로 해석한다"
+    }
+  ],
+  "limitations": [
+    "일부 선물·매크로 값은 지연 또는 quote-cache일 수 있다.",
+    "첫 시간 회복은 하루 전체 방향을 확정하지 않는다.",
+    "공개 시장 자료를 읽기 쉽게 정리한 것이며 개인 판단을 대신하지 않는다."
+  ],
+  "visual_values": [
+    {
+      "label": "QQQ",
+      "value": -0.379
+    },
+    {
+      "label": "SOXX",
+      "value": 0.852
+    },
+    {
+      "label": "SMH",
+      "value": 0.698
+    },
+    {
+      "label": "EWY",
+      "value": -2.262
+    }
+  ],
+  "visual_bundle": {
+    "hero": "/reports/time-sliced/assets/20260708_2340/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260708_2340/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260708_2340/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/assets/20260708_2340/visual_blog_pack_manifest.json"
+  }
+}

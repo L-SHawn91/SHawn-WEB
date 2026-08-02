@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Market First Hour Check — July 16, 2026</title>
+<style>
+:root {
+  --cream: #F5F0E8;
+  --forest: #2D4A3E;
+  --sage: #7A9A7E;
+  --gold: #C4A35A;
+  --dark: #1A1A1A;
+  --card-bg: #FFFFFF;
+  --text: #2D2D2D;
+  --muted: #6B6B6B;
+  --border: #E5E0D8;
+  --red-soft: #E8D5D5;
+  --green-soft: #D5E8D5;
+  --amber-soft: #E8E0D0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  line-height: 1.6;
+  word-break: keep-all;
+}
+.container { max-width: 720px; margin: 0 auto; padding: 24px 16px; }
+.hero {
+  background: var(--forest);
+  color: var(--cream);
+  padding: 32px 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gold);
+}
+.hero h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+.hero .date { font-size: 0.9rem; opacity: 0.85; }
+.hero .subtitle { font-size: 1rem; margin-top: 8px; opacity: 0.9; }
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.meta-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.meta-card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.meta-card .value { font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
+.section {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--forest);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--gold);
+}
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.chip {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.chip.red { background: var(--red-soft); color: #8B3A3A; }
+.chip.green { background: var(--green-soft); color: #3A6B3A; }
+.chip.amber { background: var(--amber-soft); color: #8B6B3A; }
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.kpi-card {
+  background: #FAF8F4;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.kpi-card .name { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+.kpi-card .price { font-size: 1.05rem; font-weight: 700; margin: 4px 0; }
+.kpi-card .change { font-size: 0.85rem; font-weight: 600; }
+.kpi-card .change.down { color: #C0392B; }
+.kpi-card .change.up { color: #27AE60; }
+.signal-list { list-style: none; }
+.signal-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.signal-list li:last-child { border-bottom: none; }
+.signal-list .signal-label { font-weight: 500; }
+.signal-list .signal-value { font-weight: 600; font-size: 0.9rem; }
+.next-check {
+  background: var(--forest);
+  color: var(--cream);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.next-check h2 { color: var(--gold); border-bottom-color: var(--gold); }
+.next-check .check-time { font-size: 1.2rem; font-weight: 700; }
+.next-check .check-detail { margin-top: 8px; opacity: 0.9; font-size: 0.9rem; }
+.footer {
+  background: var(--dark);
+  color: #999;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 1.5;
+}
+.footer strong { color: #CCC; }
+@media (max-width: 390px) {
+  .container { padding: 12px 8px; }
+  .hero { padding: 20px 16px; }
+  .hero h1 { font-size: 1.2rem; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Hero -->
+<div class="hero">
+  <div class="date">2026.07.16 — 23:40 KST (10:41 ET)</div>
+  <h1>US Market First Hour Check</h1>
+  <div class="subtitle">Premarket semiconductor panic eased. Base scenario confirmed.</div>
+</div>
+
+<!-- Meta Grid -->
+<div class="meta-grid">
+  <div class="meta-card">
+    <div class="label">Market Phase</div>
+    <div class="value">US Regular Session — First Hour</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">Next Korea Session</div>
+    <div class="value">July 20 (Mon) — After 3-Day Break</div>
+  </div>
+</div>
+
+<!-- Market Isolation Chips -->
+<div class="section">
+  <h2>Market Snapshot</h2>
+  <div class="chip-row">
+    <span class="chip amber">Semiconductors Stabilizing</span>
+    <span class="chip green">Broad Market Rotation</span>
+    <span class="chip green">VIX Low — No Panic</span>
+    <span class="chip amber">Korea ETF Stable</span>
+  </div>
+</div>
+
+<!-- KPI Grid -->
+<div class="section">
+  <h2>Key Assets — First Hour (10:41 ET)</h2>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="name">QQQ</div><div class="price">711.13</div><div class="change down">-0.92%</div></div>
+    <div class="kpi-card"><div class="name">SOXX</div><div class="price">537.24</div><div class="change down">-3.25%</div></div>
+    <div class="kpi-card"><div class="name">SMH</div><div class="price">575.08</div><div class="change down">-2.66%</div></div>
+    <div class="kpi-card"><div class="name">NVDA</div><div class="price">207.98</div><div class="change down">-2.13%</div></div>
+    <div class="kpi-card"><div class="name">AMD</div><div class="price">510.21</div><div class="change down">-3.58%</div></div>
+    <div class="kpi-card"><div class="name">MU</div><div class="price">859.99</div><div class="change down">-4.90%</div></div>
+    <div class="kpi-card"><div class="name">TSM</div><div class="price">413.01</div><div class="change down">-1.54%</div></div>
+    <div class="kpi-card"><div class="name">ASML</div><div class="price">1,821.02</div><div class="change up">+0.32%</div></div>
+    <div class="kpi-card"><div class="name">AVGO</div><div class="price">381.85</div><div class="change down">-3.15%</div></div>
+    <div class="kpi-card"><div class="name">EWY</div><div class="price">166.25</div><div class="change down">-3.14%</div></div>
+  </div>
+</div>
+
+<!-- Futures & Macro -->
+<div class="section">
+  <h2>Futures & Macro</h2>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="name">S&P 500 Futures</div><div class="price">7,612</div><div class="change down">-0.04%</div></div>
+    <div class="kpi-card"><div class="name">Nasdaq Futures</div><div class="price">29,468</div><div class="change down">-0.76%</div></div>
+    <div class="kpi-card"><div class="name">Dow Futures</div><div class="price">53,000</div><div class="change up">+0.19%</div></div>
+    <div class="kpi-card"><div class="name">Russell Futures</div><div class="price">3,007</div><div class="change up">+0.50%</div></div>
+    <div class="kpi-card"><div class="name">VIX</div><div class="price">15.86</div><div class="change" style="color:#27AE60;">Low</div></div>
+    <div class="kpi-card"><div class="name">US 10Y</div><div class="price">4.588%</div><div class="change" style="color:#6B6B6B;">—</div></div>
+    <div class="kpi-card"><div class="name">DXY</div><div class="price">100.69</div><div class="change" style="color:#6B6B6B;">—</div></div>
+    <div class="kpi-card"><div class="name">USD/KRW</div><div class="price">1,480.36</div><div class="change" style="color:#6B6B6B;">—</div></div>
+  </div>
+</div>
+
+<!-- Key Signals -->
+<div class="section">
+  <h2>Key Signals</h2>
+  <ul class="signal-list">
+    <li><span class="signal-label">Semiconductors</span><span class="signal-value" style="color:#8B6B3A;">Stabilizing — premarket panic eased</span></li>
+    <li><span class="signal-label">Broad Market</span><span class="signal-value" style="color:#3A6B3A;">Rotation support — small-caps leading</span></li>
+    <li><span class="signal-label">Fear Gauge</span><span class="signal-value" style="color:#3A6B3A;">VIX 15.86 — no systemic crisis</span></li>
+    <li><span class="signal-label">Korea ETF</span><span class="signal-value" style="color:#8B6B3A;">EWY -3.14% — in line with KOSPI close</span></li>
+    <li><span class="signal-label">Premarket Fade</span><span class="signal-value" style="color:#3A6B3A;">SOXX -5.16%→-3.25% — calibration accurate</span></li>
+  </ul>
+</div>
+
+<!-- Next Check -->
+<div class="next-check">
+  <h2>Next Check</h2>
+  <div class="check-time">July 20, 2026 — 06:45 KST</div>
+  <div class="check-detail">Korea market reopens after 3-day break (Constitution Day + weekend). US July 16 close will be the primary prior for the July 20 open.</div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <strong>Market Observation Note</strong><br>
+  This is a market data observation, not investment advice. Past patterns do not guarantee future results.<br>
+  Data from public financial information services. Delayed or end-of-day data may apply.<br>
+  No trading instructions. No broker or order execution.
+</div>
+
+</div>
+</body>
+</html>

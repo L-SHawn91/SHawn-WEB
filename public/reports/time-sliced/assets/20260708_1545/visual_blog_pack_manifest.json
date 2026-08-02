@@ -1,0 +1,16 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "slot": "20260708_1545",
+  "source_note": "../../2026-07-08_15-45_KR_CLOSE_MARKET_SIGNAL.json",
+  "assets": {
+    "hero": "market_signal_generated_visual_hero.png",
+    "graph_animation": "market_signal_linear_graph_animation.gif",
+    "shawn_icon": "shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "generated_image": "official SHawn generated investment asset used as editorial visual source",
+    "line_graph_animation": "snapshot values linearly eased for explanation; not tick-by-tick data",
+    "shawn_icon": "official SHawn x SHide operational icon pack",
+    "public_safe": true
+  }
+}

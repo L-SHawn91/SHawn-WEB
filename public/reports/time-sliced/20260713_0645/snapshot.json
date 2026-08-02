@@ -1,0 +1,31 @@
+{
+  "slot": "0645_kr_prerisk",
+  "date": "2026-07-13",
+  "time_kst": "06:45",
+  "market": "KRX",
+  "next_slot": "0845_kr_preopen",
+  "title": "Market Signal Note — Monday Pre-Open",
+  "one_liner": "US Friday recovery supports constructive Monday open; 08:45 preopen confirmation needed.",
+  "signals": {
+    "us_market": "constructive_recovery",
+    "nvidia": "strong_positive",
+    "vix": "declining",
+    "krw": "strengthening",
+    "us10y": "elevated_stable",
+    "risk_regime": "constructive_selective"
+  },
+  "watch_points": [
+    "08:45 KOSPI200/KODEX200 indicative prices",
+    "Samsung Electronics and SK Hynix preopen direction",
+    "US Monday futures opening",
+    "09:03 actual open vs preopen",
+    "09:10 foreign flow direction"
+  ],
+  "data_limits": [
+    "US Monday futures not active at report time",
+    "Weekend news not comprehensively scanned",
+    "KOSPI200 direct futures unavailable — using ETF proxies"
+  ],
+  "no_trade_instruction": true,
+  "generated_at": "2026-07-13T06:45:00+09:00"
+}

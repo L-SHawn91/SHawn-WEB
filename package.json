@@ -28,7 +28,12 @@
     "jcr:build-index": "node scripts/build-jcr-index.mjs",
     "search:build-ontology": "node scripts/build-search-ontology.mjs",
     "check:search-ontology": "node scripts/check-search-ontology.mjs",
-    "check:public-safety": "node scripts/public-safety-scan.mjs"
+    "check:public-safety": "node scripts/public-safety-scan.mjs",
+    "test:invest-public-safety": "node scripts/test-invest-public-safety.mjs",
+    "sync:wordpress-public": "node scripts/sync-wordpress-public-posts.mjs",
+    "sync:wordpress-public:dry": "node scripts/sync-wordpress-public-posts.mjs --dry-run",
+    "sync:public-content": "node scripts/sync-public-content.mjs",
+    "test:wordpress-public-sync": "node scripts/test-wordpress-public-sync.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

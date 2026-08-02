@@ -1,0 +1,17 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "미국 장전, 반도체 약세가 넓어진 날의 공개 시장 신호",
+  "source_note": "reports/public_safe/20260717_2220_us_preopen/market_signal_20260717_2220.json",
+  "assets": {
+    "hero": "reports/public_safe/20260717_2220_us_preopen/assets/market_signal_generated_visual_hero.png",
+    "graph_animation": "reports/public_safe/20260717_2220_us_preopen/assets/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "reports/public_safe/20260717_2220_us_preopen/assets/shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "generated_image": "uses official SHawn GPT-image-2 generated investment asset as composited editorial visual source",
+    "aspect_ratio": "16:9 for both editorial hero and graph animation; responsive inline display uses the same ratio and the theme-cropped featured image is cleared",
+    "line_graph_animation": "direction-aware signed snapshot reveal; negative values move down, positive values move up, and the final frame does not loop-reset to zero",
+    "shawn_icon": "official SHawn x SHide operational icon pack",
+    "public_safe": true
+  }
+}

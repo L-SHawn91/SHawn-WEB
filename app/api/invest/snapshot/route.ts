@@ -5,7 +5,7 @@ import path from "path";
 type SignalTrend = "up" | "down" | "flat";
 type RiskLevel = "Low" | "Medium" | "High";
 type StrategyMode = "balanced" | "alpha" | "defensive";
-type SignalAction = "Buy" | "Hold" | "Trim";
+type SignalAction = "Focus" | "Watch" | "Caution";
 
 type Provenance = {
   sources: string[];
@@ -30,10 +30,10 @@ type WeightProfile = {
   news: number;
 };
 
-type DecisionThresholds = {
-  buy: number;
-  hold: { min: number; max: number };
-  trim: number;
+type ObservationThresholds = {
+  focus: number;
+  watch: { min: number; max: number };
+  caution: number;
 };
 
 type SnapshotReason = {
@@ -158,6 +158,7 @@ type RebalanceSuggestion = {
   symbol: string;
   name?: string;
   action: "up" | "down" | "hold";
+  actionLabel: string;
   deltaPct: number;
   reason: string;
 };
@@ -208,9 +209,9 @@ const BASE_SIGNAL_MODULES: SignalModule[] = [
     subtitle: "기관/외국인 수급",
     weight: 30,
     trend: "flat",
-    checks: ["기관 순매수", "대량 거래", "진입/청산 시그널", "외국인 유입"],
+    checks: ["기관 순매수", "대량 거래", "관찰/위험 신호", "외국인 유입"],
     confidence: 69,
-    action: "외국인 유입 구간에서 비중 상향 검토",
+    action: "외국인 유입 구간에서 관찰 우선순위 상향 검토",
     palette: {
       from: "from-blue-900/35",
       to: "to-cyan-900/35",
@@ -228,7 +229,7 @@ const BASE_SIGNAL_MODULES: SignalModule[] = [
     trend: "down",
     checks: ["GDP", "금리 정책", "인플레이션", "환율"],
     confidence: 58,
-    action: "금리 민감 산업 비중 축소 권고",
+    action: "금리 민감 산업 노출 위험 점검",
     palette: {
       from: "from-green-900/35",
       to: "to-emerald-900/35",
@@ -317,7 +318,7 @@ const BASE_WATCH: WatchItem[] = [
   {
     symbol: "SMCI",
     name: "Super Micro Computer",
-    signal: "Buy",
+    signal: "Focus",
     score: 88,
     reason: "AI 데이터센터 실적 개선 기대",
     catalyst: "분기 실적 가이던스 상향",
@@ -326,7 +327,7 @@ const BASE_WATCH: WatchItem[] = [
   {
     symbol: "AMZN",
     name: "Amazon",
-    signal: "Hold",
+    signal: "Watch",
     score: 61,
     reason: "가격대비 모멘텀 완만",
     catalyst: "AWS 성장 둔화 완화 징후",
@@ -335,7 +336,7 @@ const BASE_WATCH: WatchItem[] = [
   {
     symbol: "TSLA",
     name: "Tesla",
-    signal: "Trim",
+    signal: "Caution",
     score: 46,
     reason: "고위험 구간 확대",
     catalyst: "마진 압박 + 자본지출 부담",
@@ -579,7 +580,7 @@ function buildNarrativeFallback(item: QuantReportItem): string {
   const mom = Number(item.price_info?.change_pct || 0);
 
   const lines: string[] = [];
-  lines.push(`종합 점수 ${score.toFixed(1)}점 기준으로 ${score >= 60 ? "매수 우위" : score <= 40 ? "보수적 접근" : "관망"} 구간입니다.`);
+  lines.push(`종합 점수 ${score.toFixed(1)}점 기준으로 ${score >= 60 ? "긍정 신호 우세" : score <= 40 ? "보수적 접근" : "관망"} 구간입니다.`);
   lines.push(`기술(${expert.toFixed(0)})·수급(${whale.toFixed(0)})·거시(${macro.toFixed(0)})·뉴스(${news.toFixed(0)})를 합산해 판단했습니다.`);
 
   if (mom > 0.8) {
@@ -587,7 +588,7 @@ function buildNarrativeFallback(item: QuantReportItem): string {
   } else if (mom < -0.8) {
     lines.push(`단기 모멘텀이 ${mom.toFixed(2)}%로 약세이므로 변동성 관리가 필요합니다.`);
   } else {
-    lines.push("단기 변동은 제한적이어서 분할 접근이 유효합니다.");
+    lines.push("단기 변동은 제한적이어서 관찰 구간으로 분류됩니다.");
   }
 
   return lines.join(" ");
@@ -757,9 +758,9 @@ function applyModeWeight(modules: SignalModule[], mode: StrategyMode): SignalMod
 
 function parseSignalFromVerdict(verdict = ""): SignalAction {
   const lower = String(verdict || "").toLowerCase();
-  if (lower.includes("buy")) return "Buy";
-  if (lower.includes("sell") || lower.includes("trim")) return "Trim";
-  return "Hold";
+  if (lower.includes("buy") || lower.includes("positive") || verdict.includes("긍정")) return "Focus";
+  if (lower.includes("sell") || lower.includes("trim") || verdict.includes("주의")) return "Caution";
+  return "Watch";
 }
 
 function inferRiskLevel(item: QuantReportItem): RiskLevel {
@@ -989,6 +990,7 @@ function computeRebalanceSuggestions(holdings: Holding[], signalScore: number): 
         symbol: item.symbol,
         name: item.name,
         action: "down",
+        actionLabel: "노출 위험 점검",
         deltaPct: 1.5,
         reason: "고위험+고농축 구간에서 완만 감축", 
       });
@@ -1002,8 +1004,9 @@ function computeRebalanceSuggestions(holdings: Holding[], signalScore: number): 
         symbol: top.symbol,
         name: top.name,
         action: "up",
+        actionLabel: "관찰 우선순위 상향",
         deltaPct: 1.0,
-        reason: "우호적 신호 구간에서 점진적 비중 확대",
+        reason: "우호적 신호 구간에서 관찰 우선순위 상향",
       });
     }
   }
@@ -1013,6 +1016,7 @@ function computeRebalanceSuggestions(holdings: Holding[], signalScore: number): 
       symbol: holdings[0]?.symbol || "Portfolio",
       name: holdings[0]?.name,
       action: "hold",
+      actionLabel: "현재 유지 관찰",
       deltaPct: 0,
       reason: "현재 제약 내에서 즉시 조정 불필요",
     });
@@ -1098,7 +1102,7 @@ export async function GET(request: NextRequest) {
   if (upstream) {
     try {
       const u = new URL(upstream);
-      upstreamSync = { ...upstreamSync, attempted: true, origin: u.origin };
+      upstreamSync = { ...upstreamSync, attempted: true };
       u.searchParams.set('mode', fallbackMode);
       if (new URL(request.url).searchParams.get('simulate') === '1') {
         u.searchParams.set('simulate', '1');
@@ -1107,21 +1111,36 @@ export async function GET(request: NextRequest) {
       const r = await fetch(u.toString(), { cache: 'no-store', signal: AbortSignal.timeout(10000) });
       if (r.ok) {
         const data = await r.json();
+        const {
+          holdings: _publicHoldings,
+          risk: _publicRisk,
+          rebalanceSuggestions: _publicRebalanceSuggestions,
+          simulation: _publicSimulation,
+          upstreamSync: upstreamData,
+          provenance: provenanceData,
+          ...safeData
+        } = data || {};
+        const safeSources = Array.isArray(provenanceData?.sources)
+          ? provenanceData.sources.filter((source: unknown) => {
+              const label = String(source || "");
+              return !label.startsWith("upstream:") && !label.includes("://");
+            })
+          : [];
+        const { origin: _hiddenOrigin, ...safeUpstreamData } = upstreamData || {};
         return NextResponse.json(
           {
-            ...data,
+            ...safeData,
             upstreamSync: {
-              ...(data?.upstreamSync || {}),
+              ...safeUpstreamData,
               configured: true,
               attempted: true,
               status: "success",
-              origin: u.origin,
               message: "SHawn-INV 업스트림 연동 정상",
               httpStatus: r.status,
             },
             provenance: {
-              ...(data?.provenance || {}),
-              sources: [...(data?.provenance?.sources || []), `upstream:${u.origin}`],
+              ...(provenanceData || {}),
+              sources: safeSources.length ? safeSources : ["Configured upstream", "Public display bundle"],
             },
           },
           { headers: { 'Cache-Control': 'no-store' } }
@@ -1165,11 +1184,8 @@ export async function GET(request: NextRequest) {
   );
 
   const holdings = mergedHoldings.length ? mergedHoldings : BASE_HOLDINGS;
+  const observationCount = holdings.length;
   const watchlist = mergedWatchlist.length ? mergedWatchlist : BASE_WATCH;
-  const { highRiskShare, concentration, weightedPnl } = computeHoldingsRisk(holdings);
-  const rebalanceSuggestions = computeRebalanceSuggestions(holdings, signalConfidence);
-  const simulation = shouldSimulate ? simulateRebalance(holdings, rebalanceSuggestions) : null;
-
   const liveMarkets = await fetchLiveMarkets();
   const driftDetector = buildDriftDetector(liveMarkets.markets, modules, signalConfidence);
 
@@ -1206,7 +1222,7 @@ export async function GET(request: NextRequest) {
     upstreamSync,
     weights: MODE_WEIGHTS_PROFILES[fallbackMode],
     provenance: {
-      sources: ["public/reports/index.json", "public/reports/*.json", liveMarkets.sourceName],
+      sources: ["Local report index", "Public report bundle", liveMarkets.sourceName],
       generatedAt: new Date().toISOString(),
       refreshRule: "latest timestamp from report index by type + live quote refresh on request",
       ...(upstreamFailure ? { upstreamFailure } : {}),
@@ -1218,30 +1234,21 @@ export async function GET(request: NextRequest) {
     },
     signalConfidence,
     modules,
-    decisionThresholds: {
-      buy: 75,
-      hold: { min: 40, max: 75 },
-      trim: 40,
+    observationThresholds: {
+      focus: 75,
+      watch: { min: 40, max: 75 },
+      caution: 40,
     },
     reasoning: reasons,
     relatives: relative,
 
     markets: liveMarkets.markets,
-    holdings,
     watchlist,
-    risk: {
-      concentration,
-      highRiskShare,
-      weightedPnl,
-      rebalanceNeed: highRiskShare >= 20,
-    },
-    rebalanceSuggestions,
-    simulation,
     kpis: {
-      portfolio: "$5.2M",
-      annualReturn: "+15.3%",
-      positionCount: holdings.length,
-      volatility: "10.6%",
+      portfolio: `${observationCount} observation items`,
+      annualReturn: "reference-only",
+      positionCount: observationCount,
+      volatility: "snapshot label",
     },
   };
 

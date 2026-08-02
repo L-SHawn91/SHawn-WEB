@@ -180,9 +180,9 @@ function isPlaceholderNarrative(text?: string): boolean {
 function buildNarrativeFallback(report: StockReport): string {
     const score = Number(report.score || 0);
     const mom = Number(report.price_info?.change_pct || 0);
-    const verdict = score >= 70 ? "강한 매수 후보" : score >= 60 ? "매수 우위" : score <= 40 ? "보수적 관점 필요" : "관망 구간";
+    const verdict = score >= 70 ? "강한 관찰 후보" : score >= 60 ? "긍정 신호 우세" : score <= 40 ? "보수적 관점 필요" : "관망 구간";
     const momentum = mom >= 0 ? `단기 변동은 +${mom.toFixed(2)}%` : `단기 변동은 ${mom.toFixed(2)}%`;
-    return `현재 ${verdict}로 해석됩니다. ${momentum}이며, 분할 진입과 손절 기준을 함께 관리하는 접근이 적절합니다.`;
+    return `현재 ${verdict}로 해석됩니다. ${momentum}이며, 단계적 확인과 위험 기준을 함께 점검하는 참고 접근이 적절합니다.`;
 }
 
 export function ReportDetailView({ data, loading, onDateSelect }: ReportDetailViewProps) {
@@ -239,8 +239,8 @@ export function ReportDetailView({ data, loading, onDateSelect }: ReportDetailVi
             <ScrollArea className="flex-1 px-6">
                 <div className="space-y-8 pb-10">
 
-                    {/* Active Buy Section */}
-                    <SectionHeader title="🟢 Active Alpha (Buy Opportunity)" color="text-green-400" />
+                    {/* Reference Observation Section */}
+                    <SectionHeader title="🟢 Active Signals (Observation Candidates)" color="text-green-400" />
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                         {activeBuys.map((report) => (
                             <ReportItem
@@ -254,7 +254,7 @@ export function ReportDetailView({ data, loading, onDateSelect }: ReportDetailVi
                     {/* Watch List Section */}
                     {watchList.length > 0 && (
                         <>
-                            <SectionHeader title="🔴 Risk Management (Watch/Sell)" color="text-red-400" />
+                            <SectionHeader title="🔴 Risk Review (Watch/Caution)" color="text-red-400" />
                             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                                 {watchList.map((report) => (
                                     <ReportItem
@@ -402,10 +402,10 @@ function DetailModalContent({ report }: { report: StockReport }) {
                     <span className="text-3xl font-bold text-blue-400">{report.score.toFixed(1)}</span>
                 </div>
                 <div className="bg-[#1e1e1e] p-4 rounded-xl border border-gray-700">
-                    <span className="text-sm text-gray-500 mb-1 block">Target Price / Stop Loss</span>
+                    <span className="text-sm text-gray-500 mb-1 block">Reference Range / Risk Check</span>
                     <div className="flex flex-col">
                         <span className="text-sm text-purple-400 font-semibold">{report.future_value.prediction}</span>
-                        <span className="text-xs text-red-400">Stop: {report.stop_loss}</span>
+                        <span className="text-xs text-red-400">Risk reference: {report.stop_loss}</span>
                     </div>
                 </div>
             </div>

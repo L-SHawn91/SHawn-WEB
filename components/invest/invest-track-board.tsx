@@ -6,21 +6,21 @@ const statuses = [
     label: "APP",
     status: "Healthy",
     detail: "Core UI/Route ready",
-    tone: "bg-emerald-500/10 text-emerald-200 border-emerald-300/40",
+    tone: "bg-emerald-50 text-emerald-700 border-emerald-200",
   },
   {
     name: "INVEST",
     label: "Invest",
     status: "Operational",
     detail: "Market Intelligence + Dashboard",
-    tone: "bg-blue-500/10 text-blue-200 border-blue-300/40",
+    tone: "bg-[#eaf4f3] text-[#2f6f73] border-[#cfe7e4]",
   },
   {
     name: "INTEGRATION",
     label: "Integration",
     status: "Synced",
     detail: "Reports route linked",
-    tone: "bg-amber-500/10 text-amber-200 border-amber-300/40",
+    tone: "bg-amber-50 text-amber-700 border-amber-200",
   },
 ];
 
@@ -34,7 +34,7 @@ export function InvestTrackBoard({ compact = false }: InvestTrackBoardProps) {
       {compact ? (
         <>
           <div className="sm:hidden overflow-x-auto">
-            <p className="whitespace-nowrap text-xs text-gray-300">
+            <p className="whitespace-nowrap text-xs text-zinc-600">
               {statuses
                 .map((item) => `${item.label}: ${item.status} (${item.detail})`)
                 .join(" · ")}
@@ -50,7 +50,7 @@ export function InvestTrackBoard({ compact = false }: InvestTrackBoardProps) {
                   <span>{item.label}</span>
                   <span>{item.status}</span>
                 </div>
-                <p className="mt-1 text-xs text-gray-300">{item.detail}</p>
+                <p className="mt-1 text-xs text-zinc-600">{item.detail}</p>
               </div>
             ))}
           </div>
@@ -66,7 +66,7 @@ export function InvestTrackBoard({ compact = false }: InvestTrackBoardProps) {
                 <span>{item.label}</span>
                 <span>{item.status}</span>
               </div>
-              <p className="mt-1 text-xs text-gray-300">{item.detail}</p>
+              <p className="mt-1 text-xs text-zinc-600">{item.detail}</p>
             </div>
           ))}
         </div>

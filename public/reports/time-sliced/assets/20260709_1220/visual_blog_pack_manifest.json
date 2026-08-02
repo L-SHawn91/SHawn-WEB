@@ -1,0 +1,17 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "2026-07-09 12:20 한국장 중간 시장 신호 노트",
+  "source_note": "/reports/time-sliced/2026-07-09_12-20_KR_MIDDAY_MARKET_SIGNAL.json",
+  "assets": {
+    "hero": "/reports/time-sliced/assets/20260709_1220/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260709_1220/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260709_1220/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/assets/20260709_1220/visual_blog_pack_manifest.json"
+  },
+  "visual_policy": {
+    "generated_image": "curated SHawn visual asset composited for public market note",
+    "line_graph_animation": "snapshot values linearly eased for explanation; not tick-by-tick data",
+    "shawn_icon": "official SHawn operational icon pack",
+    "public_safe": true
+  }
+}

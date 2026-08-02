@@ -4,17 +4,16 @@
 
 @layer base {
   :root {
-    /* SABS v0.1 — SHawn Academic Bio System */
-    /* Paper Cream base, Shawn Navy primary, Lab Teal secondary, Warm Coral accent */
+    /* SHawn research system — cool graphite base, navy, teal, and signal coral */
 
-    --background: 43 55% 94%;       /* Paper Cream #F7F3EA */
+    --background: 210 25% 97%;       /* cool neutral, never paper cream */
     --foreground: 199 21% 18%;      /* Graphite #263238 */
-    --card: 0 0% 100%;
+    --card: 210 20% 100%;
     --card-foreground: 199 21% 18%;
-    --popover: 0 0% 100%;
+    --popover: 210 20% 100%;
     --popover-foreground: 199 21% 18%;
     --primary: 211 57% 14%;         /* Shawn Navy #10243A */
-    --primary-foreground: 43 55% 94%;
+    --primary-foreground: 210 25% 97%;
     --secondary: 174 57% 39%;       /* Lab Teal #2A9D8F */
     --secondary-foreground: 0 0% 100%;
     --muted: 214 22% 87%;           /* Mist Gray #D8DEE6 */
@@ -31,21 +30,21 @@
     --chart-2: 14 76% 61%;          /* Warm Coral */
     --chart-3: 211 57% 14%;         /* Shawn Navy */
     --chart-4: 259 26% 54%;         /* Organoid Purple */
-    --chart-5: 43 55% 75%;          /* Warm Cream mid */
+    --chart-5: 210 18% 68%;          /* cool neutral mid */
   }
 
   .dark {
-    /* SABS dark mode — navy-based */
+    /* Dark-tech default — navy/graphite with teal signals */
     --background: 211 57% 8%;
-    --foreground: 43 55% 90%;
+    --foreground: 210 20% 92%;
     --card: 211 57% 12%;
-    --card-foreground: 43 55% 90%;
+    --card-foreground: 210 20% 92%;
     --popover: 211 57% 12%;
-    --popover-foreground: 43 55% 90%;
+    --popover-foreground: 210 20% 92%;
     --primary: 174 57% 52%;         /* lighter teal on dark */
     --primary-foreground: 211 57% 8%;
     --secondary: 174 30% 22%;
-    --secondary-foreground: 43 55% 90%;
+    --secondary-foreground: 210 20% 92%;
     --muted: 211 30% 20%;
     --muted-foreground: 214 22% 65%;
     --accent: 14 76% 58%;
@@ -57,7 +56,7 @@
     --ring: 174 57% 52%;
     --chart-1: 174 57% 52%;
     --chart-2: 14 76% 58%;
-    --chart-3: 43 55% 75%;
+    --chart-3: 210 18% 72%;
     --chart-4: 259 26% 65%;
     --chart-5: 211 40% 40%;
   }

@@ -1,0 +1,27 @@
+{
+  "schema": "public_market_signal.v0",
+  "date": "2026-07-14",
+  "slot": "0910_kr_open_candidate",
+  "slot_label": "한국장 개장 30분 시장 신호",
+  "kst": "2026-07-14T09:37:00+09:00",
+  "delayed_execution": true,
+  "market": "KRX",
+  "market_status": "OPEN",
+  "kospi": 6823.16,
+  "kospi_change_pct": 0.24,
+  "kosdaq": 789.94,
+  "kosdaq_change_pct": -1.18,
+  "usdkrw": 1497.41,
+  "wti": 80.19,
+  "samsung_electronics": 264500,
+  "samsung_change_pct": 3.93,
+  "sk_hynix": 1850000,
+  "sk_hynix_change_pct": 0.27,
+  "foreign_net": 34.4,
+  "institution_net": 1305.9,
+  "individual_net": -1327.5,
+  "assets": {
+    "html": "20260714_0910_kr_open_candidate.html",
+    "wordpress_url": "https://shawnassets.wordpress.com/2026/07/14/kr-market-note-20260714-0910/"
+  }
+}

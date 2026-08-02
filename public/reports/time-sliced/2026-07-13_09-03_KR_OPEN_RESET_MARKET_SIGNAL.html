@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KR Open Reset — 2026-07-13</title>
+<style>
+  :root {
+    --forest: #1a2f1d;
+    --sage: #7a9a7e;
+    --cream: #faf7f2;
+    --gold: #c4a35a;
+    --dark: #0f1a11;
+    --card-bg: #ffffff;
+    --text: #2d2d2d;
+    --text-light: #6b6b6b;
+    --danger: #c0392b;
+    --warning: #d35400;
+    --positive: #27ae60;
+    --border: #e8e4dc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--text); font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; word-break: keep-all; }
+  .container { max-width: 680px; margin: 0 auto; padding: 24px 20px 48px; }
+
+  .hero { background: linear-gradient(135deg, var(--forest), var(--dark)); border-radius: 20px; padding: 36px 28px; margin-bottom: 28px; color: #fff; position: relative; overflow: hidden; }
+  .hero::after { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: var(--gold); opacity: .08; border-radius: 50%; }
+  .hero-date { font-size: 13px; color: var(--sage); margin-bottom: 8px; letter-spacing: .5px; }
+  .hero-title { font-size: 24px; font-weight: 700; margin-bottom: 6px; position: relative; z-index: 1; }
+  .hero-sub { font-size: 15px; color: #c8d6c9; position: relative; z-index: 1; }
+
+  .gold-rule { height: 2px; background: var(--gold); opacity: .5; margin: 0 0 28px; }
+
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .meta-chip { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .meta-chip-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+  .meta-chip-value { font-size: 14px; font-weight: 600; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 28px; }
+  .kpi-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+  .kpi-label { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+  .kpi-value { font-size: 16px; font-weight: 700; }
+  .kpi-change { font-size: 12px; margin-top: 2px; }
+  .kpi-down { color: var(--danger); }
+  .kpi-up { color: var(--positive); }
+
+  .section-title { font-size: 17px; font-weight: 700; margin-bottom: 14px; color: var(--forest); padding-bottom: 6px; border-bottom: 2px solid var(--sage); }
+
+  .signal-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+  .signal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .signal-name { font-size: 15px; font-weight: 700; }
+  .signal-change { font-size: 14px; font-weight: 600; }
+  .signal-note { font-size: 13px; color: var(--text-light); line-height: 1.5; }
+
+  .risk-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .risk-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .risk-active { background: var(--danger); }
+  .risk-watch { background: var(--warning); }
+  .risk-stable { background: var(--positive); }
+  .risk-label { font-size: 13px; font-weight: 600; }
+  .risk-detail { font-size: 12px; color: var(--text-light); }
+
+  .next-box { background: var(--forest); color: #fff; border-radius: 14px; padding: 24px; margin-top: 28px; text-align: center; }
+  .next-label { font-size: 12px; color: var(--sage); margin-bottom: 4px; }
+  .next-time { font-size: 20px; font-weight: 700; }
+
+  .footer { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .footer-text { font-size: 11px; color: var(--text-light); line-height: 1.6; }
+
+  @media (max-width: 390px) {
+    .container { padding: 16px 14px 32px; }
+    .hero { padding: 24px 18px; }
+    .hero-title { font-size: 20px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .meta-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-date">2026.07.13 · 09:21 KST</div>
+    <div class="hero-title">🛢️ 유가 급등 속 KOSPI 약세 출발</div>
+    <div class="hero-sub">KOSDAQ은 +2.71% 상대 강세 — 대형주-중소형주 극단적 차별화</div>
+  </div>
+
+  <div class="gold-rule"></div>
+
+  <!-- META -->
+  <div class="meta-grid">
+    <div class="meta-chip">
+      <div class="meta-chip-label">Market Gate</div>
+      <div class="meta-chip-value">KRX OPEN</div>
+    </div>
+    <div class="meta-chip">
+      <div class="meta-chip-label">Market Pulse</div>
+      <div class="meta-chip-value">🛡️ Defensive + Rotation</div>
+    </div>
+    <div class="meta-chip">
+      <div class="meta-chip-label">Next Checkpoint</div>
+      <div class="meta-chip-value">12:20 KST 장중</div>
+    </div>
+    <div class="meta-chip">
+      <div class="meta-chip-label">Confidence</div>
+      <div class="meta-chip-value">Medium-Low (유가 변수)</div>
+    </div>
+  </div>
+
+  <!-- KPI GRID -->
+  <div class="section-title">📊 주요 지수</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">KOSPI</div>
+      <div class="kpi-value">7,416.93</div>
+      <div class="kpi-change kpi-down">▼ 0.79%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">KOSDAQ</div>
+      <div class="kpi-value">860.14</div>
+      <div class="kpi-change kpi-up">▲ 2.71%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">KPI200</div>
+      <div class="kpi-value">1,188.87</div>
+      <div class="kpi-change kpi-down">▼ 0.65%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">KODEX200</div>
+      <div class="kpi-value">119,715</div>
+      <div class="kpi-change kpi-down">▼ 0.74%</div>
+    </div>
+  </div>
+
+  <!-- KEY SIGNALS -->
+  <div class="section-title">🔍 주요 신호</div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <span class="signal-name">🛢️ WTI 원유</span>
+      <span class="signal-change kpi-up">▲ 3.46%</span>
+    </div>
+    <div class="signal-note">$73.88. 원유 공급 우려로 급등. 오늘 장의 지배적 변수. $75 돌파 시 석유화학·항공·운송 섹터 추가 압박.</div>
+  </div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <span class="signal-name">💾 SK하이닉스</span>
+      <span class="signal-change kpi-down">▼ 4.59%</span>
+    </div>
+    <div class="signal-note">2,080,000원. NQ 약세·MU 부진·차익실현 복합 충격. KOSPI 하락의 가장 큰 단일 요인.</div>
+  </div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <span class="signal-name">📱 삼성전자</span>
+      <span class="signal-change kpi-up">▲ 1.23%</span>
+    </div>
+    <div class="signal-note">288,500원. NVDA 금요일 +4.03% 강세 전이. KOSPI 방어의 중심축.</div>
+  </div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <span class="signal-name">⚙️ 원익IPS</span>
+      <span class="signal-change kpi-up">▲ 7.36%</span>
+    </div>
+    <div class="signal-note">134,200원. KOSDAQ 반도체 장비주 강세 주도. 중소형주 회전의 상징.</div>
+  </div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <span class="signal-name">🌐 US 선물</span>
+      <span class="signal-change kpi-down">▼ 0.04~0.22%</span>
+    </div>
+    <div class="signal-note">ES -0.10%, NQ -0.04%, YM -0.14%, RTY -0.22%. 소폭 마이너스이나 급락 신호 아님. VIX 15.03 안정.</div>
+  </div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <span class="signal-name">💱 USD/KRW</span>
+      <span class="signal-change">1,501.46원</span>
+    </div>
+    <div class="signal-note">원화 소폭 약세(+2.59원). 유가 급등에 따른 위험회피 압력. 1,510원 재돌파 시 추가 부담.</div>
+  </div>
+
+  <!-- RISK BOARD -->
+  <div class="section-title">⚠️ 위험 신호</div>
+  <div class="signal-card">
+    <div class="risk-row"><div class="risk-dot risk-active"></div><span class="risk-label">유가 충격</span><span class="risk-detail">WTI +3.46%. $75 상회 시 심화</span></div>
+    <div class="risk-row"><div class="risk-dot risk-active"></div><span class="risk-label">반도체 차별화</span><span class="risk-detail">SK하이닉스 -4.59% vs 삼성전자 +1.23%</span></div>
+    <div class="risk-row"><div class="risk-dot risk-watch"></div><span class="risk-label">원화 약세</span><span class="risk-detail">1,501원. 1,510원 재돌파 관찰</span></div>
+    <div class="risk-row"><div class="risk-dot risk-stable"></div><span class="risk-label">글로벌 전이 위험</span><span class="risk-detail">US 선물 마이너스 제한적. VIX 안정</span></div>
+  </div>
+
+  <!-- NEXT CHECK -->
+  <div class="next-box">
+    <div class="next-label">다음 확인 시각</div>
+    <div class="next-time">🕐 12:20 KST</div>
+    <div style="font-size:13px;color:#c8d6c9;margin-top:6px;">장중 시장 신호 업데이트 예정</div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-text">
+      ⚠️ 시장 데이터 노트 — 투자 조언이 아닙니다.<br>
+      데이터 출처: Naver Finance (KRX 실시간), Yahoo Finance (US 선물·환율), CNBC (VIX·금리).<br>
+      KOSPI200 직접선물 unavailable. 일부 데이터는 지연·추정값 포함.<br>
+      과거 패턴이 미래 결과를 보장하지 않습니다.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

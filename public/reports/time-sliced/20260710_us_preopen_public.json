@@ -1,0 +1,40 @@
+{
+  "schema": "public_market_signal_note.v1",
+  "slot": "20260710_2220_us_preopen",
+  "phase_id": "2220_us_preopen",
+  "published_at_kst": "2026-07-10T22:20:00+09:00",
+  "market_gate": "Nasdaq isBusinessDay=true, Pre-Market, opens 09:30 ET Jul 10 2026",
+  "title": "미국 개장 전 시장 신호: 반도체 ETF 강세와 NVDA 경계",
+  "summary": "미국 정규장 개장을 앞둔 프리마켓에서 반도체 ETF(QQQ·SOXX·SMH)는 플러스를 유지하고 있지만, NVDA 개별 약세와 나스닥 선물 하락이 상단을 제한하는 혼합 신호입니다. SK하이닉스 Nasdaq ADR 거래 시작일로, 한국 반도체 투자 심리에 중요한 이벤트입니다.",
+  "snapshot_label": "개장 전 공개 스냅샷 (22:20 KST)",
+  "visual_values": [
+    { "label": "QQQ", "value": 1.27 },
+    { "label": "SOXX", "value": 1.73 },
+    { "label": "SMH", "value": 1.15 },
+    { "label": "EWY", "value": -0.57 }
+  ],
+  "key_signals": [
+    "나스닥 공개 상태는 프리마켓이며 정규장 개장을 앞둔 상태로 확인됐습니다.",
+    "QQQ(+1.27%), SOXX(+1.73%), SMH(+1.15%) 등 반도체 ETF는 장전 강세입니다.",
+    "NVDA(-0.98%) 개별 약세와 NQ 선물(-0.43%) 하락이 반도체 ETF 강세와 엇갈리고 있습니다.",
+    "AMD(+4.52%), MU(+2.00%), AVGO(+2.22%) 등 다른 반도체 종목은 강세입니다.",
+    "VIX 지수 15.76(-0.51%)로 변동성은 안정, USD/KRW 1,503원대로 우호적입니다.",
+    "SK하이닉스 Nasdaq ADR 거래가 오늘 미국 정규장에서 시작됩니다 — 메모리/HBM 섹터의 미국 직접 접근 채널이 열렸습니다."
+  ],
+  "market_isolation": {
+    "etf_direction": "positive",
+    "semis_internal": "divergent",
+    "futures": "mixed",
+    "macro_pressure": "neutral_improving"
+  },
+  "check_table": [
+    { "condition": "QQQ·SOXX·SMH 첫 30분", "reading": "셋 모두 + 유지 시 시장 신호 유지, 2종목 하락 시 주의" },
+    { "condition": "NVDA 200달러 회복", "reading": "회복 시 반도체 ETF 신뢰도 개선, 198달러 이하 지속 시 경계" },
+    { "condition": "NQ 선물 전환", "reading": "상승 전환+QQQ 유지 시 강한 확인, 추가 하락 시 주의" },
+    { "condition": "SK하이닉스 ADR 거래", "reading": "플러스 출발+거래량 동반 시 한국장 긍정 선행, 약세 출발 시 보수적 접근" },
+    { "condition": "VIX·US10Y 변화", "reading": "VIX 16.5 상회 또는 US10Y 4.58% 상회 시 주의 신호" }
+  ],
+  "next_check": "23:40 KST — 미국 정규장 첫 시간(09:30~10:30 ET) 확인",
+  "data_limits": "Yahoo Finance 및 Nasdaq 공개 데이터 기준. 일부 실시간 데이터는 지연될 수 있습니다. 변동성 높은 프리마켓은 정규장과 다른 유동성 환경입니다. 이 자료는 시장 신호 확인용이며 투자 조언이 아닙니다.",
+  "disclaimer": "이 자료는 공개 시장 데이터를 기반으로 한 시장 신호 확인용이며, 투자 권유나 예측 보장이 아닙니다. 모든 투자 판단은 본인의 책임입니다."
+}

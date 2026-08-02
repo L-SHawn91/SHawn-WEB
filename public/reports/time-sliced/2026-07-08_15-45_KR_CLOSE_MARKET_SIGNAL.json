@@ -1,0 +1,69 @@
+{
+  "schema": "market_signal_note.v1",
+  "content_class": "public_market_note",
+  "title": "2026-07-08 15:45 한국 시장 신호 노트",
+  "generated_at_kst": "2026-07-08T15:50:55+09:00",
+  "market_gate": "KRX open-day close evidence from public index pages",
+  "summary": "한국 주식시장은 장중 일부 회복 시도를 끝까지 지키지 못했고, 마감에는 대형 지수와 성장주가 함께 크게 흔들렸다. 다음 확인 루틴은 미국 반도체·한국 ETF 프록시·환율·유가가 이 충격을 완화하는지에 맞춘다.",
+  "key_points": [
+    "코스피는 -5.35%, 코스닥은 -5.56%, 코스피200은 -5.48%로 마감했다.",
+    "삼성전자 -6.25%, SK하이닉스 -5.68%로 오전의 대형 반도체 차별화가 마감까지 유지되지 못했다.",
+    "기아는 2.02%로 상대적으로 버텼지만, NAVER는 -2.28%로 성장주 부담이 남았다.",
+    "투자자별 공개 표에서는 외국인 플러스와 기관 마이너스가 엇갈렸고, 프로그램 표는 플러스였지만 지수 하락을 막지는 못했다.",
+    "미국 선물은 소폭 약세, 유가와 미국 금리는 부담으로 남아 밤 시간 확인 루틴의 중요도가 높아졌다."
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "미국 반도체 ETF가 나스닥보다 더 약함",
+      "reading": "한국 반도체 충격이 다음 확인 루틴까지 이어질 수 있음"
+    },
+    {
+      "condition": "한국 ETF 프록시가 일부 회복하고 환율이 안정",
+      "reading": "다음 장전에는 과도한 공포 완화 여부를 확인"
+    },
+    {
+      "condition": "유가·금리 부담이 계속 높음",
+      "reading": "성장주와 수출 대형주의 해석을 보수적으로 유지"
+    },
+    {
+      "condition": "다음 장전 한국 지수 선행 지표가 안정",
+      "reading": "단기 변동성 완화 가능성을 낮은 신뢰도로 점검"
+    }
+  ],
+  "limitations": [
+    "일부 해외 보조 자료는 지연 또는 프록시 값일 수 있어 한국 현금시장 마감 지표를 우선했다.",
+    "이 글은 공개 시장 자료를 읽기 쉽게 정리한 것이며 개인 판단을 대신하지 않는다."
+  ],
+  "visual_values": [
+    {
+      "label": "KOSPI",
+      "value": -5.35
+    },
+    {
+      "label": "KOSDAQ",
+      "value": -5.56
+    },
+    {
+      "label": "KOSPI200",
+      "value": -5.48
+    },
+    {
+      "label": "Samsung Elec.",
+      "value": -6.25
+    },
+    {
+      "label": "SK Hynix",
+      "value": -5.68
+    },
+    {
+      "label": "Kia",
+      "value": 2.02
+    }
+  ],
+  "visual_bundle": {
+    "hero": "/reports/time-sliced/assets/20260708_1545/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260708_1545/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260708_1545/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/assets/20260708_1545/visual_blog_pack_manifest.json"
+  }
+}

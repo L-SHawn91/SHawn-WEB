@@ -1,0 +1,16 @@
+{
+  "slot": "0903_kr_open_reset",
+  "date": "2026-07-16",
+  "kst_created": "2026-07-16T09:30:00+09:00",
+  "delayed_execution": true,
+  "market": "KRX",
+  "kospi_open": 6914.79,
+  "kospi_change_pct": -5.07,
+  "kosdaq_open": 803.6,
+  "kosdaq_change_pct": -3.11,
+  "content_type": "public_safe",
+  "visual_status": "not_generated",
+  "files": [
+    "market_note_0903.md"
+  ]
+}

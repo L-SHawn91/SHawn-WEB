@@ -1,0 +1,64 @@
+{
+  "schema": "market_signal_note.v1",
+  "content_class": "public_market_note",
+  "title": "2026-07-09 06:45 한국장 전 시장 신호 노트",
+  "slug": "2026-07-09-0645-kr-prerisk-market-signal-note",
+  "generated_at_kst": "2026-07-09T06:50:34+09:00",
+  "market_gate": "XKRX calendar open-day evidence: 2026-07-09 regular session scheduled",
+  "summary": "미국 반도체와 한국 ETF 프록시는 완화 쪽으로 돌아섰지만, 유가·금리·변동성 온도계가 남아 한국장 초반은 확인 루틴이 더 중요하다.",
+  "key_points": [
+    "QQQ +0.28%, SOXX +1.87%, SMH +1.99%, NVDA +3.65%로 반도체 온도계는 전일보다 개선됐다.",
+    "EWY +0.79%는 한국 시장 프록시가 밤사이 회복 쪽으로 움직였다는 보조 신호다.",
+    "선물 온도계는 ES -0.47%, NQ 보합권, YM -1.20%, RTY -1.16%, VIX 선물은 지연 quote-cache라 조심스럽게 읽는다.",
+    "매크로 보조 지표는 US10Y 약 4.58%, VIX +4.77%, USD/KRW 약 1505.6, WTI +6%대로 부담 신호가 남아 있다.",
+    "공개 시각화는 QQQ +0.28%, SOXX +1.87%, SMH +1.99%, EWY +0.79%의 밤사이 온도계를 설명용으로 단순화했다."
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "08:45 예상가와 KOSPI200 온도계가 회복을 확인",
+      "reading": "밤사이 반도체 완화 신호가 국내 초반에도 이어지는지 본다"
+    },
+    {
+      "condition": "USD/KRW와 금리·유가 부담이 재확대",
+      "reading": "성장주 신호는 낮은 신뢰도로 읽는다"
+    },
+    {
+      "condition": "09:03 실제 체결 뒤 대형주와 성장주가 엇갈림",
+      "reading": "지수 회복과 개별 체감의 괴리를 분리해 확인한다"
+    },
+    {
+      "condition": "VIX·유가 부담이 유지되는 상태에서 거래대금이 얇음",
+      "reading": "초반 움직임을 확정 신호로 보지 않는다"
+    }
+  ],
+  "limitations": [
+    "일부 선물·매크로 값은 지연 또는 quote-cache일 수 있다.",
+    "한국 정규장 개장 전 자료라 실제 체결과 수급 확인 전까지는 보조 신호다.",
+    "공개 시장 자료를 읽기 쉽게 정리한 것이며 개인 판단을 대신하지 않는다."
+  ],
+  "visual_values": [
+    {
+      "label": "QQQ",
+      "value": 0.283
+    },
+    {
+      "label": "SOXX",
+      "value": 1.874
+    },
+    {
+      "label": "SMH",
+      "value": 1.986
+    },
+    {
+      "label": "EWY",
+      "value": 0.789
+    }
+  ],
+  "visual_bundle": {
+    "hero": "/reports/time-sliced/assets/20260709_0645/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260709_0645/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260709_0645/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/assets/20260709_0645/visual_blog_pack_manifest.json"
+  },
+  "snapshot_label": "06:45 공개 스냅샷"
+}

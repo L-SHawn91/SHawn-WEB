@@ -1,0 +1,48 @@
+{
+  "schema": "public_market_signal_note.v1",
+  "slot": "1220_kr_midday",
+  "date": "2026-07-15",
+  "created_at_kst": "2026-07-15T12:21:00+09:00",
+  "title": "한국장 정오 시장 신호 — +7% sustained rally, crash 회복 국면",
+  "market_status": "OPEN",
+  "no_trade_instruction": true,
+  "visual": {
+    "hero": "assets/hero_1220_20260715.png",
+    "graph": "assets/graph_1220_20260715.gif",
+    "icon": "assets/shawn_icon_20260715.png"
+  },
+  "summary": "KOSPI +7.24% sustained rally. Crash exhaustion Day 4 완전 확인. 외국인·기관·프로그램 대량 유입으로 structural support. 고가 7,367 → 12:21 7,353, erosion -0.19%에 불과.",
+  "market_pulse": {
+    "kospi": {"value": 7353.54, "change_pct": 7.24, "label": "급등"},
+    "kosdaq": {"value": 823.30, "change_pct": 5.02, "label": "강세"},
+    "kpi200": {"value": 1177.16, "change_pct": 7.78, "label": "급등"},
+    "breadth_rise_pct": 81.6,
+    "breadth_label": "압도적 상승 우위"
+  },
+  "signal_cards": [
+    {"title": "외국인 유입 가속", "detail": "오전 내내 순유입 규모 확대. 12:21 기준 대규모 유입. 정오 축소 패턴의 정반대.", "signal": "강한 유입"},
+    {"title": "프로그램 유입", "detail": "차익+비차익 합계 대규모 유입. 비차익이 전체 주도.", "signal": "구조적 유입"},
+    {"title": "종목 breadth", "detail": "KOSPI 상승 743 / 하락 142 (81.6%). 시장 전반에 걸친 강세.", "signal": "광범위한 상승"},
+    {"title": "US 선물 안정", "detail": "ES +0.14%, NQ +0.53%. 미국장 오버나잇 catalyst 유지.", "signal": "글로벌 지지"}
+  ],
+  "key_assets": [
+    {"name": "KOSPI", "value": "7,353.54", "change": "+7.24%", "note": "고가 7,367에서 -0.19%만 되돌림"},
+    {"name": "반도체 대표주", "value": "+6.8~11.4%", "note": "US 반도체 강세 직접 반영. 숏커버링 포함"},
+    {"name": "반도체 장비", "value": "+11.3%", "note": "후행 랠리. crash 저점 대비 강한 회복"}
+  ],
+  "scenario": {
+    "primary": "오후장 sustained consolidation. KOSPI 7,280~7,420 range 유지. 외국인·프로그램 유입 지속. 재반락 가능성 매우 낮음.",
+    "watch": "14:00~15:00 경미한 차익실현 가능. depth 1% 미만 예상. US 선물 ES 7,550 하회 시 주의."
+  },
+  "next_check": {
+    "phase": "1545_kr_close",
+    "focus": ["KOSPI 종가 수준", "외국인 최종 순유입", "반도체 종가", "고가→종가 erosion 폭"]
+  },
+  "context": {
+    "crash_recovery": "7/13 crash(-8.95%)→7/14 V-반등(+5.53%)→7/15 sustained rally(+7.24%). 2거래일 만에 crash 저점 대비 +8.0% 회복.",
+    "next_session": "7/16(목) — Constitution Day(7/17 금) 휴장 전 마지막 거래일",
+    "us_overnight": "7/14 US 마감: QQQ +1.12%, SOXX +2.58%, SMH +2.51%, NVDA +4.06%, EWY +5.33%. 전반적 강세."
+  },
+  "disclaimer": "이 자료는 시장 데이터 관찰 노트이며 투자 권유·예측이 아닙니다. 과거 패턴이 미래 결과를 보장하지 않습니다. 모든 투자 판단은 본인의 책임입니다.",
+  "data_limits": "실시간 KRX 현금시장·Naver 공개 데이터 기반. US 선물은 Yahoo Finance 지연 데이터. USD/KRW 실시간값 미확보. VIX는 US 전일 마감 기준."
+}

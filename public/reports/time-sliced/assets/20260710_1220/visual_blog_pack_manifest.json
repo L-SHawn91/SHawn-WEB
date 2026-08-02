@@ -1,0 +1,17 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "한국 시장 신호 노트 — 2026.07.10 12:20",
+  "source_note": "reports/public_safe/time_sliced/20260710_1220_public_note.json",
+  "assets": {
+    "hero": "/reports/time-sliced/assets/20260710_1220/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260710_1220/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260710_1220/shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "generated_image": "editorial public visual, text-free source asset composited into the note surface",
+    "aspect_ratio": "16:9 for hero and graph animation; responsive inline display uses the same ratio",
+    "line_graph_animation": "signed explanatory snapshot reveal; not tick-by-tick data",
+    "shawn_icon": "official operational icon pack",
+    "public_safe": true
+  }
+}

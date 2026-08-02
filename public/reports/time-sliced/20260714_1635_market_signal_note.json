@@ -1,0 +1,17 @@
+{
+  "date": "2026-07-14",
+  "slot": "1635_next_day_plan",
+  "kst": "2026-07-14T16:35:00+09:00",
+  "title": "Market Check Routine — Next Session Plan",
+  "type": "market_signal_note",
+  "market": "KRX",
+  "summary": "KOSPI closed 6,856.83 (+0.73%) in V-recovery. Crash exhaustion confirmed. Institutional demand provided stabilization. WTI $80.24 oil decoupled. Next KRX session plan for July 15.",
+  "content_class": "reference",
+  "content_url": "public/reports/time-sliced/20260714_1635_market_signal_note.md",
+  "compliance": {
+    "no_trade_instruction": true,
+    "public_safe": true,
+    "no_personal_holdings": true,
+    "no_internal_labels": true
+  }
+}

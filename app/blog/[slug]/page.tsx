@@ -1,5 +1,5 @@
 // i18n-exempt: article body follows source MDX language; shared chrome handles language switching.
-import { getPostBySlug, getAllPosts } from '@/lib/mdx';
+import { getPostBySlug, getAllPostMeta } from '@/lib/mdx';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
@@ -12,7 +12,7 @@ import { SITE_URL } from '@/lib/site-url';
 import { AdSlot } from '@/components/monetization/adsense';
 
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  const posts = getAllPostMeta();
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default function BlogPost({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
-  const allPosts = getAllPosts().map((item) => ({
+  const allPosts = getAllPostMeta().map((item) => ({
     ...item,
     category: getPublicCategoryLabel(item.category),
     tags: getPublicTagLabels(item.tags),

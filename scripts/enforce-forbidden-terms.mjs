@@ -4,6 +4,22 @@ import { join, relative } from "node:path";
 
 const forbidden = ["gemini", "sonolbot"];
 const pattern = new RegExp(forbidden.join("|"), "i");
+const publicCopyForbidden = [
+  "노출·수익화",
+  "수익화",
+  "검색 노출",
+  "광고",
+  "제휴",
+  "문의 전환",
+  "monetization",
+  "disclosure",
+  "affiliate",
+  "funnel",
+  "ADVERTISEMENT",
+  "adsbygoogle",
+  "Revenue Discovery",
+];
+const publicCopyPattern = new RegExp(publicCopyForbidden.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "i");
 const ignoredDirs = new Set([".git", "node_modules", ".next", "dist", "coverage", ".archive", ".claude"]);
 const ignoredFiles = new Set(["scripts/enforce-forbidden-terms.mjs"]);
 const textExtensions = new Set([
@@ -43,8 +59,12 @@ function walk(dir, matches) {
     if (!shouldScan(relPath)) continue;
 
     const content = readFileSync(fullPath, "utf8");
+    const isPublicCopySurface = relPath.startsWith("app/") || relPath.startsWith("components/") || relPath.startsWith("lib/");
     content.split(/\r?\n/).forEach((line, index) => {
       if (pattern.test(line)) matches.push(`${relPath}:${index + 1}:${line}`);
+      if (isPublicCopySurface && publicCopyPattern.test(line)) {
+        matches.push(`${relPath}:${index + 1}:[public-copy] ${line}`);
+      }
     });
   }
 }

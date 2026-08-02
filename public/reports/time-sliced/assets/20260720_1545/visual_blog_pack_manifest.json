@@ -1,0 +1,16 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "한국 시장 마감 신호 노트 — 2026.07.20 15:45",
+  "source_note": "../../strategy_20260720_1545_kr_close.json",
+  "assets": {
+    "hero": "market_signal_generated_visual_hero.png",
+    "graph_animation": "market_signal_linear_graph_animation.gif",
+    "shawn_icon": "shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "aspect_ratio": "1200x675",
+    "series_identity": "KOSPI deep-blue/solid/circle; KOSPI200 indigo/long-dash/square; KODEX200 bronze/dash-dot/diamond; KOSDAQ berry/short-dash/triangle",
+    "animation": "non-looping signed snapshot reveal with endpoint labels after line arrival",
+    "public_safe": true
+  }
+}

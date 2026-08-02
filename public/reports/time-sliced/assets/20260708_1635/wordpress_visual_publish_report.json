@@ -1,0 +1,31 @@
+{
+  "decision": "published_visual_verified",
+  "post_id": "483",
+  "public_url": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1635-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
+  "uploads": {
+    "hero": {
+      "id": 730,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-29.png",
+      "name": "market_signal_generated_visual_hero.png"
+    },
+    "graph": {
+      "id": 731,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-29.gif",
+      "name": "market_signal_linear_graph_animation.gif"
+    },
+    "icon": {
+      "id": 732,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/shawn_investment_assets_icon-29.png",
+      "name": "shawn_investment_assets_icon.png"
+    }
+  },
+  "readback": {
+    "status_code": 200,
+    "title_present": true,
+    "hero_present": true,
+    "graph_present": true,
+    "icon_present": true
+  },
+  "safety_hits": [],
+  "timestamp": "2026-07-10T11:09:21+0900"
+}

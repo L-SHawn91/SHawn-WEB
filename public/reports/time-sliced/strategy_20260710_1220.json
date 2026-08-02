@@ -1,0 +1,51 @@
+{
+  "schema": "time_sliced_public_market_note.v1",
+  "slot": "2026-07-10 12:20 KST",
+  "slug": "korea-market-signal-note-20260710-1220",
+  "title": "한국 시장 신호 노트 — 2026.07.10 12:20",
+  "summary": "오전 중반 이후 한국 시장의 회복 폭이 넓어졌고, 대형 지수와 기술주 온도가 동시에 높아졌습니다. 오후에는 수급과 해외 위험 온도계가 이 흐름을 지탱하는지 확인합니다.",
+  "snapshot_label": "공개 시장 스냅샷",
+  "visual_values": [
+    {
+      "label": "KOSPI",
+      "value": 4.63
+    },
+    {
+      "label": "KOSDAQ",
+      "value": 6.45
+    },
+    {
+      "label": "KPI200",
+      "value": 4.52
+    },
+    {
+      "label": "KODEX200",
+      "value": 4.55
+    }
+  ],
+  "key_points": [
+    "KOSPI·KOSDAQ·KPI200이 모두 오전보다 높은 온도를 보였습니다.",
+    "삼성전자와 SK하이닉스의 온도 차가 줄며 기술주 쪽 확산 신호가 강해졌습니다.",
+    "해외 선물과 변동성 지표는 아직 중립에 가까워 오후 확인이 필요합니다."
+  ],
+  "watch_next": [
+    "지수 상승폭이 오후에도 유지되는지",
+    "기술주 내부 온도 차가 다시 벌어지는지",
+    "수급 자료가 장 후반에 같은 방향으로 정리되는지",
+    "해외 선물·금리·변동성 온도계가 급변하지 않는지"
+  ],
+  "data_limits": [
+    "공개 시장 자료는 지연 또는 보조 지표가 섞일 수 있습니다.",
+    "그래프는 설명용 스냅샷이며 틱 단위 경로가 아닙니다.",
+    "이 글은 공개 자료 해설이며 개인 실행 판단을 대신하지 않습니다."
+  ],
+  "source_note": "Naver public cash-market readback, Naver public flow page sample, CNBC public quote-cache, SHawn Assets public-safe transformation",
+  "created_at_kst": "2026-07-10T12:26:27+09:00",
+  "content_class": "public_market_note",
+  "assets": {
+    "manifest": "/reports/time-sliced/assets/20260710_1220/visual_blog_pack_manifest.json",
+    "hero": "/reports/time-sliced/assets/20260710_1220/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260710_1220/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260710_1220/shawn_investment_assets_icon.png"
+  }
+}

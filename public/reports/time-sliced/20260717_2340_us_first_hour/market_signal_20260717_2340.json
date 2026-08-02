@@ -1,0 +1,31 @@
+{
+  "schema": "time_sliced_public_market_signal.v1",
+  "title": "미국 첫 시간 시장 신호 · 2026-07-17 23:40 KST",
+  "slot": "2026-07-17 23:40 KST",
+  "created_at_kst": "2026-07-17T23:43:14+09:00",
+  "summary": "개장 저점에서는 일부 반등했지만, 전일 종가 대비로 반도체 ETF는 기술주 ETF보다 낮았습니다. 공개 시세의 방향과 변화폭만 정리한 읽기 전용 화면입니다.",
+  "snapshot_label": "US FIRST-HOUR SNAPSHOT",
+  "visual_values": [
+    {"label": "QQQ", "value": -1.28},
+    {"label": "SOXX", "value": -2.05},
+    {"label": "SMH", "value": -2.13},
+    {"label": "EWY", "value": 0.86}
+  ],
+  "key_points": [
+    "QQQ는 전일 종가 대비 -1.28%, SOXX와 SMH는 각각 -2.05%, -2.13%로 더 낮았습니다.",
+    "표시된 변화폭은 전일 종가 대비이며, 09:30부터 10:30 ET까지 QQQ·SOXX·SMH는 개장 저점에서 반등했습니다.",
+    "EWY는 첫 시간에 반등했고, 미국 반도체 흐름은 종목별 차이가 컸습니다.",
+    "VIX는 약 18.1로 전일보다 높았고, 미국 10년물 금리는 4.525%였습니다."
+  ],
+  "afternoon_watch_table": [
+    {"condition": "미국 정규장 마감", "reading": "반도체 지수와 기술주 지수의 상대 흐름을 다시 확인합니다."},
+    {"condition": "변동성·환율", "reading": "VIX와 달러/원 변화가 함께 안정되는지 살핍니다."},
+    {"condition": "다음 한국장 전", "reading": "06:45 KST와 08:45 KST 공개 시세를 기준으로 상태를 갱신합니다."}
+  ],
+  "limitations": [
+    "시세는 공개 데이터 읽기 시점에 따라 달라질 수 있습니다.",
+    "이 화면은 관측된 시장 변화를 설명하며 미래 방향을 제시하지 않습니다.",
+    "개별 상황에 대한 판단이나 실행을 대신하지 않습니다."
+  ],
+  "source_caveat": "Nasdaq ETF 시세·공개 1분 차트·CNBC 공개 거시 시세를 10:42~10:43 ET에 교차 확인했습니다."
+}

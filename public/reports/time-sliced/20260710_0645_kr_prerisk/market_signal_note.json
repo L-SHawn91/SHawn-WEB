@@ -1,0 +1,65 @@
+{
+  "schema": "public_market_signal_note.v1",
+  "phase_id": "0645_kr_prerisk",
+  "created_at_kst": "2026-07-10T06:51:40+09:00",
+  "title": "2026.07.10 06:45 Public Market Signal Note",
+  "slug": "2026-07-10-0645-kr-prerisk-market-signal-note",
+  "summary": "미국 반도체 ETF와 한국 ETF 프록시는 우호적이지만, 금리·환율과 개별 반도체 괴리 때문에 한국장 초반은 확인 중심으로 읽는 구간입니다.",
+  "key_points": [
+    "QQQ +1.66%, SOXX +3.50%, SMH +2.48%, EWY +1.11%.",
+    "NVDA -0.66%와 AMD/MU 강세가 엇갈려 반도체 신호는 선별적으로 해석합니다.",
+    "ES +0.76%, NQ +1.57%, USD/KRW 1,506.48, US10Y 4.54를 함께 확인합니다."
+  ],
+  "visual_values": [
+    {
+      "label": "QQQ",
+      "value": 1.66
+    },
+    {
+      "label": "SOXX",
+      "value": 3.5
+    },
+    {
+      "label": "EWY",
+      "value": 1.11
+    },
+    {
+      "label": "USD/KRW",
+      "value": 0.21
+    }
+  ],
+  "snapshot_label": "공개 시장 스냅샷",
+  "check_table": [
+    {
+      "condition": "08:45 장전",
+      "reading": "KOSPI200 계열과 대형 반도체가 같은 방향인지 확인합니다."
+    },
+    {
+      "condition": "09:03 개장 리셋",
+      "reading": "장전 가정을 실제 체결 가격과 지수 흐름으로 다시 읽습니다."
+    },
+    {
+      "condition": "09:20 확인",
+      "reading": "초반 움직임이 유지되는지, 또는 식는지 분리합니다."
+    }
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "08:45 장전",
+      "reading": "KOSPI200 계열과 대형 반도체가 같은 방향인지 확인합니다."
+    },
+    {
+      "condition": "09:03 개장 리셋",
+      "reading": "장전 가정을 실제 체결 가격과 지수 흐름으로 다시 읽습니다."
+    },
+    {
+      "condition": "09:20 확인",
+      "reading": "초반 움직임이 유지되는지, 또는 식는지 분리합니다."
+    }
+  ],
+  "limitations": [
+    "선물과 프록시는 본장 확정 신호가 아니라 조기 위험온도계입니다.",
+    "일부 값은 공개 지연/프록시 자료일 수 있습니다.",
+    "개인 판단을 대신하지 않는 공개 시장 자료 읽기입니다."
+  ]
+}

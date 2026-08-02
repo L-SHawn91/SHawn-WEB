@@ -1,5 +1,21 @@
 [
   {
+    "schema_version": "market_digest.web.v1",
+    "date": "2026-07-08",
+    "time": "06:45",
+    "type": "MORNING",
+    "title": "2026년 7월 8일 06:45 한국장 전 시장 신호 노트",
+    "path": "/reports/2026-07-08_06-45_MORNING.html",
+    "filename": "2026-07-08_06-45_MORNING.json",
+    "timestamp": "2026-07-08T06:45:00+09:00",
+    "json_path": "/reports/2026-07-08_06-45_MORNING.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
+    "source": "auto-sync"
+  },
+  {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-03-02",
     "time": "12:29",
     "type": "KR",
@@ -8,9 +24,13 @@
     "filename": "2026-03-02_12-29_KR.json",
     "timestamp": "2026-03-02T12:29:00+09:00",
     "json_path": "/reports/2026-03-02_12-29_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-03-02",
     "time": "12:29",
     "type": "US",
@@ -19,9 +39,13 @@
     "filename": "2026-03-02_12-29_US.json",
     "timestamp": "2026-03-02T12:29:00+09:00",
     "json_path": "/reports/2026-03-02_12-29_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-23",
     "time": "08:22",
     "type": "KR",
@@ -30,9 +54,13 @@
     "filename": "2026-02-23_08-22_KR.json",
     "timestamp": "2026-02-23T08:22:00+09:00",
     "json_path": "/reports/2026-02-23_08-22_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-23",
     "time": "08:22",
     "type": "US",
@@ -41,9 +69,13 @@
     "filename": "2026-02-23_08-22_US.json",
     "timestamp": "2026-02-23T08:22:00+09:00",
     "json_path": "/reports/2026-02-23_08-22_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-23",
     "time": "08:21",
     "type": "KR",
@@ -52,9 +84,13 @@
     "filename": "2026-02-23_08-21_KR.json",
     "timestamp": "2026-02-23T08:21:00+09:00",
     "json_path": "/reports/2026-02-23_08-21_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-23",
     "time": "08:21",
     "type": "US",
@@ -63,9 +99,13 @@
     "filename": "2026-02-23_08-21_US.json",
     "timestamp": "2026-02-23T08:21:00+09:00",
     "json_path": "/reports/2026-02-23_08-21_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-22",
     "time": "23:20",
     "type": "KR",
@@ -74,9 +114,13 @@
     "filename": "2026-02-22_23-20_KR.json",
     "timestamp": "2026-02-22T23:20:00+09:00",
     "json_path": "/reports/2026-02-22_23-20_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-22",
     "time": "23:20",
     "type": "US",
@@ -85,9 +129,13 @@
     "filename": "2026-02-22_23-20_US.json",
     "timestamp": "2026-02-22T23:20:00+09:00",
     "json_path": "/reports/2026-02-22_23-20_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-22",
     "time": "23:15",
     "type": "KR",
@@ -96,9 +144,13 @@
     "filename": "2026-02-22_23-15_KR.json",
     "timestamp": "2026-02-22T23:15:00+09:00",
     "json_path": "/reports/2026-02-22_23-15_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-22",
     "time": "23:15",
     "type": "US",
@@ -107,9 +159,13 @@
     "filename": "2026-02-22_23-15_US.json",
     "timestamp": "2026-02-22T23:15:00+09:00",
     "json_path": "/reports/2026-02-22_23-15_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-22",
     "time": "23:11",
     "type": "KR",
@@ -118,9 +174,13 @@
     "filename": "2026-02-22_23-11_KR.json",
     "timestamp": "2026-02-22T23:11:00+09:00",
     "json_path": "/reports/2026-02-22_23-11_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-22",
     "time": "23:11",
     "type": "US",
@@ -129,9 +189,13 @@
     "filename": "2026-02-22_23-11_US.json",
     "timestamp": "2026-02-22T23:11:00+09:00",
     "json_path": "/reports/2026-02-22_23-11_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-22",
     "time": "22:56",
     "type": "KR",
@@ -140,9 +204,13 @@
     "filename": "2026-02-22_22-56_KR.json",
     "timestamp": "2026-02-22T22:56:00+09:00",
     "json_path": "/reports/2026-02-22_22-56_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-22",
     "time": "22:56",
     "type": "US",
@@ -151,9 +219,13 @@
     "filename": "2026-02-22_22-56_US.json",
     "timestamp": "2026-02-22T22:56:00+09:00",
     "json_path": "/reports/2026-02-22_22-56_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-18",
     "time": "10:00",
     "type": "SPECIAL_ANALYSIS",
@@ -162,9 +234,13 @@
     "filename": "2026-02-18_10-00_SPECIAL_ANALYSIS.json",
     "timestamp": "2026-02-18T10:00:00+09:00",
     "json_path": "/reports/2026-02-18_10-00_SPECIAL_ANALYSIS.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-18",
     "time": "08:22",
     "type": "CLI_AUTH_INCIDENT",
@@ -173,9 +249,13 @@
     "filename": "2026-02-18_08-22_CLI_AUTH_INCIDENT.json",
     "timestamp": "2026-02-18T08:22:00+09:00",
     "json_path": "/reports/2026-02-18_08-22_CLI_AUTH_INCIDENT.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-17",
     "time": "14:53",
     "type": "MORNING",
@@ -184,9 +264,13 @@
     "filename": "2026-02-17_14-53_MORNING.json",
     "timestamp": "2026-02-17T14:53:00+09:00",
     "json_path": "/reports/2026-02-17_14-53_MORNING.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-15",
     "time": "19:12",
     "type": "KR",
@@ -195,9 +279,13 @@
     "filename": "2026-02-15_19-12_KR.json",
     "timestamp": "2026-02-15T19:12:00+09:00",
     "json_path": "/reports/2026-02-15_19-12_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-15",
     "time": "19:12",
     "type": "US",
@@ -206,9 +294,13 @@
     "filename": "2026-02-15_19-12_US.json",
     "timestamp": "2026-02-15T19:12:00+09:00",
     "json_path": "/reports/2026-02-15_19-12_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-15",
     "time": "13:27",
     "type": "KR",
@@ -217,9 +309,13 @@
     "filename": "2026-02-15_13-27_KR.json",
     "timestamp": "2026-02-15T13:27:00+09:00",
     "json_path": "/reports/2026-02-15_13-27_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-15",
     "time": "13:27",
     "type": "US",
@@ -228,9 +324,13 @@
     "filename": "2026-02-15_13-27_US.json",
     "timestamp": "2026-02-15T13:27:00+09:00",
     "json_path": "/reports/2026-02-15_13-27_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-15",
     "time": "13:20",
     "type": "KR",
@@ -239,9 +339,13 @@
     "filename": "2026-02-15_13-20_KR.json",
     "timestamp": "2026-02-15T13:20:00+09:00",
     "json_path": "/reports/2026-02-15_13-20_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-15",
     "time": "13:20",
     "type": "US",
@@ -250,9 +354,13 @@
     "filename": "2026-02-15_13-20_US.json",
     "timestamp": "2026-02-15T13:20:00+09:00",
     "json_path": "/reports/2026-02-15_13-20_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-15",
     "time": "13:14",
     "type": "KR",
@@ -261,9 +369,13 @@
     "filename": "2026-02-15_13-14_KR.json",
     "timestamp": "2026-02-15T13:14:00+09:00",
     "json_path": "/reports/2026-02-15_13-14_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-15",
     "time": "13:14",
     "type": "US",
@@ -272,9 +384,13 @@
     "filename": "2026-02-15_13-14_US.json",
     "timestamp": "2026-02-15T13:14:00+09:00",
     "json_path": "/reports/2026-02-15_13-14_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-14",
     "time": "18:03",
     "type": "KR",
@@ -283,9 +399,13 @@
     "filename": "2026-02-14_18-03_KR.json",
     "timestamp": "2026-02-14T18:03:00+09:00",
     "json_path": "/reports/2026-02-14_18-03_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-14",
     "time": "18:03",
     "type": "US",
@@ -294,9 +414,13 @@
     "filename": "2026-02-14_18-03_US.json",
     "timestamp": "2026-02-14T18:03:00+09:00",
     "json_path": "/reports/2026-02-14_18-03_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-14",
     "time": "17:22",
     "type": "KR",
@@ -305,9 +429,13 @@
     "filename": "2026-02-14_17-22_KR.json",
     "timestamp": "2026-02-14T17:22:00+09:00",
     "json_path": "/reports/2026-02-14_17-22_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-14",
     "time": "17:22",
     "type": "US",
@@ -316,9 +444,13 @@
     "filename": "2026-02-14_17-22_US.json",
     "timestamp": "2026-02-14T17:22:00+09:00",
     "json_path": "/reports/2026-02-14_17-22_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-14",
     "time": "17:06",
     "type": "KR",
@@ -327,9 +459,13 @@
     "filename": "2026-02-14_17-06_KR.json",
     "timestamp": "2026-02-14T17:06:00+09:00",
     "json_path": "/reports/2026-02-14_17-06_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-02-14",
     "time": "17:06",
     "type": "US",
@@ -338,9 +474,13 @@
     "filename": "2026-02-14_17-06_US.json",
     "timestamp": "2026-02-14T17:06:00+09:00",
     "json_path": "/reports/2026-02-14_17-06_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "23:31",
     "type": "KR",
@@ -349,9 +489,13 @@
     "filename": "2026-01-26_23-31_KR.json",
     "timestamp": "2026-01-26T23:31:00+09:00",
     "json_path": "/reports/2026-01-26_23-31_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "23:31",
     "type": "US",
@@ -360,9 +504,13 @@
     "filename": "2026-01-26_23-31_US.json",
     "timestamp": "2026-01-26T23:31:00+09:00",
     "json_path": "/reports/2026-01-26_23-31_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "23:09",
     "type": "KR",
@@ -371,9 +519,13 @@
     "filename": "2026-01-26_23-09_KR.json",
     "timestamp": "2026-01-26T23:09:00+09:00",
     "json_path": "/reports/2026-01-26_23-09_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "23:09",
     "type": "US",
@@ -382,9 +534,13 @@
     "filename": "2026-01-26_23-09_US.json",
     "timestamp": "2026-01-26T23:09:00+09:00",
     "json_path": "/reports/2026-01-26_23-09_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "22:33",
     "type": "KR",
@@ -393,9 +549,13 @@
     "filename": "2026-01-26_22-33_KR.json",
     "timestamp": "2026-01-26T22:33:00+09:00",
     "json_path": "/reports/2026-01-26_22-33_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "22:33",
     "type": "US",
@@ -404,9 +564,13 @@
     "filename": "2026-01-26_22-33_US.json",
     "timestamp": "2026-01-26T22:33:00+09:00",
     "json_path": "/reports/2026-01-26_22-33_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "21:39",
     "type": "KR",
@@ -415,9 +579,13 @@
     "filename": "2026-01-26_21-39_KR.json",
     "timestamp": "2026-01-26T21:39:00+09:00",
     "json_path": "/reports/2026-01-26_21-39_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "21:39",
     "type": "US",
@@ -426,9 +594,13 @@
     "filename": "2026-01-26_21-39_US.json",
     "timestamp": "2026-01-26T21:39:00+09:00",
     "json_path": "/reports/2026-01-26_21-39_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "21:09",
     "type": "KR",
@@ -437,9 +609,13 @@
     "filename": "2026-01-26_21-09_KR.json",
     "timestamp": "2026-01-26T21:09:00+09:00",
     "json_path": "/reports/2026-01-26_21-09_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "21:09",
     "type": "US",
@@ -448,9 +624,13 @@
     "filename": "2026-01-26_21-09_US.json",
     "timestamp": "2026-01-26T21:09:00+09:00",
     "json_path": "/reports/2026-01-26_21-09_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "19:31",
     "type": "KR",
@@ -459,9 +639,13 @@
     "filename": "2026-01-26_19-31_KR.json",
     "timestamp": "2026-01-26T19:31:00+09:00",
     "json_path": "/reports/2026-01-26_19-31_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "19:31",
     "type": "US",
@@ -470,9 +654,13 @@
     "filename": "2026-01-26_19-31_US.json",
     "timestamp": "2026-01-26T19:31:00+09:00",
     "json_path": "/reports/2026-01-26_19-31_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "15:37",
     "type": "KR",
@@ -481,9 +669,13 @@
     "filename": "2026-01-26_15-37_KR.json",
     "timestamp": "2026-01-26T15:37:00+09:00",
     "json_path": "/reports/2026-01-26_15-37_KR.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   },
   {
+    "schema_version": "market_digest.web.v1",
     "date": "2026-01-26",
     "time": "15:37",
     "type": "US",
@@ -492,6 +684,9 @@
     "filename": "2026-01-26_15-37_US.json",
     "timestamp": "2026-01-26T15:37:00+09:00",
     "json_path": "/reports/2026-01-26_15-37_US.json",
+    "content_class": "reference",
+    "disclaimer": true,
+    "data_quality": "public-summary",
     "source": "auto-sync"
   }
 ]

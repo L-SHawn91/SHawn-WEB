@@ -1,0 +1,110 @@
+{
+  "slot": "0920_kr_open_reaction",
+  "date": "2026-07-13",
+  "generated_at_kst": "2026-07-13T09:58:00+09:00",
+  "market_gate": "KRX",
+  "delayed_execution": true,
+  "title": "한국장 개시 20분 — 유가 충격과 반도체 급락 속 대형주·중소형주 극단적 차별화",
+  "summary": "09:25 V자 회복 → 09:38 실패한 회복 → 09:58 추가 하락으로 전환. SK하이닉스 -8.12%, 삼성전자 -3.86%로 대형주 지배적 약세. KOSDAQ +1.63%만 유일한 플러스.",
+  "key_metrics": {
+    "KOSPI": {
+      "current": 7266.27,
+      "change_pct": -2.8,
+      "status": "급락"
+    },
+    "KOSDAQ": {
+      "current": 851.14,
+      "change_pct": 1.63,
+      "status": "상승"
+    },
+    "KPI200": {
+      "current": 1156.39,
+      "change_pct": -3.37,
+      "status": "급락"
+    },
+    "KODEX200": {
+      "current": 116035,
+      "change_pct": -3.79,
+      "status": "급락"
+    }
+  },
+  "key_stocks": {
+    "삼성전자": {
+      "current": 274000,
+      "change_pct": -3.86,
+      "note": "280,000/276,000 지지선 연속 붕괴. 270,000이 최후 방어선"
+    },
+    "SK하이닉스": {
+      "current": 2003000,
+      "change_pct": -8.12,
+      "note": "2,000,000 심리적 지지선 테스트 중. 서킷브레이커 근접"
+    },
+    "원익IPS": {
+      "current": 135800,
+      "change_pct": 8.64,
+      "note": "KOSDAQ 대표주. AI·장비 수요 기대 유지"
+    },
+    "기아": {
+      "current": 149500,
+      "change_pct": 1.36,
+      "note": "반도체 충격에서 상대적 격리"
+    },
+    "NAVER": {
+      "current": 193400,
+      "change_pct": 1.1,
+      "note": "방어적 성격"
+    }
+  },
+  "external_signals": {
+    "WTI": {
+      "price": 74.29,
+      "change_pct": 4.03,
+      "note": "유가 급등이 인플레·금리 불안으로 전이"
+    },
+    "USD_KRW": {
+      "price": 1503.88,
+      "note": "원화 소폭 약세. 외국인 매도 압력"
+    },
+    "ES_futures": {
+      "change_pct": -0.24,
+      "note": "US 선물 소폭 마이너스. KRX 폭락은 US발 아님"
+    },
+    "NQ_futures": {
+      "change_pct": -0.45,
+      "note": "기술주 선물 소폭 약세"
+    }
+  },
+  "timeline": [
+    {
+      "time": "09:03",
+      "event": "개장. KOSPI -0.79%. SK하이닉스 -4.59%로 약세 출발"
+    },
+    {
+      "time": "09:25",
+      "event": "V자 회복. KOSPI -0.06%로 거의 평탄. 삼성전자 +1.58%"
+    },
+    {
+      "time": "09:38",
+      "event": "실패한 회복(FAILED_RECOVERY). KOSPI -1.54%. SK하이닉스 -6.15%"
+    },
+    {
+      "time": "09:58",
+      "event": "하락 가속(ROUT). KOSPI -2.80%. SK하이닉스 -8.12%. 삼성전자 -3.86%"
+    }
+  ],
+  "scenario_assessment": {
+    "dominant_theme": "유가 급등(+4.03%) + 반도체 대형주 패닉(SK하이닉스 -8.12%)",
+    "divergence": "KOSDAQ +1.63% vs KOSPI -2.80% — 극단적 차별화. 중소형주로의 선택적 자금 이동",
+    "triggers": [
+      "SK하이닉스 2,000,000 심리적 지지선 테스트 — 붕괴 시 -10%대 진입 가능",
+      "삼성전자 270,000 최종 방어선 — 붕괴 시 KOSPI 7,150 테스트",
+      "WTI 75달러 상회(+5%) 시 oil_shock 심화",
+      "ES/NQ 선물 추가 하락 시 이중 충격"
+    ],
+    "next_checkpoint": "12:20 장중 점검"
+  },
+  "data_limits": "US 선물은 아시아 세션 유동성 낮음. CNBC VIX/US10Y 조회 불가로 09:20 추정치 사용. 기관·외국인 수급 데이터 조회 불가. KOSPI200 직접선물 unavailable.",
+  "disclaimer": "이 자료는 시장 데이터 관찰 노트이며 투자 조언이 아닙니다. 수치는 참고용이며 지연·오차가 있을 수 있습니다. 투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.",
+  "no_trade_instruction": true,
+  "next_slot": "1220_kr_midday"
+}

@@ -1,0 +1,106 @@
+{
+  "files": {
+    "market_signal_generated_visual_hero.png": {
+      "exists": true,
+      "bytes": 121472,
+      "sha256": "2384c2b46931d85314d9518c7274b5e008de2e863e17cea924c87e720f004ad7",
+      "size": [
+        1200,
+        675
+      ],
+      "mode": "RGB"
+    },
+    "market_signal_linear_graph_animation.gif": {
+      "exists": true,
+      "bytes": 218651,
+      "sha256": "b14e588fb8922e424a4594d0000a575011f5c2f0aa663cd831afb4ec3bf4e616"
+    },
+    "shawn_investment_assets_icon.png": {
+      "exists": true,
+      "bytes": 254101,
+      "sha256": "890d971003a6084ee7592d14033591e88e194b0e8e01ad193b66968ad42d43cf"
+    },
+    "visual_blog_pack_manifest.json": {
+      "exists": true,
+      "bytes": 935,
+      "sha256": "7595996878b8ce6c629a134f28a771f3edcb0617b929156ee2ce0d2cc7e531fe"
+    },
+    "wordpress_visual_publish_report.json": {
+      "exists": true,
+      "bytes": 1982,
+      "sha256": "073bf3fcbdead276321f526643b3b25bdfe1528c9ee9cc5b99f61f2025bd617e"
+    },
+    "20260722_1545.json": {
+      "exists": true,
+      "bytes": 2600,
+      "sha256": "843f149e9bb7a737e6662f426c9a304afe9d7a6cfc80ed66593c16ae1b2580ba"
+    },
+    "20260722_1545.html": {
+      "exists": true,
+      "bytes": 16440,
+      "sha256": "5badd840e61a467d09941016982e22a629c0632f17f817adc05ef4c50b874699"
+    },
+    "20260722_1545_delivery_manifest.json": {
+      "exists": true,
+      "bytes": 1232,
+      "sha256": "402d12f3c19f7a21ecd96166873f7feb8e55514c4931e67c8a21884f00b1b5ea"
+    }
+  },
+  "gif": {
+    "frames": 28,
+    "size": [
+      1200,
+      675
+    ],
+    "mode": "RGB",
+    "loop": null,
+    "durations_ms": [
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      2600
+    ],
+    "unique_frame_hashes": 28,
+    "first_equals_final": false,
+    "max_quantized_colors": 254,
+    "final_duration_ms": 2600,
+    "contact_sheet": "qa_start_middle_final.png",
+    "grayscale_sheet": "qa_start_middle_final_grayscale.png"
+  },
+  "html": {
+    "word_break_keep_all": true,
+    "responsive_clamp": true,
+    "max_width": true,
+    "contains_graph_caveat": true,
+    "local_assets": true
+  },
+  "leakage": {
+    "hits": [],
+    "pass": true
+  },
+  "decision": "PASS"
+}

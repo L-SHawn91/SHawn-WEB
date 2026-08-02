@@ -65,17 +65,17 @@ const quoteHealthMap: Record<QuoteHealth, { labelKo: string; labelEn: string; ba
   ok: {
     labelKo: "정상",
     labelEn: "Healthy",
-    badgeClass: "text-emerald-200 bg-emerald-500/10 border-emerald-400/30",
+    badgeClass: "text-emerald-700 bg-emerald-50 border-emerald-200",
   },
   degraded: {
     labelKo: "주의",
     labelEn: "Degraded",
-    badgeClass: "text-amber-200 bg-amber-500/10 border-amber-400/30",
+    badgeClass: "text-amber-700 bg-amber-50 border-amber-200",
   },
   fallback: {
     labelKo: "폴백",
     labelEn: "Fallback",
-    badgeClass: "text-rose-200 bg-rose-500/10 border-rose-400/30",
+    badgeClass: "text-rose-700 bg-rose-50 border-rose-200",
   },
 };
 
@@ -83,17 +83,17 @@ const upstreamStatusMap: Record<UpstreamSyncState, { labelKo: string; labelEn: s
   success: {
     labelKo: "연동 성공",
     labelEn: "Connected",
-    badgeClass: "text-emerald-200 bg-emerald-500/10 border-emerald-400/30",
+    badgeClass: "text-emerald-700 bg-emerald-50 border-emerald-200",
   },
   failed: {
     labelKo: "연동 실패",
     labelEn: "Connection failed",
-    badgeClass: "text-rose-200 bg-rose-500/10 border-rose-400/30",
+    badgeClass: "text-rose-700 bg-rose-50 border-rose-200",
   },
   disabled: {
     labelKo: "미사용",
     labelEn: "Local mode",
-    badgeClass: "text-gray-200 bg-gray-500/10 border-gray-400/30",
+    badgeClass: "text-zinc-600 bg-zinc-50 border-zinc-200",
   },
 };
 
@@ -151,6 +151,22 @@ function mapUpstreamFailureHint(raw?: string, language: "ko" | "en" = "ko"): str
   return en ? "Upstream integration failed. Check settings and network." : "업스트림 연동에 실패했습니다. 설정 및 네트워크를 확인해 주세요.";
 }
 
+function humanizeKpiSourceLabel(raw?: string, language: "ko" | "en" = "ko"): string {
+  const value = String(raw || "").trim();
+  const lower = value.toLowerCase();
+  const en = language === "en";
+  if (!value || value === "-") return en ? "No source record" : "근거 출처 없음";
+  if (lower.includes("public/reports") || lower.includes("reports/index") || lower.includes("reports/*.json")) {
+    return en ? "Local report snapshot" : "로컬 리포트 스냅샷";
+  }
+  if (lower.includes("fallback/static") || lower.includes("fallback")) {
+    return en ? "Fallback snapshot" : "폴백 스냅샷";
+  }
+  if (lower.includes("snapshot")) return en ? "Snapshot record" : "스냅샷 기록";
+  if (value.length > 28) return en ? "Configured data source" : "설정된 데이터 소스";
+  return value;
+}
+
 function mapUpstreamUserMessage(message?: string, failureHint?: string, language: "ko" | "en" = "ko"): string {
   if (failureHint) return failureHint;
   if (!message) return language === "en" ? "No upstream status information" : "업스트림 상태 정보 없음";
@@ -183,12 +199,12 @@ function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number, l
 
   const freshnessClass =
     freshnessSec === undefined
-      ? "text-gray-300 bg-gray-500/10 border-gray-400/20"
+      ? "text-zinc-600 bg-zinc-50 border-zinc-200"
       : isStaleQuote
-      ? "text-rose-200 bg-rose-500/10 border-rose-400/30"
+      ? "text-rose-700 bg-rose-50 border-rose-200"
       : freshnessSec <= staleThresholdSec / 2
-      ? "text-emerald-200 bg-emerald-500/10 border-emerald-400/30"
-      : "text-amber-200 bg-amber-500/10 border-amber-400/30";
+      ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+      : "text-amber-700 bg-amber-50 border-amber-200";
 
   const driftScore =
     input.driftDetector?.driftScore !== undefined ? Number(input.driftDetector.driftScore) : null;
@@ -199,6 +215,10 @@ function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number, l
   const upstreamMeta = upstreamStatusMap[upstreamState];
   const provenanceSources = input.provenance?.sources || [];
   const upstreamFailureHint = mapUpstreamFailureHint(input.provenance?.upstreamFailure, language);
+
+  const provenanceSummary = provenanceSources.length
+    ? Array.from(new Set(provenanceSources.slice(0, 2).map((source) => humanizeKpiSourceLabel(source, language)))).join(", ")
+    : (language === "en" ? "No source record" : "근거 출처 없음");
 
   return {
     quoteHealth: fallbackState,
@@ -211,9 +231,9 @@ function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number, l
     driftStateLabel: driftState === "stable" ? (language === "en" ? "Stable" : "안정") : (language === "en" ? "Volatile" : "변동"),
     driftStateClass:
       driftState === "stable"
-        ? "text-emerald-200 bg-emerald-500/10 border-emerald-400/30"
-        : "text-rose-200 bg-rose-500/10 border-rose-400/30",
-    sourceName: input.quoteSource?.sourceName ?? "-",
+        ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+        : "text-rose-700 bg-rose-50 border-rose-200",
+    sourceName: humanizeKpiSourceLabel(input.quoteSource?.sourceName, language),
     fallbackLevel: input.quoteSource?.fallbackLevel ?? 0,
     isFallbackQuote,
     isStaleQuote,
@@ -225,7 +245,7 @@ function deriveQuoteHealth(input: QuoteKpiSnapshot, staleThresholdSec: number, l
       language,
     ),
     upstreamFailureHint,
-    provenanceSummary: provenanceSources.length ? provenanceSources.slice(0, 2).join(", ") : (language === "en" ? "No source record" : "근거 출처 없음"),
+    provenanceSummary,
   };
 }
 
@@ -241,27 +261,27 @@ export function InvestQuoteKpiCards({
   const state = deriveQuoteHealth(snapshot || {}, staleThresholdSec, language);
 
   return (
-    <div className={`${investUiClass.grid} grid-cols-1 sm:grid-cols-2 xl:grid-cols-4`}>
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
       <article className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-        <p className="text-xs text-gray-400 mb-1">{isKo ? "데이터 건전성" : "Data health"}</p>
-        <p className={`text-2xl font-bold ${state.quoteHealth === "ok" ? "text-emerald-300" : state.quoteHealth === "degraded" ? "text-amber-300" : "text-rose-300"}`}>
+        <p className="text-xs text-zinc-500 mb-1">{isKo ? "데이터 건전성" : "Data health"}</p>
+        <p className={`text-2xl font-bold ${state.quoteHealth === "ok" ? "text-emerald-700" : state.quoteHealth === "degraded" ? "text-amber-700" : "text-rose-700"}`}>
           {state.quoteHealthLabel}
         </p>
-        <p className={`mt-2 w-fit max-w-full px-2 py-1 text-[10px] inline-flex items-center rounded border break-all ${state.quoteHealthClass}`}>{isKo ? "상태 코드" : "Status code"}: {state.quoteHealth}</p>
+        <p className={`mt-2 inline-flex w-fit max-w-full items-center rounded border px-2 py-1 text-[10px] ${state.quoteHealthClass}`}>{isKo ? "상태" : "Status"}: {state.quoteHealthLabel}</p>
       </article>
 
       <article className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-        <p className="text-xs text-gray-400 mb-1">{isKo ? "최신성" : "Freshness"}</p>
-        <p className="text-2xl font-bold text-blue-300">{state.freshnessText}</p>
+        <p className="text-xs text-zinc-500 mb-1">{isKo ? "최신성" : "Freshness"}</p>
+        <p className="text-2xl font-bold text-blue-700">{state.freshnessText}</p>
         <div className="mt-2 flex flex-wrap items-start gap-2 text-[10px]">
-          <span className={`inline-flex items-center rounded border px-2 py-1 break-all ${state.freshnessClass}`}>{isKo ? "소스" : "Source"}: {state.sourceName}</span>
+          <span className={`inline-flex min-w-0 items-center rounded border px-2 py-1 ${state.freshnessClass}`}>{isKo ? "소스" : "Source"}: {state.sourceName}</span>
           <span className={`inline-flex items-center rounded border px-2 py-1 ${state.freshnessClass}`}>{isKo ? "폴백 단계" : "Fallback level"}: {state.fallbackLevel}</span>
         </div>
       </article>
 
       <article className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-        <p className="text-xs text-gray-400 mb-1">{isKo ? "드리프트" : "Drift"}</p>
-        <p className={`text-2xl font-bold ${state.driftState === "stable" ? "text-emerald-300" : "text-rose-300"}`}>
+        <p className="text-xs text-zinc-500 mb-1">{isKo ? "드리프트" : "Drift"}</p>
+        <p className={`text-2xl font-bold ${state.driftState === "stable" ? "text-emerald-700" : "text-rose-700"}`}>
           {state.driftScore === null ? "-" : `${state.driftScore.toFixed(2)} / 100`}
         </p>
         <p className={`mt-2 w-fit px-2 py-1 text-[10px] inline-flex items-center rounded border ${state.driftStateClass}`}>
@@ -270,12 +290,12 @@ export function InvestQuoteKpiCards({
       </article>
 
       <article className={`${investUiClass.panel} ${investUiClass.panelInner}`}>
-        <p className="text-xs text-gray-400 mb-1">{isKo ? "연동/근거" : "Integration / source"}</p>
-        <p className="text-sm font-semibold text-white break-words">{state.provenanceSummary}</p>
+        <p className="text-xs text-zinc-500 mb-1">{isKo ? "연동/근거" : "Integration / source"}</p>
+        <p className="text-sm font-semibold leading-snug text-zinc-950">{state.provenanceSummary}</p>
         <div className="mt-2 flex flex-col items-start gap-2 text-[10px]">
           <p className={`inline-flex items-center rounded border px-2 py-1 ${state.upstreamStatusClass}`}>{isKo ? "Source" : "Source"}: {state.upstreamStatusLabel}</p>
-          <p className="text-gray-300 break-words leading-relaxed">{state.upstreamMessage}</p>
-          {state.upstreamFailureHint ? <p className="text-amber-200 break-words leading-relaxed">{isKo ? "원인 안내" : "Reason"}: {state.upstreamFailureHint}</p> : null}
+          <p className="text-zinc-600 leading-relaxed">{state.upstreamMessage}</p>
+          {state.upstreamFailureHint ? <p className="text-amber-700 break-words leading-relaxed">{isKo ? "원인 안내" : "Reason"}: {state.upstreamFailureHint}</p> : null}
         </div>
       </article>
     </div>
@@ -298,18 +318,18 @@ export function InvestQuoteKpiNotice({
   return (
     <div className="mt-3 space-y-2">
       {snapshot?.upstreamSync?.status === "failed" ? (
-        <p className="text-xs text-rose-200 border border-rose-500/40 rounded p-2 leading-relaxed break-words">
+        <p className="text-xs text-rose-700 border border-rose-200 rounded p-2 leading-relaxed break-words">
           {isKo ? "연동 경고: 업스트림 연동에 실패하여 로컬 스냅샷으로 대체했습니다." : "Connection warning: upstream connection failed, using a local snapshot."}
           {state.upstreamFailureHint ? ` ${state.upstreamFailureHint}` : ""}
         </p>
       ) : null}
       {state.isFallbackQuote ? (
-        <p className="text-xs text-amber-200 border border-amber-500/40 rounded p-2">
+        <p className="text-xs text-amber-700 border border-amber-200 rounded p-2">
           {isKo ? "폴백 경고: 실시간 지수 공급자가 폴백 모드로 동작 중입니다. 원본 공급자 상태를 점검하세요." : "Fallback warning: the live index provider is running in fallback mode. Check the source provider."}
         </p>
       ) : null}
       {state.isStaleQuote ? (
-        <p className="text-xs text-rose-200 border border-rose-500/40 rounded p-2">
+        <p className="text-xs text-rose-700 border border-rose-200 rounded p-2">
           {isKo ? "최신성 경고: 지수 업데이트가 지연되어 데이터 신선도가 낮습니다." : "Freshness warning: index updates are delayed."}
         </p>
       ) : null}

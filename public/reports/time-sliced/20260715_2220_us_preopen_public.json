@@ -1,0 +1,45 @@
+{
+  "schema": "market_signal.v1",
+  "content_class": "reference",
+  "slot": "2220_us_preopen",
+  "market": "US",
+  "date": "2026-07-15",
+  "kst_time": "2026-07-15T22:21:00+09:00",
+  "title": "U.S. Pre-Market Check — July 15, 2026",
+  "url": "https://shawnassets.wordpress.com/2026/07/15/us-preopen-market-check-20260715/",
+  "wp_post_id": 1021,
+  "wp_status": "publish",
+  "summary": "US futures constructive (+0.2~0.6%). Semiconductors strong from Tuesday close (SOXX +2.58%, SMH +2.51%, NVDA +4.06%). VIX 16.10 below 17. Korea crash exhaustion Day 4 confirmed. Next check 23:40 KST.",
+  "key_signals": {
+    "futures": {
+      "ES": "+0.23%",
+      "NQ": "+0.57%",
+      "YM": "+0.14%",
+      "RTY": "+0.29%"
+    },
+    "semiconductors": {
+      "SOXX_close": "+2.58%",
+      "SMH_close": "+2.51%",
+      "NVDA_close": "+4.06%",
+      "MU_close": "+4.92%"
+    },
+    "macro": {
+      "VIX": 16.1,
+      "US10Y": "4.561%",
+      "DXY": 100.84,
+      "WTI": "$80.13"
+    },
+    "krx_context": {
+      "KOSPI": "7,284.41 (+6.24%)",
+      "foreign_flow": "net buy",
+      "crash_status": "exhaustion Day 4 confirmed"
+    }
+  },
+  "next_checkpoint": {
+    "time_kst": "23:40",
+    "label": "US First Hour Confirmation",
+    "phase_id": "2340_us_first_hour"
+  },
+  "disclaimer": "Market observation note. Not investment advice. No trade or order execution is implied.",
+  "generated_at_kst": "2026-07-15T22:21:00+09:00"
+}

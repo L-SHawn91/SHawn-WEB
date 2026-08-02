@@ -72,7 +72,7 @@ export default function InvestSearchPage() {
     contextCard: isKo ? "정성 컨텍스트" : "Qualitative Context",
     readGuide: isKo ? "결과 읽는 법" : "How to Read This Result",
     bandPrefix: isKo ? "점수 구간" : "Score Band",
-    approach: isKo ? "권장 접근" : "Recommended Approach",
+    approach: isKo ? "참고 해석" : "Reference Interpretation",
     note: isKo
       ? "참고: 본 결과는 교육·해설용 자료이며 투자 조언이 아닙니다."
       : "Note: This output is for education and commentary only, not investment advice.",
@@ -81,16 +81,16 @@ export default function InvestSearchPage() {
   const scoreDescriptions = SCORE_DESCRIPTIONS[language];
   const scoreBandGuide = isKo
     ? [
-        { label: "80~100", meaning: "강한 매수 후보", action: "분할 매수 + 손절 기준 설정" },
-        { label: "60~79", meaning: "매수 우위", action: "소규모 진입 후 추세 확인" },
-        { label: "40~59", meaning: "관망 구간", action: "신규 진입보다 관찰 우선" },
-        { label: "0~39", meaning: "주의 구간", action: "비중 축소/리스크 점검" },
+        { label: "80~100", meaning: "강한 관찰 후보", action: "단계적 확인 + 위험 기준 점검" },
+        { label: "60~79", meaning: "긍정 신호 우세", action: "작게 확인하고 추세 지속 여부 관찰" },
+        { label: "40~59", meaning: "관망 구간", action: "신규 판단보다 관찰 우선" },
+        { label: "0~39", meaning: "주의 구간", action: "노출 위험과 데이터 품질 점검" },
       ]
     : [
-        { label: "80~100", meaning: "Strong buy candidate", action: "Scale in with predefined stop-loss rules" },
-        { label: "60~79", meaning: "Buy-leaning zone", action: "Start small and validate trend continuation" },
-        { label: "40~59", meaning: "Watch zone", action: "Observe first rather than opening a new position" },
-        { label: "0~39", meaning: "Caution zone", action: "Reduce exposure and recheck risk" },
+        { label: "80~100", meaning: "Strong observation candidate", action: "Review gradually with predefined risk checks" },
+        { label: "60~79", meaning: "Positive signals leading", action: "Validate trend continuation before any decision" },
+        { label: "40~59", meaning: "Watch zone", action: "Observe first rather than making a new decision" },
+        { label: "0~39", meaning: "Caution zone", action: "Recheck exposure risk and data quality" },
       ];
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);

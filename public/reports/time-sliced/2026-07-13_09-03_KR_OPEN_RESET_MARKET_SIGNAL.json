@@ -1,0 +1,48 @@
+{
+  "slot": "0903_kr_open_reset",
+  "date": "2026-07-13",
+  "kst": "2026-07-13T09:21:09+09:00",
+  "market_gate": "KRX OPEN",
+  "delayed_execution": true,
+  "summary": {
+    "headline": "유가 급등 속 KOSPI 약세 출발, KOSDAQ은 상대 강세",
+    "market_pulse": "defensive_with_sector_rotation",
+    "one_liner": "WTI +3.46% 급등이 장 초반 주도. SK하이닉스 -4.59% 급락 vs KOSDAQ +2.71%·원익IPS +7.36% 강세로 대형주-중소형주 극단적 차별화."
+  },
+  "index_snapshot": {
+    "KOSPI": {"value": "7,416.93", "change": "-0.79%", "direction": "하락"},
+    "KOSDAQ": {"value": "860.14", "change": "+2.71%", "direction": "상승"},
+    "KPI200": {"value": "1,188.87", "change": "-0.65%", "direction": "하락"},
+    "KODEX200": {"value": "119,715", "change": "-0.74%", "direction": "하락"}
+  },
+  "key_assets": {
+    "삼성전자": {"value": "288,500", "change": "+1.23%", "note": "NVDA 강세 전이. KOSPI 방어 중심"},
+    "SK하이닉스": {"value": "2,080,000", "change": "-4.59%", "note": "유가 충격+반도체 고점 부담+차익실현 복합"},
+    "원익IPS": {"value": "134,200", "change": "+7.36%", "note": "KOSDAQ 반도체 장비주 강세 주도"}
+  },
+  "global_signals": {
+    "WTI": {"value": "$73.88", "change": "+3.46%", "impact": "유가 급등 — 석유화학·항공·운송 섹터 압박"},
+    "US_futures": {"ES": "-0.10%", "NQ": "-0.04%", "YM": "-0.14%", "RTY": "-0.22%", "note": "소폭 마이너스. 추가 급락 신호 아님"},
+    "VIX": "15.03 (안정)",
+    "US10Y": "4.569% (안정)",
+    "USD_KRW": "1,501.46 (원화 소폭 약세)"
+  },
+  "market_drivers": [
+    "원유 공급 우려로 WTI +3.46% 급등 — 오늘 장의 지배적 변수",
+    "SK하이닉스 -4.59% 급락 — NQ 약세·MU 부진·차익실현 복합 충격",
+    "KOSDAQ +2.71% 상승 — 대형주→중소형주 자금 이동. 전면적 하락 아님",
+    "삼성전자 +1.23% 선방 — NVDA 금요일 +4.03% 강세 전이"
+  ],
+  "risk_check": {
+    "oil_shock": {"status": "active", "threshold": "WTI $75 상회 시 심화"},
+    "semis_divergence": {"status": "active", "detail": "SK하이닉스 -4.59% vs 삼성전자 +1.23% 극단적 차별화"},
+    "global_contagion": {"status": "stable", "detail": "US 선물 마이너스 폭 제한적. VIX 안정"}
+  },
+  "next_checkpoint": "12:20 KST 장중 점검",
+  "disclaimer": "시장 데이터 노트. 투자 조언 아님. 데이터 출처: Naver Finance(KRX 실시간), Yahoo Finance(US 선물·환율), CNBC(VIX·금리). KOSPI200 직접선물 unavailable. 일부 데이터는 지연·추정값 포함.",
+  "visual_labels": {
+    "hero_title": "KR Open Reset",
+    "slot_label": "09:03 개장 확인",
+    "public_label": "공개 시장 신호"
+  }
+}

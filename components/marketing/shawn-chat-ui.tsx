@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { MessageSquare, Shield, Send, LogIn, ExternalLink, X, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
 export function ShawnChatUI() {
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
@@ -119,6 +121,10 @@ export function ShawnChatUI() {
         setIsAuthorized(false);
         setMessages(prev => [...prev, { role: "system", content: "🔒 로그아웃되었습니다." }]);
     };
+
+    if (pathname?.startsWith("/invest")) {
+        return null;
+    }
 
     if (!isOpen) {
         return (

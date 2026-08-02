@@ -1,0 +1,31 @@
+{
+  "decision": "published_visual_verified",
+  "post_id": "1261",
+  "public_url": "https://shawnassets.wordpress.com/2026/07/23/market-close-note-1545-20260723/",
+  "uploads": {
+    "hero": {
+      "id": 1262,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-67.png",
+      "name": "market_signal_generated_visual_hero.png"
+    },
+    "graph": {
+      "id": 1263,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-69.gif",
+      "name": "market_signal_linear_graph_animation.gif"
+    },
+    "icon": {
+      "id": 1264,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/shawn_investment_assets_icon-67.png",
+      "name": "shawn_investment_assets_icon.png"
+    }
+  },
+  "readback": {
+    "status_code": 200,
+    "title_present": true,
+    "hero_present": true,
+    "graph_present": true,
+    "icon_present": true
+  },
+  "safety_hits": [],
+  "timestamp": "2026-07-23T15:58:11+0900"
+}

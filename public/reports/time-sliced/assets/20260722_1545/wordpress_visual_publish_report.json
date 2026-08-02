@@ -1,0 +1,75 @@
+{
+  "decision": "published_visual_verified",
+  "action": "already_published",
+  "post_id": 1246,
+  "slug": "market-close-note-1545-20260722",
+  "public_url": "https://shawnassets.wordpress.com/2026/07/22/market-close-note-1545-20260722/",
+  "uploads": {
+    "hero": {
+      "id": null,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-65.png",
+      "name": "market_signal_generated_visual_hero"
+    },
+    "graph": {
+      "id": null,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-67.gif",
+      "name": "market_signal_linear_graph_animation"
+    },
+    "icon": {
+      "id": null,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/shawn_investment_assets_icon-65.png",
+      "name": "shawn_investment_assets_icon"
+    }
+  },
+  "readback": {
+    "status_code": 200,
+    "title_present": true,
+    "hero_present": true,
+    "graph_present": true,
+    "icon_present": true,
+    "graph_caveat_present": true,
+    "non_advice_present": true
+  },
+  "cdn_readback": {
+    "hero": {
+      "status_code": 200,
+      "bytes": 101973,
+      "content_type": "image/png",
+      "size": [
+        1200,
+        675
+      ],
+      "mode": "RGB",
+      "frames": 1,
+      "loop": null
+    },
+    "graph": {
+      "status_code": 200,
+      "bytes": 218651,
+      "content_type": "image/gif",
+      "size": [
+        1200,
+        675
+      ],
+      "mode": "P",
+      "frames": 28,
+      "loop": null
+    },
+    "icon": {
+      "status_code": 200,
+      "bytes": 248563,
+      "content_type": "image/png",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA",
+      "frames": 1,
+      "loop": null
+    }
+  },
+  "safety_hits": [],
+  "site_chrome_nonarticle_hit_count": 2,
+  "site_chrome_note": "Unrelated WordPress page-shell strings were excluded; article-content scan was clean.",
+  "timestamp": "2026-07-22T16:08:14+0900"
+}

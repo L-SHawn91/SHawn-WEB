@@ -1,0 +1,46 @@
+{
+  "schema": "time_sliced_public_delivery.v1",
+  "slot": "2026-07-23 15:45 KST",
+  "source_note": "20260723_1545_public_note.json",
+  "public_web_artifacts": {
+    "json": "20260723_1545.json",
+    "html": "20260723_1545.html",
+    "hero": "assets/20260723_1545/market_signal_generated_visual_hero.png",
+    "graph_animation": "assets/20260723_1545/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "assets/20260723_1545/shawn_investment_assets_icon.png"
+  },
+  "wordpress": {
+    "slug": "market-close-note-1545-20260723",
+    "post_id": 1261,
+    "public_url": "https://shawnassets.wordpress.com/2026/07/23/market-close-note-1545-20260723/",
+    "status": "published_visual_verified",
+    "action": "created_and_published"
+  },
+  "public_safety": {
+    "no_private_ranges": true,
+    "no_holdings": true,
+    "no_broker_details": true,
+    "no_portfolio_buckets": true,
+    "no_revision_lineage": true,
+    "safety_hits": []
+  },
+  "visual_qa": {
+    "status": "PASS",
+    "report": "assets/20260723_1545/visual_qa_report.json",
+    "frames_checked": [
+      "start",
+      "middle",
+      "final",
+      "grayscale"
+    ],
+    "gif_loop": null,
+    "max_quantized_colors": 71,
+    "wordpress_cdn_readback": "PASS",
+    "wordpress_browser_readback": "PASS",
+    "browser_report": "assets/20260723_1545/wordpress_browser_qa.json",
+    "viewports": [
+      "1440x1100",
+      "390x844"
+    ]
+  }
+}

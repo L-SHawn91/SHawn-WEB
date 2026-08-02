@@ -1,0 +1,39 @@
+{
+  "schema": "time_sliced_public_market_signal.v1",
+  "phase_id": "0845_kr_preopen",
+  "created_at_kst": "2026-07-13T08:46:00+09:00",
+  "title": "한국장 장전 신호 — 2026.07.13 (월) 08:45",
+  "slug": "2026-07-13-0845-kr-preopen-market-signal-note",
+  "market": "KRX",
+  "market_status": "PREOPEN",
+  "public_copy": {
+    "headline": "월요일 한국장, US 금요일 회복과 선물 약세 사이",
+    "conclusion": "US 금요일 마감은 NVDA +4.03%·VIX 15.03·원화 강세로 우호적이었으나, 월요일 아시아 세션에서 ES/NQ 선물이 소폭 약세로 전환하고 WTI가 3.3% 급등하면서 장 초반 기대치가 다소 낮아졌다. 09:03 첫 체결에서 KOSPI·KODEX200이 플러스로 출발하고 삼성전자·SK하이닉스가 동반 상승할지가 오전 방향을 결정한다.",
+    "key_signals": [
+      "US 금요일 마감: QQQ +0.31%, SOXX -0.06%, SMH +0.54%, NVDA +4.03% 강세",
+      "월요일 선물: ES -0.31%, NQ -0.51%, RTY -0.45% — 아시아 세션 소폭 약세 (유동성 낮아 과대해석 주의)",
+      "WTI +3.31%($73.77) 급등 — 주말 공급 우려로 유가 상승. 석유화학·정유 수혜, 항공·운송 부담 가능성",
+      "USD/KRW 1,498.80 안정, VIX 15.03 저공포, US10Y 4.587% 안정 — macro 패닉 신호 없음",
+      "KRX PREOPEN: 모든 지수·종목 무체결(0.00%) — 09:03 첫 체결까지 방향성 미확정"
+    ],
+    "index_preopen": {
+      "KOSPI": "7,475.94 (전일 종가, PREOPEN 무체결)",
+      "KOSDAQ": "837.43 (전일 종가, PREOPEN 무체결)",
+      "KPI200": "1,196.69 (전일 종가, PREOPEN 무체결)",
+      "KODEX200": "120,605 (전일 종가, PREOPEN 무체결)"
+    },
+    "key_stocks_preopen": {
+      "삼성전자": "285,000원 (전일 종가, PREOPEN 무체결)",
+      "SK하이닉스": "2,180,000원 (전일 종가, PREOPEN 무체결)"
+    },
+    "scenario_matrix": [
+      {"scenario": "우호적 출발", "condition": "KOSPI +0.5%↑·KODEX200 +1.0%↑·삼성전자+SK하이닉스 동반 플러스", "signal": "US 금요일 강세가 한국장으로 전이되는 긍정적 신호"},
+      {"scenario": "중립 출발", "condition": "KOSPI +0.2~+0.5%·삼성전자↑·SK하이닉스 보합", "signal": "반도체 내부 차별화. 09:10 추가 확인 필요"},
+      {"scenario": "경계 출발", "condition": "KOSPI -0.3%↓ 또는 삼성전자+SK하이닉스 모두 약세", "signal": "월요일 선물 약세가 현물로 전이. 오전 중 회복 여부 관찰"}
+    ],
+    "oil_spike_note": "WTI +3.31% 급등은 반도체·AI 섹터와는 별개 축. 석유화학·정유 업종은 단기 수혜 가능성, 항공·운송·해운은 비용 압박 요인으로 관찰.",
+    "next_check": "09:03 KST — 개장 첫 체결 확인",
+    "data_limits": "ES/NQ 선물은 유동성 낮은 아시아 세션 값으로 과대해석 주의. PREOPEN은 무체결 상태. KOSPI200 직접선물 데이터 미확보.",
+    "disclaimer": "이 자료는 시장 신호 관찰 노트이며 투자 권유·매매 제안이 아닙니다. 모든 투자 판단은 본인 책임입니다."
+  }
+}

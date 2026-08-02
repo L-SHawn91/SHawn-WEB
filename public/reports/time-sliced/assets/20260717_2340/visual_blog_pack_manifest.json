@@ -1,0 +1,17 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "미국 첫 시간 시장 신호 · 2026-07-17 23:40 KST",
+  "source_note": "/reports/time-sliced/20260717_2340_us_first_hour/market_signal_20260717_2340.json",
+  "assets": {
+    "hero": "../SHawn-WEB/public/reports/time-sliced/assets/20260717_2340/market_signal_generated_visual_hero.png",
+    "graph_animation": "../SHawn-WEB/public/reports/time-sliced/assets/20260717_2340/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "../SHawn-WEB/public/reports/time-sliced/assets/20260717_2340/shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "generated_image": "uses official SHawn GPT-image-2 generated investment asset as composited editorial visual source",
+    "aspect_ratio": "16:9 for both editorial hero and graph animation; responsive inline display uses the same ratio and the theme-cropped featured image is cleared",
+    "line_graph_animation": "direction-aware signed snapshot reveal; negative values move down, positive values move up, and the final frame does not loop-reset to zero",
+    "shawn_icon": "official SHawn x SHide operational icon pack",
+    "public_safe": true
+  }
+}

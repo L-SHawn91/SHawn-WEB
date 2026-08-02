@@ -1,0 +1,73 @@
+# WordPress → SHawn-WEB → Vercel Operations
+
+## Purpose
+
+The public website mirrors all currently published posts from three read-only WordPress sources:
+
+| WordPress source | SHawn-WEB lane |
+|---|---|
+| `shawnaiintelligence.wordpress.com` | AI Notes |
+| `shawnbiohub.wordpress.com` | Bio Notes |
+| `shawnassets.wordpress.com` | Asset Signals |
+
+The importer preserves the WordPress post ID, source site, canonical source URL, publication date, body images, and featured image. A post that is unpublished or removed from WordPress is removed from the managed SHawn-WEB mirror only after all three source fetches pass completeness checks.
+
+## Commands
+
+```bash
+# Deterministic fixture test: create, no-change idempotency, update, removal, URL safety
+corepack pnpm run test:wordpress-public-sync
+
+# Read-only live source preview
+corepack pnpm run sync:wordpress-public:dry
+
+# Live write to content/posts and content/wordpress-sync-manifest.json
+corepack pnpm run sync:wordpress-public
+
+# Full public-content preflight and sync
+corepack pnpm run sync:public-content
+
+# Read-only production-alias HTTP verification
+/home/mdge/.hermes/scripts/shawn_web_wordpress_sync.sh --verify-production-only
+```
+
+## Scheduled production path
+
+- Scheduler job: `[SUPPORT] SHawn-WEB nightly WordPress→Vercel sync`
+- Schedule: daily at 03:30 KST, after the three WordPress publishing pipelines
+- Script: `/home/mdge/.hermes/scripts/shawn_web_wordpress_sync.sh`
+- Delivery: script-only watchdog; unchanged runs produce no message
+- Git behavior: generated `content/` changes are committed locally with content-only scope; no remote push
+- Deployment: verified production build, then an isolated file snapshot is sent to Vercel production and read back over HTTP
+
+## Safety gates
+
+1. A non-blocking file lock prevents overlapping runs.
+2. A reviewed non-content source baseline prevents unrelated dirty code from entering an automatic deployment.
+3. Pre-existing `content/` dirtiness blocks the run, preventing manual and generated content from being mixed.
+4. A deterministic fixture test runs before every live sync.
+5. Public forbidden-term checks run before and after the import.
+6. All three WordPress sources must return `fetched === remote_total`; otherwise no removal reconciliation occurs.
+7. Unsupported URL protocols are stripped from imported links and images.
+8. Unchanged MDX files are not rewritten, and an unchanged manifest keeps its prior hash and timestamp.
+9. The last deployed content-tree digest is stored outside the repository. A failed deployment is retried on the next run even when WordPress has no newer change.
+10. After the build, the approved non-content digest and committed content state are checked again.
+11. Deployment uses a temporary snapshot containing only tracked and non-ignored untracked files plus the local Vercel project link; ignored secrets and later worktree mutations are excluded.
+12. Vercel inspection must show the expected production alias (`https://shawnlab.vercel.app`), and that alias must keep all redirects on the same origin while passing content-aware HTTP readback for `/`, `/blog`, `/privacy`, and `/sitemap.xml`; only then does the deployment state marker advance.
+
+## Approving intentional website source changes
+
+The scheduled job refuses to deploy when non-content website files differ from the last reviewed baseline. After reviewing and verifying an intentional source/UI change, refresh the baseline explicitly:
+
+```bash
+/home/mdge/.hermes/scripts/shawn_web_wordpress_sync.sh --approve-baseline-only
+```
+
+This records a digest only. It does not store file contents or secrets and does not deploy.
+
+## Recovery
+
+- **WordPress/API failure:** fix the source/API issue and rerun; no partial deletion is performed.
+- **Build failure:** fix the website gate failure, reapprove the source baseline, and rerun.
+- **Vercel failure after local content commit:** rerun the same script. The undeployed content-tree digest causes deployment to retry.
+- **Unexpected `content/` dirtiness:** inspect and separate manual edits before rerunning. Never bypass the guard by staging unrelated content.

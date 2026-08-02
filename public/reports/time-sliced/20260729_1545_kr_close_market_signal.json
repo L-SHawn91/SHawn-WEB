@@ -1,0 +1,66 @@
+{
+  "schema": "time_sliced_public_note.v1",
+  "content_class": "public_market_data_note",
+  "slot": "2026-07-29 15:45 KST",
+  "title": "2026-07-29 15:45 한국 시장 신호",
+  "summary": "한국 현물시장은 큰 폭의 하락으로 마감했습니다. 지수와 반도체 관련 공개 지표의 변화폭을 시점과 한계와 함께 정리합니다.",
+  "visual_values": [
+    {
+      "label": "KOSPI",
+      "value": -5.98
+    },
+    {
+      "label": "KOSPI200",
+      "value": -6.18
+    },
+    {
+      "label": "KODEX200",
+      "value": -6.34
+    },
+    {
+      "label": "KOSDAQ",
+      "value": -6.12
+    }
+  ],
+  "key_points": [
+    "KOSPI는 5,663.24, KOSPI200은 887.20으로 마감했습니다.",
+    "반도체 관련 공개 표본은 지수보다 큰 하락폭을 보였으며, 세부 종목별 차이가 있었습니다.",
+    "전일 미국 반도체 ETF 종가와 당일 한국 현물 마감은 모두 약세였지만, 시점이 달라 직접적인 원인으로 해석하지 않습니다.",
+    "원/달러와 미국 지수선물은 다음 확인 시점에 다시 비교할 보조 신호입니다."
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "미국 반도체 지표",
+      "reading": "전일 종가와 야간 흐름을 분리해 확인합니다."
+    },
+    {
+      "condition": "미국 지수선물",
+      "reading": "지수별 방향이 같은지, 또는 엇갈리는지 확인합니다."
+    },
+    {
+      "condition": "원/달러",
+      "reading": "다음 한국 개장 전 새 시점으로 다시 비교합니다."
+    },
+    {
+      "condition": "한국 수급 공시",
+      "reading": "동일 날짜의 확인 가능한 확정 수치가 있을 때만 함께 읽습니다."
+    }
+  ],
+  "limitations": [
+    "이 화면은 공개 시장 자료를 설명하는 읽기 전용 노트입니다.",
+    "표시값은 관측 시점의 스냅샷이며 실시간 전체 경로나 미래 방향을 뜻하지 않습니다.",
+    "해외 종가와 야간 지표는 한국 현물 마감과 시점이 다를 수 있습니다.",
+    "교육·해설용 참고 자료이며 투자 조언이 아닙니다."
+  ],
+  "source_caveat": "한국 현물 마감 수치: Naver Finance, 2026-07-29 15:52 KST. 해외 전일 종가 및 야간 보조값: Yahoo Finance, 지연 가능성과 시점 차이가 있습니다.",
+  "disclaimer": "교육·해설용 참고 자료이며 투자 조언이 아닙니다.",
+  "assets": {
+    "hero": "assets/20260729_1545/market_signal_generated_visual_hero.png",
+    "graph_animation": "assets/20260729_1545/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "assets/20260729_1545/shawn_investment_assets_icon.png"
+  },
+  "compliance": {
+    "public_safety_scan": "pass",
+    "no_trade_instruction": true
+  }
+}

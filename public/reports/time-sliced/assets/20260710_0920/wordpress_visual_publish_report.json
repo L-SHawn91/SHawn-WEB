@@ -1,0 +1,31 @@
+{
+  "decision": "published_visual_verified",
+  "post_id": "721",
+  "public_url": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0920-kr-open-reaction-market-signal-note/",
+  "uploads": {
+    "hero": {
+      "id": 836,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-54.png",
+      "name": "market_signal_generated_visual_hero.png"
+    },
+    "graph": {
+      "id": 837,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-56.gif",
+      "name": "market_signal_linear_graph_animation.gif"
+    },
+    "icon": {
+      "id": 838,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/shawn_investment_assets_icon-54.png",
+      "name": "shawn_investment_assets_icon.png"
+    }
+  },
+  "readback": {
+    "status_code": 200,
+    "title_present": true,
+    "hero_present": true,
+    "graph_present": true,
+    "icon_present": true
+  },
+  "safety_hits": [],
+  "timestamp": "2026-07-10T16:53:41+0900"
+}

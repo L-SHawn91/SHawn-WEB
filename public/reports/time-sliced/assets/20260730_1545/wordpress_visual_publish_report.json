@@ -1,0 +1,33 @@
+{
+  "decision": "published",
+  "post_id": 1625,
+  "public_url": "https://shawnassets.wordpress.com/2026/07/30/2026-07-30-1545-kr-close-market-signal-note/",
+  "slug": "2026-07-30-1545-kr-close-market-signal-note",
+  "uploads": {
+    "hero": {
+      "id": 1622,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-71.png",
+      "name": "market_signal_generated_visual_hero.png"
+    },
+    "graph": {
+      "id": 1623,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-73.gif",
+      "name": "market_signal_linear_graph_animation.gif"
+    },
+    "icon": {
+      "id": 1624,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/shawn_investment_assets_icon-71.png",
+      "name": "shawn_investment_assets_icon.png"
+    }
+  },
+  "readback": {
+    "status_code": 200,
+    "published_status": true,
+    "title_present": true,
+    "disclaimer_present": true,
+    "hero_present": true,
+    "graph_present": true,
+    "icon_present": true
+  },
+  "safety_hits": []
+}

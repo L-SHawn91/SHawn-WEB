@@ -1,0 +1,17 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "2026-07-09 15:45 한국장 마감 시장 신호 노트",
+  "source_note": "/home/mdge/github/SHawn-WEB/public/reports/time-sliced/2026-07-09_15-45_KR_CLOSE_MARKET_SIGNAL.json",
+  "assets": {
+    "hero": "/home/mdge/github/SHawn-WEB/public/reports/time-sliced/assets/20260709_1545/market_signal_generated_visual_hero.png",
+    "graph_animation": "/home/mdge/github/SHawn-WEB/public/reports/time-sliced/assets/20260709_1545/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/home/mdge/github/SHawn-WEB/public/reports/time-sliced/assets/20260709_1545/shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "generated_image": "uses official SHawn GPT-image-2 generated investment asset as composited editorial visual source",
+    "aspect_ratio": "16:9 for both editorial hero and graph animation; responsive inline display uses the same ratio and the theme-cropped featured image is cleared",
+    "line_graph_animation": "direction-aware signed snapshot reveal; negative values move down, positive values move up, and the final frame does not loop-reset to zero",
+    "shawn_icon": "official SHawn x SHide operational icon pack",
+    "public_safe": true
+  }
+}

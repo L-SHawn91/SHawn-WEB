@@ -1,0 +1,66 @@
+{
+  "url": "https://shawnassets.wordpress.com/2026/07/23/market-close-note-1545-20260723/",
+  "viewports": {
+    "desktop": {
+      "title_present": true,
+      "title_boxes": 1,
+      "title_rect": {
+        "width": 607,
+        "height": 120.9375,
+        "left": 214,
+        "right": 821
+      },
+      "scroll_width": 1440,
+      "client_width": 1440,
+      "overflow_x": false,
+      "hero": {
+        "complete": true,
+        "naturalWidth": 1200,
+        "naturalHeight": 675,
+        "src": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-67.png"
+      },
+      "graph": {
+        "complete": true,
+        "naturalWidth": 1200,
+        "naturalHeight": 675,
+        "src": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-69.gif"
+      },
+      "public_safe_present": true,
+      "limits_present": true,
+      "inner_width": 1440,
+      "http_status": 200,
+      "screenshot": "/tmp/shawn_inv_1545_20260723/wordpress_desktop.png"
+    },
+    "mobile_390": {
+      "title_present": true,
+      "title_boxes": 1,
+      "title_rect": {
+        "width": 269.5,
+        "height": 110.15625,
+        "left": 60.25,
+        "right": 329.75
+      },
+      "scroll_width": 390,
+      "client_width": 390,
+      "overflow_x": false,
+      "hero": {
+        "complete": true,
+        "naturalWidth": 1200,
+        "naturalHeight": 675,
+        "src": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-67.png"
+      },
+      "graph": {
+        "complete": true,
+        "naturalWidth": 1200,
+        "naturalHeight": 675,
+        "src": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-69.gif"
+      },
+      "public_safe_present": true,
+      "limits_present": true,
+      "inner_width": 390,
+      "http_status": 200,
+      "screenshot": "/tmp/shawn_inv_1545_20260723/wordpress_mobile_390.png"
+    }
+  },
+  "decision": "PASS"
+}

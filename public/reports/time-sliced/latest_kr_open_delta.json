@@ -1,0 +1,64 @@
+{
+  "schema": "market_signal_note.v1",
+  "content_class": "public_market_note",
+  "title": "2026-07-09 09:13 한국 개장 후 시장 신호 재확인",
+  "slug": "2026-07-09-0913-kr-open-delta-market-signal-note",
+  "generated_at_kst": "2026-07-09T10:17:35+09:00",
+  "market_gate": "Naver KRX OPEN evidence: 2026-07-09T10:13:00+09:00",
+  "summary": "한국 정규장 초반 공개 지표는 09시 후반보다 한 번 더 강해졌다. 다만 해외 선물과 환율은 보조 온도계라서 흐름 지속 여부는 다음 공개 확인 구간에서 다시 분리해 읽어야 한다.",
+  "key_points": [
+    "코스피 +3.77%, 코스닥 +3.83%, 코스피200 +4.18%로 전체 지수와 성장주 온도가 함께 높아졌다.",
+    "KODEX 200 +3.95%, 레버리지형 프록시 +7.67%로 대형주·프로그램 온도계도 개선 쪽이다.",
+    "삼성전자 +3.96%, SK하이닉스 +8.29%로 반도체 주도축은 09시 후반보다 강해졌다.",
+    "달러/원은 1,504.50원 부근이고, CNBC quote-cache 기준 S&P500 선물 0.01%, Nasdaq100 선물 0.02%, VIX 선물 0.97%로 확인됐다.",
+    "직접 KOSPI200 선물 값은 이번 확인에서 확보하지 못해 코스피200·KODEX 계열 프록시와 현물 지수를 분리해 읽는다."
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "코스피200·KODEX 계열 강도 유지",
+      "reading": "초반 회복이 대형주 전반으로 이어지는지 확인한다."
+    },
+    {
+      "condition": "코스닥과 반도체 주도축의 동행 여부",
+      "reading": "성장주 체감 온도와 대형 반도체 온도가 같은 방향인지 본다."
+    },
+    {
+      "condition": "달러/원 또는 변동성 지표 재상승",
+      "reading": "공개 지수 개선의 신뢰도를 낮춰 해석한다."
+    },
+    {
+      "condition": "다음 확인 구간에서 상승폭 급축소",
+      "reading": "강한 출발 뒤 과열 해소인지 흐름 약화인지 구분한다."
+    }
+  ],
+  "limitations": [
+    "실행 시각이 늦어 09:13 자체의 체결 경로가 아니라 지연 재확인 자료다.",
+    "일부 해외 선물은 quote-cache이고, 현물 확정 신호가 아니라 보조 온도계다.",
+    "공개 시장 자료를 읽기 쉽게 정리한 것이며 개인 판단을 대신하지 않는다."
+  ],
+  "visual_values": [
+    {
+      "label": "KOSPI",
+      "value": 3.77
+    },
+    {
+      "label": "KOSDAQ",
+      "value": 3.83
+    },
+    {
+      "label": "KPI200",
+      "value": 4.18
+    },
+    {
+      "label": "KODEX200",
+      "value": 3.95
+    }
+  ],
+  "snapshot_label": "09:13 지연 재확인 스냅샷",
+  "visual_bundle": {
+    "hero": "/reports/time-sliced/assets/20260709_0913/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260709_0913/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260709_0913/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/assets/20260709_0913/visual_blog_pack_manifest.json"
+  }
+}

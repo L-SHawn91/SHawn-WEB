@@ -1,0 +1,39 @@
+{
+  "schema": "public_signal_note.v1",
+  "slot": "0920_kr_open_reaction",
+  "date": "2026-07-16",
+  "published_kst": "2026-07-16T10:28:00+09:00",
+  "delayed": true,
+  "market": "KRX",
+  "market_status": "OPEN",
+  "title": "Korea Market Open Signal — July 16, 2026",
+  "headline": "Pre-holiday semiconductor pressure drives KOSPI divergence. Mid-cap resilience observed despite headline index decline.",
+  "observations": [
+    {
+      "label": "Market Direction",
+      "value": "Semiconductor-led decline, broad market divergence"
+    },
+    {
+      "label": "Key Factor",
+      "value": "Pre-holiday positioning + US semiconductor weakness spillover"
+    },
+    {
+      "label": "External Risk",
+      "value": "Low — US futures flat, VIX 15.67, won stable"
+    },
+    {
+      "label": "Next Session",
+      "value": "Monday July 20 (after Constitution Day holiday)"
+    }
+  ],
+  "wordpress": {
+    "post_id": 1026,
+    "status": "publish",
+    "url": "https://shawnassets.wordpress.com/2026/07/16/korea-market-open-signal-20260716/"
+  },
+  "visual": {
+    "status": "visual_unverified",
+    "reason": "Cron executed late (10:28 KST). Visual generation skipped to prioritize timely delivery."
+  },
+  "disclaimer": "Public market data note. Not investment advice."
+}

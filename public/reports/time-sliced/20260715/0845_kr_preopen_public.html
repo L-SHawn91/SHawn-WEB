@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7월 15일 장전 시장 신호 — 미 반도체 강세에 힘입은 기술적 반등 지속</title>
+<style>
+:root {
+  --shawn-forest: #2d4232;
+  --shawn-cream: #faf8f5;
+  --shawn-sage: #8fa68a;
+  --shawn-gold: #ba9b65;
+  --shawn-dark: #1a1f1c;
+  --shawn-gray: #6b7280;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--shawn-cream);
+  color: var(--shawn-dark);
+  line-height: 1.6;
+  word-break: keep-all;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 16px;
+}
+.header-card {
+  background: var(--shawn-forest);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.header-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 120px; height: 100%;
+  background: linear-gradient(135deg, transparent 40%, rgba(186,155,101,0.25));
+  pointer-events: none;
+}
+.header-card .hero-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  object-fit: contain;
+  background: rgba(255,255,255,0.07);
+  margin-top: 16px;
+}
+.header-card h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+}
+.header-card .meta-row {
+  display: flex;
+  gap: 12px;
+  font-size: 0.8rem;
+  opacity: 0.75;
+  margin-bottom: 12px;
+}
+.gold-rule {
+  height: 2px;
+  background: var(--shawn-gold);
+  margin: 8px 0 14px;
+  border: none;
+}
+.conclusion-box {
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--shawn-forest);
+  margin: 20px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--shawn-sage);
+}
+.signal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0;
+}
+.signal-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--card-shadow);
+  border-left: 3px solid var(--shawn-sage);
+}
+.signal-card.positive { border-left-color: #4a9e6e; }
+.signal-card.positive .signal-label { color: #3a7d55; }
+.signal-card.neutral_positive { border-left-color: #7b9cae; }
+.signal-card .signal-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--shawn-gray);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.signal-card .signal-value {
+  font-size: 0.85rem;
+  color: var(--shawn-dark);
+}
+.scenario-row {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--card-shadow);
+  margin: 8px 0;
+  border-left: 3px solid var(--shawn-sage);
+}
+.scenario-row .scenario-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 3px;
+}
+.scenario-row .scenario-prob {
+  font-size: 0.78rem;
+  color: var(--shawn-gold);
+  font-weight: 600;
+}
+.scenario-row .scenario-desc {
+  font-size: 0.83rem;
+  color: #4a4a4a;
+  margin-top: 3px;
+}
+.check-list {
+  list-style: none;
+  padding: 0;
+}
+.check-list li {
+  padding: 8px 12px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  margin: 5px 0;
+  box-shadow: var(--card-shadow);
+  font-size: 0.85rem;
+}
+.check-list li::before {
+  content: '▸ ';
+  color: var(--shawn-sage);
+  font-weight: 700;
+}
+.graph-container {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+  margin: 16px 0;
+  text-align: center;
+}
+.graph-container img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: contain;
+  border-radius: 6px;
+  max-width: 100%;
+}
+.footer-limits {
+  background: var(--shawn-dark);
+  color: #b0b8b1;
+  border-radius: var(--radius);
+  padding: 16px;
+  font-size: 0.73rem;
+  line-height: 1.55;
+  margin-top: 24px;
+}
+.footer-limits strong { color: var(--shawn-gold); }
+.icon-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.icon-row img {
+  width: 28px; height: 28px;
+  border-radius: 4px;
+}
+.next-check {
+  background: var(--shawn-gold);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin: 16px 0;
+}
+@media (max-width: 390px) {
+  body { padding: 12px 10px; }
+  .signal-grid { grid-template-columns: 1fr; }
+  .header-card { padding: 20px 16px; }
+  .header-card h1 { font-size: 1.15rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header-card">
+  <div class="meta-row">
+    <span>2026년 7월 15일 수요일</span>
+    <span>·</span>
+    <span>08:45 KST</span>
+    <span>·</span>
+    <span>장전 시장 신호 노트</span>
+  </div>
+  <h1>미 반도체 강세에 힘입은<br>기술적 반등 지속</h1>
+  <hr class="gold-rule">
+  <div class="conclusion-box">
+    크래시 사이클 종료 확인 3일차. 미국 반도체 2.5~4% 강세·VIX 16.50·원화 안정이 기술적 반등을 지지한다. 장중 차익실현 변동성은 정상 범위이며, 09:00 개장 후 첫 10분이 방향을 확정한다.
+  </div>
+  <img class="hero-img" src="https://shawnassets.wordpress.com/wp-content/uploads/2026/07/hero_0845_20260715.png" alt="시장 신호">
+</div>
+
+<div class="section-title">핵심 신호</div>
+<div class="signal-grid">
+  <div class="signal-card positive">
+    <div class="signal-label">미국 반도체</div>
+    <div class="signal-value">SOXX +2.58%, SMH +2.51%, NVDA +4.06% — 삼성전자·SK하이닉스 직접 호재</div>
+  </div>
+  <div class="signal-card positive">
+    <div class="signal-label">변동성 지수</div>
+    <div class="signal-value">VIX 16.50 (20 아래 유지) — 공포 국면 종료 확인</div>
+  </div>
+  <div class="signal-card positive">
+    <div class="signal-label">원·달러 환율</div>
+    <div class="signal-value">USD/KRW 추정 1,488 — 원화 안정, 외국인 복귀 긍정</div>
+  </div>
+  <div class="signal-card neutral_positive">
+    <div class="signal-label">미국 선물</div>
+    <div class="signal-value">ES +0.13%, NQ +0.25% — 소폭 플러스, 반전 신호 없음</div>
+  </div>
+  <div class="signal-card positive" style="grid-column: 1 / -1;">
+    <div class="signal-label">국채 금리</div>
+    <div class="signal-value">US10Y 4.587% — 금리 하락, 위험선호 환경 지지</div>
+  </div>
+</div>
+
+<div class="section-title">09:00~09:30 시나리오</div>
+
+<div class="scenario-row">
+  <div class="scenario-name">📈 갭 상승 후 안정</div>
+  <div class="scenario-prob">확률 약 65%</div>
+  <div class="scenario-desc">KOSPI 6,900~6,960. 미 반도체 강세 반영, 09:00~09:10 소폭 조정 후 안정. 기술주·반도체 중심 상승. 시장 참여자 관망 심리 완화.</div>
+</div>
+
+<div class="scenario-row">
+  <div class="scenario-name">↔️ 횡보·숨고르기</div>
+  <div class="scenario-prob">확률 약 27%</div>
+  <div class="scenario-desc">KOSPI 6,850~6,900. 7/14 V-반등(+5.53%) 후 단기 차익실현. 제한적 범위에서 매매 공방. 과열 부담 속 추가 모멘텀 확인.</div>
+</div>
+
+<div class="scenario-row">
+  <div class="scenario-name">⚠️ 급반전·경계</div>
+  <div class="scenario-prob">확률 약 8%</div>
+  <div class="scenario-desc">KOSPI 6,800 이하. V자 회복 실패. 외국인 이탈·달러 급등·반도체 약세 연계. 위험 신호 — 방어 전환 필요.</div>
+</div>
+
+<div class="graph-container">
+  <p style="font-size:0.82rem;color:var(--shawn-gray);margin-bottom:8px;">📊 장전 신호 그래프 — 설명용 도해</p>
+  <img src="https://shawnassets.wordpress.com/wp-content/uploads/2026/07/graph_0845_20260715.gif" alt="장전 신호 애니메이션 그래프" loading="lazy">
+  <p style="font-size:0.68rem;color:#9ca3af;margin-top:4px;">애니메이션 그래프. 실선=관측 경로, 점선=예상 범위. 설명 목적이며 실제 거래 데이터를 정확히 복제하지 않을 수 있음.</p>
+</div>
+
+<div class="section-title">오늘 확인 루틴</div>
+<ul class="check-list">
+  <li>09:00 개장: KOSPI·KOSDAQ 첫 체결 확인</li>
+  <li>09:03: 삼성전자·SK하이닉스 시초가 비교</li>
+  <li>09:10: 방향 확정 — 안정적 상승·횡보·반전 판단</li>
+  <li>USD/KRW·외국인 순유입 확인</li>
+  <li>KOSPI200 선물·KODEX200 동반 움직임 확인</li>
+</ul>
+
+<div class="next-check">
+  ⏱️ 다음 확인 — 09:03 개장 리셋 리포트
+</div>
+
+<div class="icon-row">
+  <img src="https://shawnassets.wordpress.com/wp-content/uploads/2026/07/icon_shawn.png" alt="SHawn" width="28" height="28">
+  <span style="font-size:0.73rem;color:var(--shawn-gray);">SHawn Report · 시장 신호 노트</span>
+</div>
+
+<div class="footer-limits">
+  <strong>데이터 한계와 주의사항</strong><br>
+  이 자료는 <strong>시장 신호 관찰 노트</strong>이며 투자 조언·매매 권유가 아닙니다. 모든 투자 판단은 본인의 책임입니다. 데이터는 공개 시장 정보에 기반하며 지연·오류 가능성이 있습니다. 수치는 추정치일 수 있으며 실제 시장 결과와 다를 수 있습니다. 과거 패턴이 미래 결과를 보장하지 않습니다. 본 자료는 특정 종목의 거래를 권유하거나 예약하지 않습니다.
+</div>
+
+</body>
+</html>

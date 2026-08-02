@@ -1,0 +1,57 @@
+{
+  "schema_version": "market_digest.web.latest.v1",
+  "content_class": "reference",
+  "generated_at": "2026-07-08T06:45:00+09:00",
+  "items": {
+    "KR": {
+      "schema_version": "market_digest.web.v1",
+      "date": "2026-03-02",
+      "time": "12:29",
+      "type": "KR",
+      "title": "KR Daily Strategic Report",
+      "path": "/reports/2026-03-02_12-29_KR.html",
+      "filename": "2026-03-02_12-29_KR.json",
+      "timestamp": "2026-03-02T12:29:00+09:00",
+      "json_path": "/reports/2026-03-02_12-29_KR.json",
+      "content_class": "reference",
+      "disclaimer": true,
+      "data_quality": "public-summary",
+      "source": "auto-sync"
+    },
+    "US": {
+      "schema_version": "market_digest.web.v1",
+      "date": "2026-03-02",
+      "time": "12:29",
+      "type": "US",
+      "title": "US Daily Strategic Report",
+      "path": "/reports/2026-03-02_12-29_US.html",
+      "filename": "2026-03-02_12-29_US.json",
+      "timestamp": "2026-03-02T12:29:00+09:00",
+      "json_path": "/reports/2026-03-02_12-29_US.json",
+      "content_class": "reference",
+      "disclaimer": true,
+      "data_quality": "public-summary",
+      "source": "auto-sync"
+    },
+    "MORNING": {
+      "schema_version": "market_digest.web.v1",
+      "date": "2026-07-08",
+      "time": "06:45",
+      "type": "MORNING",
+      "title": "2026년 7월 8일 06:45 한국장 전 시장 신호 노트",
+      "path": "/reports/2026-07-08_06-45_MORNING.html",
+      "filename": "2026-07-08_06-45_MORNING.json",
+      "timestamp": "2026-07-08T06:45:00+09:00",
+      "json_path": "/reports/2026-07-08_06-45_MORNING.json",
+      "content_class": "reference",
+      "disclaimer": true,
+      "data_quality": "public-summary",
+      "source": "auto-sync"
+    },
+    "EVENING": null
+  },
+  "compliance": {
+    "disclaimer": "For education and commentary only, not investment advice.",
+    "no_trade_instruction": true
+  }
+}

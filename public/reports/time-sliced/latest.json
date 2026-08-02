@@ -1,0 +1,18 @@
+{
+  "latest_slot": "kr_open_reset",
+  "date": "2026-07-13",
+  "kst": "2026-07-13T09:21:09+09:00",
+  "delayed_execution": true,
+  "latest_kr_open_reset": {
+    "path": "20260714_0903_kr_open_reset/market_signal.json",
+    "generated_at_kst": "2026-07-14T09:25:00+09:00",
+    "headline": "Crash exhaustion — KOSPI -0.4%, Samsung +2%"
+  },
+  "kr_midday": {
+    "date": "2026-07-16",
+    "kst_time": "12:20",
+    "path": "20260716/1220_kr_midday.json",
+    "html_path": "20260716/1220_kr_midday.html",
+    "title": "한국장 중간 점검: 대형 반도체 집중 하락, 중소형주 분리 움직임"
+  }
+}

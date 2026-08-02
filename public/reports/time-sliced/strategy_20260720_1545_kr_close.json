@@ -1,0 +1,18 @@
+{
+  "schema": "time_sliced_public_market_note.v1",
+  "slot": "2026-07-20 15:45 KST",
+  "slug": "market-close-note-1545-20260720",
+  "title": "한국 시장 마감 신호 노트 — 2026.07.20 15:45",
+  "summary": "오전의 급한 회복 시도는 이어지지 못했고, 한국 주요 지수는 장 후반까지 넓은 하락 압력을 보였습니다. 지수보다 더 약했던 코스닥과 장비주, 그리고 국제유가 상승을 다음 확인축으로 둡니다.",
+  "visual_values": [
+    {"label": "KOSPI", "value": -4.46},
+    {"label": "KOSPI200", "value": -4.43},
+    {"label": "KODEX200", "value": -4.50},
+    {"label": "KOSDAQ", "value": -5.33}
+  ],
+  "public_path": "/reports/time-sliced/strategy_20260720_1545_kr_close.json",
+  "asset_manifest": "/reports/time-sliced/assets/20260720_1545/visual_blog_pack_manifest.json",
+  "source_caveat": "지수 15:46~15:47 KST·국내 종목 15:48 KST 공개 마감값과 지연 가능성이 있는 해외 보조값",
+  "boundary": "공개 시장 자료를 설명하는 읽기 자료이며 개인 판단이나 실행을 대신하지 않습니다.",
+  "no_trade_instruction": true
+}

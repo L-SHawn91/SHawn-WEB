@@ -1,0 +1,19 @@
+{
+  "paths": {
+    "json": "/reports/time-sliced/2026-07-08_23-40_US_FIRST_HOUR_MARKET_SIGNAL.json",
+    "html": "/reports/time-sliced/2026-07-08_23-40_US_FIRST_HOUR_MARKET_SIGNAL.html",
+    "latest": "/reports/time-sliced/latest_us_first_hour.json",
+    "manifest": "/reports/time-sliced/assets/20260708_2340/visual_blog_pack_manifest.json",
+    "hero": "/reports/time-sliced/assets/20260708_2340/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260708_2340/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260708_2340/shawn_investment_assets_icon.png"
+  },
+  "public_urls": {
+    "hero": "/reports/time-sliced/assets/20260708_2340/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260708_2340/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260708_2340/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/assets/20260708_2340/visual_blog_pack_manifest.json"
+  },
+  "safety_hits": [],
+  "status": "pass"
+}

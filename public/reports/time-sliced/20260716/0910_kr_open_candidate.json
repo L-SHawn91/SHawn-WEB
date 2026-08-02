@@ -1,0 +1,19 @@
+{
+  "schema": "time_sliced_public_note.v1",
+  "slot": "0910_kr_open_candidate",
+  "date": "2026-07-16",
+  "published_kst": "2026-07-16T09:49:00+09:00",
+  "delayed_execution": true,
+  "market": "KRX",
+  "title": "Korea Market Open Check: July 16, 2026",
+  "excerpt": "KOSPI opened -5.07% amid pre-holiday semiconductor pressure. Mega-cap concentration, not broad collapse.",
+  "key_readings": {
+    "KOSPI": "6,823.87 (-6.32%)",
+    "KOSDAQ": "797.62 (-3.83%)",
+    "signal": "pre-holiday mega-cap concentration"
+  },
+  "wordpress_url": "https://shawnassets.wordpress.com/2026/07/16/market-check-2026-07-16-0910/",
+  "wordpress_post_id": 1024,
+  "wordpress_status": "publish",
+  "no_trade_instruction": true
+}

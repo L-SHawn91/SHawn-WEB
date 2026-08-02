@@ -1,0 +1,97 @@
+{
+  "schema": "time_sliced_public_note.v1",
+  "slot": "1635_kr_next_day_plan",
+  "date": "2026-07-10",
+  "generated_at_kst": "2026-07-10T16:35:00+09:00",
+  "type": "market_signal_note",
+  "title_en": "Korea Market Close — Next Session Checkpoints",
+  "title_ko": "한국장 마감 점검 — 다음 장 확인 루틴",
+  "summary_en": "KOSPI closed +2.52% in a broad relief rally, though afternoon erosion and SK Hynix flipping negative suggest caution. Friday's US session and weekend risk will set the tone for Monday's KRX open.",
+  "summary_ko": "KOSPI +2.52%·KOSDAQ +5.47%로 광범위 반등 마감했으나, 오후 침식과 SK하이닉스 마이너스 전환은 일회성 안도보다 신중한 접근이 필요함을 시사합니다. 금요일 미국장과 주말 리스크가 월요일 한국장 방향을 결정합니다.",
+  "key_signals": [
+    {
+      "label_en": "KOSPI",
+      "value": "7,475.94",
+      "change_pct": "+2.52%",
+      "note": "broad recovery, eroded from midday +4.63%"
+    },
+    {
+      "label_en": "KOSDAQ",
+      "value": "837.43",
+      "change_pct": "+5.47%",
+      "note": "strongest segment, small-cap recovery"
+    },
+    {
+      "label_en": "KPI200",
+      "value": "1,196.69",
+      "change_pct": "+2.30%",
+      "note": "large-cap rally, also eroded from midday +4.52%"
+    },
+    {
+      "label_en": "Samsung Electronics",
+      "value": "285,000",
+      "change_pct": "+2.52%",
+      "note": "midday +5.22%→close +2.52%, afternoon fade"
+    },
+    {
+      "label_en": "SK Hynix",
+      "value": "2,180,000",
+      "change_pct": "-0.27%",
+      "note": "flipped negative from midday +2.38%, key warning"
+    },
+    {
+      "label_en": "KODEX200",
+      "value": "120,605",
+      "change_pct": "+2.47%",
+      "note": "KOSPI200 proxy, afternoon erosion visible"
+    }
+  ],
+  "flow_summary": {
+    "foreign": "-3,226억 (selling)",
+    "institution": "+11,319억 (buying support)",
+    "program": "-69억 (neutral)"
+  },
+  "risk_context": [
+    "금리 부담: US10Y 4.53%대",
+    "가격검증 경고: 일부 종목 가격범위 확인 필요",
+    "SK하이닉스 마이너스 전환: 반도체 내부 차별화 신호",
+    "오후 침식: midday→close 상승폭 축소 (KOSPI +4.63%→+2.52%)",
+    "외국인 selling 지속",
+    "미국장 미개시: 금요일 세션 결과·주말 리스크 미반영"
+  ],
+  "next_session_checkpoints": [
+    {
+      "time_kst": "월요일 06:45",
+      "label_en": "KR Pre-Risk",
+      "check": "US Friday close + weekend risk → first Monday signal"
+    },
+    {
+      "time_kst": "월요일 08:45",
+      "label_en": "Pre-Open",
+      "check": "KPI200/KODEX200/Samsung/SK Hynix pre-open alignment"
+    },
+    {
+      "time_kst": "월요일 09:03",
+      "label_en": "Open Reset",
+      "check": "Actual open print vs pre-open expectations"
+    },
+    {
+      "time_kst": "월요일 09:20",
+      "label_en": "Open Reaction",
+      "check": "Recovery breadth, foreign flow direction"
+    },
+    {
+      "time_kst": "월요일 12:20",
+      "label_en": "Midday",
+      "check": "Morning trend sustain or fade"
+    },
+    {
+      "time_kst": "월요일 15:45",
+      "label_en": "Close Review",
+      "check": "Full-day path + next-plan anchors"
+    }
+  ],
+  "disclaimer_en": "Public market data organized for readability. Not personal investment advice or trading instruction. Data may be delayed or incomplete.",
+  "disclaimer_ko": "공개 시장 자료를 읽기 쉽게 정리한 것입니다. 개인 판단을 대신하지 않으며, 투자자문·거래 지시가 아닙니다.",
+  "title": "한국장 마감 점검 — 다음 장 확인 루틴 (2026.07.10)"
+}

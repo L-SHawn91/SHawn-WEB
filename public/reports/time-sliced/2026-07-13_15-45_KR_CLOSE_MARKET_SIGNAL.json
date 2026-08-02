@@ -1,0 +1,48 @@
+{
+  "schema": "time_sliced_public_market_note.v1",
+  "slot": "1545_kr_close",
+  "date": "2026-07-13",
+  "published_kst": "2026-07-13T15:52:00+09:00",
+  "title": "Korea Market Note — July 13, 2026 (Monday Close)",
+  "public_url": "https://shawnassets.wordpress.com/2026/07/13/market-note-20260713-1545-kr-close/",
+  "wordpress_post_id": 962,
+  "wordpress_status": "published_visual_verified",
+  "market_snapshot": {
+    "KOSPI": {
+      "value": 6806.93,
+      "change_pct": -8.95
+    },
+    "KOSDAQ": {
+      "value": 799.36,
+      "change_pct": -4.55
+    },
+    "Samsung_Electronics": {
+      "value": 254500,
+      "change_pct": -10.7
+    },
+    "SK_Hynix": {
+      "value": 1845000,
+      "change_pct": -15.37
+    },
+    "Wonik_IPS": {
+      "value": 124800,
+      "change_pct": -0.16
+    },
+    "USD_KRW": {
+      "value": 1503.2,
+      "change_pct": 0.29
+    },
+    "WTI": {
+      "value": 74.33,
+      "change_pct": 4.11
+    }
+  },
+  "web_assets": {
+    "visual_blog_pack": {
+      "hero": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-55.png",
+      "graph": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-57.gif",
+      "icon": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/shawn_investment_assets_icon-55.png"
+    }
+  },
+  "no_trade_instruction": true
+}

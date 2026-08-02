@@ -1,0 +1,31 @@
+{
+  "decision": "published_visual_verified",
+  "post_id": "716",
+  "public_url": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0913-kr-market-check-routine-note/",
+  "uploads": {
+    "hero": {
+      "id": 798,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_generated_visual_hero-46.png",
+      "name": "market_signal_generated_visual_hero.png"
+    },
+    "graph": {
+      "id": 799,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/market_signal_linear_graph_animation-46.gif",
+      "name": "market_signal_linear_graph_animation.gif"
+    },
+    "icon": {
+      "id": 800,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/07/shawn_investment_assets_icon-46.png",
+      "name": "shawn_investment_assets_icon.png"
+    }
+  },
+  "readback": {
+    "status_code": 200,
+    "title_present": true,
+    "hero_present": true,
+    "graph_present": true,
+    "icon_present": true
+  },
+  "safety_hits": [],
+  "timestamp": "2026-07-10T11:12:49+0900"
+}

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KR Midday Market Signal — 2026-07-13 12:20 KST</title>
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --forest: #1A2E1F;
+    --sage: #7D9B76;
+    --gold: #C4A44A;
+    --dark: #0D1B0F;
+    --fear: #C0392B;
+    --extreme-fear: #8B0000;
+    --neutral: #7D9B76;
+    --light: #F5F0E8;
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans CJK KR', 'Apple SD Gothic Neo', sans-serif;
+    background: var(--cream);
+    color: var(--forest);
+    line-height: 1.6;
+    word-break: keep-all;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 16px; }
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #2A1F1F 100%);
+    color: var(--cream);
+    padding: 32px 24px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(196,164,74,0.15) 0%, transparent 70%);
+  }
+  .hero h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; position: relative; z-index: 1; }
+  .hero .date { font-size: 0.85rem; opacity: 0.7; position: relative; z-index: 1; }
+  .hero .rule { width: 40px; height: 2px; background: var(--gold); margin: 16px 0; position: relative; z-index: 1; }
+  .hero .pulse-tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 8px;
+    position: relative; z-index: 1;
+  }
+  .tag-extreme { background: rgba(139,0,0,0.3); border: 1px solid var(--extreme-fear); }
+  .metadata {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .meta-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--card-shadow);
+  }
+  .meta-card .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+  .meta-card .value { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .kpi-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+  }
+  .kpi-card .name { font-size: 0.75rem; color: #888; margin-bottom: 6px; }
+  .kpi-card .price { font-size: 1.2rem; font-weight: 700; }
+  .kpi-card .change { font-size: 0.9rem; font-weight: 600; margin-top: 4px; }
+  .down { color: var(--fear); }
+  .up { color: var(--sage); }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 24px 0 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--gold);
+  }
+  .signal-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--card-shadow);
+  }
+  .signal-card .asset { font-weight: 700; font-size: 0.95rem; }
+  .signal-card .detail { font-size: 0.85rem; color: #666; margin-top: 4px; }
+  .condition-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 12px 0 20px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+  .condition-table th {
+    background: var(--forest);
+    color: var(--cream);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .condition-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+  }
+  .condition-table tr:last-child td { border-bottom: none; }
+  .footer {
+    background: var(--dark);
+    color: var(--cream);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 24px;
+    font-size: 0.8rem;
+    opacity: 0.85;
+  }
+  .footer .disclaimer { font-size: 0.75rem; margin-top: 10px; opacity: 0.6; }
+  .divergence-chip {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin: 4px 4px 4px 0;
+    background: rgba(125,155,118,0.15);
+    color: var(--sage);
+  }
+  @media (max-width: 390px) {
+    .container { padding: 10px; }
+    .hero { padding: 24px 16px; }
+    .hero h1 { font-size: 1.2rem; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .metadata { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Market Signal — KR Midday</h1>
+    <div class="date">2026년 7월 13일 월요일 12:20 KST</div>
+    <div class="rule"></div>
+    <span class="pulse-tag tag-extreme">⚠ EXTREME FEAR — KOSPI -6.53%</span>
+  </div>
+
+  <!-- Metadata -->
+  <div class="metadata">
+    <div class="meta-card">
+      <div class="label">Market Phase</div>
+      <div class="value">Midday Check</div>
+    </div>
+    <div class="meta-card">
+      <div class="label">Next Check</div>
+      <div class="value">15:45 KST Close</div>
+    </div>
+  </div>
+
+  <!-- KPI Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="name">KOSPI</div>
+      <div class="price down">6,987.83</div>
+      <div class="change down">-6.53%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="name">KOSDAQ</div>
+      <div class="price down">815.27</div>
+      <div class="change down">-2.65%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="name">KPI200</div>
+      <div class="price down">1,110.27</div>
+      <div class="change down">-7.22%</div>
+    </div>
+  </div>
+
+  <!-- Key Assets -->
+  <div class="section-title">Key Assets</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="name">Samsung Electronics</div>
+      <div class="price down">264,000</div>
+      <div class="change down">-7.37%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="name">SK Hynix</div>
+      <div class="price down">1,917,000</div>
+      <div class="change down">-12.06%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="name">Wonik IPS</div>
+      <div class="price up">134,000</div>
+      <div class="change up">+7.20%</div>
+    </div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="name">Kia</div>
+      <div class="price down">145,400</div>
+      <div class="change down">-1.42%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="name">NAVER</div>
+      <div class="price down">189,700</div>
+      <div class="change down">-0.84%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="name">KODEX200</div>
+      <div class="price down">111,595</div>
+      <div class="change down">-7.47%</div>
+    </div>
+  </div>
+
+  <!-- Divergence -->
+  <div class="section-title">Market Isolation</div>
+  <div class="signal-card">
+    <span class="divergence-chip">KOSPI vs KOSDAQ</span>
+    <span class="divergence-chip">Large Cap Rout</span>
+    <span class="divergence-chip">Semicon Equipment Resilience</span>
+    <p style="margin-top: 10px; font-size: 0.85rem; color: #666;">
+      Large-cap semiconductor stocks collapsed (SK Hynix -12.06%, Samsung -7.37%) while small/mid-cap equipment stocks like Wonik IPS (+7.20%) held gains. KOSDAQ -2.65% vs KOSPI -6.53% shows extreme sector divergence.
+    </p>
+  </div>
+
+  <!-- External Signals -->
+  <div class="section-title">External Context</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="name">WTI Crude</div>
+      <div class="price up">$74.38</div>
+      <div class="change up">+4.16%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="name">NQ Futures</div>
+      <div class="price down">29,695</div>
+      <div class="change down">-1.12%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="name">USD/KRW</div>
+      <div class="price down">1,506.98</div>
+      <div class="change down">+0.54%</div>
+    </div>
+  </div>
+
+  <!-- Scenario -->
+  <div class="section-title">Scenario Brief</div>
+  <div class="signal-card">
+    <div class="asset">From Failed Recovery to Crash</div>
+    <div class="detail">
+      A deceptive V-recovery at 09:25 (KOSPI nearly flat at -0.06%) completely reversed within 13 minutes. By 12:20, KOSPI had plunged to -6.53% — a textbook FAILED RECOVERY → ROUT → CRASH cascade. Mechanical selling from semiconductor ETF unwinding, leveraged product liquidation, and program selling amplified the decline.
+    </div>
+    <div style="margin-top: 12px; font-size: 0.82rem; color: #888;">
+      Afternoon outlook: Consolidation near current levels unless SK Hynix triggers the individual circuit breaker (-15% at 1,853,000) or WTI breaks above $76.
+    </div>
+  </div>
+
+  <!-- Check Table -->
+  <div class="section-title">Afternoon Watch</div>
+  <table class="condition-table">
+    <thead>
+      <tr><th>Condition</th><th>Signal</th><th>If Triggers</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>SK Hynix &lt; 1,853,000</td><td>Circuit Breaker</td><td>KOSPI → 6,700</td></tr>
+      <tr><td>SK Hynix &gt; 1,950,000</td><td>Rout Stabilizing</td><td>Downside slowing</td></tr>
+      <tr><td>Samsung &lt; 255,000</td><td>Last Defense Broken</td><td>KOSPI → 6,700</td></tr>
+      <tr><td>WTI &gt; $76</td><td>Oil Shock Deepens</td><td>KOSPI → 6,800</td></tr>
+      <tr><td>NQ Futures &lt; -1.5%</td><td>Double Shock</td><td>KOSPI → 6,700</td></tr>
+      <tr><td>KOSDAQ &lt; 800</td><td>Contagion Complete</td><td>Broad selloff</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Data Limits & Footer -->
+  <div class="footer">
+    <strong>Data Limits</strong><br>
+    Prices from public market data (Naver KRX live). US futures from low-liquidity Asia session. KOSPI200 direct futures unavailable. Investor/program flow data unavailable at snapshot time. This is a market data observation note, not investment advice or trade instruction.
+    <div class="disclaimer">
+      © SHawn Report · No broker / no order / no trade instruction · For market observation only
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

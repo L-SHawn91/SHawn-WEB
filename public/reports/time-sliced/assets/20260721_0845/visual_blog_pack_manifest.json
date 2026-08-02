@@ -1,0 +1,17 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "2026년 7월 21일 장전 시장 신호",
+  "source_note": "20260721_0845_kr_preopen.json",
+  "assets": {
+    "hero_url": "/reports/time-sliced/assets/20260721_0845/market_signal_generated_visual_hero.png",
+    "graph_url": "/reports/time-sliced/assets/20260721_0845/market_signal_linear_graph_animation.gif",
+    "icon_url": "/reports/time-sliced/assets/20260721_0845/shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "generated_image": "공식 SHawn GPT-image-2 투자 자산을 편집용 시각 원본으로 사용",
+    "aspect_ratio": "16:9 반응형 인라인 표시",
+    "line_graph_animation": "0% 기준 부호와 시리즈 정체성을 유지하는 스냅샷 애니메이션",
+    "shawn_icon": "공식 SHawn x SHide 운영 아이콘",
+    "public_safe": true
+  }
+}

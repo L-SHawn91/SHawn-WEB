@@ -1,0 +1,27 @@
+{
+  "slot": "2220_us_preopen",
+  "date": "2026-07-16",
+  "kst_time": "22:20",
+  "market_gate": "NYSE/Nasdaq regular session open",
+  "market_status": "premarket",
+  "no_trade_instruction": true,
+  "public_safety_scan": "pending",
+  "headline": "US Preopen: Semiconductor Pressure Intensifies, Broad Market Rotation Continues",
+  "summary": "US premarket shows intensified semiconductor pressure (SOXX -5.16%, MU -12.09%) while Dow futures hold positive (+0.09%). VIX at 16.20 confirms no systemic crisis. The pre-holiday large-cap concentration pattern seen in KOSPI (-6.37%) is transmitting to US markets.",
+  "key_signals": [
+    {"signal": "SOXX -5.16%", "level": "strong pressure", "note": "Intensifying from -2.23% in prior regular session"},
+    {"signal": "MU -12.09%", "level": "extreme", "note": "Memory semiconductor under severe pressure. Direct read-through to SK Hynix"},
+    {"signal": "YM +0.09%", "level": "stable", "note": "Dow strength confirms rotation, not systemic crisis"},
+    {"signal": "VIX 16.20", "level": "low", "note": "Fear index remains subdued. No panic"},
+    {"signal": "USD/KRW 1,480.80", "level": "stable", "note": "Won strength sustained. Positive for foreign inflows"}
+  ],
+  "next_check": "23:40 KST — US First Hour confirmation",
+  "next_check_conditions": [
+    "SOXX recovery above -3% → semiconductor pressure easing",
+    "SOXX below -5% → further intensification, gate retest risk rises",
+    "MU recovery above -10% → SK Hynix shock moderating",
+    "VIX above 18 → caution returning, confidence downgrade"
+  ],
+  "data_limits": "Premarket data only. Regular session direction may differ. Pre-holiday (Constitution Day July 17) may amplify moves. Next KRX session July 20 (Mon) — 3-day gap.",
+  "disclaimer": "Market data note for informational purposes only. Not investment advice. No trading instructions."
+}

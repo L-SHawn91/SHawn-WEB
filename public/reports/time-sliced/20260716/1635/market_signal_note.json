@@ -1,0 +1,48 @@
+{
+  "schema": "market_signal_note.v1",
+  "slot": "1635_next_day_plan",
+  "date": "2026-07-16",
+  "kst": "2026-07-16T16:35:46+09:00",
+  "market_status": "closed",
+  "next_session": "2026-07-20",
+  "holiday_note": "2026-07-17 Constitution Day (제헌절) 휴장",
+  "kospi_close": 6820.60,
+  "kospi_change_pct": -6.37,
+  "kosdaq_close": 791.84,
+  "kosdaq_change_pct": -4.53,
+  "kpi200_close": 1080.36,
+  "kpi200_change_pct": -7.18,
+  "failed_recovery_gate": 6807,
+  "gate_status": "defended_after_breach",
+  "vix": 15.67,
+  "us_semis": {
+    "SOXX_close_0715": 555.27,
+    "SOXX_chg_pct": -2.23,
+    "MU_close_0715": 904.28,
+    "MU_chg_pct": -8.02
+  },
+  "key_divergence": "mega_cap_semis_capitulation_with_midcap_resilience",
+  "forecast_readback": {
+    "KOSPI": {"forecast": 6810, "actual": 6820.60, "grade": "HIT"},
+    "삼성전자": {"forecast": 255000, "actual": 255000, "grade": "HIT"},
+    "SK하이닉스": {"forecast": 1845000, "actual": 1842000, "grade": "HIT"},
+    "원익IPS": {"forecast": 139000, "actual": 140700, "grade": "HIT"}
+  },
+  "next_session_scenarios": [
+    {"label": "Base", "prob": 0.50, "kospi_range": "6,750~6,850", "description": "US 반도체 ±1% 이내. FAILED_RECOVERY gate 인근 횡보."},
+    {"label": "Upside", "prob": 0.25, "kospi_range": "6,850~6,950", "description": "US 반도체 반등·원화강세. gate 상회 안착."},
+    {"label": "Downside", "prob": 0.25, "kospi_range": "6,650~6,750", "description": "US 추가 약세·3일 공백 risk. gate 재붕괴 가능."}
+  ],
+  "checkpoints": [
+    {"time_kst": "7/16 22:20", "label": "US Preopen 3-Day Bridge", "focus": "반도체 premarket 방향"},
+    {"time_kst": "7/16 23:40", "label": "US 첫시간", "focus": "반도체 첫시간 direction"},
+    {"time_kst": "7/17 06:45", "label": "US 마감 → Weekend Bridge", "focus": "7/16 정규장 종가"},
+    {"time_kst": "7/20 06:45", "label": "KR 사전점검", "focus": "US 이틀치 + premarket 종합"},
+    {"time_kst": "7/20 08:45", "label": "KR 장전 확인", "focus": "KOSPI200·KODEX200 PREOPEN"},
+    {"time_kst": "7/20 09:03", "label": "KR 개장 초기", "focus": "FAILED_RECOVERY gate 재테스트"}
+  ],
+  "source": "Naver KRX close, Yahoo Finance US 7/15 close, Yahoo futures. 2026-07-16 16:35 KST.",
+  "data_limitations": "US 7/16-17 데이터 미확보. 3일 공백 변수로 예측 신뢰도 제한적.",
+  "disclaimer": "시장 신호 확인용 공개 자료. 투자 권유나 매매 제안 아님. 과거 패턴이 미래 결과를 보장하지 않습니다.",
+  "no_trade_instruction": true
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "public_market_signal.v0",
+  "date": "2026-07-15",
+  "slot": "0910_kr_open_candidate",
+  "slot_label": "한국장 개장 30분 시장 신호",
+  "kst": "2026-07-15T09:30:00+09:00",
+  "delayed_execution": true,
+  "delayed_execution_note": "09:03 리포트가 09:21에 지연 실행되며 09:10 슬롯 건너뜀. 09:30 델타 리드백.",
+  "market": "KRX",
+  "market_status": "OPEN",
+  "kospi": 7334.79,
+  "kospi_change_pct": 6.97,
+  "kosdaq": 820.93,
+  "kosdaq_change_pct": 4.72,
+  "kpi200": 1174.22,
+  "kpi200_change_pct": 7.51,
+  "kodex200": 117995,
+  "kodex200_change_pct": 7.54,
+  "es_futures": 7602.0,
+  "es_futures_change_pct": 0.14,
+  "source_tier": "Naver KRX live (high trust). Yahoo ES futures (high trust).",
+  "source_note": "CNBC VIX/DXY/USDKRW endpoints unavailable at fetch time. 관찰에 포함하지 않음.",
+  "narrative": {
+    "headline": "한국장 +7% 갭업 sustained rally — 역사적 crash 반등 Day 2",
+    "summary": "KOSPI가 전일 대비 +6.97% 상승한 7,334에서 거래 중입니다. 09:00 개장 시 7,082(+3.3% 갭업)로 시작해 09:15경 고가 7,347(+7.16%)까지 급등했으며, 이후 7,330~7,340 범위에서 안정적인 움직임을 보이고 있습니다. KOSDAQ도 +4.72% 동반 강세입니다.",
+    "sector_context": "반도체 업종이 장을 주도하고 있습니다. 삼성전자 +6.3%, SK하이닉스 +11.9%로 미국발 반도체 강세(NVDA +4.1%, SOXX +2.6%)가 국내 증시에 직접 반영되는 모습입니다. KODEX 레버리지 ETF +7.5%, 인버스2X ETF -14.0%로 위험선호 심리가 강하게 반영되었습니다.",
+    "breadth": "KOSPI 상승 종목 비율 약 91%로 거의 전 종목이 상승하는 극단적 강세장입니다. KOSDAQ도 상승 1,457 / 하락 206으로 유사한 흐름입니다.",
+    "risk_note": "단일 세션 +7% 급등은 역사적으로 드문 움직임입니다. 10:00~10:30 시간대에 정상적인 차익실현 물량이 나올 수 있으며, 이 경우 1~2% 범위의 일시적 조정이 가능합니다. 글로벌 증시 동향과 외국인 수급 변화에 주의가 필요합니다.",
+    "next_check": "12:20 정오 시장 확인. 이후 오후 장 흐름을 체크합니다."
+  },
+  "data_limits": "본 자료는 시장 데이터 스냅샷에 기반한 관찰 정보이며, 투자 조언이나 거래 권유가 아닙니다. 수치는 실시간 데이터 소스에서 수집되었으며, 지연/오차 가능성이 있습니다. 과거 패턴이 미래를 보장하지 않습니다.",
+  "not_advice": true,
+  "no_trade_instruction": true,
+  "assets": {
+    "html": "20260715_0910_kr_open_candidate.html"
+  }
+}

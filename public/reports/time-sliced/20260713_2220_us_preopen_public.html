@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미국장 개장 전 시장 신호 — 2026년 7월 13일</title>
+<style>
+  :root {
+    --cream: #FEFDF9;
+    --forest: #2D4A3E;
+    --sage: #7D9B76;
+    --gold: #C4A35A;
+    --dark: #1A1A1A;
+    --muted: #6B7280;
+    --card-bg: #F9F8F4;
+    --border: #E5E0D5;
+    --red-soft: #FEF2F2;
+    --red-text: #991B1B;
+    --amber-soft: #FFFBEB;
+    --amber-text: #92400E;
+    --green-soft: #F0FDF4;
+    --green-text: #166534;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    line-height: 1.7;
+    word-break: keep-all;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--forest) 0%, #1a3a2a 100%);
+    color: var(--cream);
+    padding: 32px 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .hero .meta {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+  }
+  .gold-rule {
+    height: 3px;
+    background: var(--gold);
+    margin: 24px 0;
+    border-radius: 2px;
+  }
+  .conclusion-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .conclusion-box h2 {
+    font-size: 1.1rem;
+    color: var(--forest);
+    margin-bottom: 12px;
+  }
+  .conclusion-box ol {
+    padding-left: 20px;
+  }
+  .conclusion-box li {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .kpi-card .label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .kpi-card .value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .kpi-card .change {
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+  .down { color: var(--red-text); }
+  .up { color: var(--green-text); }
+  .neutral { color: var(--amber-text); }
+  .signal-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .signal-section h3 {
+    font-size: 1.05rem;
+    color: var(--forest);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .signal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .signal-row:last-child { border-bottom: none; }
+  .signal-name { font-weight: 600; font-size: 0.9rem; }
+  .signal-values { text-align: right; }
+  .signal-values .val { font-weight: 600; font-size: 0.95rem; }
+  .signal-values .sub { font-size: 0.75rem; color: var(--muted); }
+  .scenario-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .scenario-card {
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--border);
+  }
+  .scenario-card.prob-main { background: var(--amber-soft); border-color: #FCD34D; }
+  .scenario-card.prob-low { background: #F8FAFC; }
+  .scenario-card.prob-risk { background: var(--red-soft); border-color: #FECACA; }
+  .scenario-card .sc-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+  .scenario-card .sc-prob { font-size: 1.4rem; font-weight: 700; }
+  .scenario-card .sc-range { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+  .scenario-card .sc-trigger { font-size: 0.8rem; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+  .next-check {
+    background: linear-gradient(135deg, #EEF2FF, #E8ECF8);
+    border: 1px solid #C7D2FE;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .next-check h3 { font-size: 1rem; color: #3730A3; margin-bottom: 8px; }
+  .next-check ul { padding-left: 20px; font-size: 0.9rem; }
+  .next-check li { margin-bottom: 4px; }
+  .footer-disclaimer {
+    background: #1A1A1A;
+    color: #9CA3AF;
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+  .footer-disclaimer strong { color: #D1D5DB; }
+  @media (max-width: 390px) {
+    body { padding: 12px 8px; }
+    .hero { padding: 20px 16px; }
+    .hero h1 { font-size: 1.2rem; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .scenario-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🔍 미국장 개장 전 시장 신호<br>기술주 조정 압력, 원유·변동성 상승</h1>
+  <div class="meta">
+    <span>2026년 7월 13일 (월)</span>
+    <span class="badge">KST 22:20</span>
+    <span class="badge">US Pre-Market</span>
+  </div>
+</div>
+
+<div class="gold-rule"></div>
+
+<div class="conclusion-box">
+  <h2>📋 3줄 요약</h2>
+  <ol>
+    <li>미국 선물은 기술주 중심 약세(<strong>NQ -1.03%</strong>)를 보이나 S&P500(-0.31%)·Dow(-0.07%)는 제한적 하락 — 전반적 하락 신호는 아님.</li>
+    <li>변동성 지수(VIX) <strong>16.35(+8.8%)</strong> 상승과 원유 <strong>$73.93(+3.5%)</strong> 급등은 한국장 -8.95% 충격과 중동 긴장을 반영.</li>
+    <li>한국 증시는 기술적 과매도 구간이나, <strong>미국 첫 1시간(23:40 KST)</strong> 반도체·기술주 방향이 내일 장 방향을 결정할 전망.</li>
+  </ol>
+</div>
+
+<h3 style="color:var(--forest); margin-bottom:12px;">📊 주요 지표</h3>
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="label">S&P500 선물</div>
+    <div class="value">7,596.25</div>
+    <div class="change down">▼ -0.31%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Nasdaq100 선물</div>
+    <div class="value">29,723</div>
+    <div class="change down">▼ -1.03%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">VIX</div>
+    <div class="value">16.35</div>
+    <div class="change up">▲ +8.78%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">WTI 원유</div>
+    <div class="value">$73.93</div>
+    <div class="change up">▲ +3.53%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">US 10Y</div>
+    <div class="value">4.579%</div>
+    <div class="change neutral">+0.01%p</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">USD/KRW</div>
+    <div class="value">₩1,491.78</div>
+    <div class="change down">▼ -0.47%</div>
+  </div>
+</div>
+
+<div class="signal-section">
+  <h3>🛢️ 유가 & 변동성 신호</h3>
+  <div class="signal-row">
+    <span class="signal-name">WTI 원유</span>
+    <span class="signal-values"><span class="val up">$73.93 (+3.53%)</span><br><span class="sub">US-Iran 긴장 고조. Brent +5% 동반 상승</span></span>
+  </div>
+  <div class="signal-row">
+    <span class="signal-name">VIX (변동성)</span>
+    <span class="signal-values"><span class="val up">16.35 (+8.78%)</span><br><span class="sub">금요일 15.03 → KOSPI 충격 반영. VIX 선물 17.30</span></span>
+  </div>
+  <div class="signal-row">
+    <span class="signal-name">금 (Gold)</span>
+    <span class="signal-values"><span class="val down">$4,068 (-1.11%)</span><br><span class="sub">안전자산 금도 하락 — 유가발 인플레 우려</span></span>
+  </div>
+  <div class="signal-row">
+    <span class="signal-name">US 10년물</span>
+    <span class="signal-values"><span class="val neutral">4.579%</span><br><span class="sub">채권시장 안정. 금리 패닉 없음</span></span>
+  </div>
+  <div class="signal-row">
+    <span class="signal-name">달러·원화</span>
+    <span class="signal-values"><span class="val down">₩1,491.78 (-0.47%)</span><br><span class="sub">원화 강세 — KOSPI 폭락 속 역설적 흐름</span></span>
+  </div>
+</div>
+
+<div class="signal-section">
+  <h3>🇰🇷 오늘 한국장 요약</h3>
+  <div class="signal-row">
+    <span class="signal-name">KOSPI</span>
+    <span class="signal-values"><span class="val down">6,806.93 (-8.95%)</span><br><span class="sub">서킷브레이커 발동. -669p 연중 최대 낙폭</span></span>
+  </div>
+  <div class="signal-row">
+    <span class="signal-name">삼성전자</span>
+    <span class="signal-values"><span class="val down">254,500 (-10.70%)</span></span>
+  </div>
+  <div class="signal-row">
+    <span class="signal-name">SK하이닉스</span>
+    <span class="signal-values"><span class="val down">1,845,000 (-15.37%)</span><br><span class="sub">ADR 미국서 +13% 급등 ↔ 한국 현물 폭락. 극단적 괴리</span></span>
+  </div>
+  <div class="signal-row">
+    <span class="signal-name">KOSDAQ</span>
+    <span class="signal-values"><span class="val down">799.36 (-4.55%)</span></span>
+  </div>
+</div>
+
+<h3 style="color:var(--forest); margin-bottom:12px;">🔮 내일 KOSPI 시나리오</h3>
+<div class="scenario-cards">
+  <div class="scenario-card prob-main">
+    <div class="sc-name">📉 지속 약세</div>
+    <div class="sc-prob">55%</div>
+    <div class="sc-range">KOSPI 6,550 ~ 6,800</div>
+    <div class="sc-trigger">미국 기술주 -0.5~-1.5%, 반도체 -1~-2.5% 시</div>
+  </div>
+  <div class="scenario-card prob-low">
+    <div class="sc-name">📈 기술적 반등</div>
+    <div class="sc-prob">20%</div>
+    <div class="sc-range">KOSPI 6,950 ~ 7,100</div>
+    <div class="sc-trigger">미국 기술주 안정(±0.3%), AI 강세 시</div>
+  </div>
+  <div class="scenario-card prob-risk">
+    <div class="sc-name">⚠️ 추가 충격</div>
+    <div class="sc-prob">25%</div>
+    <div class="sc-range">KOSPI 6,350 ~ 6,500</div>
+    <div class="sc-trigger">나스닥 -2%↑, 반도체 -3%↑, VIX 20↑ 시</div>
+  </div>
+</div>
+
+<div class="next-check">
+  <h3>⏰ 다음 확인: 23:40 KST (US 첫 1시간)</h3>
+  <ul>
+    <li><strong>QQQ·SOXX·SMH</strong> 첫시간 체결 방향 — 선물 약세 확인 여부</li>
+    <li><strong>NVDA</strong> 프리마켓→정규장 전환 — AI 섹터 심리 지표</li>
+    <li><strong>VIX 20</strong> 상회 — 시스템 리스크 확대 신호</li>
+    <li><strong>WTI $76</strong> 돌파 — 인플레·소비심리 추가 압박</li>
+  </ul>
+</div>
+
+<div class="footer-disclaimer">
+  <p><strong>ⓘ 시장 신호 노트</strong></p>
+  <p>이 자료는 시장 데이터를 바탕으로 한 정보 제공 목적의 노트이며, 투자 권유나 조언이 아닙니다. 수치는 지연·추정치를 포함할 수 있으며, 과거 데이터는 미래 결과를 보장하지 않습니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.</p>
+  <p style="margin-top:8px;">데이터 출처: Yahoo Finance, CNBC, Nasdaq market-info · KST 22:20 기준</p>
+</div>
+
+</body>
+</html>

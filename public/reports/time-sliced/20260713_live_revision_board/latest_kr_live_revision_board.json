@@ -1,0 +1,23 @@
+{
+  "title": "2026-07-13 한국장 실시간 예측 리비전 보드",
+  "summary": "KOSPI 12:20 예측범위 변화: Base 7,560→7,240, Low–High 리본 포함, 09:58 실측 7,266. SK하이닉스 -8.12%, 삼성전자 -3.86%. 유가 급등+반도체 차별화.",
+  "format": "live_revision_board",
+  "assets": [
+    "KOSPI",
+    "삼성전자",
+    "SK하이닉스",
+    "KOSDAQ",
+    "원익IPS"
+  ],
+  "checkpoints": [
+    "첫 12:20 예측",
+    "09:21 수정",
+    "09:47 수정",
+    "09:58 최신"
+  ],
+  "target_horizon": "12:20 KST",
+  "latest_actual": "09:58 KST",
+  "disclaimer": "no broker / no order / no transfer",
+  "generated": "2026-07-13T10:00:00+09:00",
+  "safety_scan": "pass"
+}

@@ -7,14 +7,14 @@ const copy = {
     ko: {
         eyebrow: "Public Blog",
         title: "블로그",
-        desc: "AI, Bio, Assets 글을 이미지와 함께 차분하게 정리한 SHawn_LAB 공개 아카이브입니다.",
-        badges: ["KOR/ENG 전환", "본문형 이미지", "공개 아카이브"],
+        desc: "AI 시스템, 바이오 근거, 시장·생활비 신호를 확인된 사실과 해석의 경계를 지키며 정리합니다.",
+        badges: ["AI Systems", "Bio Evidence", "Asset Intelligence"],
     },
     en: {
         eyebrow: "Public Blog",
         title: "Blog",
-        desc: "A public SHawn_LAB archive for AI, Bio, and Asset articles with clear writing and inline visuals.",
-        badges: ["KOR/ENG switch", "Inline visuals", "Public archive"],
+        desc: "Evidence-aware intelligence on AI systems, biomedical evidence, markets, and living costs.",
+        badges: ["AI Systems", "Bio Evidence", "Asset Intelligence"],
     },
 } as const
 

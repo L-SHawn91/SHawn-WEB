@@ -1,19 +1,23 @@
 // Server shell: homepage copy is rendered by HomePageClient.
 import { HomePageClient, type HomePost } from "@/components/home/home-page-client";
-import { getAllPosts } from "@/lib/mdx";
-import { getPublicCategoryLabel } from "@/lib/public-labels";
+import { getAllPostMeta } from "@/lib/mdx";
+import { BLOG_LANES, getPublicCategoryLabel } from "@/lib/public-labels";
 
 export default function Home() {
-  const recentPosts: HomePost[] = getAllPosts()
-    .slice(0, 3)
-    .map(({ slug, title, date, description, category, image }) => ({
-      slug,
-      title,
-      date,
-      description,
-      category: getPublicCategoryLabel(category),
-      image,
-    }));
+  const posts = getAllPostMeta();
+  const recentPosts: HomePost[] = BLOG_LANES.flatMap((lane) => {
+    const post = posts.find((candidate) => getPublicCategoryLabel(candidate.category) === lane);
+    if (!post) return [];
+
+    return [{
+      slug: post.slug,
+      title: post.title,
+      date: post.date,
+      description: post.description,
+      category: lane,
+      image: post.image,
+    }];
+  });
 
   return <HomePageClient recentPosts={recentPosts} />;
 }

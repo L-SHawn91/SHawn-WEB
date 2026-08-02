@@ -1,0 +1,64 @@
+{
+  "schema": "market_signal_note.v1",
+  "content_class": "public_market_note",
+  "title": "2026-07-09 23:40 미국 첫 시간 시장 신호 노트",
+  "slug": "2026-07-09-2340-us-first-hour-market-signal-note",
+  "generated_at_kst": "2026-07-09T23:46:17.384327+09:00",
+  "market_gate": "Nasdaq public market-info open-day evidence: Market Open, isBusinessDay=true",
+  "summary": "미국 정규장 첫 시간에는 전일 종가 대비 나스닥과 반도체 ETF의 우호적 온도가 이어졌지만, 09:30→10:30 장중 경로에서는 개별 반도체의 힘 차이가 커졌다. 다음 한국 장전은 전면 확정보다 선별 확인 루틴이 더 적합하다.",
+  "key_points": [
+    "전일 종가 대비 QQQ +1.09%, SOXX +4.88%, SMH +3.39%로 ETF 기준 반도체 온도는 QQQ보다 높았다.",
+    "개별 반도체의 전일 종가 대비 흐름은 NVDA -1.66%, AMD +7.49%, MU +7.39%, TSM +1.38%, ASML +3.62%, AVGO +1.46%로 갈라졌다.",
+    "EWY +0.40%는 한국 시장 프록시가 플러스권에 머문 보조 신호다.",
+    "선물 온도계는 ES +0.25%, NQ +0.86%, YM +0.16%, VIX 선물 -0.15%로 대체로 안정 쪽이었다.",
+    "매크로 보조 지표는 US10Y 4.557, VIX -2.48%, DXY -0.07%, USD/KRW 1509.76이다."
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "SOXX·SMH 강세가 미국 후반까지 QQQ 대비 유지",
+      "reading": "다음 한국 장전의 경계 강도를 낮춰 읽을 수 있다"
+    },
+    {
+      "condition": "NVDA·TSM·AVGO 약세가 더 커짐",
+      "reading": "반도체 ETF와 개별 종목 온도를 분리해 읽는다"
+    },
+    {
+      "condition": "EWY 플러스와 USD/KRW 상승이 함께 지속",
+      "reading": "한국 프록시는 긍정과 환율 부담을 동시에 반영한다"
+    },
+    {
+      "condition": "VIX·금리·달러가 재상승",
+      "reading": "성장주 온도계는 다시 보수적으로 읽는다"
+    }
+  ],
+  "limitations": [
+    "Yahoo 1분 차트는 이번 확인에서 429로 제한되어 Nasdaq 공개 chart/info와 CNBC quote-cache를 함께 사용했다. 전일 종가 대비 변화와 09:30→10:30 장중 경로는 구분해 읽어야 한다.",
+    "선물과 환율은 본장 가격 확정 신호가 아니라 조기 위험 온도계다.",
+    "첫 시간 신호는 하루 전체 방향을 확정하지 않는다. 공개 시장 자료를 읽기 쉽게 정리한 것이며 개인 판단을 대신하지 않는다."
+  ],
+  "visual_values": [
+    {
+      "label": "QQQ",
+      "value": 1.09
+    },
+    {
+      "label": "SOXX",
+      "value": 4.88
+    },
+    {
+      "label": "SMH",
+      "value": 3.39
+    },
+    {
+      "label": "EWY",
+      "value": 0.4
+    }
+  ],
+  "snapshot_label": "미국 첫 시간 스냅샷",
+  "visual_bundle": {
+    "hero": "/reports/time-sliced/assets/20260709_2340/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260709_2340/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260709_2340/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/assets/20260709_2340/visual_blog_pack_manifest.json"
+  }
+}

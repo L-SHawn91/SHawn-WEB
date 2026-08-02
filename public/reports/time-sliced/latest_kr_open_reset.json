@@ -1,0 +1,108 @@
+{
+  "schema": "time_sliced_public_market_signal.v0",
+  "generated_at_kst": "2026-07-14T09:25:00+09:00",
+  "slot": "0903_kr_open_reset",
+  "date": "20260714",
+  "market_gate": "KRX",
+  "phase_id": "0903_kr_open_reset",
+  "execution_note": "delayed_execution (09:25 vs 09:03 scheduled)",
+  "snapshot_label": "KRX 개장 직후 — 09:25 KST",
+  "market_status": "open",
+  "no_trade_instruction": true,
+  "headline": "Crash exhaustion — KOSPI -0.4%, Samsung +2%",
+  "conclusion": "서울 증시는 어제 -8.95% crash 이후 crash exhaustion 상태로 개장. 갭다운 -0.1%로 추가 폭락 없이 안정화. 삼성전자 +2% 저가매수 유입이 핵심 신호. 원화 1,497원 안정이 외국인 이탈을 막는 버팀목. KODEX인버스 하락(-0.45%)은 시장이 추가 폭락을 예상하지 않음을 시사.",
+  "indicators": {
+    "KOSPI": {
+      "value": 6779.76,
+      "change_pct": -0.4,
+      "signal": "stabilizing"
+    },
+    "KOSDAQ": {
+      "value": 785.77,
+      "change_pct": -1.7,
+      "signal": "mid_small_soft"
+    },
+    "KPI200": {
+      "value": 1075.97,
+      "change_pct": -0.26,
+      "signal": "large_cap_defensive"
+    },
+    "KODEX200": {
+      "value": 108450,
+      "change_pct": -0.34,
+      "signal": "index_tracking"
+    },
+    "삼성전자": {
+      "value": 259500,
+      "change_pct": 1.96,
+      "signal": "dip_buying"
+    },
+    "SK하이닉스": {
+      "value": 1848000,
+      "change_pct": 0.16,
+      "signal": "near_flat"
+    },
+    "원익IPS": {
+      "value": 122300,
+      "change_pct": -2.0,
+      "signal": "small_cap_weak"
+    },
+    "KODEX인버스": {
+      "value": 121350,
+      "change_pct": -0.45,
+      "signal": "fear_easing"
+    },
+    "WTI": {
+      "value": 79.33,
+      "change_note": "oil_shock_contained_for_KRX"
+    },
+    "USD_KRW": {
+      "value": 1496.98,
+      "change_note": "won_stable_key_support"
+    }
+  },
+  "key_signals": [
+    {
+      "signal": "crash_exhaustion",
+      "detail": "-8.95% Monday already priced worst case. Gap down only -0.1%."
+    },
+    {
+      "signal": "samsung_dip_buying",
+      "detail": "+2% institutional inflow. Crash-day bottom being tested."
+    },
+    {
+      "signal": "won_stability_anchor",
+      "detail": "₩1,497 stable. Preventing foreign flight."
+    },
+    {
+      "signal": "oil_kr_decoupled",
+      "detail": "WTI $79 impact limited on KRX vs US sensitivity."
+    },
+    {
+      "signal": "inverse_etf_falling",
+      "detail": "KODEX Inverse -0.45%. Market not betting on further collapse."
+    }
+  ],
+  "watch_items": [
+    "Samsung holding 260,000 → confirms crash-day bottom",
+    "SK Hynix defending 1,800,000 → semiconductor sentiment",
+    "KOSPI reclaiming 6,800 → psychological support",
+    "WTI breaking $80 → reintroduce risk aversion",
+    "Won above ₩1,500 → renew foreign selling signal"
+  ],
+  "data_context": {
+    "source": "KRX live market data (Naver m.stock.naver.com)",
+    "observation_time_kst": "2026-07-14T09:25:00+09:00",
+    "market_phase": "regular_session_post_open",
+    "previous_session": "KOSPI -8.95% crash Monday July 13",
+    "method": "intraday market observation",
+    "limitations": "Single-session snapshot. Crash-day distributions non-normal."
+  },
+  "blog_status": {
+    "wordpress": "published",
+    "url": "https://shawnassets.wordpress.com/2026/07/14/market-check-routine-20260714-0903/",
+    "post_id": 977,
+    "visual_status": "visual_unverified",
+    "visual_note": "Hero/GIF/icon generation skipped due to cron time constraints. Text-only publish."
+  }
+}

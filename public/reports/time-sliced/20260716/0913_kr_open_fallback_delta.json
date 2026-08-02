@@ -1,0 +1,40 @@
+{
+  "slot": "0913_kr_open_fallback_delta",
+  "timestamp": "2026-07-16T09:55:00+09:00",
+  "delayed_execution": true,
+  "parent_slot": "0910_kr_open_candidate",
+  "market": "KRX",
+  "indices": {
+    "KOSPI": {
+      "value": 6842.29,
+      "change_pct": -6.07,
+      "note": "open 6914.79(-5.07%) → recovered +18p from 09:49 low of 6823"
+    },
+    "KOSDAQ": {
+      "value": 799.31,
+      "change_pct": -3.63
+    },
+    "KPI200": {
+      "value": 1084.05,
+      "change_pct": -6.86
+    }
+  },
+  "reference_levels": {
+    "crash_low_20260713": 6807,
+    "current_distance_pct": 0.51,
+    "gate_status": "defending"
+  },
+  "us_futures": {
+    "ES_F": 7615.25,
+    "VIX_spot": 15.67,
+    "VIX_futures": 16.60,
+    "DXY": 100.48,
+    "US10Y": 4.561
+  },
+  "public_url": "https://shawnassets.wordpress.com/2026/07/16/market-check-routine-2026-07-16-0955/",
+  "wordpress_post_id": 1025,
+  "next_check": "2026-07-16T12:20:00+09:00",
+  "next_phase_id": "1220_kr_midday",
+  "no_trade_instruction": true,
+  "visual_status": "not_generated_for_fallback_delta"
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "time_sliced_public_report.v0",
+  "date": "2026-07-15",
+  "slot": "0913_kr_open_fallback_delta",
+  "published_at_kst": "2026-07-15T09:39:00+09:00",
+  "execution": "delayed_delta_check",
+  "market": "KRX",
+  "market_status": "OPEN",
+  "title": "KR Market Check Routine — 2026-07-15 09:39",
+  "conclusion": "09:10 기준 강세장 유지. 09:30→09:39 자연스러운 consolidation 진행 중. 구조적 순유입 기반 견고.",
+  "observations": {
+    "kospi": { "value": 7304.91, "change_pct": 6.53, "note": "전일비 +448p 강세" },
+    "kosdaq": { "value": 821.54, "change_pct": 4.79, "note": "개인 순유출 속 상승" },
+    "kpi200": { "value": 1167.85, "change_pct": 6.92, "note": "대형주 주도" },
+    "samsung_electronics": { "value": 277250, "change_pct": 5.42, "note": "외국인 순유입 기반" },
+    "sk_hynix": { "value": 2125000, "change_pct": 11.08, "note": "HBM 리더십 반영" },
+    "usd_krw": { "value": 1490.18, "note": "안정적" },
+    "vix": { "value": 16.50, "note": "20 하회, 위험선호" },
+    "us_futures": {
+      "es": { "value": 7602.25, "change": "mild_positive" },
+      "nq": { "value": 29918.5, "change": "mild_positive" }
+    }
+  },
+  "market_flow": {
+    "foreign_net": "buy_6996B_krw",
+    "institution_net": "buy_1489B_krw",
+    "individual_net": "sell_8387B_krw",
+    "program_total": "buy_5869B_krw",
+    "breadth": { "rise": 789, "fall": 103, "steady": 12, "upper_limit": 3 }
+  },
+  "delta_vs_0930": {
+    "kospi": "-29.88p (-0.41%)",
+    "samsung": "-2,250 (-0.81%)",
+    "sk_hynix": "-16,000 (-0.75%)",
+    "note": "정상 consolidation 범위. profit-taking mild"
+  },
+  "next_check": "12:20 KST midday",
+  "data_limits": "Naver live KRX cash market + Yahoo US futures. Real-time only — not guaranteed prediction.",
+  "disclaimer": "This is a market data note for informational purposes only. Not financial advice, not a trading recommendation. No investment decision should be based solely on this note."
+}

@@ -1,0 +1,100 @@
+{
+  "schema": "public_market_signal_note.v1",
+  "slot": "2220_us_preopen",
+  "published_at_kst": "2026-07-13T22:20:43+09:00",
+  "market_status_check": "US Pre-Market",
+  "market_status": "NYSE/Nasdaq 정규장 개장일 확인. Nasdaq market-info: isBusinessDay=true, Pre-Market.",
+  "headline": {
+    "ko": "미국장 개장 전: 기술주 중심 조정 압력, 원유·변동성 상승",
+    "en": "US Pre-Open: Tech-Led Pressure, Oil & Volatility Rise"
+  },
+  "conclusion_3_lines": [
+    "미국 선물은 기술주 중심 약세(NQ -1.03%)를 보이나 S&P500(-0.31%)·Dow(-0.07%)는 제한적 하락으로 전반적 하락 신호는 아님.",
+    "변동성 지수(VIX) 16.35(+8.8%) 상승과 원유 $73.93(+3.5%) 급등은 한국장 -8.95% 충격과 중동 긴장을 반영.",
+    "한국 증시는 기술적 과하락(oversold) 구간이나, 미국 첫 1시간(23:40 KST) 반도체·기술주 방향이 내일 장 방향을 결정할 전망."
+  ],
+  "signals": {
+    "us_futures": {
+      "ES": {
+        "value": 7596.25,
+        "change_pct": -0.31,
+        "label": "소폭 약세"
+      },
+      "NQ": {
+        "value": 29723.0,
+        "change_pct": -1.03,
+        "label": "기술주 약세"
+      },
+      "YM": {
+        "value": 52867.0,
+        "change_pct": -0.07,
+        "label": "보합"
+      },
+      "RTY": {
+        "value": 2985.2,
+        "change_pct": -0.29,
+        "label": "소폭 약세"
+      }
+    },
+    "volatility": {
+      "VIX": {
+        "value": 16.35,
+        "change_pct": 8.78,
+        "label": "공포 상승",
+        "friday_close": 15.03
+      },
+      "VIX_futures": {
+        "value": 17.3,
+        "source": "CNBC 지연 시세",
+        "label": "추가 변동성 기대"
+      }
+    },
+    "rates_fx": {
+      "US10Y": {
+        "value": 4.579,
+        "change_pct": 0.22,
+        "label": "안정"
+      },
+      "USDKRW": {
+        "value": 1491.78,
+        "change_pct": -0.47,
+        "label": "원화 강세"
+      },
+      "DXY": {
+        "value": 100.929,
+        "change_pct": -0.02,
+        "label": "달러 안정"
+      }
+    },
+    "commodities": {
+      "WTI": {
+        "value": 73.93,
+        "change_pct": 3.53,
+        "label": "유가 급등",
+        "context": "US-Iran 긴장 고조"
+      },
+      "Gold": {
+        "value": 4068.1,
+        "change_pct": -1.11,
+        "label": "금 하락"
+      }
+    }
+  },
+  "korea_context": {
+    "today_summary": "KOSPI -8.95%(-669p), 서킷브레이커 발동. 삼성전자 -10.70%, SK하이닉스 -15.37%. KOSDAQ -4.55%. 기계적 물량·프로그램 물량·레버리지 포지션 정리 연쇄.",
+    "key_observation": "SK하이닉스 ADR 미국서 +13% 급등 ↔ 한국 현물 -15.37% 폭락. 극단적 괴리."
+  },
+  "next_check": {
+    "time_kst": "2026-07-13 23:40",
+    "label": "US 첫 1시간 확인",
+    "watch_items": [
+      "QQQ·SOXX·SMH 첫시간 방향",
+      "NVDA 프리마켓→정규장 전환",
+      "VIX 20 상회 여부",
+      "WTI $76 돌파 여부"
+    ]
+  },
+  "source_tier": "Yahoo query2 US 선물(live) + CNBC VIX/US10Y/DXY + Nasdaq market-info. ETF 프리마켓 별도 확인.",
+  "disclaimer": "시장 신호 노트이며 투자 조언이 아님. 수치는 지연·추정치를 포함할 수 있음. 과거 데이터는 미래 결과를 보장하지 않음.",
+  "no_trade_instruction": true
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "time_sliced_public_note.v1",
+  "content_class": "public_market_data_note",
+  "slot": "2026-07-31 15:45 KST",
+  "slug": "2026-07-31-1545-kr-close-market-signal-note",
+  "title": "2026년 7월 31일 한국 장마감 시장 신호",
+  "summary": "한국 현물시장은 폭넓은 상승으로 마감했습니다. 지수와 주요 공개 표본의 변화폭을 관측 시점 및 자료 한계와 함께 정리합니다.",
+  "snapshot_label": "2026-07-31 KRX CLOSE SNAPSHOT",
+  "visual_values": [
+    {
+      "label": "KOSPI",
+      "value": 17.91
+    },
+    {
+      "label": "KOSPI200",
+      "value": 19.98
+    },
+    {
+      "label": "KODEX200",
+      "value": 24.17
+    },
+    {
+      "label": "KOSDAQ",
+      "value": 11.63
+    }
+  ],
+  "key_points": [
+    "KOSPI는 6,595.45, KOSPI200은 1,046.81, KOSDAQ는 719.76으로 마감했습니다.",
+    "동일 시점의 공개 표본에서는 지수와 같은 방향의 움직임이 확인됐습니다.",
+    "장중 후반의 변화는 지수별로 차이가 있어, 변화율과 관측시각을 함께 비교할 필요가 있습니다.",
+    "해외 지표와 원/달러는 다음 확인 시점에 시간 차이를 분리해 읽을 보조 자료입니다."
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "미국 지수선물",
+      "reading": "22:20 KST에 지수별 방향과 관측시각을 함께 확인합니다."
+    },
+    {
+      "condition": "반도체 공개 지표",
+      "reading": "광역 지수와 같은 방향인지, 차이가 이어지는지 분리해 읽습니다."
+    },
+    {
+      "condition": "원/달러",
+      "reading": "다음 한국 장전의 새 관측값으로 시점 차이를 다시 확인합니다."
+    },
+    {
+      "condition": "한국 수급 공시",
+      "reading": "확인 가능한 동일 날짜 수치가 있을 때만 가격 자료와 나란히 기록합니다."
+    }
+  ],
+  "limitations": [
+    "이 화면은 공개 시장 자료를 설명하는 읽기 전용 노트입니다.",
+    "표시값은 관측 시점의 스냅샷이며 실시간 전체 경로나 미래 방향을 뜻하지 않습니다.",
+    "해외 지표와 한국 현물 마감은 시점이 다를 수 있어 직접 원인으로 해석하지 않습니다.",
+    "교육·해설용 참고 자료이며 투자 조언이 아닙니다."
+  ],
+  "source_caveat": "한국 현물 마감 수치: Naver Finance 공개값, 2026-07-31 15:48~15:49 KST. 각 값은 공개 화면의 마감 상태를 읽은 시점 기준이며, 지연과 시장별 시점 차이가 있을 수 있습니다.",
+  "created_at_kst": "2026-07-31T15:49:30+09:00",
+  "disclaimer": "교육·해설용 참고 자료이며 투자 조언이 아닙니다.",
+  "compliance": {
+    "public_safety_scan": "pass",
+    "no_trade_instruction": true,
+    "private_numeric_ranges": "absent",
+    "private_portfolio_labels": "absent"
+  }
+}

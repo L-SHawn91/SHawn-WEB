@@ -1,0 +1,73 @@
+{
+  "schema": "public_market_signal_note.v1",
+  "phase_id": "0845_kr_preopen",
+  "created_at_kst": "2026-07-10T08:50:40+09:00",
+  "title": "2026.07.10 08:45 Public Market Signal Note",
+  "slug": "2026-07-10-0845-kr-preopen-market-signal-note",
+  "summary": "한국장 정규장 전 공개 지표는 아직 첫 체결 전 0값에 머물러 있습니다. 밤사이 미국 반도체와 한국 ETF 프록시는 우호적이지만, 실제 한국 시장은 09:03 첫 흐름 확인이 핵심입니다.",
+  "key_points": [
+    "공개 KOSPI·KOSDAQ·KOSPI200 지수 화면은 같은 날 PREOPEN으로 확인되지만 08:45 지수 변화는 0.00%입니다.",
+    "QQQ +1.66%, SOXX +3.50%, SMH +2.48%, EWY +1.11%로 밤사이 위험 온도계는 우호적입니다.",
+    "ES +0.82%, NQ +1.65%, RTY +1.17%이며 VIX 선물은 지연 보조값으로만 참고합니다.",
+    "USD/KRW는 약 1505.43, US10Y는 약 4.54라 성장주 신호의 신뢰도 상단을 제한합니다."
+  ],
+  "visual_values": [
+    {
+      "label": "QQQ",
+      "value": 1.66
+    },
+    {
+      "label": "SOXX",
+      "value": 3.5
+    },
+    {
+      "label": "EWY",
+      "value": 1.11
+    },
+    {
+      "label": "USD/KRW %",
+      "value": 0.14
+    }
+  ],
+  "snapshot_label": "08:45 공개 스냅샷",
+  "afternoon_watch_table": [
+    {
+      "condition": "09:03 첫 체결",
+      "reading": "장전 0값을 실제 지수와 대형주 흐름으로 다시 읽습니다."
+    },
+    {
+      "condition": "09:10 초반 확인",
+      "reading": "반도체와 성장주가 지수 흐름을 따라가는지 봅니다."
+    },
+    {
+      "condition": "09:20 반응 점검",
+      "reading": "초반 회복이 유지되는지, 또는 식는지 분리합니다."
+    }
+  ],
+  "check_table": [
+    {
+      "condition": "09:03 첫 체결",
+      "reading": "장전 0값을 실제 지수와 대형주 흐름으로 다시 읽습니다."
+    },
+    {
+      "condition": "09:10 초반 확인",
+      "reading": "반도체와 성장주가 지수 흐름을 따라가는지 봅니다."
+    },
+    {
+      "condition": "09:20 반응 점검",
+      "reading": "초반 회복이 유지되는지, 또는 식는지 분리합니다."
+    }
+  ],
+  "limitations": [
+    "정규장 전 0값은 방향 신호가 아니라 첫 체결 전 대기 상태입니다.",
+    "선물과 ETF 보조지표는 본장 확정 신호가 아니라 조기 위험온도계입니다.",
+    "공개 시장 자료를 읽기 쉽게 정리한 것이며 개인 판단을 대신하지 않습니다."
+  ],
+  "content_class": "public_market_note",
+  "visual_bundle": {
+    "hero": "/reports/time-sliced/20260710_0845_kr_preopen/assets/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/20260710_0845_kr_preopen/assets/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/20260710_0845_kr_preopen/assets/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/20260710_0845_kr_preopen/assets/visual_blog_pack_manifest.json"
+  }
+}

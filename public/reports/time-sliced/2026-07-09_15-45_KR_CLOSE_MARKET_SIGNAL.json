@@ -1,0 +1,64 @@
+{
+  "schema": "market_signal_note.v1",
+  "content_class": "public_market_note",
+  "title": "2026-07-09 15:45 한국장 마감 시장 신호 노트",
+  "slug": "2026-07-09-1545-kr-close-market-signal-note",
+  "generated_at_kst": "2026-07-09T15:51:48+09:00",
+  "market_gate": "공개 KRX 마감 기준: 2026-07-09T15:51:00+09:00",
+  "summary": "한국 주식시장은 정오의 냉각을 마감에 일부 되돌렸다. 다만 지수 회복과 개별 대형주의 온도차가 함께 나타나 밤사이 미국 반도체·환율·금리 확인이 중요해졌다.",
+  "key_points": [
+    "코스피 +0.62%, 코스닥 +1.15%, 코스피200 +0.98%로 마감하며 정오 약세를 일부 되돌렸다.",
+    "KODEX 200 +0.71%, 레버리지형 프록시 +1.35%, 인버스형 프록시 -2.17%로 대형주 온도계는 양수권이었다.",
+    "삼성전자 +0.18%, SK하이닉스 +5.30%로 반도체 내부 강도는 한쪽에 더 집중됐다.",
+    "기아 -7.65%, NAVER -4.31%로 일부 대형 업종은 지수 회복과 다르게 약했다.",
+    "공개 수급표 기준 외국인 1349.0억, 기관 12873.0억, 프로그램 전체 12062.0억으로 확인됐다."
+  ],
+  "afternoon_watch_table": [
+    {
+      "condition": "미국 반도체 온도계",
+      "reading": "QQQ보다 SOXX·SMH가 강한지 약한지 분리해 본다."
+    },
+    {
+      "condition": "한국 ETF 프록시",
+      "reading": "EWY와 원화가 국내 마감 회복을 지지하는지 확인한다."
+    },
+    {
+      "condition": "환율·금리·유가",
+      "reading": "금리와 환율 부담이 커지면 지수 회복 신호를 보수적으로 읽는다."
+    },
+    {
+      "condition": "다음 한국장 장전",
+      "reading": "대형 반도체와 코스피200 온도계가 같은 방향인지 확인한다."
+    }
+  ],
+  "limitations": [
+    "투자자별·프로그램 수급 수치는 장중·마감 후 집계 과정에서 일부 달라질 수 있다.",
+    "미국 선물·환율·금리 값은 공개 보조 자료이며 지연 또는 보조 성격이 섞일 수 있다.",
+    "공개 시장 자료를 읽기 쉽게 정리한 것이며 개인 판단을 대신하지 않는다."
+  ],
+  "visual_values": [
+    {
+      "label": "KOSPI",
+      "value": 0.62
+    },
+    {
+      "label": "KOSDAQ",
+      "value": 1.15
+    },
+    {
+      "label": "KPI200",
+      "value": 0.98
+    },
+    {
+      "label": "KODEX200",
+      "value": 0.71
+    }
+  ],
+  "snapshot_label": "15:45 마감 스냅샷",
+  "visual_bundle": {
+    "hero": "/reports/time-sliced/assets/20260709_1545/market_signal_generated_visual_hero.png",
+    "graph_animation": "/reports/time-sliced/assets/20260709_1545/market_signal_linear_graph_animation.gif",
+    "shawn_icon": "/reports/time-sliced/assets/20260709_1545/shawn_investment_assets_icon.png",
+    "manifest": "/reports/time-sliced/assets/20260709_1545/visual_blog_pack_manifest.json"
+  }
+}

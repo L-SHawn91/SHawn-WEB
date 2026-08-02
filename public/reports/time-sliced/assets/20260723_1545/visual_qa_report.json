@@ -1,0 +1,100 @@
+{
+  "files": {
+    "market_signal_generated_visual_hero.png": {
+      "exists": true,
+      "bytes": 127165,
+      "sha256": "e012e70c3a9408f38378c19c60dfd111f9c8ebf00425be0654ef63b3b96513dd",
+      "size": [
+        1200,
+        675
+      ],
+      "mode": "RGB"
+    },
+    "market_signal_linear_graph_animation.gif": {
+      "exists": true,
+      "bytes": 227403,
+      "sha256": "ff32ecd83cc092bd9235afeda2ec0d48b85f148c193e3daf0db7eccfb27c0f87",
+      "size": [
+        1200,
+        675
+      ],
+      "mode": "P"
+    },
+    "shawn_investment_assets_icon.png": {
+      "exists": true,
+      "bytes": 254101,
+      "sha256": "890d971003a6084ee7592d14033591e88e194b0e8e01ad193b66968ad42d43cf",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA"
+    },
+    "visual_blog_pack_manifest.json": {
+      "exists": true,
+      "bytes": 935,
+      "sha256": "c810de3757330aafea948c28008c8c098572d5532979d200c1bf30976495dc7f"
+    },
+    "wordpress_visual_publish_report.json": {
+      "exists": true,
+      "bytes": 1031,
+      "sha256": "7885cfda2c13bd1c15e7250df826e984f31acaedbb55fea014ed9ab11e5e3dc1"
+    }
+  },
+  "gif": {
+    "frames": 28,
+    "size": [
+      1200,
+      675
+    ],
+    "loop": null,
+    "durations_ms": [
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      2600
+    ],
+    "unique_frame_hashes": 28,
+    "first_equals_final": false,
+    "max_quantized_colors": 71,
+    "final_duration_ms": 2600,
+    "contact_sheet": "qa_start_middle_final.png",
+    "grayscale_sheet": "qa_start_middle_final_grayscale.png"
+  },
+  "html": {
+    "word_break_keep_all": true,
+    "responsive_clamp": true,
+    "max_width": true,
+    "contains_graph_caveat": true,
+    "local_assets": true
+  },
+  "leakage": {
+    "hits": [],
+    "pass": true
+  },
+  "decision": "PASS"
+}

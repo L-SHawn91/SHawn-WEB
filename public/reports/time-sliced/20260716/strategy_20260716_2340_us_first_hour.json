@@ -1,0 +1,42 @@
+{
+  "slot": "2340_us_first_hour",
+  "date": "2026-07-16",
+  "kst_time": "23:40",
+  "market": "US",
+  "title": "US Market First Hour Check — July 16, 2026",
+  "summary": "Premarket semiconductor panic eased in the first hour. SOXX recovered from -5.16% premarket to -3.25%, confirming the base scenario. Broad market rotation continued with YM +0.19% and RTY +0.50%. VIX at 15.86 indicates no systemic crisis.",
+  "key_signals": [
+    {"label": "Semiconductors", "value": "Stabilizing", "detail": "SOXX -3.25% (premarket -5.16%→first hour recovery). MU -4.90% (premarket -12.09%→significant recovery)"},
+    {"label": "Broad Market", "value": "Rotation Support", "detail": "YM +0.19%, RTY +0.50%. Small-cap strength continues"},
+    {"label": "Fear Gauge", "value": "Low", "detail": "VIX 15.86. No systemic crisis signal"},
+    {"label": "Korea ETF", "value": "Stable", "detail": "EWY -3.14%. In line with KOSPI -6.37% close. No additional deterioration"}
+  ],
+  "market_data": {
+    "qqq": {"price": 711.13, "change_pct": -0.92},
+    "soxx": {"price": 537.24, "change_pct": -3.25},
+    "smh": {"price": 575.08, "change_pct": -2.66},
+    "nvda": {"price": 207.98, "change_pct": -2.13},
+    "amd": {"price": 510.21, "change_pct": -3.58},
+    "mu": {"price": 859.99, "change_pct": -4.90},
+    "tsm": {"price": 413.01, "change_pct": -1.54},
+    "asml": {"price": 1821.02, "change_pct": 0.32},
+    "avgo": {"price": 381.85, "change_pct": -3.15},
+    "ewy": {"price": 166.25, "change_pct": -3.14}
+  },
+  "futures": {
+    "es": {"price": 7612.00, "change_pct": -0.04},
+    "nq": {"price": 29468.00, "change_pct": -0.76},
+    "ym": {"price": 53000.00, "change_pct": 0.19},
+    "rty": {"price": 3006.80, "change_pct": 0.50}
+  },
+  "macro": {
+    "vix": 15.86,
+    "us10y": "4.588%",
+    "dxy": 100.687,
+    "usdkrw": "1,480.36"
+  },
+  "next_check": "July 20, 2026 06:45 KST — Korea market reopen after 3-day break",
+  "data_timestamp_et": "10:41 ET",
+  "source_note": "Market data from public financial information services. Delayed or end-of-day data may apply.",
+  "disclaimer": "This is a market observation note, not investment advice. Past patterns do not guarantee future results."
+}
