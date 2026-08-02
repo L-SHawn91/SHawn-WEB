@@ -1,0 +1,121 @@
+---
+title: "Google AI API Managed Agents의 방향은 성능 체감보다 운영 지배권 회수다"
+date: "2026-07-29"
+description: "Google이 Google AI API Managed Agents에 3.6 Flash, hooks, scheduled trigger를 묶어 배포했습니다. 샌드박스 내부 정책 실행, 예산 경계, 스케줄러, 환경 관리 API가 추가된 구조적 진화를 분석합니다."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/hero-45.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: ""
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1276"
+---
+
+AI NOTES · KO  KOREAN EDITION
+
+**KO · 한국어** / [EN · English](https://shawnaiintelligence.wordpress.com/?p=1277&preview=true) BILINGUAL PAIR
+
+ Google이  Google AI API Managed  Agents에  3.6 Flash, hooks, scheduled  trigger를   묶어   배포한   2026년   7월   28일   업데이트는   단순   모델   교체가   아니다.  `antigravity-preview-05-2026` 를   기본값으로   두고,   샌드박스   내부에서   정책   실행을   가능하게   만든   방식은  AI  에이전트의   실패   비용을   낮추고,   운영   책임을   외부   오케스트레이션이   아니라  Google  기반   실행   경계로   되돌려   놓는   구조적   진화이다.   이   변화는   단기   체감의   “더   똑똑한   모델”보다   장기   조직   설계의   “관리   가능한   자동화   인프라”를   의미한다.
+
+## 1) 결론: 지금의 Google 전략은 에이전트를 기능이 아니라 거버넌스 단위로 재정의한다
+
+Google AI API Managed  Agents는   이제   채팅형   질의   응답의   연장선이   아니다.   Google은   에이전트가   무엇을   할   수   있는가보다,  * 무슨   규칙으로   움직여야   하는가 * 에   답을   붙였다.  Philipp Schmid( Member of the Technical Staff, Google DeepMind  )와  Mariano Cocirio( Product Manager, Google DeepMind  )가   함께   알린   방향은   분명하다.  `Managed Agents in Google AI API now default to Google AI 3.6 Flash` 라는   모델   공지는   시작에   불과하고,   진짜   추가값은   환경   훅,   예산   경계,   스케줄러,   환경   관리   API에서   나온다.
+
+ 여기서   판단은   단순하다.   에이전트를   “잘하는   모델   호출”이   아니라   “통제된   작업자”로   쓰고   싶다면   이   업데이트가   갖는   실무적   파급은   크다.   반대로   모델링   실험만으로   충분한   팀은   여전히   기존   인터랙션   방식에   익숙하게   남아도   된다.   이   구분은   장난이   아니라   비용·보안·재현성의   분기점이다.
+
+## 2) 무엇이 바뀌었는가: 한 번에 본다면 4개 축
+
+ 첫째,   기본   모델이  `Google AI-3.6-flash` 로   바뀌면서  `antigravity-preview-05-2026` 을   중심축으로   둔  managed agent  운영이   기본화됐다.   둘째,   환경   훅이   본격적으로   들어오며   샌드박스   내에서  `pre_tool_execution` 과  `post_tool_execution`  이벤트를   실행할   수   있게   됐다.   셋째,  `max_total_tokens`  기반의   총량   제어가   추가돼   토큰   폭주를   멈출   수   있게   되었고,   한도   초과   시   상태는  `status: "incomplete"` 로   반환되며   중단된   지점이   보존된다.   넷째,   일정   기반   재실행을   위한  scheduled  trigger와  Environments  API가   붙으면서   실행   생명주기가   코드로   관리된다.
+
+ Google은  free  tier에서도  managed  agents를   사용할   수   있도록   낮춘   장벽을   공개했고,   이와   함께   7일   TTL을   기다리지   않고   종료   시점에   샌드박스를   정리할   수   있는  API  경로를   추가했다.   핵심은   API의   기능   개수가   늘어났다는   사실보다,   운영자가   장시간   작업·다단계   작업·컴플라이언스   검증을   한   시스템으로   붙일   수   있게   됐다는   점이다.
+
+## 3) 작동 메커니즘: pre/post 훅과 상태보존이 만드는 인과 사슬
+
+[![환경 훅 파이프라인: pre_tool_execution과 post_tool_execution 게이트](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept-36.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept-36.webp)
+_환경 훅 파이프라인: pre_tool_execution과 post_tool_execution 게이트_
+
+ 한   번의  Interactions  호출은   더   이상   단일   프롬프트-단일   응답   루프에   갇히지   않는다.   툴   실행이   발생하면   훅의  `matcher` 가   어떤   호출을   가로챌지   정한다.   정규표현식이   허용된다는   점은   단순   필터링을   넘어서,   도메인   단위   정책을   하나의   패턴   엔진으로   유지한다는   뜻이다.   예를   들어  `code_execution|write_file` 처럼   특정   민감   동작만  `pre_tool_execution` 에서   선제   차단하고,   전체   툴은  `post_tool_execution` 에서   형식   점검을   거치게   할   수   있다.
+
+`security-gate`  예시는  Python `gate.py` 를   예로   들어  tool  invocation을   block/allow으로   통제한다.   반환   형식이  `&#123;"decision": "deny", "reason": "..."&#125;` 이라면   요청은   차단되고,   이유가   모델   컨텍스트에   들어가   추가   추론에서   참조된다.   즉   제어권이   모델   내부   추론에만   있는   게   아니라,   모델이   무엇을   할지   결정하는   실행계층으로   이동한다.
+
+`auto-format`  훅은  `auto_lint.py` 처럼   모든   툴   종료   뒤의   검사   단계를   기본으로   붙이도록   구성한다.   이는   “작동   뒤   정리”가   아니라   “작동   자체가   검증   파이프라인을   통과해야만   완료”되는   구조를   만든다.   여기에  HTTP  훅   타입이   결합되면   외부   시스템으로   결과를   보고하거나   추가   인증   절차를   넣는   확장이   쉬워진다.
+
+ 중요한   또   하나의   사슬은   토큰   상한이다.  `max_total_tokens` 로  input/output/thinking  총합을   제한하면   대규모   자동   루프에서   제어불능을   막을   수   있다.   한계   도달   시  `status: "incomplete"` 를   주고   환경   상태를   보존한   뒤  `previous_interaction_id` 로   이어서   실행한다.   단일   호출이   실패로   끝나는   대신,   관리   가능한   이어서   실행이   가능한   작업   단위로   전환된다는   뜻이다.
+
+## 4) 근거와 경계: 벤더 문구로 증명 가능한 범위
+
+ 공식   문서는   이   업데이트를  `interactions`  체계에서   바라보도록   설계한다.  Google AI for  Developers의  `Interactions API` 는   2026년   6월   기준으로   일반   공급( `GA` )되고,   새로운   프로젝트는   이것을   권장한다.   동시에   기존  `generateContent` 는   레거시로   남았지만   완전   지원된다고   명시한다.   즉,   교체   강제가   아니라   전환   전략의   문제다.
+
+ 벤더   공개   기준에서   수치화   가능한   부분은   명확하다.   지원   모델은   적어도  `Google AI-3.6-flash`, `Google AI-3.5-flash`, `Google AI-3.5-flash-lite` 가   포함되며,  interactions  문서에서는  `Google AI-3.1-pro-preview` 와  `Google AI-3.1-flash-lite`, `Google AI-3-flash-preview`, `Google AI-2.5-pro` 도   나란히   노출돼   있다.   또한   상호작용   데이터   보존은   유료   55일,   무료   1일로   구분되고,  `store=false` 는   무상태   모드로   전환한다.   그러나  `store=false` 는   상태   보존   정책을   끄는   옵션이지,   배경   실행과   연동되는   연속성의   대체   장치가   아님을   이해해야   한다.
+
+ 이   범위를   넘는   주장,   예컨대   “성능이   곧바로   벤치마크에서   우월하다”   같은   단정은   공식   문서가   제공하지   않는다.   지원   모델이   늘어난   점과   거버넌스   API가   들어온   점은   분명하지만,   품질   비교   수치나   비용   단축   정량은   본문에서   직접   인용되지   않는다.   그러므로   본문   분석은   수치   과장이   아니라   운영   가능성의   범위를   바르게   그리는   데   집중해야   한다.
+
+## 5) 실무 시나리오: OffDeal, 그리고 반복 작업에서 드러나는 효과
+
+OffDeal  사례는   이   설계의   실용적   밀도를   보여준다.  AI-native investment  bank인   OffDeal의  Alston Lin(Founder &  CTO)은  banker-ready deck  제작에서   30개가   넘는   회사   로고를   자동   검증해야   했고,   크기·종횡비·브랜딩·배경   대비를   모두   통제해야   한다고   말한다.   이때  `post_tool_execution`  훅으로   원격   샌드박스   안에서   자동   이미지   검증을   실행하고,   후보   로고   목록이   들어오는   즉시   픽셀   기준   검증과   비전   기반   확인을   거친   뒤   승인된   파일만   전달하는   파이프라인이   가능해졌다.
+
+ 이   시나리오의   핵심은   “모델이   계산해서   텍스트를   뱉는   데서   끝나지   않고,   샌드박스   내부에서   결과품질을   즉시   재검증한다”는   점이다.   기존   구조였다면   별도   오케스트레이터나   외부   워크플로우가   필요했을   가능성이   높다.   그러나  managed  환경   훅은   그   오케스트레이션의   일부를   같은   실행   경로   안으로   당겨서   구현   복잡도를   낮춘다.   여기서  `Google` 이   얻는   이점은   기능이   아니라   통합   비용의   축소이며,   팀이   얻는   이점은   운영   리스크의   중앙화다.
+
+ 수치   시나리오도   분명하다.  Google  문서   예시에서  `max_total_tokens: 10000` 과   같은   한도를   두고   작업을   실행하면   한계   도달   시   중단   상태가   보존된다.   반복   크론   작업도   마찬가지로,   한   번의   실행이   끝날   때마다   같은   sandbox를   재사용하거나   파이프라인   종료   시점에   환경을   정리할   수   있어   자원   누수를   줄일   여지가   생긴다.   여기에  `Environments API` 의   리스트/조회/삭제가   붙으면,   네트워크   이슈로   연결이   끊겨도  environment  id를   복구해   이어받거나,   7일  TTL  대기   없이   파이프라인   후   정리   절차를   코드화할   수   있다.
+
+## 6) 시장 위치: LangChain/CrewAI/Claude Code/Codex와의 정합성은 어디서 갈라진다
+
+[![예산 상한, 스케줄 트리거, 무료 계층 — 운영 통제의 3축](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/mechanism-19.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/mechanism-19.webp)
+_예산 상한, 스케줄 트리거, 무료 계층 — 운영 통제의 3축_
+
+ LangChain이나   CrewAI는   에이전트   오케스트레이션을   개발자   코드로   직접   구성하는   프레임워크다.   강점은   유연성,   약점은   오케스트레이션과   거버넌스   레이어를   매번   팀이   직접   운영해야   한다는   점이다.  Claude  Code나   Codex는   코딩   작업에서   강력하지만,   승인·검증·정합성   단계를   외부   환경(로컬/CI/리뷰)에서   설계해야   한다.
+
+ Google의  managed  접근은   이   축에서   완전히   다르게   선회한다.  `pre_tool_execution`/`post_tool_execution`  훅이   샌드박스   내부에서   제약·린트·검증을   실행하고,   토큰   상한·백그라운드   상태   복구·스케줄   트리거가   같은  API  경계   안에서   결합된다.   다시   말해   “로컬   개발자   도구  +  별도   정책   엔진”이   아니라   “원격   실행  +  정책   실행  +  상태   관리”가   하나의   런타임   경로가   된다.   이때   Google이   무료   계층까지   문턱을   낮춘   건,   개발자   입장에서는   실험에서   프로덕션   전환까지   걸림돌을   줄이는   의미가   있다.
+
+ 다만   이   전환이   즉시   기존  self-hosted  생태계를   대체하지는   않는다.   조직   데이터가   이미   내부   저장소/온프레미스   정책에   강하게   묶인   경우,   혹은   커스텀   오케스트레이션이   핵심   경쟁력이라면  managed  환경의   경량성보다   완전   통제형   구조가   더   유리할   수   있다.
+
+## 7) 선택 프레임: 팀이 따라야 할 판단 질문
+
+ 우선   질문   하나다.   팀이   원하는   운영   비용은   무엇인가.   내부   플랫폼팀이   이미   프레임워크·CI·감사   체인을   유지하고   있고,   정책   규칙이   정교하다면  managed  agents의   훅만으로   통합이   충분할지   점검해야   한다.   반대로   작은   팀에서   반복   자동화를   늘리고   싶지만   매번   외부   오케스트레이터를   붙이기엔   과한   경우,   Google이   제공한  sandbox-centric  모델이   초기   진입장벽을   크게   낮춘다.
+
+ 두   번째는   데이터   거버넌스다.  `max_total_tokens` 와  `store=false` /상태보존   조합을   이해하지   못한   팀은   비용과   추적에서   혼선이   생긴다.   무료   계층을   시험해   보고   싶다면   실무적으로는  `environment`, `cron schedule`, `previous_interaction_id` 로   이어받는   상태   흐름을   먼저   시험해야   한다.
+
+ 세   번째는   의존성이다.  Google  DeepMind가   주도해   배포한   이   구조는  Google  생태계와   결합력이   높다.   장기적으로   멀티클라우드/멀티벤더   중립을   지향한다면   현재의   빠른   생산성   이득   대비   벤더   종속   리스크를   함께   본다.   즉,   선택은   “좋아서”가   아니라   “언제,   어느   구간까지”의   정책   판단이어야   한다.
+
+## 8) 한계: 이상적인 서사에서 빠진 현실적 제약
+
+ 첫   번째   제약은   벤더   의존이다.   모델   라우팅,   훅   규격,   환경   API를   중심으로   설계하면   이식성은   감소한다.   두   번째는   정책   훅의   오용   위험이다.   훅이   강력하다는   것은   그만큼   정책   코드   품질이   곧   안정성의   핵심이라는   뜻이다.  `gate.py`  하나의   버그가   전체   작업   라인을   막을   수   있다.
+
+ 세   번째,   관측성의   한계다.  managed  환경에서   무엇이   실행되었는지,   왜   거부됐는지,   훅   실패가   어느   단계에서   발생했는지   추적   설계를   별도로   세팅하지   않으면   운영에서   디버깅   비용이   늘   수   있다.   네   번째는   무료/유료   경계다.  `1 day/55 days`  보존   제한은   데이터   패턴과   이력   요구사항이   큰   조직에선   즉시   체감될   수밖에   없다.   다섯   번째는   “자동   실행=자동   신뢰”   오류다.  `status: "incomplete"` 는   안전장치이지만,   경보·재시도   정책이   없으면   단순히   분할   처리로   보일   뿐   책임   분리는   보장되지   않는다.
+
+ 요약하면,  managed  agents는   강력한   실행   패턴을   제시하지만,   팀의   통제   체계를   없애주지   않는다.   오히려   그   반대다.   통제   체계를   어디에   두느냐가   바뀌는   구조다.
+
+## 9) 다음 행동: 바로 적용 가능한 6단계
+
+ 첫째,   정책   우선순위를   코드로   정리한다.  `code_execution|write_file`  같은   민감   툴은  `pre_tool_execution` 에서  deny  이유를   표준화해   거부   규칙을   둔다.
+
+ 둘째,   품질   게이트를   고정한다.   모든   훅   실행   종료   시  `auto_format` 으로  `auto_lint.py` 류의   정합성   점검을   강제하거나,  HTTP  훅으로   외부   검증   엔드포인트를   붙여   승격   기준을   명시한다.
+
+ 셋째,   자원   상한   전략을   잡는다.  `max_total_tokens` 를   기본값으로   두고,   장기   작업은  `status: "incomplete"`  후  `previous_interaction_id`  복원   전략을   운영   runbook에   넣는다.
+
+ 넷째,   스케줄러와   환경   수명을   연결한다.  cron  기반   trigger를   쓰되   실행   간  sandbox  재사용   여부와   종료   후  `Environments API`  삭제   정책을   명문화한다.
+
+ 다섯째,   retention을   정리한다.  free tier  실험은   1일   보존과  `store=false` 의   제약을   반영해,   유료   계층   전환   임계값을   KPI로   관리한다.
+
+ 여섯째,   비교   프레임을   문서화한다.  LangChain/CrewAI/Codex·Claude  Code의   장점과  managed  agents의   장점을   동일   표준(정책   일관성,   감시   비용,   재현성,   공급자   종속성)로   비교해   실제   도입   대상을   선별한다.
+
+ Google의   이번   발표는   제품   하나를   바꾼   사건이   아니라,  AI  팀의   실행   언어를   바꾸는   사건이다.  `Google` 이   제시한   것은   “더   많은   기능”이   아니라   “통제가   가능한   자동화”이며,   그   통제가   실제로   돌아가게   되면   에이전트의   실사용   가치가   급격히   달라진다.   2026년   하반기  AI  오케스트레이션   경쟁은   이제   모델   크기나  API  개수의   싸움보다,   운영   정책을   어디에   탑재하느냐의   싸움으로   이동한다.
+
+[![거버넌스가 새로운 전장이다 — 실행 경계는 누가 소유하는가](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing-40.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing-40.webp)
+_거버넌스가 새로운 전장이다 — 실행 경계는 누가 소유하는가_
+
+## Sources
+
+- Google AI API Managed Agents: 3.6 Flash, hooks, and more
+
+- Interactions API
+
+- Interactions API overview
+
+- Managed Agents in Google AI API
+
+- Environment hooks
+
+- Antigravity agent

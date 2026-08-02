@@ -1,0 +1,135 @@
+---
+title: "LightOn mDenseOn·mLateOn: 번역 훈련만으로 13개 미학습 언어를 정복한 오픈 검색 모델"
+date: "2026-08-02"
+description: "307M 파라미터 오픈 소스 다국어 검색 모델 mDenseOn과 mLateOn 공개. 단일 벡터 밀집 검색은 미학습 언어에서 급격히 무너지지만, 토큰 수준 지연 상호작용은 훈련에 포함되지 않은 13개 언어에서 오히려 훈련 언어 평균을 웃돈다. 아키텍처 선택이 다국어 전이 성능을 결정한다."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/hero-1.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/08/02/lighton-mdenseon-mlateon-multilingual-retrieval/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1325"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/08/02/lighton-mdenseon-mlateon-multilingual-retrieval/)
+
+AI NOTES · KO  KOREAN EDITION
+
+**KO · 한국어** / [EN · English](https://shawnaiintelligence.wordpress.com/2026/08/02/lighton-mdenseon-mlateon-multilingual-retrieval-en/) BILINGUAL PAIR
+
+ LightOn이  307M  파라미터   오픈   소스   다국어   검색   모델   mDenseOn과   mLateOn을   공개했다.   두   모델은   28억   쌍   규모의   번역   훈련   코퍼스를   기반으로   하며,   모델·데이터셋·학습   코드를   모두   Apache-2.0으로   배포한다.   핵심   결론부터   말하면,   검색   아키텍처   선택이   다국어   전이   성능을   결정한다.   단일   벡터   밀집   검색(mDenseOn)은   훈련   언어에서   견고하지만   미학습   언어에서   급격히   무너지고,   토큰   수준   지연   상호작용(mLateOn)은   훈련에   포함되지   않은   13개   언어에서   오히려   훈련   언어   평균을   웃도는   성능을   보인다.   이   차이는  RAG  파이프라인을   다국어로   확장하려는   실무자에게   아키텍처   선택의   기준을   바꾼다.
+
+## 무엇이 달라졌는가: 오픈 데이터 레시피의 다국어 확장
+
+ LightOn은   2026년   초   DenseOn과   LateOn이라는   영어   전용   검색   모델을   공개하며   “폐쇄   훈련   데이터가   진짜   병목이지,   모델   아키텍처나   규모가   아니다”라는   주장을   검증했다.   같은  ModernBERT  백본을   쓰면서도   훈련   데이터   레시피에   따라  BEIR  평균이   2.5점   이상   벌어지는   현상을   보였고,   자체   정제   코퍼스로   그   격차를   닫았다.
+
+ mDenseOn과   mLateOn은   그   영어   레시피를   8개   언어(프랑스어·독일어·이탈리아어·스페인어·포르투갈어·스웨덴어·노르웨이어·아랍어)로   확장한   결과물이다.   LightOn은   언어별   코퍼스를   독립적으로   수집하는   대신,   검증된   영어   데이터를   기계   번역으로   변환하는  translate-train  방식을   택했다.   이   선택의   핵심   근거는   비용과   품질   통제다.   비원어민이   여러   언어의   데이터   품질을   일관되게   검수하기   어렵고,   언어별   코퍼스   구축   비용이   선형으로   증가하기   때문이다.
+
+ 결과물은  307M  파라미터  mmBERT-base  백본   위에   훈련된   두   모델이다.   mDenseOn은   단일   벡터   밀집   검색,   mLateOn은  ColBERT  스타일   지연   상호작용   검색을   수행한다.   두   모델은   동일한   백본·코퍼스·교사   모델·하드   네거티브·배치   크기·훈련   시간을   공유하므로,   성능   차이는   오직   표현   및   스코어링   패러다임에서   나온다.
+
+## 28억 쌍 번역 훈련 코퍼스: 규모와 구조
+
+ LightOn이   공개한   훈련   데이터의   규모는   오픈   다국어   검색   코퍼스   중   최대급이다.   영어   시드   6억   6,500만   쌍을   Mistral-Small-3.1-24B-Instruct로   8개   언어에   번역해   약   19억   쌍의   단국어   번역   쌍을   만들었고,   문서   쪽을   다른   언어   번역본으로   교체하는   방식으로   2억   2,000만   쌍의   교차   언어   쌍을   추가했다.   총   28억   쌍이다.
+
+ 번역   파이프라인의   설계   선택이   중요하다.   LightOn은   쿼리와   문서를   한   번에   번역해   양쪽이   동일한   맥락에   기반하도록   했다.   또한   직역이   아닌   관용적   번역을   유도하는   언어별   프롬프트에   두   개의   번역   예시를   포함했다.   예를   들어  “a common  culprit”를   언어별로   자연스러운   표현으로   변환하도록   설계했다.
+
+ 미세   조정   단계에서는   Qwen3-32B로   번역을   수행하고,  Snowflake Arctic  Embed으로   하드   네거티브를   채굴하며,  mxbai-rerank-large-v2  교차   인코더로   증류   점수를   부여했다.   코드   검색   데이터는   CommitPackFT에서  CodeEditSearch  평가   세트와   중복을   제거한   뒤   gte-modernbert-base로   채굴했다.   최종   미세   조정   코퍼스는   9개   자연어와   코드를   아우르는   약   1,630만   대비   샘플이다.
+
+ LightOn은   모든   데이터를   공개했다.   사전   훈련   코퍼스,   미세   조정   데이터,   채굴된   하드   네거티브와   점수까지  Hugging  Face에   올려   누구나   임계값을   조정하거나   자체   필터를   추가할   수   있다.
+
+## 밀집 검색 vs 지연 상호작용: 표현 병목의 실체
+
+ mDenseOn과   mLateOn의   차이는   검색   패러다임에서   나온다.   mDenseOn은   입력   전체를   하나의   벡터로   압축한다.   이   단일   벡터는   정보   병목을   만들며,   특히   다국어   환경에서   백본이   이미   학습한   다국어   정렬   정보를   손실한다.
+
+ mLateOn은   토큰   수준   표현을   유지하고   MaxSim(쿼리   토큰과   문서   토큰   간   최대   유사도의   합)으로   점수를   매긴다.   미세   조정   단계에서는   쿼리   길이로   정규화하는   MeanMaxSim을   사용한다.   이   정규화는   BEIR에서  56.46  대   56.19로   작은   차이를   보이지만,   다국어·장문   맥락에서   쿼리   길이   편향을   줄여   추론   시   일반화에   기여한다.
+
+ LightOn의   실험에서   두   모델은   동일한   조건에서   훈련되었으므로,   성능   차이는   오직   이   표현   방식에서   기인한다.   그리고   그   차이는   미학습   언어에서   극적으로   벌어진다.
+
+## 벤치마크 결과: mLateOn의 전면 우세
+
+ 네   개   축에서   평가한   결과(NDCG@10),   mLateOn은  BEIR  57.56으로   모든   평가   모델   중   최고점을   기록했다.   영어   전용   LateOn(57.22)보다   높으며,   두   배   크기인   밀집   모델(pplx-embed-v1-0.6b,   jina-v5-text-small의   56.70)을   앞선다.   mDenseOn은   56.70으로   동급   밀집   모델과   동률을   이뤘다.
+
+MIRACL  다국어   검색에서   mLateOn은   훈련   대상   언어   평균   65.61로   전체   1위,   전체   언어   평균   67.04를   기록했다.   mDenseOn은   각각  59.61,  58.02에   그쳤다.  MLDR  장문   검색에서는   격차가   더   벌어진다.   mLateOn은   훈련   언어  87.69,  전체   77.92로   압도적   1위다.   mDenseOn은  64.98,  51.59로   훈련   언어에서는   경쟁력   있지만   전체   평균에서   급락한다.
+
+ 코드   검색(MTEB   Code)에서는  mLateOn 73.48, mDenseOn  71.53으로   둘   다   강세를   보였으며,   코드   전용   사전   훈련   없이   미세   조정   데이터만으로   이   성능을   달성했다.
+
+[![BEIR, MIRACL, MLDR, Code 네 개 벤치마크에서 mLateOn(높은 막대)이 mDenseOn(낮은 막대)을 모든 항목에서 앞선다. MLDR에서 격차가 가장 크다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept-1.webp)
+_BEIR, MIRACL, MLDR, Code 네 개 벤치마크에서 mLateOn(높은 막대)이 mDenseOn(낮은 막대)을 모든 항목에서 앞선다. MLDR에서 격차가 가장 크다._
+
+## 미학습 언어 전이: 핵심 발견
+
+ 이   논문의   가장   중요한   결과는   훈련에   포함되지   않은   언어에서의   전이   격차다.   MIRACL에서   mLateOn의   미학습   13개   언어   평균은   67.59로,   훈련   언어   평균   65.61보다   오히려   높다.   mDenseOn은   미학습   언어에서   57.42로   훈련   언어   59.61보다   낮다.
+
+ MLDR에서는   격차가   더   극적이다.   mLateOn은   미학습   6개   언어에서   66.52를   기록하지만,   mDenseOn은   35.97로   29점이나   추락한다.   mLateOn도   21점   하락하지만   출발점이   훨씬   높다.
+
+ 언어별   세부   결과를   보면,   mLateOn은   라틴   문자   미학습   언어(핀란드어  74.3,  요루바어   69.1)뿐   아니라   완전히   다른   문자   체계에서도   강세를   보인다.   키릴   문자   러시아어  71.4,  일본어  72.1,  한국어  71.9,  중국어  64.0,  데바나가리   힌디어  60.4,  벵골어  73.4,  텔루구어  71.8,  태국어   76.0이다.   mDenseOn은   같은   라틴   문자   미학습   언어에서도   핀란드어  52.5,  인도네시아어  47.5,  스와힐리어   42.3으로   급락한다.
+
+ LightOn은   이   차이의   가능한   설명으로   토큰   수준   지연   상호작용이   백본의   다국어   정렬을   더   잘   보존하는   반면,   단일   벡터   풀링은   정보   병목을   만들어   정렬   정보를   손실한다는   가설을   제시한다.   다만   이   메커니즘을   직접   분리하는   실험은   수행하지   않았다.
+
+ 중요한   한정   조건이   있다.   여기서   “미학습”은   검색   훈련   단계에서   보지   못했다는   뜻이지,  mmBERT  백본의  MLM  사전   훈련에서   전혀   보지   못했다는   뜻이   아니다.   전이   성능의   일부는   백본의   다국어   사전   훈련에서   올   수   있다.
+
+## 실무 배포 판단: 어떤 모델을 언제 쓰는가
+
+ mDenseOn과   mLateOn의   선택은   인프라   제약과   검색   품질   요구   사이의   트레이드오프다.
+
+ mDenseOn은   단일   벡터이므로   인덱싱·검색   인프라가   단순하다.   기존  FAISS·Milvus·pgvector  등   벡터   데이터베이스를   그대로   사용할   수   있다.  Matryoshka  표현   학습(128·256·512·768   차원)을   적용해   추론   시   차원을   줄이면서도   성능을   유지할   수   있다.   영어   중심이거나   훈련   대상   9개   언어   내에서만   서비스하며,   인프라   단순성이   최우선이면   mDenseOn이   합리적이다.
+
+ mLateOn은   토큰   수준   표현을   저장하므로   인덱스   크기가   크고,   검색   시  MaxSim  계산이   필요하다.   LightOn의  FastPLAID  엔진이   이   연산을   최적화하지만,   단일   벡터   검색보다   인프라   복잡도와   지연   시간이   높다.   대신   다국어·장문·미학습   언어   커버리지가   핵심이면   mLateOn의   품질   우위가   인프라   비용을   정당화한다.
+
+ 구체적   시나리오로,   한국어·일본어·중국어   RAG를   구축하는   경우를   생각하자.   이   세   언어는   LightOn의   번역   훈련   대상이   아니지만,   mLateOn은   MIRACL에서   한국어  71.9,  일본어  72.1,  중국어   64.0을   기록했다.   mDenseOn은   이   언어들에서   급격한   성능   저하를   보인다.   다국어   고객   지원   검색이나   비영어   장문   문서   검색에서는   mLateOn이   이   파라미터   규모에서   사실상   유일한   오픈   소스   선택지다.
+
+[![훈련 언어와 미학습 언어 구간에서 mLateOn(청록색)은 높은 성능을 유지하지만 mDenseOn(주황색)은 미학습 언어 구간에서 급격히 하락한다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism-1.webp)
+_훈련 언어와 미학습 언어 구간에서 mLateOn(청록색)은 높은 성능을 유지하지만 mDenseOn(주황색)은 미학습 언어 구간에서 급격히 하락한다._
+
+## 비용과 인프라 함의
+
+307M  파라미터는   추론   비용   면에서   실용적이다.   mDenseOn은   단일   벡터   임베딩이므로   쿼리당   계산량이   적고,  GPU  없이   CPU로도   배치   처리가   가능하다.   mLateOn은   토큰   수준   표현을   유지하므로   쿼리당   계산량이   많지만,  307M  규모는   여전히   단일   GPU로   실시간   서빙이   가능한   범위다.
+
+ LightOn이   훈련   코드와   데이터를   모두   공개했으므로,   특정   도메인이나   언어에   맞춘   추가   미세   조정도   가능하다.   예를   들어   한국어   의료   문서   검색이   필요하면,   기존   코퍼스에   한국어   의료  QA  쌍을   추가해   미세   조정할   수   있다.   훈련   스크립트는   PyLate(지연   상호작용)와  Sentence  Transformers(밀집)   기반으로   공개되어   있다.
+
+ 번역   훈련의   비용   효율성도   주목할   만하다.   LightOn은   8개   언어에   대한   독립적   코퍼스   구축   대신   영어   시드   번역을   택했고,   이   선택이   미학습   언어   전이까지   가능하게   했다.   언어당   독립   코퍼스   구축   비용이   수만~수십만   달러   규모임을   고려하면,   번역   훈련은   다국어   검색   모델   구축의   진입   장벽을   크게   낮춘다.
+
+## 한계와 미해결 문제
+
+ LightOn은   자체   한계를   명확히   밝힌다.   첫째,   번역   데이터는   인공물(artifact)을   포함할   수   있으며,   영어   특유   가정을   전파하거나   어휘적으로   과도하게   정렬된   쌍을   만들   수   있다.   번역   품질에   대한   인간   평가는   수행하지   않았다.
+
+ 둘째,   주요   벤치마크는   다국어   검색(쿼리와   문서가   같은   언어)을   측정하며,   교차   언어   검색(쿼리와   문서가   다른   언어)을   포괄적으로   테스트하지   않는다.   교차   언어   쌍이   훈련에  25%  포함되었지만,   그   효과가   실제   교차   언어   검색에   미치는   영향은   전용   벤치마크   없이   확인하기   어렵다.
+
+ 셋째,  MLDR  비교는   완전히   통제되지   않았다.   mDenseOn과   mLateOn은  MLDR  훈련   분할을   사용했지만,   베이스라인   모델들이   얼마나   comparable한   장문   감독을   받았는지   알   수   없다.   가장   통제된   비교는   두  LightOn  모델   간이며,   이   비교에서   지연   상호작용의   우위는   명확하다.
+
+ 넷째,   인도네시아어(55.4)와   스와힐리어(57.8)처럼   mLateOn에서도   약한   언어가   존재한다.   LightOn은   백본   사전   훈련의   언어별   통계가   없어   원인을   특정할   수   없다고   밝힌다.
+
+## 구체적 다음 행동
+
+ 다국어  RAG  파이프라인을   운영하거나   구축   중인   실무자에게   이   릴리스가   의미하는   바는   구체적이다.
+
+ 첫째,   비영어   검색   품질이   병목이라면   mLateOn을   우선   평가하라.   FastPLAID와   PyLate가   모두   오픈   소스이므로,   자체   인덱스에서   미학습   언어   검색   품질을   직접   측정할   수   있다.   특히   한국어·일본어·중국어처럼   번역   훈련   대상이   아닌   언어에서  mDenseOn  대비   격차가   클   것이다.
+
+ 둘째,   영어   중심이고   인프라   단순성이   우선이면   mDenseOn의  Matryoshka  차원   축소를   활용하라.   768차원   전체   임베딩   대신   256차원으로   줄여도   성능   저하가   최소화되므로,   저장·검색   비용을   크게   절감할   수   있다.
+
+ 셋째,   특정   도메인이나   저자원   언어가   핵심이면   공개된   훈련   코드로   추가   미세   조정을   수행하라.   1,630만   샘플의   미세   조정   데이터와   채굴된   하드   네거티브가   공개되어   있으므로,   도메인   특화   데이터만   추가하면   된다.
+
+ 넷째,   교차   언어   검색(예:   영어   쿼리로   한국어   문서   검색)이   필요하면   전용   평가를   설계하라.   LightOn의   벤치마크는   이   시나리오를   직접   측정하지   않으므로,   자체   데이터로   mLateOn의   교차   언어   성능을   검증해야   한다.
+
+ LightOn의   이번   릴리스는   오픈   소스   검색   모델이   폐쇄   시스템과의   격차를   닫는   방식을   보여준다.   데이터   레시피의   투명한   공개,   번역   훈련의   규모   있는   확장,   그리고   밀집   대   지연   상호작용이라는   아키텍처   선택이   다국어   전이에   미치는   영향의   정량적   비교.   이   세   가지가   결합되어,   다국어   검색   인프라를   구축하는   실무자에게   실제로   사용할   수   있는   오픈   소스   선택지를   제공한다.
+
+[![LightOn mDenseOn·mLateOn 오픈 소스 다국어 검색 모델 릴리스 요약.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing-1.webp)
+_LightOn mDenseOn·mLateOn 오픈 소스 다국어 검색 모델 릴리스 요약._
+
+## Sources
+
+- LightOn 공식 블로그: huggingface.co/blog/lightonai/mdenseon-mlateon
+
+- mDenseOn 모델 카드: huggingface.co/lightonai/mDenseOn
+
+- mLateOn 모델 카드: huggingface.co/lightonai/mLateOn
+
+- 논문: arxiv.org/abs/2607.27178
+
+- 훈련 코드: github.com/lightonai/mdenseon-mlateon
+
+- PyLate: github.com/lightonai/pylate
+
+- FastPLAID: github.com/lightonai/fast-plaid

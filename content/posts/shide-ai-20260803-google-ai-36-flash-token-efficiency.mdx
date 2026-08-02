@@ -1,0 +1,116 @@
+---
+title: "Google AI 3.6 Flash: 토큰 효율이 에이전트 비용 구조를 바꾸는 방식"
+date: "2026-08-03"
+description: "Google이 2026년 7월 21일 Google AI 3.6 Flash, 3.5 Flash-Lite, 3.5 Flash Cyber를 동시에 공개했다. 핵심은 단순 성능 향상이 아니라 출력 토큰 소비량 자체를 줄이는 설계 방향이다. Artificial Analysis Index 기준 3.6 Flash는 3.5 Flash ..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/hero_v1.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: ""
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1339"
+---
+
+AI NOTES · KO  KOREAN EDITION
+
+ KO · 한국어
+
+EN · English
+
+## 출력 토큰 17% 감소가 의미하는 것
+
+ Google   DeepMind가   공개한   벤치마크   테이블에   따르면   Google AI   3.6   Flash는   Artificial   Analysis   Index에서   3.5   Flash   대비   출력   토큰   사용량이   17%   적다.   DeepSWE   v1.1(Datacurve)에서는   특정   조건에서   최대   65%까지   줄어든다.   이   수치는   모델이   같은   작업을   수행하면서   더   짧은   응답을   생성한다는   뜻이   아니라,   추론   단계와   도구   호출   횟수   자체가   줄어든   결과다.
+
+ Google   공식   블로그는   “3.6   Flash   takes   fewer   reasoning   steps   and   tool   calls   to   accomplish   multi-step   workflows”라고   설명한다.   멀티스텝   에이전트   작업에서   불필요한   중간   출력이   줄어들면   누적   토큰   소비가   선형이   아닌   복합적으로   감소한다.   10단계   워크로드에서   각   단계가   17%씩   짧아지면   전체   출력량은   단순   합산보다   더   크게   줄어든다.
+
+ 이   변화의   메커니즘은   post-training   단계에서의   효율   최적화다.   아키텍처   변경이   아니라   응답   생성   전략   자체를   바꾼   것이다.   Google   DeepMind   모델   페이지는   3.6   Flash를   “token   efficiency   in   coding,   knowledge   work,   and   multimodal   tasks”에   최적화된   모델로   정의한다.
+
+![DeepSWE, MLE-Bench, OSWorld, GDM-MRCR 128k 네 개 벤치마크에서 3.6 Flash(높은 막대)가 3.5 Flash(낮은 막대)를 앞선다. GDM-MRCR 128k에서 격차가 가장 크다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept_v1.webp)
+
+## 벤치마크 품질 변화: 코딩·컴퓨터 사용·장기 컨텍스트
+
+ 토큰   효율만   높아지고   품질이   떨어지면   운영   의미가   없다.   Google   DeepMind가   공개한   벤치마크에서   3.6   Flash는   3.5   Flash   대비   주요   항목에서   개선을   보였다.
+
+ DeepSWE   v1.1(장기   소프트웨어   엔지니어링)에서   3.6   Flash는   49%를   기록해   3.5   Flash의   37%보다   12포인트   높았다.   상대   개선률은   32.4%다.   MLE-Bench(머신러닝   엔지니어링)에서는   63.9%   대   49.7%로   14.2포인트   차이를   보였다.   OSWorld-Verified(에이전트   컴퓨터   사용)에서는   83.0%   대   78.4%로   4.6포인트   개선됐다.
+
+ 장기   컨텍스트   성능   변화가   특히   크다.   GDM-MRCR   v2   8-needle   128k   평균에서   3.6   Flash는   91.8%를   기록해   3.5   Flash의   77.3%보다   14.5포인트   높았다.   1M   토큰   pointwise에서는   54.0%   대   26.6%로   27.4포인트   차이다.   100만   토큰   컨텍스트를   실제로   활용할   때   검색   정확도가   두   배   이상   높아진   셈이다.
+
+ 지식   작업   지표인   GDPval-AA   v2에서는   Elo   1421   대   1349를   기록했다.   법률   AI   기업   Harvey는   공식   블로그   인용문에서   3.6   Flash가   “벤치마크에서   강력한   성능   향상을   보였고,   특히   효율적이어서   평균   12%   빠르게   작업을   완료했다”고   밝혔다.   JetBrains는   “low   reasoning   coding   performance   by   10–20%   compared   to   the   previous   Flash   generation”이라고   평가했다.   Hebbia는   3.6   Flash가   “인용이   많은   금융   리서치에서   증거   추출을   위해   테스트한   최고의   모델”이라고   보고했다.
+
+## Google AI 3.5 Flash-Lite: 초당 350토큰과 스케일링 경제학
+
+ 같은   날   공개된   Google AI   3.5   Flash-Lite는   속도와   처리량에   초점을   맞춘   모델이다.   Artificial   Analysis   측정   기준   출력   속도는   초당   350토큰이다.   이   속도로   100만   출력   토큰을   생성하면   약   47.6분이   걸린다.   가격은   입력   $0.30/1M,   출력   $2.50/1M으로   3.6   Flash   대비   입력은   80%,   출력은   66.7%   저렴하다.
+
+ Flash-Lite의   핵심   가치는   단순   저가가   아니다.   3.1   Flash-Lite   대비   Terminal-Bench   2.1에서   54%   대   31%로   23포인트,   GDM-MRCR   v2에서   72.2%   대   60.1%로   12.1포인트,   GDPval-AA   v2에서   1140   대   642로   Elo   498포인트   개선을   보였다.   이전   세대   저가   모델이   “품질   포기”를   전제로   했다면,   3.5   Flash-Lite는   에이전트   서브태스크를   처리할   수   있는   품질을   유지하면서   처리량만   극대화한   설계다.
+
+ Google   공식   블로그는   Flash-Lite가   “3   Flash를   포함한   여러   에이전트·코딩   평가에서   앞선다”고   밝혔다.   SWE-Bench   Pro에서   54.2%   대   49.6%(3   Flash   대비),   OSWorld-Verified에서   74.0%   대   65.1%(3   Flash   대비)를   기록했다.   마스터   에이전트로   3.6   Flash를,   서브에이전트로   Flash-Lite를   배치하는   계층   구조가   비용   최적화의   현실적   경로가   된다.
+
+![3.6 Flash 마스터 에이전트와 Flash-Lite 서브에이전트 계층 구조. 초기 계획 단계만 3.6 Flash로 처리하고 나머지 서브태스크를 Flash-Lite로 분배하면 복합 비용이 절감된다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism_v1.webp)
+
+## Google AI 3.5 Flash Cyber와 CodeMender: 제한 배포의 설계 의도
+
+ 세   번째   모델인   Google AI   3.5   Flash   Cyber는   범용   배포가   아닌   제한   접근   모델이다.   Google   DeepMind는   이   모델을   3.5   Flash   기반   사이버보안   특화   파인튜닝으로   정의하며,   CodeMender   코드   보안   에이전트와   결합해   CyberGym   벤치마크에서   프론티어급   경쟁   성능을   달성했다고   밝혔다.
+
+ 배포   대상은   정부와   신뢰   파트너로   한정된다.   Google   공식   블로그는   “exclusively   available   to   governments   and   trusted   partners   via   CodeMender   soon   as   part   of   a   limited-access   pilot   program”이라고   명시한다.   이는   취약점   탐지·패치   기술의   이중용도(dual-use)   특성을   고려한   설계다.   공격자가   동일   모델을   악용할   경로를   차단하면서   방어자   측에   먼저   도구를   제공하는   전략이다.
+
+ 일반   개발자에게   Flash   Cyber는   직접   사용할   수   있는   모델이   아니다.   다만   Google이   사이버보안   영역에서   모델   특화   +   에이전트   오케스트레이션   조합을   공식   제품으로   내놓았다는   점은,   향후   다른   도메인에서도   유사한   전용   모델   +   에이전트   번들이   등장할   수   있다는   신호다.
+
+## 가격 구조와 복합 비용 절감 계산
+
+ Google AI   3.6   Flash의   공식   가격은   입력   $1.50/1M   토큰,   출력   $7.50/1M   토큰이다.   3.5   Flash는   입력   $1.50,   출력   $9.00이었다.   입력   가격은   동일하고   출력   가격만   16.7%   낮아졌다.
+
+ 여기에   출력   토큰   소비량   17%   감소를   결합하면   복합   절감   효과가   생긴다.   3.5   Flash가   출력   100토큰당   $0.0009를   지불했다면,   3.6   Flash는   83토큰만   생성하면서   단가도   낮아   $0.0006225가   된다.   동일   작업   기준   복합   절감률은   약   30.8%다.
+
+ Flash-Lite를   서브에이전트로   활용하면   절감   폭은   더   커진다.   입력   $0.30/1M,   출력   $2.50/1M은   3.6   Flash   대비   각각   80%,   66.7%   저렴하다.   10단계   에이전트   워크로드에서   초기   계획   단계만   3.6   Flash로   처리하고   나머지   9단계를   Flash-Lite로   분배하면,   전체   출력   비용은   3.6   Flash   단독   대비   크게   줄어든다.
+
+ 다만   이   계산은   공식   가격표와   Artificial   Analysis   Index   수치에   기반한   이론값이다.   실제   비용은   캐시   적중률,   thinking   level   설정,   도구   호출   빈도에   따라   달라진다.   Google   공식   블로그는   “prompt   caching으로   최대   90%,   batch   processing으로   최대   50%   비용   절감”이   가능하다고   별도   명시한다.   이   수치는   3.6   Flash   전용이   아닌   Google AI   API   일반   정책이다.
+
+## 근거 경계: 벤치마크가 말하지 않는 것
+
+ Google   DeepMind가   공개한   벤치마크   테이블에는   GPT-5.6   Luna,   Grok   4.5,   Claude   Sonnet   5가   비교   대상으로   포함돼   있다.   SWE-Bench   Pro에서   GPT-5.6   Luna는   62.7%,   Claude   Sonnet   5는   63.2%로   3.6   Flash의   58.7%보다   높다.   DeepSWE   v1.1에서는   GPT-5.6   Luna가   67%로   3.6   Flash의   49%를   크게   앞선다.   Terminal-Bench   2.1에서도   GPT-5.6   Luna   84.7%,   Grok   4.5   83.3%가   3.6   Flash의   78.0%보다   높다.
+
+ 3.6   Flash의   위치는   “프론티어   최고   성능”이   아니라   “Flash급   가격대에서   가장   높은   토큰   효율과   품질   균형”이다.   Google   DeepMind   모델   페이지도   “Best   for   token   efficiency”를   첫   줄에   배치한다.   절대   성능   경쟁에서는   상위   모델에   뒤지는   항목이   존재하며,   이는   공식   벤치마크   테이블   자체에   명시돼   있다.
+
+ GDPval-AA   v2   지식   작업   Elo에서   3.6   Flash는   1421로   GPT-5.6   Luna(1584),   Grok   4.5(1535),   Claude   Sonnet   5(1607)보다   낮다.   CharXiv   Reasoning(도구   없음)에서는   85.2%로   비교   대상   중   가장   높지만,   이는   차트   해석   특화   항목이다.   벤치마크   항목별   편차를   무시하고   “전면   우위”로   해석하면   안   된다.
+
+## 선택 프레임: 워크로드별 모델 배치
+
+ Google이   같은   날   세   모델을   공개한   것은   단일   모델   선택이   아닌   워크로드별   배치   전략을   제시한   것이다.
+
+ 3.6   Flash는   코딩,   지식   작업,   멀티모달   문서   분석에서   토큰   효율과   품질   균형을   요구하는   마스터   에이전트에   적합하다.   1M   토큰   컨텍스트와   64k   출력,   컴퓨터   사용   내장   도구를   지원한다.   Google   AI   Studio,   Android   Studio,   Google   Antigravity,   Google AI   Enterprise   Agent   Platform에서   즉시   사용   가능하다.
+
+ 3.5   Flash-Lite는   고처리량   서브태스크에   배치한다.   에이전트   검색,   문서   처리,   대량   데이터   추출처럼   지연보다   처리량이   중요한   작업에서   초당   350토큰과   $0.30/$2.50   가격   조합이   경제성을   만든다.   thinking   level을   minimal/low로   설정하면   저지연   고볼륨   처리에,   high로   설정하면   멀티스텝   서브에이전트   작업에   사용할   수   있다.
+
+ 3.5   Flash   Cyber는   일반   개발자   선택지가   아니다.   정부·신뢰   파트너   전용   CodeMender   파일럿으로만   접근   가능하다.   사이버보안   취약점   탐지·패치가   필요한   조직은   CodeMender   제한   접근   프로그램   신청   경로를   확인해야   한다.
+
+ Google AI   3.5   Pro는   현재   파트너   테스트   중이며   Google   공식   블로그는   “broadly   available   as   soon   as   it’s   ready”라고   밝혔다.   Google AI   4   사전학습도   시작됐으며   “our   most   ambitious   pre-training   run   yet”라고   명시한다.   현시점   모델   선택은   3.6   Flash와   Flash-Lite   조합이   현실적   최적이다.
+
+![Google AI 3.6 Flash·3.5 Flash-Lite·3.5 Flash Cyber 릴리스 요약. 워크로드별 모델 배치 전략.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing_v1.webp)
+
+## 한계와 다음 단계
+
+ 이번   발표에서   확인해야   할   경계가   있다.   첫째,   출력   토큰   17%   감소는   Artificial   Analysis   Index   집계   기준이며   워크로드   구성에   따라   실제   체감   효율은   달라진다.   DeepSWE   65%   감소는   특정   벤치마크   조건의   최대값이다.
+
+ 둘째,   Flash-Lite의   “3   Flash   대비   우위”   벤치마크는   SWE-Bench   Pro와   OSWorld-Verified   일부   항목에   한정된다.   전   항목에서   3   Flash를   앞서는   것은   아니다.   Google   공식   블로그도   “on   many   agentic   and   coding   evals”라는   표현을   사용한다.
+
+ 셋째,   Flash   Cyber의   CyberGym   성능은   CodeMender   멀티에이전트   오케스트레이션   결합   조건에서의   결과다.   모델   단독   성능이   아닌   시스템   수준   성과다.
+
+ 넷째,   Google AI   3.5   Flash는   Google   Enterprise   앱   글로벌   리전에서   2026년   8월   4일   제거될   예정이다.   Google   Cloud   공식   릴리스   노트에   명시된   일정이다.   기존   3.5   Flash   기반   워크플로우는   3.6   Flash   또는   Flash-Lite로   전환   계획을   세워야   한다.
+
+ 다음   행동은   명확하다.   현재   Google AI   API에서   3.5   Flash를   사용   중이라면   3.6   Flash로   모델명을   교체하고   출력   토큰   소비량을   A/B   비교한다.   고볼륨   서브태스크가   있다면   Flash-Lite   thinking   level   minimal   설정으로   지연과   비용을   측정한다.   캐시   적중률과   batch   processing   적용   여부에   따라   실제   절감률이   이론값(30.8%)과   얼마나   차이   나는지   첫   주   운영   데이터로   확인한다.
+
+## Sources
+
+- blog.google
+
+- deepmind.google
+
+- deepmind.google
+
+- deepmind.google
+
+- deepmind.google
+
+- docs.cloud.google.com

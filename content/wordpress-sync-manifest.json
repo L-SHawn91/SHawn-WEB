@@ -1,24 +1,80 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-07-28T18:30:40.033Z",
+  "generated_at": "2026-08-02T20:55:58.760Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 68,
-      "fetched": 68,
-      "scanned": 68,
-      "unchanged": 68,
-      "updated": 0,
-      "created": 0,
+      "remote_total": 76,
+      "fetched": 76,
+      "scanned": 76,
+      "unchanged": 65,
+      "updated": 3,
+      "created": 8,
       "removed": 0,
       "items": [
         {
+          "id": 1340,
+          "title": "Google AI 3.6 Flash: How Token Efficiency Reshapes Agent Cost Structures",
+          "link": "",
+          "target": "content/posts/shide-ai-20260803-google-ai-36-flash-token-efficiency-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1339,
+          "title": "Google AI 3.6 Flash: 토큰 효율이 에이전트 비용 구조를 바꾸는 방식",
+          "link": "",
+          "target": "content/posts/shide-ai-20260803-google-ai-36-flash-token-efficiency.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1326,
+          "title": "LightOn’s mDenseOn and mLateOn: Open Retrieval Models That Transfer to 13 Unseen Languages via Translate-Train",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/02/lighton-mdenseon-mlateon-multilingual-retrieval-en/",
+          "target": "content/posts/shide-ai-20260802-lighton-mdenseon-mlateon-multilingual-retrieval-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1325,
+          "title": "LightOn mDenseOn·mLateOn: 번역 훈련만으로 13개 미학습 언어를 정복한 오픈 검색 모델",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/02/lighton-mdenseon-mlateon-multilingual-retrieval/",
+          "target": "content/posts/shide-ai-20260802-lighton-mdenseon-mlateon-multilingual-retrieval.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1308,
+          "title": "Liquid AI’s LFM2.5-Encoders: 8K-Token Inference on CPU Changes the Edge Deployment Math",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/07/30/liquid-ai-lfm25-encoders-cpu-inference-en/",
+          "target": "content/posts/shide-ai-20260730-liquid-ai-lfm25-encoders-cpu-inference-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1307,
+          "title": "Liquid AI LFM2.5-Encoders: CPU에서 8K 토큰을 처리하는 새로운 인코더 아키텍처",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/07/30/liquid-ai-lfm25-encoders-cpu-inference/",
+          "target": "content/posts/shide-ai-20260730-liquid-ai-lfm25-encoders-cpu-inference.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1277,
+          "title": "Google’s Managed Agents: Governance, Not Intelligence",
+          "link": "",
+          "target": "content/posts/shide-ai-20260729-google-google-ai-managed-agents-hooks-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1276,
+          "title": "Google AI API Managed Agents의 방향은 성능 체감보다 운영 지배권 회수다",
+          "link": "",
+          "target": "content/posts/shide-ai-20260729-google-google-ai-managed-agents-hooks.mdx",
+          "mode": "created"
+        },
+        {
           "id": 1242,
-          "title": "Claude Opus 5 Bets on Efficiency, Not Capability: What Half the Price and a Cost-Capability Toggle Actually Mean",
+          "title": "Claude Opus 5: Half the Price, but What About Cost per Task?",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/28/anthropic-opus-5-efficiency-pricing-en/",
           "target": "content/posts/shide-ai-20260728-anthropic-opus-5-efficiency-pricing-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1241,
@@ -29,10 +85,10 @@
         },
         {
           "id": 1226,
-          "title": "The Hugging Face AI-Agent–Driven Intrusion: Lessons from a Guardrail Lockout",
+          "title": "Hugging Face Breach: AI-Agent Intrusion and Guardrail Lockout",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/27/huggingface-breach-guardrail-lockout-en/",
           "target": "content/posts/shide-ai-20260727-huggingface-breach-guardrail-lockout-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1225,
@@ -43,10 +99,10 @@
         },
         {
           "id": 1153,
-          "title": "Physical AI Leaves the Data Center: What NVIDIA Cosmos 3 Edge Changes",
+          "title": "Physical AI Leaves the Data Center: NVIDIA Cosmos 3 Edge",
           "link": "https://shawnaiintelligence.wordpress.com/2026/07/26/nvidia-cosmos-3-edge-physical-ai-en/",
           "target": "content/posts/shide-ai-20260726-nvidia-cosmos-3-edge-physical-ai-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1152,
@@ -493,41 +549,139 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 51,
-      "fetched": 51,
-      "scanned": 51,
+      "remote_total": 65,
+      "fetched": 65,
+      "scanned": 65,
       "unchanged": 47,
-      "updated": 0,
-      "created": 4,
+      "updated": 4,
+      "created": 14,
       "removed": 0,
       "items": [
+        {
+          "id": 1290,
+          "title": "리보세라닙 2상 시험, 선양낭성암 최종 결과 게시",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/02/rivoceranib-adenoid-cystic-carcinoma-trial-kor/",
+          "target": "content/posts/shide-bio-20260802-rivoceranib-adenoid-cystic-carcinoma-trial-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1288,
+          "title": "Rivoceranib Phase 2 Trial in Adenoid Cystic Carcinoma Posts Final Results",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/02/rivoceranib-adenoid-cystic-carcinoma-trial/",
+          "target": "content/posts/shide-bio-20260802-rivoceranib-adenoid-cystic-carcinoma-trial.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1286,
+          "title": "사하라 이남 아프리카 백혈병, 체계적 문헌고찰로 2,537건 분석",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/02/leukemia-sub-saharan-africa-review-kor/",
+          "target": "content/posts/shide-bio-20260802-leukemia-sub-saharan-africa-review-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1284,
+          "title": "Leukemia in Sub-Saharan Africa: Systematic Review Maps 2,537 Cases",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/02/leukemia-sub-saharan-africa-review/",
+          "target": "content/posts/shide-bio-20260802-leukemia-sub-saharan-africa-review.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1258,
+          "title": "자궁경부암에서 LN-145 종양침윤림프구: 다중 코호트 시험 중단 후 Phase 2 결과 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/01/ln145-til-cervical-cancer-kor/",
+          "target": "content/posts/shide-bio-20260801-ln145-til-cervical-cancer-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1256,
+          "title": "LN-145 TIL Therapy in Cervical Cancer: Phase 2 Results Posted After Trial Termination",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/01/ln145-til-cervical-cancer/",
+          "target": "content/posts/shide-bio-20260801-ln145-til-cervical-cancer.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1254,
+          "title": "혈우병 수술에서 재조합 Factor VIIa: Feasibility 중단 후 Phase 3 시험 초기 결과 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/01/fviia-hemophilia-surgery-bleeding-kor/",
+          "target": "content/posts/shide-bio-20260801-fviia-hemophilia-surgery-bleeding-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1252,
+          "title": "Factor VIIa in Hemophilia Surgery: Phase 3 Results Posted After Early Termination",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/01/fviia-hemophilia-surgery-bleeding/",
+          "target": "content/posts/shide-bio-20260801-fviia-hemophilia-surgery-bleeding.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1238,
+          "title": "에베롤리무스·레트로졸·메트포르민, 자궁내막암 2⁠상 결과 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/31/endometrial-triple-regimen-results-kor/",
+          "target": "content/posts/shide-bio-20260731-endometrial-triple-regimen-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1236,
+          "title": "Everolimus, Letrozole, and Metformin: New Phase 2 Results in Endometrial Cancer",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/31/endometrial-triple-regimen-results/",
+          "target": "content/posts/shide-bio-20260731-endometrial-triple-regimen-results.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1222,
+          "title": "소아암 생존자 재접종 후 93.5%에서 보호 항체 반응 달성",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/30/childhood-cancer-survivor-reimmunization-protective-antibody-kor/",
+          "target": "content/posts/shide-bio-20260730-childhood-cancer-survivor-reimmunization-protective-antibody-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1220,
+          "title": "Re-Immunization After Childhood Cancer Achieves 93.5% Protective Antibody Response",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/30/childhood-cancer-survivor-reimmunization-protective-antibody/",
+          "target": "content/posts/shide-bio-20260730-childhood-cancer-survivor-reimmunization-protective-antibody.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1218,
+          "title": "TAR-200 방광 내 약물전달 시스템, BCG 불응성 방광암에서 완전관해율 82% 보고",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/30/tar200-bcg-unresponsive-bladder-cancer-complete-response-kor/",
+          "target": "content/posts/shide-bio-20260730-tar200-bcg-unresponsive-bladder-cancer-complete-response-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1216,
+          "title": "TAR-200 Intravesical Therapy Reports 82% Complete Response in BCG-Unresponsive Bladder Cancer",
+          "link": "https://shawnbiohub.wordpress.com/2026/07/30/tar200-bcg-unresponsive-bladder-cancer-complete-response/",
+          "target": "content/posts/shide-bio-20260730-tar200-bcg-unresponsive-bladder-cancer-complete-response.mdx",
+          "mode": "created"
+        },
         {
           "id": 1193,
           "title": "최소잔존질환 기반 적응형 다라투무맙 전략, 신규 골수종 2상 결과 게시",
           "link": "https://shawnbiohub.wordpress.com/2026/07/29/mrd-driven-myeloma-treatment-results-kor/",
           "target": "content/posts/shide-bio-20260729-mrd-driven-myeloma-treatment-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1191,
-          "title": "MRD-driven adaptive daratumumab strategy posts phase 2 results in newly diagnosed myeloma",
+          "title": "MRD-Driven Daratumumab: Phase 2 Results in New Myeloma",
           "link": "https://shawnbiohub.wordpress.com/2026/07/29/mrd-driven-myeloma-treatment-results/",
           "target": "content/posts/shide-bio-20260729-mrd-driven-myeloma-treatment-results.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1189,
           "title": "크레토스티모젠 면역치료, BCG 불응 방광암에서 75% 완전관해 달성",
           "link": "https://shawnbiohub.wordpress.com/2026/07/29/cretostimogene-bcg-unresponsive-bladder-cancer-kor/",
           "target": "content/posts/shide-bio-20260729-cretostimogene-bcg-unresponsive-bladder-cancer-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1187,
-          "title": "Cretostimogene immunotherapy achieves 75% complete response in BCG-unresponsive bladder cancer",
+          "title": "Cretostimogene: 75% CR in BCG-Unresponsive Bladder Cancer",
           "link": "https://shawnbiohub.wordpress.com/2026/07/29/cretostimogene-bcg-unresponsive-bladder-cancer/",
           "target": "content/posts/shide-bio-20260729-cretostimogene-bcg-unresponsive-bladder-cancer.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1083,
@@ -538,10 +692,10 @@
         },
         {
           "id": 1081,
-          "title": "JX-594 in Advanced Melanoma: Why Five Evaluable Patients Change the Conclusion",
+          "title": "JX-594 in Melanoma: Five Evaluable Patients, Big Questions",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/jx594-oncolytic-vaccinia-melanoma/",
           "target": "content/posts/shide-bio-20260728-jx594-oncolytic-vaccinia-melanoma.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1079,
@@ -552,10 +706,10 @@
         },
         {
           "id": 1077,
-          "title": "Ibrutinib Plus Trastuzumab After T-DM1: What a 19.2% Clinical Benefit Rate Really Means",
+          "title": "Ibrutinib + Trastuzumab After T-DM1: 19.2% CBR Explained",
           "link": "https://shawnbiohub.wordpress.com/2026/07/28/ibrutinib-trastuzumab-her2-breast-cancer/",
           "target": "content/posts/shide-bio-20260728-ibrutinib-trastuzumab-her2-breast-cancer.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 746,
@@ -862,34 +1016,83 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 104,
-      "fetched": 104,
-      "scanned": 104,
-      "unchanged": 78,
-      "updated": 26,
-      "created": 0,
-      "removed": 25,
+      "remote_total": 111,
+      "fetched": 111,
+      "scanned": 111,
+      "unchanged": 100,
+      "updated": 4,
+      "created": 7,
+      "removed": 0,
       "items": [
+        {
+          "id": 1644,
+          "title": "Global Housing Property Tax Comparison: Where Korea Stands in OECD Data",
+          "link": "https://shawnassets.wordpress.com/2026/08/01/global-housing-property-tax-comparison-where-korea-stands-in-oecd-data/",
+          "target": "content/posts/shide-assets-20260801-global-housing-property-tax-comparison-where-korea-stands-in-oecd-data.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1643,
+          "title": "해외 주요국의 주택 보유세제 비교 분석: OECD 데이터로 본 한국의 위치",
+          "link": "https://shawnassets.wordpress.com/2026/08/01/%ed%95%b4%ec%99%b8-%ec%a3%bc%ec%9a%94%ea%b5%ad%ec%9d%98-%ec%a3%bc%ed%83%9d-%eb%b3%b4%ec%9c%a0%ec%84%b8%ec%a0%9c-%eb%b9%84%ea%b5%90-%eb%b6%84%ec%84%9d-oecd-%eb%8d%b0%ec%9d%b4%ed%84%b0%eb%a1%9c/",
+          "target": "content/posts/shide-assets-20260801-ed-95-b4-ec-99-b8-ec-a3-bc-ec-9a-94-ea-b5-ad-ec-9d-98-ec-a3-bc-ed-83-9d-eb-b3-b4-ec-9c-a0-ec-84-b8-ec-a0-9c-eb-b9-84-ea-b5-90-eb-b6-84-ec-84-9d-oecd-eb-8d-b0-ec-9d-b4-ed-84-b0-eb-a1-9c.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1639,
+          "title": "2026년 7월 31일 한국 장마감 시장 신호",
+          "link": "https://shawnassets.wordpress.com/2026/07/31/2026-07-31-1545-kr-close-market-signal-note/",
+          "target": "content/posts/shide-assets-20260731-2026-07-31-1545-kr-close-market-signal-note.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1631,
+          "title": "2026년 7월 31일 한국 장전 시장 신호",
+          "link": "https://shawnassets.wordpress.com/2026/07/31/2026%eb%85%84-7%ec%9b%94-31%ec%9d%bc-%ed%95%9c%ea%b5%ad-%ec%9e%a5%ec%a0%84-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8/",
+          "target": "content/posts/shide-assets-20260731-2026-eb-85-84-7-ec-9b-94-31-ec-9d-bc-ed-95-9c-ea-b5-ad-ec-9e-a5-ec-a0-84-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1607,
+          "title": "Vietnam-US FDA Cooperation: What Changes for Pharmaceuticals, Food Safety, and Medical Devices",
+          "link": "https://shawnassets.wordpress.com/2026/07/30/vietnam-us-fda-safety-cooperation-2026-en/",
+          "target": "content/posts/shide-assets-20260730-vietnam-us-fda-safety-cooperation-2026-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1606,
+          "title": "베트남-미국 FDA 협력: 의약품·식품·의료기기 안전 규제, 무엇이 달라지나",
+          "link": "https://shawnassets.wordpress.com/2026/07/30/vietnam-us-fda-safety-cooperation-2026/",
+          "target": "content/posts/shide-assets-20260730-vietnam-us-fda-safety-cooperation-2026.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1625,
+          "title": "2026-07-30 15:45 한국 시장 신호",
+          "link": "https://shawnassets.wordpress.com/2026/07/30/2026-07-30-1545-kr-close-market-signal-note/",
+          "target": "content/posts/shide-assets-20260730-2026-07-30-1545-kr-close-market-signal-note.mdx",
+          "mode": "created"
+        },
         {
           "id": 1483,
           "title": "2026년 8월 식품가격 인상, 발표 숫자보다 장바구니가 덜 단순한 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/28/food-price-hike-wave-2026/",
           "target": "content/posts/shide-assets-20260728-food-price-hike-wave-2026.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1484,
-          "title": "Korea’s August 2026 Food Price Changes: Why Announcements and Checkout Prices Diverge",
+          "title": "Korea August 2026 Food Prices: Announcements vs. Checkout",
           "link": "https://shawnassets.wordpress.com/2026/07/28/food-price-hike-wave-2026-en/",
           "target": "content/posts/shide-assets-20260728-food-price-hike-wave-2026-en.mdx",
           "mode": "updated"
         },
         {
           "id": 1348,
-          "title": "Bank of Korea Raises Policy Rate to 2.75%: First Hike Since October 2025",
+          "title": "Bank of Korea Hikes to 2.75%: First Since October 2025",
           "link": "https://shawnassets.wordpress.com/2026/07/27/bok-rate-hike-275-2026-en/",
           "target": "content/posts/shide-assets-20260727-bok-rate-hike-275-2026-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1347,
@@ -900,10 +1103,10 @@
         },
         {
           "id": 1341,
-          "title": "Korea Extends Fuel Tax Cut Through September: Gasoline -15%, Diesel -25%",
+          "title": "Korea Extends Fuel Tax Cut to September: Gas -15%, Diesel -25%",
           "link": "https://shawnassets.wordpress.com/2026/07/27/fuel-tax-cut-extension-sept-2026-en/",
           "target": "content/posts/shide-assets-20260727-fuel-tax-cut-extension-sept-2026-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1340,
@@ -914,10 +1117,10 @@
         },
         {
           "id": 1334,
-          "title": "Korea Raises Leveraged ETF/ETN Minimum Deposit to KRW 30M: Effective July 31",
+          "title": "Korea Raises Leveraged ETF Deposit to KRW 30M: July 31",
           "link": "https://shawnassets.wordpress.com/2026/07/27/leverage-etf-deposit-30m-2026-en/",
           "target": "content/posts/shide-assets-20260727-leverage-etf-deposit-30m-2026-en.mdx",
-          "mode": "unchanged"
+          "mode": "updated"
         },
         {
           "id": 1333,
@@ -1330,42 +1533,42 @@
           "title": "Korea Market Note — July 13, 2026 (Monday Close)",
           "link": "https://shawnassets.wordpress.com/2026/07/13/market-note-20260713-1545-kr-close/",
           "target": "content/posts/shide-assets-20260713-market-note-20260713-1545-kr-close.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 923,
           "title": "한국장 장전 신호 — 2026.07.13 (월) 08:45",
           "link": "https://shawnassets.wordpress.com/2026/07/13/2026-07-13-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260713-2026-07-13-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 908,
           "title": "Why Korea’s Summer Electricity Bill Is a Cost-of-Living Signal in the AI Era",
           "link": "https://shawnassets.wordpress.com/2026/07/12/summer-electricity-bill-ai-korea-2026-en/",
           "target": "content/posts/shide-assets-20260712-summer-electricity-bill-ai-korea-2026-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 907,
           "title": "여름 전기요금, AI 시대에 생활비 신호가 된 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/12/summer-electricity-bill-ai-korea-2026-ko/",
           "target": "content/posts/shide-assets-20260712-summer-electricity-bill-ai-korea-2026-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 878,
           "title": "El Niño 2026 and Korea’s Food Prices: The Path from Crops to the Grocery Basket",
           "link": "https://shawnassets.wordpress.com/2026/07/11/el-nino-2026-korea-food-prices-en/",
           "target": "content/posts/shide-assets-20260711-el-nino-2026-korea-food-prices-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 877,
           "title": "2026 엘니뇨, 곡물·식용유 가격이 식탁 물가로 오는 경로",
           "link": "https://shawnassets.wordpress.com/2026/07/11/el-nino-2026-korea-food-prices-ko/",
           "target": "content/posts/shide-assets-20260711-el-nino-2026-korea-food-prices-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 865,
@@ -1407,70 +1610,70 @@
           "title": "2026.07.10 08:45 Public Market Signal Note",
           "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260710-2026-07-10-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 655,
           "title": "The Gap Created by U.S. AI Chip Export Controls: DeepSeek and Huawei Are Signals, Not Nvidia Replacements",
           "link": "https://shawnassets.wordpress.com/2026/07/09/us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-en/",
           "target": "content/posts/shide-assets-20260709-us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 654,
           "title": "미국 수출통제가 만든 빈자리: DeepSeek·Huawei는 엔비디아 대체가 아니라 중국 AI칩 자립 압박의 신호다",
           "link": "https://shawnassets.wordpress.com/2026/07/09/us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-ko/",
           "target": "content/posts/shide-assets-20260709-us-export-controls-nvidia-china-gap-deepseek-huawei-ai-chip-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 620,
           "title": "2026-07-09 08:45 한국 장전 시장 신호 노트",
           "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0845-kr-preopen-market-signal-note/",
           "target": "content/posts/shide-assets-20260709-2026-07-09-0845-kr-preopen-market-signal-note.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 583,
           "title": "New U.S. Strikes After Ceasefire Collapse: Iran–US Clash, Hormuz Risk, Oil Prices, and Inflation",
           "link": "https://shawnassets.wordpress.com/2026/07/09/iran-us-conflict-current-impact-20260709-en/",
           "target": "content/posts/shide-assets-20260709-iran-us-conflict-current-impact-20260709-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 582,
           "title": "미군 추가 공습 재개, 휴전 종료 선언: 이란-미국 재충돌이 유가·호르무즈·물가를 흔든다",
           "link": "https://shawnassets.wordpress.com/2026/07/09/iran-us-conflict-current-impact-20260709-ko/",
           "target": "content/posts/shide-assets-20260709-iran-us-conflict-current-impact-20260709-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 532,
           "title": "Why Tariffs Became a Political Weapon Again",
           "link": "https://shawnassets.wordpress.com/2026/07/08/tariffs-political-weapon-20260708-en/",
           "target": "content/posts/shide-assets-20260708-tariffs-political-weapon-20260708-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 531,
           "title": "관세는 왜 다시 정치의 무기가 됐을까",
           "link": "https://shawnassets.wordpress.com/2026/07/08/tariffs-political-weapon-20260708-ko/",
           "target": "content/posts/shide-assets-20260708-tariffs-political-weapon-20260708-ko.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 455,
           "title": "Risk Aversion Held Into the Close; the Next Check Is Overnight Signals",
           "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1545-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
           "target": "content/posts/shide-assets-20260708-2026-07-08-1545-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 405,
           "title": "Why Samsung and SK Hynix Falling Does Not Mean AI Is Over",
           "link": "https://shawnassets.wordpress.com/2026/07/08/samsung-sk-hynix-ai-not-over-market-check-20260708-en/",
           "target": "content/posts/shide-assets-20260708-samsung-sk-hynix-ai-not-over-market-check-20260708-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 404,
@@ -1484,7 +1687,7 @@
           "title": "Why can the index rise while my stock does nothing?",
           "link": "https://shawnassets.wordpress.com/2026/07/08/index-up-my-stock-flat-20260708-en/",
           "target": "content/posts/shide-assets-20260708-index-up-my-stock-flat-20260708-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 356,
@@ -1519,21 +1722,21 @@
           "title": "Semiconductor equipment cycle explained: reading the next capex signal",
           "link": "https://shawnassets.wordpress.com/2026/07/05/semiconductor-equipment-leading-signal-20260704-en/",
           "target": "content/posts/shide-assets-20260705-semiconductor-equipment-leading-signal-20260704-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 217,
           "title": "반도체 장비 사이클이란? 다음 투자 흐름을 먼저 읽는 신호",
           "link": "https://shawnassets.wordpress.com/2026/07/05/semiconductor-equipment-leading-signal-20260704/",
           "target": "content/posts/shide-assets-20260705-semiconductor-equipment-leading-signal-20260704.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 224,
           "title": "Gold versus the dollar explained: safe assets, FX, and market stress",
           "link": "https://shawnassets.wordpress.com/2026/07/05/gold-dollar-war-20260705-en/",
           "target": "content/posts/shide-assets-20260705-gold-dollar-war-20260705-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 223,
@@ -1547,7 +1750,7 @@
           "title": "Why jeonse becomes monthly rent: housing costs, interest rates, and sticky prices",
           "link": "https://shawnassets.wordpress.com/2026/07/03/jeonse-monthly-rent-housing-cost-20260703-en/",
           "target": "content/posts/shide-assets-20260703-jeonse-monthly-rent-housing-cost-20260703-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 187,
@@ -1561,14 +1764,14 @@
           "title": "AI rally crack explained: why Samsung and SK Hynix fell together",
           "link": "https://shawnassets.wordpress.com/2026/07/03/samsung-sk-hynix-ai-rally-crack-20260703-en/",
           "target": "content/posts/shide-assets-20260703-samsung-sk-hynix-ai-rally-crack-20260703-en.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 124,
           "title": "AI 랠리 균열이란? 삼성전자·SK하이닉스가 같이 흔들린 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/03/samsung-sk-hynix-ai-rally-crack-20260703/",
           "target": "content/posts/shide-assets-20260703-samsung-sk-hynix-ai-rally-crack-20260703.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 99,
@@ -1582,7 +1785,7 @@
           "title": "AI 전력 인프라란? 반도체 다음 병목이 전력망인 이유",
           "link": "https://shawnassets.wordpress.com/2026/07/02/ai-power-infrastructure-data-center-grid-20260702/",
           "target": "content/posts/shide-assets-20260702-ai-power-infrastructure-data-center-grid-20260702.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 89,
@@ -1597,192 +1800,17 @@
           "link": "https://shawnassets.wordpress.com/2026/07/02/semiconductor-trend-capital-flow-20260702/",
           "target": "content/posts/shide-assets-20260702-semiconductor-trend-capital-flow-20260702.mdx",
           "mode": "unchanged"
-        },
-        {
-          "id": "396",
-          "title": "2026-07-08 12:20 한국 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1220-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
-          "target": "content/posts/shide-assets-20260708-2026-07-08-1220-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "483",
-          "title": "2026-07-08 16:35 다음 한국장 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-1635-%ed%95%9c%ea%b5%ad-%ec%8b%9c%ec%9e%a5-%ec%8b%a0%ed%98%b8-%eb%85%b8%ed%8a%b8/",
-          "target": "content/posts/shide-assets-20260708-2026-07-08-1635-ed-95-9c-ea-b5-ad-ec-8b-9c-ec-9e-a5-ec-8b-a0-ed-98-b8-eb-85-b8-ed-8a-b8.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "574",
-          "title": "2026-07-08 22:20 미국 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-2220-us-market-signal-note/",
-          "target": "content/posts/shide-assets-20260708-2026-07-08-2220-us-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "578",
-          "title": "2026-07-08 23:40 미국 첫 시간 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/08/2026-07-08-2340-us-first-hour-market-signal-note/",
-          "target": "content/posts/shide-assets-20260708-2026-07-08-2340-us-first-hour-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "608",
-          "title": "2026-07-09 06:45 한국장 전 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0645-kr-prerisk-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0645-kr-prerisk-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "624",
-          "title": "2026-07-09 09:03 한국 개장 직후 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0903-kr-open-reset-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0903-kr-open-reset-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "628",
-          "title": "2026-07-09 09:10 한국 개장 초반 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0910-kr-open-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0910-kr-open-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "632",
-          "title": "2026-07-09 09:13 한국 개장 후 시장 신호 재확인",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0913-kr-open-delta-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0913-kr-open-delta-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "636",
-          "title": "2026-07-09 09:20 한국 개장 후 시장 신호 점검",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-0920-kr-open-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-0920-kr-open-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "640",
-          "title": "2026-07-09 15:45 한국장 마감 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-1545-kr-close-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-1545-kr-close-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "663",
-          "title": "2026-07-09 16:35 다음 한국장 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-1635-kr-next-day-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-1635-kr-next-day-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "693",
-          "title": "2026-07-09 23:40 미국 첫 시간 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/2026-07-09-2340-us-first-hour-market-signal-note/",
-          "target": "content/posts/shide-assets-20260709-2026-07-09-2340-us-first-hour-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "689",
-          "title": "미국 개장 전 시장 신호: 반도체 반등과 환율 경계",
-          "link": "https://shawnassets.wordpress.com/2026/07/09/market-signal-20260709-2220-us-preopen/",
-          "target": "content/posts/shide-assets-20260709-market-signal-20260709-2220-us-preopen.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "698",
-          "title": "2026.07.10 06:45 Public Market Signal Note",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0645-kr-prerisk-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0645-kr-prerisk-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "707",
-          "title": "2026-07-10 09:03 한국 개장 직후 시장 신호 노트",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0903-kr-open-reset-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0903-kr-open-reset-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "711",
-          "title": "2026.07.10 09:10 Public Market Signal Note",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0910-kr-open-candidate-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0910-kr-open-candidate-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "716",
-          "title": "2026.07.10 09:13 Public Market Signal Note",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0913-kr-market-check-routine-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0913-kr-market-check-routine-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "721",
-          "title": "2026-07-10 09:20 한국 개장 후 시장 신호 점검",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-0920-kr-open-reaction-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-0920-kr-open-reaction-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "859",
-          "title": "US First-Hour Market Signal Note — 2026-07-10 23:40 KST",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-2340-us-first-hour-market-signal-note/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-2340-us-first-hour-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "860",
-          "title": "2026-07-10 23:50 미국 첫 시간 시장 신호 — 재확인",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/2026-07-10-2350-us-first-hour-market-signal-recheck/",
-          "target": "content/posts/shide-assets-20260710-2026-07-10-2350-us-first-hour-market-signal-recheck.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "834",
-          "title": "한국장 마감 점검 — 다음 장 확인 루틴 (2026.07.10)",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/%ed%95%9c%ea%b5%ad%ec%9e%a5-%eb%a7%88%ea%b0%90-%ec%a0%90%ea%b2%80-%eb%8b%a4%ec%9d%8c-%ec%9e%a5-%ed%99%95%ec%9d%b8-%eb%a3%a8%ed%8b%b4-2026-07-10/",
-          "target": "content/posts/shide-assets-20260710-ed-95-9c-ea-b5-ad-ec-9e-a5-eb-a7-88-ea-b0-90-ec-a0-90-ea-b2-80-eb-8b-a4-ec-9d-8c-ec-9e-a5-ed-99-95-ec-9d-b8-eb-a3-a8-ed-8b-b4-2026-07-10.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "811",
-          "title": "한국 시장 신호 노트 — 2026.07.10 12:20",
-          "link": "https://shawnassets.wordpress.com/2026/07/10/korea-market-signal-note-20260710-1220/",
-          "target": "content/posts/shide-assets-20260710-korea-market-signal-note-20260710-1220.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "925",
-          "title": "한국장 개장 10분 신호 — 2026.07.13 (월) 09:10",
-          "link": "https://shawnassets.wordpress.com/2026/07/13/2026-07-13-0910-kr-open-market-signal-note/",
-          "target": "content/posts/shide-assets-20260713-2026-07-13-0910-kr-open-market-signal-note.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "928",
-          "title": "한국장 개시 20분 – 유가 충격 반도체 급락, 대형주 중소형주 극단적 차별화 (2026-07-13)",
-          "link": "https://shawnassets.wordpress.com/2026/07/13/kr-open-reaction-20260713/",
-          "target": "content/posts/shide-assets-20260713-kr-open-reaction-20260713.mdx",
-          "mode": "removed"
-        },
-        {
-          "id": "926",
-          "title": "한국장 개장 흐름 — 2026년 7월 13일 오전",
-          "link": "https://shawnassets.wordpress.com/2026/07/13/market-check-routine-20260713-0913/",
-          "target": "content/posts/shide-assets-20260713-market-check-routine-20260713-0913.mdx",
-          "mode": "removed"
         }
       ]
     }
   ],
   "totals": {
-    "remote": 223,
-    "scanned": 223,
-    "unchanged": 193,
-    "updated": 26,
-    "created": 4,
-    "removed": 25,
-    "changed": 55
+    "remote": 252,
+    "scanned": 252,
+    "unchanged": 212,
+    "updated": 11,
+    "created": 29,
+    "removed": 0,
+    "changed": 40
   }
 }

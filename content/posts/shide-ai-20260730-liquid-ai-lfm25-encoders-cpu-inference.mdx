@@ -1,0 +1,127 @@
+---
+title: "Liquid AI LFM2.5-Encoders: CPU에서 8K 토큰을 처리하는 새로운 인코더 아키텍처"
+date: "2026-07-30"
+description: "Liquid AI가 LFM2.5-Encoders를 공개했습니다. 230M/350M 파라미터 인코더가 CPU에서 8K 토큰을 ModernBERT 대비 3.7배 빠르게 처리하며, 엣지 배포의 비용 구조를 근본적으로 바꿉니다."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/hero-46.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/07/30/liquid-ai-lfm25-encoders-cpu-inference/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1307"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/07/30/liquid-ai-lfm25-encoders-cpu-inference/)
+
+AI NOTES · KO  KOREAN EDITION
+
+**KO · 한국어** / [EN · English](https://shawnaiintelligence.wordpress.com/2026/07/30/liquid-ai-lfm25-encoders-cpu-inference-en/) BILINGUAL PAIR
+
+Liquid  AI가   2026년   7월   28일   LFM2.5-Encoder-230M과   LFM2.5-Encoder-350M을   공개했다.   두   모델은   8,192토큰   문서를   CPU에서   약   28초   만에   처리하며,   같은   조건에서   ModernBERT-base이   1분   30초   이상   걸리는   것과   비교해  Liquid AI  기준으로   약   3.7배   빠르다.   핵심은   속도가   아니다.  GPU  없이   문서를   분류하고,   라우팅하고,   PII를   탐지하는   파이프라인을   기존   서버에서   그대로   돌릴   수   있다는   점이다.
+
+## 무엇이 달라졌는가
+
+ 인코더   모델은   텍스트를   고정   길이   벡터로   압축하는   분류·이해   전용   모델이다.   생성형   LLM처럼   답변을   만들지   않고,   입력   문서를   읽어   분류   점수나   토큰   레벨   레이블을   반환한다.   BERT가   2019년에   이   패턴을   확립했고,   ModernBERT가   2024년에   정확도·속도·컨텍스트를   개선했다.
+
+ LFM2.5-Encoders는  Liquid  AI의  LFM2  하이브리드   아키텍처   위에서   동작한다.   LFM2는   어텐션과   짧은   컨볼루션을   섞은   구조로,   입력   길이가   늘어나도   계산   비용이   완만하게   증가한다.   이   특성을   인코더에   그대로   이식했다.
+
+ 구체적으로   세   가지를   바꿨다.   첫째,   인과적   어텐션   마스크를   양방향으로   교체해   각   토큰이   좌우   문맥을   모두   본다.   둘째,   LFM2의   짧은   컨볼루션을   비대칭   패딩에서   대칭   센터   패딩으로   바꿔   양쪽   이웃   정보를   혼합한다.   셋째,   마스킹률을   BERT의   15%에서   30%로   높여   이   규모에서   더   효과적인   학습   신호를   확보했다.
+
+ 학습은   2단계다.   1단계에서   1,024토큰   컨텍스트로   대규모   웹   코퍼스   일반   언어   능력을   학습하고,   2단계에서   8,192토큰으로   확장하며   사실·법률·다국어   능력을   강화한다.
+
+[![양방향 어텐션과 8K 컨텍스트 윈도우 — CPU 전용 인코더 아키텍처](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept-37.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/concept-37.webp)
+_양방향 어텐션과 8K 컨텍스트 윈도우 — CPU 전용 인코더 아키텍처_
+
+## 벤치마크에서 확인된 것
+
+Liquid  AI는  GLUE, SuperGLUE,  다국어   분류를   아우르는   17개   태스크에서   14개   모델을   비교했다.   각   태스크마다   완전한   지도   파인튜닝을   수행하고,   학습률   선택에   쓰지   않은   5개   시드의   평균을   보고한다.
+
+ LFM2.5-Encoder-350M은   14개   중   4위다.   앞선   3개는   모두   더   큰   모델이며,   그중   하나는   약  3.5B  파라미터로   LFM2.5-Encoder-350M의   거의   10배다.   LFM2.5-Encoder-230M은   ModernBERT-base와   모든  EuroBERT  모델을   이기면서   대부분보다   작다.
+
+ 여기서   경계가   있다.   이   수치는  Liquid  AI가   자체   프레임워크로   측정한   결과다.   독립   기관의   재현이   아니라   공급자   벤치마크다.   3.7배   속도   차이도  Liquid  AI가   공개한  CPU  추론   측정값이며,   어떤   CPU에서   측정했는지   블로그에   명시되어   있지   않다.  HuggingFace  커뮤니티에서는  Apple Silicon  단일   시퀀스인지,   멀티코어   x86인지에   따라   “계약서   스캔”의   실무   의미가   달라진다는   지적이   이미   나왔다.
+
+## CPU 속도가 실무에서 의미하는 것
+
+ 8,192토큰은   약   15페이지   분량이다.   계약서   한   건,   진료   기록   한   건,   긴   고객   상담   스레드   한   건을   한   번의   포워드   패스로   처리할   수   있다.
+
+Liquid AI  공개   수치로   계산하면,  8K  토큰   문서   1건당   ModernBERT-base은   약   90초   이상,   LFM2.5-Encoder-230M은   약   28초가   걸린다.   하루   10,000건을   분류한다고   가정하면,   ModernBERT-base은   약   250시간,   LFM2.5-Encoder-230M은   약   78시간의  CPU  시간이   필요하다.   단일   머신으로는   둘   다   하루   안에   끝나지   않지만,   차이는   병렬   처리   대수를   직접   줄인다.   250시간을   24시간   안에   끝내려면   약   11대가,   78시간은   약   4대가   필요하다.
+
+ 이   계산은   문서당  8K  토큰을   꽉   채운다는   가정이다.   실제   평균   문서가  2K~4K  토큰이면   절대   시간은   줄지만,   길이   대비   비용   곡선의   기울기   차이는   그대로   유지된다.
+
+[![동일 하드웨어에서 LFM2.5 28초 vs ModernBERT 90초 이상](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/mechanism-20.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/mechanism-20.webp)
+_동일 하드웨어에서 LFM2.5 28초 vs ModernBERT 90초 이상_
+
+## GPU를 제거한다는 것의 비용 의미
+
+ 인코더   추론을   GPU에서   돌리면   ModernBERT-base도   충분히   빠르다.   문제는   GPU가   필요하다는   사실   자체다.  AWS A10G  인스턴스는   시간당   약   0.75달러이고,   24시간   30일   가동하면   월   약   540달러다.  CPU  전용   서버를   이미   보유하고   있다면   이   비용은   0이다.
+
+ 규제   산업에서는   이   차이가   더   크다.   금융·의료·법률   문서는   외부   클라우드로   나갈   수   없는   경우가   많다.   사내  CPU  서버에서  8K  문서를   30초   안에   분류할   수   있으면,   데이터   반출   없이   파이프라인을   완결한다.  GPU  서버를   사내에   추가하는   것은   비용뿐   아니라   전력·냉각·조달   절차를   동반한다.
+
+## 세 가지 실전 배치 패턴
+
+Liquid  AI가   시연한   용도는   네   가지다.
+
+** 프롬프트   라우팅 **:  분류   체계를   고정하지   않고   자유   텍스트로   라우팅   레인을   정의한다.   인코더가   전체   프롬프트를   한   번   읽고   모든   레인에   점수를   매긴다.  GLiNER  방식의   문장   단위   스코어링이다.
+
+** 정책   린팅 **:  회사   규칙을   자유   텍스트로   작성하면,   인코더가   모든   토큰을   모든   규칙에   대해   한   번에   스코어링한다.   “경쟁사   이름   언급을   표시하라”   같은   규칙을   코드   없이   추가한다.
+
+**PII  탐지 **:  16개   언어에서   40종류의   개인정보를   탐지·제거한다.   다국어   고객   데이터를   다루는   팀에   직접   해당한다.
+
+** 마스킹   확산   챗봇 ** (보너스):   양방향  MLM  인코더를   반복적   언마스킹으로   텍스트를   생성하는   챗봇으로   전환한다.   좌→우   예측   대신   마스크에서   답변을   점진적으로   복원한다.   인코더의   비자명한   활용   사례다.
+
+## 230M과 350M 중 선택 기준
+
+ 두   모델의   차이는   정확도와   하드웨어   제약의   트레이드오프다.
+
+ LFM2.5-Encoder-350M은   정확도가   최우선일   때   선택한다.   벤치마크   4위이며,  3.5B  모델   바로   아래다.   GPU가   없어도   CPU에서   동작하지만,   230M보다   추론   시간이   길다.
+
+ LFM2.5-Encoder-230M은   하드웨어가   제한적이거나   처리량이   중요할   때   선택한다.   ModernBERT-base보다   작으면서  8K  토큰에서   더   빠르고,   벤치마크에서도   ModernBERT-base를   이긴다.   엣지   디바이스,   산업용   컨트롤러,   차량   내장   컴퓨팅처럼   GPU가   없는   환경에   적합하다.
+
+ 공통적으로   두   모델   모두   파인튜닝이   전제다.   베이스   인코더는   범용   표현을   산출하지   태스크   출력을   만들지   않는다.  Liquid  AI의   파인튜닝   튜토리얼은  8K  컨텍스트로   긴   법률   문서를   분류하는   예시를   제공한다.
+
+## 오픈 가중치와 재현성의 범위
+
+ 두   모델   모두   HuggingFace에서   오픈   가중치로   배포된다.  LFM Open License v1.0  아래에서   다운로드·파인튜닝·배포에   제한이   없다.   벤치마크   프레임워크,   태스크별   런처,   원본   결과  JSON,  테이블   스크립트는   github.com/Liquid4All/encoder_eval에   공개되어   있다.
+
+ 재현성   범위에는   한계가   있다.   벤치마크는  Liquid  AI가   설계한   17개   태스크   세트다.   독립적   재현이   가능한   코드와   데이터가   공개되어   있지만,   제3자   재현   결과는   아직   없다.  CPU  추론   속도는   측정   하드웨어에   민감하며,   블로그에  CPU  모델명이   없다.  HuggingFace  커뮤니티   댓글에서  x86  멀티코어와  Apple  Silicon의   차이가   지적된   상태다.
+
+ 또한  `trust_remote_code=True` 가   필요하다.   ONNX나  OpenVINO  변환   경로가   아직   없으므로,   현재  CPU  배포는  PyTorch eager  모드에   의존한다.   커뮤니티에서는  int8  양자화나  ONNX  익스포트   계획에   대한   질문이   올라와   있다.
+
+[![오픈 웨이트, CPU 우선, 엣지 준비 — 배포 민주화의 방향](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing-41.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/07/closing-41.webp)
+_오픈 웨이트, CPU 우선, 엣지 준비 — 배포 민주화의 방향_
+
+## 한계와 확인되지 않은 것
+
+Liquid  AI의   주장은   공급자   벤치마크에   기반한다.   3.7배   속도   차이는  Liquid AI  측정값이며,   독립   재현이   없다.   벤치마크   4위라는   순위도   자체   태스크   세트   기준이다.
+
+“GPU  없이   문서   규모   워크로드를   처리한다”는   주장은   단일   문서   처리   시간에   대한   것이다.   초당   수천   건을   처리하는   고부하   프로덕션   환경에서는  CPU  코어   수,   메모리   대역폭,   배치   전략이   병목이   된다.  Liquid  AI는   내부  GPU  추론   스택도   별도로   개발했다고   밝히며,   엔터프라이즈   배포에서는   GPU가   여전히   유효함을   시사한다.
+
+ 마스킹   확산   챗봇   데모는   기술적   흥미를   유발하지만,   생성형   LLM을   대체하는   실전   용도로   제시된   것은   아니다.   인코더의   부수적   활용   가능성   시연이다.
+
+## 다음 행동
+
+- CPU 전용 분류 파이프라인을 운영 중이라면 : HuggingFace에서 LFM2.5-Encoder-230M을 다운로드해 기존 ModernBERT 또는 BERT 기반 분류기를 대체 테스트한다. transformers 라이브러리로 수 줄 안에 로드할 수 있다.
+
+- 규제 산업에서 문서 분류·PII 탐지를 내재화하려 한다면 : 350M 모델을 사내 CPU 서버에서 파인튜닝한다. 8K 컨텍스트로 계약서·진료 기록 전체를 한 번에 처리하는지 확인한다.
+
+- GPU 비용이 부담되는 고빈도 라우팅·필터링이라면 : 230M 모델을 생성형 LLM 앞단 트리아지로 배치한다. 저렴한 인코더가 1차 필터링을 하고, 고가 모델은 필요한 경우만 호출한다.
+
+- 벤치마크를 직접 검증하려면 : github.com/Liquid4All/encoder_eval에서 프레임워크를 내려받아 자체 하드웨어에서 속도·정확도를 재측정한다. CPU 모델명을 기록해 Liquid AI 수치와 비교한다.
+
+## Sources
+
+- Liquid AI, “LFM2.5-Encoders: Fast at Long Context, Even on CPU”, Liquid AI Blog, Jul 28, 2026. www.liquid.ai ↗
+
+- Liquid AI, “LFM2.5-Encoders for Fast Long-Context Inference on CPU”, Hugging Face Blog, Jul 28, 2026. huggingface.co ↗
+
+- LiquidAI/LFM2.5-Encoder-230M, Hugging Face Model Card. huggingface.co ↗
+
+- LiquidAI/LFM2.5-Encoder-350M, Hugging Face Model Card. huggingface.co ↗
+
+- Liquid4All/encoder_eval, GitHub. github.com ↗
+
+- MarkTechPost, “Liquid AI Releases LFM2.5-Encoder-230M and LFM2.5-Encoder-350M”, Jul 29, 2026. www.marktechpost.com ↗
+
+- AlphaSignal, “LiquidAI’s LFM2.5-Encoder Beats ModernBERT at Long Context 3.7x Faster on CPU”. alphasignal.ai ↗
