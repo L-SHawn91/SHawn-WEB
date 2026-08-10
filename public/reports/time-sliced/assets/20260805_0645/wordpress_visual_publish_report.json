@@ -1,0 +1,31 @@
+{
+  "decision": "published_visual_verified",
+  "post_id": "1756",
+  "public_url": "https://shawnassets.wordpress.com/2026/08/05/2026-08-05-0645-korea-morning-risk-check/",
+  "uploads": {
+    "hero": {
+      "id": 1757,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/08/market_signal_generated_visual_hero-10.png",
+      "name": "market_signal_generated_visual_hero.png"
+    },
+    "graph": {
+      "id": 1758,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/08/market_signal_linear_graph_animation-10.gif",
+      "name": "market_signal_linear_graph_animation.gif"
+    },
+    "icon": {
+      "id": 1759,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/08/shawn_investment_assets_icon-10.png",
+      "name": "shawn_investment_assets_icon.png"
+    }
+  },
+  "readback": {
+    "status_code": 200,
+    "title_present": true,
+    "hero_present": true,
+    "graph_present": true,
+    "icon_present": true
+  },
+  "safety_hits": [],
+  "timestamp": "2026-08-05T07:18:25+0900"
+}

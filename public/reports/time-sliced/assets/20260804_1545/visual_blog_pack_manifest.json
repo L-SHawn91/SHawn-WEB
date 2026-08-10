@@ -1,0 +1,17 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "2026년 8월 4일 한국장 마감 시장 신호",
+  "source_note": "20260804_1545_public_note.json",
+  "assets": {
+    "hero": "market_signal_generated_visual_hero.png",
+    "graph_animation": "market_signal_linear_graph_animation.gif",
+    "shawn_icon": "shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "generated_image": "uses official SHawn GPT-image-2 generated investment asset as composited editorial visual source",
+    "aspect_ratio": "16:9 for both editorial hero and graph animation; responsive inline display uses the same ratio and the theme-cropped featured image is cleared",
+    "line_graph_animation": "time-by-time public checkpoint path reveal across the day's observed snapshots; falls back to the legacy straight-line signed reveal when fewer than two checkpoints are available; negative values move down, positive values move up, and the final frame does not loop-reset to zero",
+    "shawn_icon": "official SHawn x SHide operational icon pack",
+    "public_safe": true
+  }
+}

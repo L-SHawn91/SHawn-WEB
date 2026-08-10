@@ -1,0 +1,16 @@
+{
+  "schema": "time_sliced_visual_blog_pack.v1",
+  "title": "2026년 8월 10일 한국 시장 신호 노트",
+  "slot": "2026-08-10 16:35 KST",
+  "assets": {
+    "hero": "market_signal_generated_visual_hero.png",
+    "graph_animation": "market_signal_linear_graph_animation.gif",
+    "shawn_icon": "shawn_investment_assets_icon.png"
+  },
+  "visual_policy": {
+    "aspect_ratio": "1200x675, 16:9 for hero and graph",
+    "hero": "official approved editorial visual asset; no text, ticker, logo, or trade symbols",
+    "graph": "public close-change explanatory animation; fixed series identity from frame zero; finite loop with final hold",
+    "public_safe": true
+  }
+}

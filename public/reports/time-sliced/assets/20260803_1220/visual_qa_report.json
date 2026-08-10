@@ -1,0 +1,38 @@
+{
+  "desktop_mobile_pass": true,
+  "visual_files": {
+    "hero": {
+      "size": [
+        1200,
+        675
+      ],
+      "format": "PNG",
+      "frames": 1,
+      "loop": "absent",
+      "filename": "market_signal_generated_visual_hero.png"
+    },
+    "graph": {
+      "size": [
+        1200,
+        675
+      ],
+      "format": "GIF",
+      "frames": 28,
+      "loop": "absent",
+      "filename": "market_signal_linear_graph_animation.gif"
+    },
+    "icon": {
+      "size": [
+        512,
+        512
+      ],
+      "format": "PNG",
+      "frames": 1,
+      "loop": "absent",
+      "filename": "shawn_investment_assets_icon.png"
+    }
+  },
+  "public_safety_hits": [],
+  "all_pass": true,
+  "browser_qa_file": "20260803_1220_browser_qa.json"
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "time_sliced_public_market_note.v1",
+  "title": "2026년 8월 6일 한국장 마감 신호 — 다음 거래일 체크포인트",
+  "summary": "2026-08-06 한국장은 KOSPI -4.58%, KOSPI200 -5.36% 하락 마감했습니다. 반도체 대형주가 지수를 주도하며 약세를 확대했고, 외국인과 프로그램 수급도 부정적이었습니다. 미국장은 반도체 ETF가 약세이나 지수는 혼조로 마감해 다음 거래일 방향은 아직 확인이 필요합니다. 본 자료는 시장 신호를 정리한 읽기 전용 화면이며 투자 지시가 아닙니다.",
+  "slot": "2026-08-06 16:35 KST",
+  "created_at_kst": "2026-08-06T16:40:50+09:00",
+  "session": "KR",
+  "visual_values": [
+    {"label": "KOSPI", "value": -4.58},
+    {"label": "KOSPI200", "value": -5.36},
+    {"label": "KOSDAQ", "value": 0.26},
+    {"label": "SK hynix proxy", "value": -10.37}
+  ],
+  "snapshot_label": "PUBLIC SNAPSHOT",
+  "source_tier_note": "Naver public index/stock close snapshots (실시간), Naver finance 수급 테이블 (EUC-KR), Yahoo query2 FX/선물/원자재 (quote-cache), CNBC quote cache ETF/금리/VIX (지연).",
+  "source_caveat": "공개 지연시세·프록시 데이터 기준. 실시간 실행 경로가 아닙니다.",
+  "key_points": [
+    "KOSPI와 KOSPI200가 동반 하락; KOSDAQ은 소폭 상승해 대형주 중심 조정임을 시사합니다.",
+    "SK하이닉스(-10.37%)와 삼성전자(-6.30%)가 반도체 섹터 약세를 주도했습니다.",
+    "외국인 수급은 시장에서 이탈(-3,327억), 프로그램도 순매각(-2,303억) 흐름이었습니다.",
+    "미국 완성 종가는 반도체 ETF(SOXX -2.12%, SMH -1.04%)와 EWY(-1.17%)가 약세이나, SPY/DIA는 혼조로 마감했습니다.",
+    "VIX 15.81, US10Y 4.619%, 원/달러 1,427.95로 거시 압력은 유효합니다."
+  ],
+  "afternoon_watch_table": [
+    {"condition": "22:20 미국 프리마켓", "reading": "SOXX/SMH/EWY 방향과 NQ/ES 선물의 시각 정렬을 확인합니다."},
+    {"condition": "23:40 미국 첫 시간", "reading": "10:40 ET 반도체 ETF와 EWY가 추가 약세로 전환하는지 관찰합니다."},
+    {"condition": "08-07 06:45", "reading": "완성된 미국 종가 + 아시아 프리마켓 + 원/달러를 교차 확인합니다."},
+    {"condition": "08-07 08:45/09:03", "reading": "KRX 현금 개장 첫 체결이 prior 밴드 내 어디에 머무는지 확인합니다."}
+  ],
+  "limitations": [
+    "본 자료는 공개 시장 데이터 기반 시장 설명이며 개인 판단이나 실행을 대신하지 않습니다.",
+    "수급·환율·금리 데이터는 공개 지연시세이며 실시간 실행 경로가 아닙니다.",
+    "다음 거래일 전망은 2026-08-06 종가를 앵커로 한 광폭·저신뢰 밴드이며, 22:20/23:40 야간 확인과 개장 첫 체결에 의해 수정될 수 있습니다.",
+    "SHawn Assets · public market explanation surface"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "decision": "blocked_readback_failed",
+  "action": "published",
+  "post_id": "1772",
+  "public_url": "https://shawnassets.wordpress.com/2026/08/05/2026-08-05-2220-us-preopen-market-signal/",
+  "uploads": {
+    "hero": {
+      "id": 1769,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/08/market_signal_generated_visual_hero-13.png",
+      "name": "market_signal_generated_visual_hero.png"
+    },
+    "graph": {
+      "id": 1770,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/08/market_signal_linear_graph_animation-13.gif",
+      "name": "market_signal_linear_graph_animation.gif"
+    },
+    "icon": {
+      "id": 1771,
+      "url": "https://shawnassets.wordpress.com/wp-content/uploads/2026/08/shawn_investment_assets_icon-13.png",
+      "name": "shawn_investment_assets_icon.png"
+    }
+  },
+  "readback": {
+    "http_status": 200,
+    "api_status": "publish",
+    "api_slug": "2026-08-05-2220-us-preopen-market-signal",
+    "title_present": true,
+    "disclaimer_present": false,
+    "hero_present": true,
+    "graph_present": true,
+    "icon_present": true,
+    "featured_image": ""
+  },
+  "safety_hits": []
+}

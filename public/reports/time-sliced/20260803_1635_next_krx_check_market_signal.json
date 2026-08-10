@@ -1,0 +1,45 @@
+{
+  "schema": "time_sliced_public_market_note.v1",
+  "content_class": "public_market_data_note",
+  "slot": "2026-08-03 16:35 KST",
+  "slug": "2026-08-03-1635-next-krx-check-market-signal",
+  "title": "2026년 8월 3일 마감 뒤 다음 확인 루틴",
+  "summary": "한국 현물시장 마감 뒤, 다음 장 전까지 시점이 다른 공개 자료를 분리해 확인하는 순서를 정리합니다. 오늘의 변화폭은 마감 시점의 공개 스냅샷이며 다음 장의 결과를 뜻하지 않습니다.",
+  "snapshot_label": "2026-08-03 15:48~15:49 KST 한국 현물 마감 스냅샷",
+  "visual_values": [
+    {"label": "KOSPI", "value": -5.12},
+    {"label": "KOSPI200", "value": -5.74},
+    {"label": "KODEX200", "value": -8.93},
+    {"label": "KOSDAQ", "value": 2.44}
+  ],
+  "key_points": [
+    "KOSPI는 6,257.45로 전일 기준 -5.12%, KOSPI200은 986.72로 -5.74%에서 마감했습니다.",
+    "KOSDAQ는 737.35로 +2.44%였습니다. 지수별 변화폭이 달랐는지는 다음 관측에서도 따로 확인합니다.",
+    "삼성전자 -8.76%, SK하이닉스 -8.79%, 원익IPS -4.00%는 공개 종가 기준 변화폭입니다. 개별 값과 지수의 관계는 같은 시점의 새 자료가 있을 때만 비교합니다.",
+    "KODEX200은 -8.93%였습니다. 지수와 변화폭 차이가 있어 가격과 관측 시각을 분리해 읽을 필요가 있습니다.",
+    "해외 지수선물·환율·금리는 각 시장의 관측 시점이 다르므로 한국 현물 마감의 직접 원인으로 단정하지 않습니다."
+  ],
+  "afternoon_watch_table": [
+    {"condition": "22:20 KST 해외 시장 자료", "reading": "지수와 반도체 지표의 관측 시각과 방향이 같은지 먼저 확인합니다."},
+    {"condition": "원/달러와 금리", "reading": "새 공개값을 한국 현물 마감 시점과 분리해 비교합니다."},
+    {"condition": "다음 한국장 전", "reading": "개장일 공지와 실제 거래 가능 상태를 확인하고, 반복된 전일 값은 새 신호로 읽지 않습니다."},
+    {"condition": "첫 유효 체결", "reading": "KOSPI·KOSPI200·KOSDAQ의 변화폭을 나란히 확인합니다."},
+    {"condition": "공개 수급 자료", "reading": "같은 기준 시각의 공개값이 교차확인될 때만 해석에 더합니다."}
+  ],
+  "limitations": [
+    "이 화면은 공개 시장 자료를 설명하는 읽기 전용 화면입니다.",
+    "표시값은 관측 시점의 공개 스냅샷이며 실시간 전체 경로나 미래 방향을 뜻하지 않습니다.",
+    "시장별 관측시각과 지연 조건이 다를 수 있어 수치를 직접 원인으로 연결할 수 없습니다.",
+    "교육·해설용 참고 자료이며 투자 조언이 아닙니다."
+  ],
+  "source_caveat": "공개 한국 지수·종목 시세 종가(2026-08-03 15:48~15:49 KST)와 공개 지연 해외·환율·금리 자료(각 자료의 자체 시각).",
+  "created_at_kst": "2026-08-03T16:35:00+09:00",
+  "disclaimer": "교육·해설용 참고 자료이며 투자 조언이 아닙니다.",
+  "compliance": {
+    "public_safety_scan": "pass",
+    "no_trade_instruction": true,
+    "private_numeric_ranges": "absent",
+    "private_portfolio_labels": "absent",
+    "visual_qa": "pass"
+  }
+}

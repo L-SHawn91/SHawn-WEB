@@ -1,0 +1,16 @@
+{
+  "schema":"public_market_signal_package.v1",
+  "title":"2026년 8월 4일 한국장 한낮 시장 신호",
+  "published_url":"https://shawnassets.wordpress.com/2026/08/04/2026-08-04-1220-kr-midday-market-signal/",
+  "observed_at_kst":"2026-08-04 12:22 KST",
+  "summary":"대형주 중심 지수와 코스닥의 변화폭을 같은 공개 시각에 나누어 확인한 시장 데이터 노트입니다.",
+  "snapshot":{"KOSPI":"6,174.13 (-1.33%)","KOSPI200":"968.77 (-1.82%)","KODEX200":"97,110 (-2.01%)","KOSDAQ":"771.12 (+4.58%)"},
+  "assets":{
+    "manifest":"assets/1220/visual_blog_pack_manifest.json",
+    "hero":"assets/1220/market_signal_generated_visual_hero.png",
+    "graph_animation":"assets/1220/market_signal_linear_graph_animation.gif",
+    "icon":"assets/1220/shawn_investment_assets_icon.png"
+  },
+  "disclaimer":"교육·해설용 공개 시장 자료이며 투자 조언이 아닙니다.",
+  "publication_qa":{"public_safety":"pass","visual_16_9":"pass","desktop_mobile_readback":"pass","status":"publish"}
+}
