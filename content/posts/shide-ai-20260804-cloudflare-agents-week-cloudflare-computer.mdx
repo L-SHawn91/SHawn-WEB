@@ -1,0 +1,107 @@
+---
+title: "@cloudflare/computer: 컨테이너 대신 컴퓨터를 주는 에이전트 런타임"
+date: "2026-08-04"
+description: "Cloudflare가 2026년 8월 2일 Agents Week를 시작하고, 8월 3일 에이전트 런타임 패키지 @cloudflare/computer를 얼리 프리뷰로 공개했다. 에이전트 하나마다 컨테이너 하나를 할당하는 대신, 선언적으로 정의된 파일시스템과 선택 가능한 실행 환경을 묶어 에이전트에게 한 대의 컴퓨터로 ..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/hero-3.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/08/04/cloudflare-agents-week-cloudflare-computer/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1354"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/08/04/cloudflare-agents-week-cloudflare-computer/)
+
+AI NOTES · KO  KOREAN EDITION
+
+**KO · 한국어** / [EN · English](https://shawnaiintelligence.wordpress.com/2026/08/04/cloudflare-agents-week-cloudflare-computer-en/) BILINGUAL PAIR
+
+ Cloudflare가   2026년   8월   2일  Agents  Week를   시작하고,   8월   3일   에이전트   런타임   패키지   @cloudflare/computer를   얼리   프리뷰로   공개했다.   에이전트   하나마다   컨테이너   하나를   할당하는   대신,   선언적으로   정의된   파일시스템과   선택   가능한   실행   환경을   묶어   에이전트에게   한   대의   컴퓨터로   제공하는   패키지다.   Cloudflare는   “컨테이너가   필요한   작업   비중을  10%  미만으로   만드는   것”을   목표로   제시했다.   2025년에는   에이전트마다   각각의   컨테이너   하나를   배정해   실행하는   방식이   지배적   설계였고,   Cloudflare의   이번   선언은   그   지배적   구조에   대한   정면   도전이다.   에이전트   인프라의   계산   구조를   컨테이너   중심에서   아이솔레이트   중심으로   재설계하겠다는   것이다.
+
+## Agents Week가 던진 질문: 에이전트 클라우드는 무엇이어야 하는가
+
+ 개막   포스트  “Welcome to Agents  Week”에서   Cloudflare는  “What is an Agent  Cloud?”라는   질문을   던졌다.   Cloudflare는   오늘의   클라우드와   그   위의   웹이   사람을   위해   만들어졌으며,   모든   레이어가   사람이   보고   있다는   전제를   깔고   있다고   짚었다.   에이전트   클라우드는   두   가지를   동시에   해야   한다.   Cloudflare는   개막   포스트에서   이를   “에이전트   네이티브   미래를   위한   토대,   즉   휴먼   도구에서   개조한   것이   아니라   처음부터   에이전트를   위해   만든   프리미티브를   제공해야   하고,   동시에   오늘의   현실에서는   사람   모양의   웹과   에이전트   모양의   웹   사이의   번역   계층으로   작동해야   한다”고   정의했다.
+
+ Cloudflare가  Agents  Week의   주제로   설정한   영역은   다섯   가지다.   프리미티브와   실행   계층,   변화하는   에이전틱   소프트웨어   개발   수명주기,   조직이   직원과   에이전트를   안전하게   통제하며   활용할   수   있는   방법,   에이전틱   웹,   그리고   에이전트와   사람의   공존이다.   이   중   둘째   날   공개된   @cloudflare/computer는   첫   번째   주제인   프리미티브와   실행   계층에   해당하는   발표다.
+
+## 컨테이너는 모든 에이전트에게 나눠줄 수 없다
+
+ Cloudflare는   최근   6개월간의   에이전트   산업   변화를   이렇게   진단했다.   연초만   해도   컨테이너를   띄워   그   안에서   에이전트를   실행하는   방식이   표준이었다.   최근   몇   달   사이   에이전트   하니스가   도구   형태로   샌드박스   코드   실행을   제공하는   방식으로   빠르게   이동했다.   Cloudflare는   이   변화를   “작업이   일어나는   손(샌드박스)과   에이전트   루프인   뇌를   분리한다”고   표현했다.
+
+ 문제는   컴퓨트   공급이다.   Cloudflare는   “모든   클라우드,   모든   하이퍼스케일러를   합쳐도,   모든   기업이   각   사용자의   에이전트마다   컨테이너화된   컴퓨트   환경을   하나씩   나눠줄   만큼의   컴퓨트는   세상에   존재하지   않는다”고   주장했다.   수억   개에서   수십억   개   동시   에이전트로   확장될   수   없는   구조라는   것이다.   Cloudflare는   현재   시장을   “GPU만이   아니라  CPU  컴퓨트에   대한   절박하고   공황   상태인   산업   수요”로   규정했다.
+
+ Cloudflare의   해답은   아이솔레이트다.   약   10년   전   Workers를,   약   6년   전  Durable  Objects를   내놓으며   Cloudflare는   무한히   수평   확장이   가능하고,   극도로   빠르게   시작하고   종료되며,   에이전트가   유휴   상태일   때   하이버네이트하면서   에이전트   자신의   상태를   저장할   수   있는   컴퓨트   프리미티브를   선택했다.   지난해에는   아이솔레이트가   컨테이너   샌드박스를   직접   띄울   수   있는   기능을   추가했다.   에이전트   하니스를   실행하는  Durable  Object가   수평   확장을   담당하고,   필요할   때만   연결된   컨테이너를   도구처럼   호출해   수직   확장을   확보하는   구조다.   Cloudflare는   “우리가   직접   에이전트를   만드는   방식이기도   하다”고   밝혔다.
+
+## SQLite 기반 워크스페이스와 실행 백엔드
+
+ @cloudflare/computer는  `npm install @cloudflare/computer` 로   설치하며,   아무  Durable Object  위에서   인스턴스화할   수   있다.   핵심은   워크스페이스다.  SQLite  기반의   가상   파일시스템으로,  git  저장소,   스토리지   버킷,   임의의   파일로   채울   수   있다.  Code  Mode나  bash  명령으로   파일을   읽고   쓰고   편집하는   도구를   제공하며,   모든   작업은   게이트되고   감사되며   관측된다.   에이전트가   수행할   수   있는   변경에   대한   세밀한   통제와,   에이전트가   무엇을   했는지   보여주는   명확한   기록을   동시에   확보하는   설계다.
+
+[![SQLite 기반 Workspace 가상 파일시스템. git 저장소와 버킷, exec() 호출이 하나의 작업 공간으로 수렴하며 모든 작업은 게이트되고 감사된다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept-3.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept-3.webp)
+_SQLite 기반 Workspace 가상 파일시스템. git 저장소와 버킷, exec() 호출이 하나의 작업 공간으로 수렴하며 모든 작업은 게이트되고 감사된다._
+
+ 실행은  `exec(string, options)` 라는   단일   인터페이스로   통합된다.   기본   제공   백엔드는   두   가지다.   빠르고   저렴한   워커(아이솔레이트)   백엔드와,   완전한   기능을   갖춘  Cloudflare Container  백엔드다.   직접   백엔드를   작성하는   것도   지원한다.  Workspace  클래스는   파일시스템을   직접   조작하는   API와   함께  node:fs  호환   래퍼를   제공해   서드파티  JavaScript  라이브러리와   그대로   사용할   수   있다.   에이전트용으로는  read, write, edit, ls, exec  같은   공통   도구를  AI SDK  호환   툴킷으로   제공하며,  exec  도구는  `backend`  인자를   받아   적절한   런타임으로   라우팅한다.
+
+## 에이전트가 실행 환경을 직접 고르는 설계
+
+ 이   패키지의   전제는   에이전트가   이제   작업에   맞는   환경을   스스로   선택할   수   있을   만큼   유능하다는   것이다.   파일   조작,   데이터   처리,  git  저장소   관리만으로   끝나는   작업은   아이솔레이트에서   실행된다.  Linux, npm,  네이티브   바이너리가   필요한   명령은   컨테이너에서   실행된다.   둘은   동일한   파일을   대상으로   작업하며   소스   파일시스템과   동기화가   유지된다.  exec  도구의   설명문이   에이전트를   올바른   런타임   선택으로   유도하는   역할을   한다.
+
+ Cloudflare는   “테스트에서   프론티어   모델들은   올바른   결정을   내리고,   컨테이너   사용이   필요할   때만   폴백하는   데   매우   뛰어났다”고   밝혔다.   블로그에   공개된   버그   트리아지   에이전트   예시는   작업   공간   준비를   에이전트에   앞서   프로그램적으로   수행한다.   버그   리포트를   파일로   쓰고,   저장소를   클론한   뒤,   에이전트에게는   버그   재현,   코드   점검,   안전한   수정,   검증   실행만   넘긴다.   에이전트에게   실행   권한만이   아니라   준비된   작업   환경을   통째로   주는   구조다.
+
+[![exec(string, options) 단일 인터페이스. 빠른 Worker(아이솔레이트) 백엔드와 완전한 기능을 갖춘 Container 백엔드 중 에이전트가 작업에 맞는 런타임을 선택한다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism-3.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism-3.webp)
+_exec(string, options) 단일 인터페이스. 빠른 Worker(아이솔레이트) 백엔드와 완전한 기능을 갖춘 Container 백엔드 중 에이전트가 작업에 맞는 런타임을 선택한다._
+
+## 컨테이너 사용 10% 미만이 목표인 이유
+
+ Cloudflare는   @cloudflare/computer의   목표를   “컨테이너가   필요한   작업   비중이  10%  미만인   에이전트   런타임   제공”이라고   명시했다.   코딩   작업,   오디오와   비디오   조작,   문서   생성까지   모두   아이솔레이트로   처리할   수   있다는   것이   목표의   근거다.   Cloudflare는   이미   자사   내부에서   에이전트가   아이솔레이트만   사용해   최신   도구   체인으로  JavaScript  애플리케이션을   빌드·테스트·배포하고,   고객마다   맞춤   문서를   생성하며,   웹   브라우저로   복잡한   작업을   수행하는   사례를   확인했다고   밝혔다.
+
+ 목표가   달성된다면   컨테이너   할당의   의미가   베이스라인에서   온디맨드로   바뀐다.   네이티브   바이너리나   완전한  Linux  사용자   영역이   필요한   순간에만   컨테이너를   확보하면   된다.   아이솔레이트는   유휴   상태에서   하이버네이트하고   에이전트   상태를   SQLite에   지속   저장하므로,   유휴   시간의   비용   구조가   상시   구동   컨테이너와   다르다.   다만   이는   Cloudflare의   목표   수치와   아이솔레이트   특성에   기반한   시나리오   계산이며,   실제   절감   폭은   프리뷰   운영   데이터가   공개되어야   확인된다.
+
+## 공개 지표로 보는 현 단계
+
+ 공개된   지표는   얼리   프리뷰   단계를   그대로   보여준다.  GitHub  저장소  cloudflare/computer(MIT  라이선스,   TypeScript)는   2026년   8월   4일   기준   스타   265개,   포크   16개,   오픈   이슈   5개를   기록했다.   저장소   생성   시점은   2026년   6월   5일로,  Agents Week  발표   약   두   달   전이다.   공개   발표   이전에   내부   개발이   진행되고   있었다는   뜻이다.
+
+npm  레지스트리에서는   2026년   7월   29일   패키지가   등록됐고,  0.0.0, 0.1.0-alpha.1, 0.1.0,  0.1.1이   순서대로   발행됐다.   최신   버전   0.1.1의   발행   시각은   2026년   8월   3일  13:01:22  UTC로,   블로그   포스트   공개   시각과   같은   날이다.   패키지의   공식   설명은   “컨테이너   측   데몬   computerd와   동기화되는  SQLite  기반   가상   파일시스템”이다.   Cloudflare는   이번   공개를   “고객과   함께   배우기   위해   오픈소스   라이브러리로   내보내는   실험의   시작”이라고   표현했다.   실험   기간   동안   인터페이스   변경이   가능하다는   신호로   읽어야   하며,   프로덕션   도입   판단은  API  안정화   속도를   추적하는   것이   전제다.
+
+## 에이전트 인프라의 평행선: Microsoft Research의 Orchard
+
+ 같은   주  Microsoft  Research도   8월   3일   오픈소스   에이전트   프레임워크   Orchard를   공개했다.   Orchard의   중심은  Orchard  Env다.  Kubernetes  기반의   경량   환경으로,   에이전트를   대규모로   실행하고   구축하기   위한   재사용   가능한   격리   컴포넌트를   제공하며,   훈련   데이터   수집부터   강화학습   롤아웃,   평가까지   하나의   서비스로   지원한다.   소프트웨어   엔지니어링   에이전트,   웹   브라우징   에이전트,   개인   비서   에이전트를   수정   없이   같은   환경에서   돌릴   수   있다는   것이  Microsoft  Research의   설명이다.
+
+ 함께   공개된   훈련   레시피의   결과도   구체적이다.   Orchard-SWE는   MiniMax-M2.5와  Qwen3.5-397B  두   오픈웨이트   모델에서   107,000개의   에이전트   상호작용을   증류한   뒤,   신용   할당   기반   지도   파인튜닝과   강화학습을   거쳐  SWE-bench Verified 61.4%  기준선을   69.1%까지   끌어올렸고,   밸류   모델   리랭킹을   더해   73%를   기록했다.   Orchard-GUI는   40억   파라미터   비전-언어   모델을   400개   증류   데모와   2,200개   오픈엔드   작업만으로   훈련해  WebVoyager 74.1%, Online-Mind2Web 67.0%, DeepShop  64.0%를   달성했다.
+
+ 두   발표는   같은   병목을   서로   다른   층에서   겨냥한다.   Orchard는   에이전트를   만드는   훈련·평가   환경,   @cloudflare/computer는   에이전트가   일하는   프로덕션   런타임이다.   확장   가능한   격리   실행   표면이   에이전트   확장의   선결   조건이라는   문제의식은   공유하지만,   Kubernetes와   아이솔레이트라는   서로   다른   구현을   선택했다.   Orchard는   실제   배포에   쓸   하니스와   동일한   하니스   안에서   에이전트를   훈련시키고,   가벼운   프록시를   통해   하니스   자체의   모델   호출을   훈련   데이터로   기록해   훈련과   프로덕션   동작의   정합성을   유지한다.   에이전트   인프라   경쟁의   기준이   모델   성능에서   실행   환경의   경제와   재현성으로   이동하고   있다는   신호다.
+
+[![같은 주 공개된 Cloudflare @cloudflare/computer와 Microsoft Research Orchard. 런타임과 훈련 환경, 두 층에서 동시에 열린 에이전트 인프라 경쟁.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing-3.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing-3.webp)
+_같은 주 공개된 Cloudflare @cloudflare/computer와 Microsoft Research Orchard. 런타임과 훈련 환경, 두 층에서 동시에 열린 에이전트 인프라 경쟁._
+
+## 근거 경계: 프리뷰가 말하지 않는 것
+
+ 근거의   경계를   분명히   해야   한다.   첫째,   공개된   벤치마크가   없다.   컨테이너   대비   지연시간,   처리량,   비용에   대한   비교   수치가   공개   자료에는   존재하지   않는다.   “컨테이너   사용  10%  미만”은   설계   목표이지   측정   결과가   아니다.
+
+ 둘째,   “프론티어   모델이   적절한   런타임을   잘   선택한다”는   주장은  Cloudflare  내부   테스트에   기반한   서술이다.   제삼자   검증   자료가   아직   없으며,   프론티어급이   아닌   모델에서의   백엔드   라우팅   정확도는   공개되지   않았다.
+
+ 셋째,   패키지는  0.1.x  계열이다.  Workspace,  백엔드,   도구   인터페이스가   변경될   수   있고,  computerd  데몬과   동기화   메커니즘도   재구성될   수   있다.   넷째,   아이솔레이트는   임의의   네이티브   바이너리를   실행할   수   없으며,   컨테이너   백엔드가   존재하는   이유가   바로   이   지점이다.   네이티브   바이너리   의존도가   높은   워크로드라면   아이솔레이트   커버리지는   목표   수치보다   낮아진다.
+
+ 다섯째,  Agents  Week는   아직   진행   중이다.   에이전틱   소프트웨어   개발   수명주기,   안전한   통제,   에이전틱   웹   관련   발표가   이번   주   안에   이어지므로,   주간   전체   그림을   확인한   뒤에야  Cloudflare  에이전트   전략의   방향을   종합   평가할   수   있다.
+
+## 선택 프레임과 다음 행동
+
+ 도입   판단은   워크로드   구성에   달려   있다.   현재   사용자별   에이전트를   컨테이너   기반으로   운영하고   있다면,   컨테이너   이용률과   아이솔레이트로   처리   가능한   작업   비중을   측정하는   것이   첫   단계다.   파일   조작,  git  작업,   텍스트와   데이터   처리가   대부분이라면   아이솔레이트   우선   구조를   이   패키지의   워크스페이스   API로   시험할   수   있다.
+
+ 권장   평가   순서는   세   단계다.   먼저  Workspace  API로  git  클론과   파일   준비   흐름을   검증한다.   다음으로   사용   중인   모델에서  exec  도구   라우팅이   백엔드를   선택하는   정확도를   측정한다.   마지막으로   감사   로그가   조직의   변경   관리   요구를   충족하는지   확인한다.   실험   기간인   만큼   프로덕션   즉시   적용보다는   대표   워크로드에서   기존   컨테이너   구성과   병행   비교하는   것이   현실적이다.
+
+Cloudflare  환경이   아니라면,   Orchard의   오픈소스화가   훈련·평가   환경   층에서도   공개   대안이   생겼다는   뜻이다.   런타임   선택과   훈련   환경   선택은   분리된   결정이다.   같은   주에   두   대규모   조직이   에이전트   실행   표면   솔루션을   나란히   공개한   사실은,   에이전트를   운영하는   팀이라면   이번   분기   로드맵에   실행   환경   전략을   올려야   한다는   방향을   가리킨다.
+
+## Sources
+
+- Cloudflare Blog, “Your agent needs a computer, not a container — introducing @cloudflare/computer,” August 3, 2026. https://blog.cloudflare.com/cloudflare-computer/
+
+- Cloudflare Blog, “Welcome to Agents Week,” August 2, 2026. https://blog.cloudflare.com/agents-week-welcome/
+
+- npm registry, “@cloudflare/computer” version history and publication timestamps (0.1.1, August 3, 2026). https://www.npmjs.com/package/@cloudflare/computer
+
+- GitHub, “cloudflare/computer” repository metadata (MIT license, TypeScript, created June 5, 2026). https://github.com/cloudflare/computer
+
+- Microsoft Research Blog, “Orchard: An open framework for scalable agentic AI,” August 3, 2026. https://www.microsoft.com/en-us/research/blog/orchard-an-open-framework-for-scalable-agentic-ai/

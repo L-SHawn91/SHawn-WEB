@@ -1,0 +1,107 @@
+---
+title: "@cloudflare/computer: an agent runtime that hands out computers instead of containers"
+date: "2026-08-04"
+description: "Cloudflare opened Agents Week on August 2, 2026, and on August 3 released @cloudflare/computer as an early preview. Instead of assigning one container per agent, the package giv..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/hero-3.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/08/04/cloudflare-agents-week-cloudflare-computer-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1355"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/08/04/cloudflare-agents-week-cloudflare-computer-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/08/04/cloudflare-agents-week-cloudflare-computer/) / **EN · English** BILINGUAL PAIR
+
+Cloudflare opened Agents Week on August 2, 2026, and on August 3 released @cloudflare/computer as an early preview. The package gives each agent a computer — a declaratively defined filesystem plus selectable execution backends — rather than assigning one container per agent. Cloudflare’s stated goal is to keep the share of agent tasks that need a container below ten percent. That framing is a direct challenge to the dominant design of 2025, where every agent ran inside its own container.
+
+## The question Agents Week poses: what should an Agent Cloud be
+
+In the opening post, “Welcome to Agents Week,” Cloudflare asked “What is an Agent Cloud?” The company’s answer has two parts. The cloud and the web built on top of it were designed for humans, with every layer assuming a person watching; an Agent Cloud must first build primitives made for agents rather than retrofitted from human tools. At the same time, in the present reality it must act as a translation layer between the human-shaped web and the agent-shaped web.
+
+Cloudflare organized the week around five themes: primitives and the execution layer, the changing agent software development lifecycle, how organizations can safely deploy and control employees and agents alike, the agentic web, and agents working alongside humans. @cloudflare/computer, released on day two, addresses the first theme — primitives and execution.
+
+## Containers cannot be handed to every agent
+
+Cloudflare’s diagnosis of the past six months: earlier in 2026, the standard pattern was to boot a container and run the agent inside it. In recent months the industry shifted toward agent harnesses providing sandboxed code execution as a tool, which — in Cloudflare’s phrasing — separates the hand where work happens, the sandbox, from the brain, the agent loop.
+
+The constraint is compute supply. Cloudflare claims that no combination of cloud providers and hyperscalers has enough compute to give every enterprise a containerized environment per user’s agent. A design that cannot scale to hundreds of millions or billions of concurrent agents is structurally wrong. The company describes the current market as a desperate, panic-level industry demand for CPU compute, not just GPUs.
+
+Cloudflare’s answer is isolates. Roughly a decade ago it launched Workers, and roughly six years ago Durable Objects — compute primitives that scale horizontally without limit, start and stop extremely fast, and hibernate while idle while persisting the agent’s own state. Last year the company added the ability for an isolate to boot a container sandbox directly. In the resulting architecture, the Durable Object running the agent harness handles horizontal scale, and it calls a connected container like a tool only when vertical scale is needed. Cloudflare notes this is also how it builds its own agents.
+
+## A SQLite-backed workspace and pluggable backends
+
+@cloudflare/computer installs with `npm install @cloudflare/computer` and can be instantiated on any Durable Object. The core is the workspace: a SQLite-backed virtual filesystem that can be populated with git repositories, storage buckets, or arbitrary files. It ships tools for reading, writing, and editing files via Code Mode or bash commands, and every operation is gated, audited, and observable — fine-grained control over the changes an agent can make, alongside a clear record of what the agent did.
+
+[![The SQLite-backed Workspace virtual filesystem. Git repos, buckets, and exec() calls converge into one gated, audited working space.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept-3.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept-3.webp)
+_The SQLite-backed Workspace virtual filesystem. Git repos, buckets, and exec() calls converge into one gated, audited working space._
+
+Execution is unified behind a single interface, `exec(string, options)`. Two backends ship by default: a fast, low-cost worker (isolate) backend, and a fully featured Cloudflare Container backend. You can also write your own. The Workspace class exposes a filesystem API plus a node:fs-compatible wrapper, so third-party JavaScript libraries run against it unchanged. For agents, the package provides common tools — read, write, edit, ls, exec — as an AI-SDK-compatible toolkit; the exec tool takes a `backend` argument that routes to the appropriate runtime.
+
+## An agent that picks its own execution environment
+
+The package assumes agents are now capable enough to choose the right environment for the job themselves. File manipulation, data processing, and git repository management run on isolates. Commands that need Linux, npm, or native binaries run in a container. Both operate on the same files and stay in sync with the source filesystem; the exec tool’s description is designed to steer the agent toward the correct runtime choice.
+
+Cloudflare reports that in testing, frontier models made the right calls and only fell back to containers when genuinely required. The blog’s bug-triage agent example does workspace preparation programmatically before the agent takes over: it writes the bug report to a file, clones the repository, then hands the agent a scoped job — reproduce the bug, inspect the code, make a safe fix, run verification. The agent receives not just execution permission but a fully prepared working environment.
+
+[![A single exec(string, options) interface. The agent picks between the fast Worker (isolate) backend and the full-featured Container backend.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism-3.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism-3.webp)
+_A single exec(string, options) interface. The agent picks between the fast Worker (isolate) backend and the full-featured Container backend._
+
+## Why the sub-ten-percent container target matters
+
+Cloudflare states the goal of @cloudflare/computer explicitly: an agent runtime where fewer than ten percent of tasks require a container. The rationale is that coding tasks, audio and video manipulation, and document generation can all run on isolates. The company says it has already seen this pattern internally — agents building, testing, and deploying JavaScript applications with a modern toolchain using isolates alone, generating custom documentation per customer, and completing complex tasks in a web browser.
+
+If the target holds, container allocation changes from baseline to on-demand: reserve a container only for the moment a native binary or a full Linux userspace is needed. Because isolates hibernate when idle and persist agent state in SQLite, the cost structure of idle time differs fundamentally from an always-on container. That said, this is scenario reasoning built on Cloudflare’s target and isolate characteristics; the actual savings require operational data from the preview period to confirm.
+
+## What public metrics say about the current stage
+
+Public metrics show an early-preview stage, honestly. The GitHub repository cloudflare/computer (MIT license, TypeScript) recorded 265 stars, 16 forks, and 5 open issues as of August 4, 2026. The repository was created on June 5, 2026 — about two months before the Agents Week announcement, meaning internal development preceded the public release.
+
+On the npm registry, the package appeared on July 29, 2026, with versions 0.0.0, 0.1.0-alpha.1, 0.1.0, and 0.1.1 published in sequence. The latest, 0.1.1, was published at 13:01:22 UTC on August 3, 2026, the same day the blog post went live. The package description reads “SQLite-based virtual file system that syncs with a container-side daemon, computerd.” Cloudflare frames the release as “the start of an experiment we’re releasing as an open-source library so we can learn alongside customers.” Interfaces can change during that experiment; production adoption decisions should track API stabilization.
+
+## A parallel line in agent infrastructure: Microsoft Research’s Orchard
+
+In the same week, Microsoft Research released Orchard on August 3, an open-source framework for scalable agentic AI. At its center is Orchard Env, a lightweight Kubernetes-based environment providing reusable isolated components for running and building agents at scale — from training-data collection to reinforcement-learning rollouts to evaluation. A single service supports software-engineering agents, web-browsing agents, and personal-assistant agents without modification, according to Microsoft Research.
+
+The released training recipes carry concrete results. Orchard-SWE distilled 107,000 agent interactions from two open-weight models, MiniMax-M2.5 and Qwen3.5-397B, then applied credit-assignment supervised fine-tuning and reinforcement learning to lift SWE-bench Verified from a 61.4% baseline to 69.1%, reaching 73% with value-model reranking. Orchard-GUI trained a 4-billion-parameter vision-language model as a browser agent on just 400 distilled demonstrations plus 2,200 open-ended tasks, achieving 74.1% on WebVoyager, 67.0% on Online-Mind2Web, and 64.0% on DeepShop.
+
+The two releases aim at the same bottleneck from different layers. Orchard is the training and evaluation environment for building agents; @cloudflare/computer is the production runtime where agents work. Both share the conviction that scalable isolated execution surfaces are the prerequisite for agent scale — but they chose different implementations, Kubernetes versus isolates. Orchard also trains agents inside the exact harness they will be deployed with, recording the harness’s own model calls as training data through a lightweight proxy, which keeps training and production behavior aligned. The competitive criterion in agent infrastructure is shifting from model performance to the economics and reproducibility of the execution surface.
+
+[![Released the same week: Cloudflare](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing-3.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing-3.webp)
+_Released the same week: Cloudflare’s @cloudflare/computer and Microsoft Research’s Orchard. Agent infrastructure competition opens on two layers at once — runtime and training environment._
+
+## Evidence boundaries: what the preview does not say
+
+The evidence boundaries deserve to be stated plainly. First, there are no published benchmarks. No latency, throughput, or cost comparison against containers appears in the public materials. “Fewer than ten percent of tasks need a container” is a design target, not a measured outcome.
+
+Second, the claim that “frontier models choose the appropriate runtime well” rests on Cloudflare’s internal testing. No third-party verification exists yet, and backend-routing accuracy on models below frontier class is not published.
+
+Third, the package sits at 0.1.x. Workspace, backend, and tool interfaces may change, and the computerd daemon’s sync mechanics can be restructured. Fourth, isolates cannot execute arbitrary native binaries — precisely why the container backend exists. For workloads with heavy native-binary dependencies, isolate coverage will fall short of the target figure.
+
+Fifth, Agents Week is still in progress. Announcements on the agent software development lifecycle, safe control, and the agentic web will follow during the week, and a full assessment of Cloudflare’s agent strategy requires the week’s complete picture.
+
+## A decision frame and next actions
+
+Adoption judgment depends on workload composition. If you currently run per-user agents on containers, the first step is measuring container utilization and the share of tasks isolates could handle. If file operations, git work, and text or data processing dominate, you can trial an isolate-first structure through this package’s workspace API.
+
+A recommended evaluation sequence has three steps. First, validate the git-clone and file-preparation flow with the Workspace API. Second, measure how accurately your model’s exec-tool routing selects the backend. Third, confirm the audit log meets your organization’s change-management requirements. Given the experimental stage, running this alongside your existing container setup on representative workloads is more realistic than immediate production adoption.
+
+If you are not on Cloudflare, Orchard’s open-sourcing means a public alternative now exists at the training and evaluation layer too. Runtime choice and training-environment choice are separate decisions. The fact that two major organizations released agent execution-surface solutions in the same week points one direction: teams operating agents should put execution-environment strategy on this quarter’s roadmap.
+
+## Sources
+
+- Cloudflare Blog, “Your agent needs a computer, not a container — introducing @cloudflare/computer,” August 3, 2026. https://blog.cloudflare.com/cloudflare-computer/
+
+- Cloudflare Blog, “Welcome to Agents Week,” August 2, 2026. https://blog.cloudflare.com/agents-week-welcome/
+
+- npm registry, “@cloudflare/computer” version history and publication timestamps (0.1.1, August 3, 2026). https://www.npmjs.com/package/@cloudflare/computer
+
+- GitHub, “cloudflare/computer” repository metadata (MIT license, TypeScript, created June 5, 2026). https://github.com/cloudflare/computer
+
+- Microsoft Research Blog, “Orchard: An open framework for scalable agentic AI,” August 3, 2026. https://www.microsoft.com/en-us/research/blog/orchard-an-open-framework-for-scalable-agentic-ai/
