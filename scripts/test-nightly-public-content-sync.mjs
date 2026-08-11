@@ -14,6 +14,7 @@ assert.match(source, /wait_for_github_deployment/, "nightly deploy must wait for
 assert.match(source, /run watch .*--exit-status/, "workflow completion must be checked, not assumed after push");
 assert.doesNotMatch(source, /populate_deploy_snapshot/, "nightly job must not retain an alternate local deployment snapshot path");
 assert.doesNotMatch(source, /VERCEL=/, "nightly job must not depend on local Vercel credentials");
+assert.doesNotMatch(source, /\[\[ -n "\$changed_summary" \]\] && echo/, "no-change success reporting must not trip set -e");
 assert.doesNotMatch(source, /node scripts\/sync-wordpress-public-posts\.mjs 2>&1/, "nightly job must not bypass the full public-content pipeline");
 
 const pushIndex = source.indexOf("git push origin HEAD:main");
