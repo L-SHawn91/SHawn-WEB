@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-08-11T21:43:00.759Z",
+  "generated_at": "2026-08-11T21:57:57.505Z",
   "mode": "write",
   "sources": [
     {
@@ -623,8 +623,8 @@
       "fetched": 69,
       "scanned": 69,
       "unchanged": 67,
-      "updated": 0,
-      "created": 2,
+      "updated": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -632,14 +632,14 @@
           "title": "GEN1055 최초 임상시험 결과 게시: 악성 고형종양 21명 투여, 용량제한독성 없어 시험 중단",
           "link": "https://shawnbiohub.wordpress.com/2026/08/12/gen1055-first-in-human-solid-tumor-trial-results-kor/",
           "target": "content/posts/shide-bio-20260812-gen1055-first-in-human-solid-tumor-trial-results-kor.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1356,
           "title": "GEN1055 First-in-Human Trial Results Posted: No Dose-Limiting Toxicities in Terminated Solid Tumor Study",
           "link": "https://shawnbiohub.wordpress.com/2026/08/12/gen1055-first-in-human-solid-tumor-trial-results/",
           "target": "content/posts/shide-bio-20260812-gen1055-first-in-human-solid-tumor-trial-results.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 1337,
@@ -2018,8 +2018,8 @@
     "remote": 282,
     "scanned": 282,
     "unchanged": 280,
-    "updated": 0,
-    "created": 2,
+    "updated": 2,
+    "created": 0,
     "removed": 0,
     "changed": 2
   }
