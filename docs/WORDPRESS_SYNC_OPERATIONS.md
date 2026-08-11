@@ -44,17 +44,18 @@ corepack pnpm run sync:public-content
 ## Safety gates
 
 1. A non-blocking file lock prevents overlapping runs.
-2. A reviewed non-content source baseline prevents unrelated dirty code from entering an automatic deployment; independently generated `public/reports/time-sliced/` packages are excluded from this blog/public-index lane.
-3. Pre-existing managed public-mirror dirtiness (`content/`, `public/reports/index.json`, or `public/reports/latest.json`) blocks the run, preventing manual and generated content from being mixed.
-4. The nightly job runs the full `sync:public-content` pipeline: deterministic WordPress fixture test, SHide package test, investment public-safety test, forbidden-term pre/post checks, WordPress import, and report-index refresh.
-5. Public forbidden-term checks run before and after the import.
-6. All three WordPress sources must return `fetched === remote_total`; otherwise no removal reconciliation occurs.
-7. Unsupported URL protocols are stripped from imported links and images.
-8. Unchanged MDX files are not rewritten, and an unchanged manifest keeps its prior hash and timestamp.
-9. The last deployed managed-public digest (`content/` plus the public report index/latest) is stored outside the repository. A failed deployment is retried on the next run even when WordPress has no newer change.
-10. After the build, the approved non-content digest and committed managed-public state are checked again.
-11. Deployment uses a temporary snapshot containing only tracked and non-ignored untracked files, excluding separate generated time-slice report artifacts, plus the local Vercel project link; ignored secrets and later worktree mutations are excluded.
-12. Vercel inspection must show the expected production alias (`https://shawnlab.vercel.app`), and that alias must keep all redirects on the same origin while passing content-aware HTTP readback for `/`, `/blog`, `/privacy`, and `/sitemap.xml`; only then does the deployment state marker advance.
+2. Vercel account identity and linked-project read access are verified before any sync write or generated-content commit; an empty or rejected identity fails before mutation. Final production deploy permission is still validated by the deploy command itself.
+3. A reviewed non-content source baseline prevents unrelated dirty code from entering an automatic deployment; independently generated `public/reports/time-sliced/` packages are excluded from this blog/public-index lane.
+4. Pre-existing managed public-mirror dirtiness (`content/`, `public/reports/index.json`, or `public/reports/latest.json`) blocks the run, preventing manual and generated content from being mixed.
+5. The nightly job runs the full `sync:public-content` pipeline: deterministic WordPress fixture test, SHide package test, investment public-safety test, forbidden-term pre/post checks, WordPress import, and report-index refresh.
+6. Public forbidden-term checks run before and after the import.
+7. All three WordPress sources must return `fetched === remote_total`; otherwise no removal reconciliation occurs.
+8. Unsupported URL protocols are stripped from imported links and images.
+9. Unchanged MDX files are not rewritten, and an unchanged manifest keeps its prior hash and timestamp.
+10. The last deployed managed-public digest (`content/` plus the public report index/latest) is stored outside the repository. A failed deployment is retried on the next run even when WordPress has no newer change.
+11. After the build, the approved non-content digest and committed managed-public state are checked again.
+12. Deployment uses a temporary snapshot containing only tracked and non-ignored untracked files, excluding separate generated time-slice report artifacts, plus the local Vercel project link; ignored secrets and later worktree mutations are excluded.
+13. Vercel inspection must show the expected production alias (`https://shawnlab.vercel.app`), and that alias must keep all redirects on the same origin while passing content-aware HTTP readback for `/`, `/blog`, `/privacy`, and `/sitemap.xml`; only then does the deployment state marker advance.
 
 ## Approving intentional website source changes
 
