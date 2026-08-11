@@ -11,7 +11,6 @@ import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import { SuppressTitleTooltips } from "@/components/ui/suppress-title-tooltips";
 import { SITE_URL } from "@/lib/site-url";
-import { AdSenseScript } from "@/components/monetization/adsense";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
@@ -91,7 +90,6 @@ export default function RootLayout({
             {children}
             <Footer />
             <Analytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""} />
-            <AdSenseScript />
             <VercelAnalytics />
             <SpeedInsights />
           </LanguageProvider>
