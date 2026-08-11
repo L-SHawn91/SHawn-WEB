@@ -39,7 +39,7 @@ jobs:
               echo ""
               echo "The build gate can still pass, but the public site will not update until these secrets are configured and this workflow is rerun."
             } >> "$GITHUB_STEP_SUMMARY"
-            exit 0
+            exit 1
           fi
 
           echo "ready=true" >> "$GITHUB_OUTPUT"
@@ -82,6 +82,10 @@ jobs:
       - name: Smoke test production routes
         if: steps.preflight.outputs.ready == 'true' && env.PRODUCTION_URL != ''
         run: |
+          curl -fsSL "$PRODUCTION_URL/" > /dev/null
+          curl -fsSL "$PRODUCTION_URL/blog" > /dev/null
+          curl -fsSL "$PRODUCTION_URL/privacy" > /dev/null
+          curl -fsSL "$PRODUCTION_URL/sitemap.xml" > /dev/null
           curl -fsSL "$PRODUCTION_URL/invest" > /dev/null
           curl -fsSL "$PRODUCTION_URL/invest/reports" > /dev/null
           curl -fsSL "$PRODUCTION_URL/invest/archive" > /dev/null

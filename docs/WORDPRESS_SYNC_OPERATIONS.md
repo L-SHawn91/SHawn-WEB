@@ -1,4 +1,4 @@
-# WordPress → SHawn-WEB → Vercel Operations
+# WordPress → SHawn-WEB → GitHub Actions → Vercel Operations
 
 ## Purpose
 
@@ -37,14 +37,15 @@ corepack pnpm run sync:public-content
 - Schedule: daily at 03:30 KST, after the three WordPress publishing pipelines
 - Script: `/home/mdge/.hermes/scripts/shawn_web_wordpress_sync.sh`
 - Delivery: script-only watchdog; unchanged runs produce no message
-- Git behavior: the managed public mirror (`content/` plus `public/reports/index.json` and `public/reports/latest.json`) is committed locally with that scope only; no remote push
-- Deployment: verified production build, then an isolated file snapshot is sent to Vercel production and read back over HTTP
-- Boundary: generated market time-slice packages under `public/reports/time-sliced/` have their own producer/release lifecycle. They are excluded from this WordPress/public-index baseline and deploy snapshot; this job never silently promotes them.
+- Git behavior: the managed public mirror (`content/` plus `public/reports/index.json` and `public/reports/latest.json`) is committed with that scope only and pushed to `main` after local validation.
+- Deployment authority: the repository's `Deploy Production` GitHub Actions workflow. It owns the Vercel secrets, builds/deploys production, and smoke-tests production routes. The nightly host never reads or uses a Vercel credential.
+- Completion: the script waits for that exact commit's `Deploy Production` workflow to succeed, then performs its own content-aware HTTP read-back.
+- Boundary: generated market time-slice packages under `public/reports/time-sliced/` have their own producer/release lifecycle. They are excluded from this WordPress/public-index baseline; this job never silently commits or promotes them.
 
 ## Safety gates
 
 1. A non-blocking file lock prevents overlapping runs.
-2. Vercel account identity and linked-project read access are verified before any sync write or generated-content commit; an empty or rejected identity fails before mutation. Final production deploy permission is still validated by the deploy command itself.
+2. GitHub CLI authentication and the `main` branch are required before any sync write or generated-content commit.
 3. A reviewed non-content source baseline prevents unrelated dirty code from entering an automatic deployment; independently generated `public/reports/time-sliced/` packages are excluded from this blog/public-index lane.
 4. Pre-existing managed public-mirror dirtiness (`content/`, `public/reports/index.json`, or `public/reports/latest.json`) blocks the run, preventing manual and generated content from being mixed.
 5. The nightly job runs the full `sync:public-content` pipeline: deterministic WordPress fixture test, SHide package test, investment public-safety test, forbidden-term pre/post checks, WordPress import, and report-index refresh.
@@ -52,10 +53,10 @@ corepack pnpm run sync:public-content
 7. All three WordPress sources must return `fetched === remote_total`; otherwise no removal reconciliation occurs.
 8. Unsupported URL protocols are stripped from imported links and images.
 9. Unchanged MDX files are not rewritten, and an unchanged manifest keeps its prior hash and timestamp.
-10. The last deployed managed-public digest (`content/` plus the public report index/latest) is stored outside the repository. A failed deployment is retried on the next run even when WordPress has no newer change.
-11. After the build, the approved non-content digest and committed managed-public state are checked again.
-12. Deployment uses a temporary snapshot containing only tracked and non-ignored untracked files, excluding separate generated time-slice report artifacts, plus the local Vercel project link; ignored secrets and later worktree mutations are excluded.
-13. Vercel inspection must show the expected production alias (`https://shawnlab.vercel.app`), and that alias must keep all redirects on the same origin while passing content-aware HTTP readback for `/`, `/blog`, `/privacy`, and `/sitemap.xml`; only then does the deployment state marker advance.
+10. The last deployed managed-public digest (`content/` plus the public report index/latest) is stored outside the repository. A failed GitHub workflow or failed production read-back is retried on the next run even when WordPress has no newer change.
+11. After the local build, the approved non-content digest and committed managed-public state are checked again.
+12. The script pushes only `main` and waits for the exact commit's `Deploy Production` workflow. The workflow exits nonzero if required deployment secrets are missing, preventing a false successful release.
+13. The workflow smoke-tests `/`, `/blog`, `/privacy`, `/sitemap.xml`, and invest routes; the scheduler independently verifies same-origin content-aware HTTP read-back for `/`, `/blog`, `/privacy`, and `/sitemap.xml` before advancing the deployment marker.
 
 ## Approving intentional website source changes
 
@@ -71,5 +72,5 @@ This records a digest only. It does not store file contents or secrets and does 
 
 - **WordPress/API failure:** fix the source/API issue and rerun; no partial deletion is performed.
 - **Build failure:** fix the website gate failure, reapprove the source baseline, and rerun.
-- **Vercel failure after local content commit:** rerun the same script. The undeployed content-tree digest causes deployment to retry.
+- **GitHub Actions deployment failure after local content commit:** inspect the exact failed `Deploy Production` run, fix the issue, reapprove the source baseline if the source changed, and rerun. The undeployed managed-public digest causes deployment to retry.
 - **Unexpected `content/` dirtiness:** inspect and separate manual edits before rerunning. Never bypass the guard by staging unrelated content.
