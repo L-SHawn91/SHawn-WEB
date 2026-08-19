@@ -56,3 +56,7 @@ legacy_imports/
 dist-app/
 .turbo/
 tmp/
+
+# SHawn ecosystem shared ignore (Opus P1-4)
+.bak-*
+*/*.bak-*
