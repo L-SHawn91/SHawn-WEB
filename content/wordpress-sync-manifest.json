@@ -1,31 +1,59 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-08-25T18:33:11.695Z",
+  "generated_at": "2026-08-26T18:31:25.693Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 88,
-      "fetched": 88,
-      "scanned": 88,
-      "unchanged": 86,
+      "remote_total": 92,
+      "fetched": 92,
+      "scanned": 92,
+      "unchanged": 88,
       "updated": 0,
-      "created": 2,
+      "created": 4,
       "removed": 0,
       "items": [
+        {
+          "id": 1470,
+          "title": "The Model Name Stayed the Same, but the Operating Contract Changed: Reading DeepSeek V4 Pro GA",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/26/deepseek-v4-pro-ga-agent-operations-en/",
+          "target": "content/posts/shide-ai-20260826-deepseek-v4-pro-ga-agent-operations-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1469,
+          "title": "모델 이름은 그대로인데 운영 계약은 바뀌었다: DeepSeek V4 Pro GA를 읽는 법",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/26/deepseek-v4-pro-ga-agent-operations/",
+          "target": "content/posts/shide-ai-20260826-deepseek-v4-pro-ga-agent-operations.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1502,
+          "title": "DeepSeek Opens Image Input: How to Operationalize V4 Flash Vision and the Files API",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/26/deepseek-v4-flash-vision-files-api-en/",
+          "target": "content/posts/shide-ai-20260826-deepseek-v4-flash-vision-files-api-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1501,
+          "title": "DeepSeek가 이미지 입력을 열었다: V4 Flash Vision과 Files API를 운영에 넣는 법",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/26/deepseek-v4-flash-vision-files-api/",
+          "target": "content/posts/shide-ai-20260826-deepseek-v4-flash-vision-files-api.mdx",
+          "mode": "created"
+        },
         {
           "id": 1482,
           "title": "Claude’s Text Watermark Is Not an ‘AI Detector’: Turning a Provenance Signal into Operational Evidence",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/23/anthropic-claude-text-watermark-provenance-en/",
           "target": "content/posts/shide-ai-20260823-anthropic-claude-text-watermark-provenance-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1481,
           "title": "Claude의 텍스트 워터마크는 ‘AI 판독기’가 아니다: 출처 신호를 운영 증거로 바꾸는 법",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/23/anthropic-claude-text-watermark-provenance/",
           "target": "content/posts/shide-ai-20260823-anthropic-claude-text-watermark-provenance.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1434,
@@ -633,14 +661,28 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 71,
-      "fetched": 71,
-      "scanned": 71,
+      "remote_total": 73,
+      "fetched": 73,
+      "scanned": 73,
       "unchanged": 71,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1418,
+          "title": "비인두암 TPC 유도 항암요법, 고위험 국소진행군 5년 결과 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/26/tpc-induction-nasopharyngeal-carcinoma-kor/",
+          "target": "content/posts/shide-bio-20260826-tpc-induction-nasopharyngeal-carcinoma-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1416,
+          "title": "TPC induction chemotherapy improved five-year failure-free survival in high-risk nasopharyngeal carcinoma",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/26/tpc-induction-nasopharyngeal-carcinoma/",
+          "target": "content/posts/shide-bio-20260826-tpc-induction-nasopharyngeal-carcinoma.mdx",
+          "mode": "created"
+        },
         {
           "id": 1378,
           "title": "올리세리딘 진통 펌프, 부인종양 수술 후 초기 회복 질 높여",
@@ -1145,9 +1187,9 @@
       "remote_total": 135,
       "fetched": 135,
       "scanned": 135,
-      "unchanged": 129,
+      "unchanged": 135,
       "updated": 0,
-      "created": 6,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -1155,42 +1197,42 @@
           "title": "Rates, Inflation, Housing and Household Debt: Four Checks Behind One Warning Headline",
           "link": "https://shawnassets.wordpress.com/2026/08/23/rates-inflation-housing-and-household-debt-four-checks-behind-one-warning-headline/",
           "target": "content/posts/shide-assets-20260823-rates-inflation-housing-and-household-debt-four-checks-behind-one-warning-headline.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2191,
           "title": "금리인상 무게 커졌다…물가·부동산·가계대출 경고등을 한 지표로 묶지 않는 법",
           "link": "https://shawnassets.wordpress.com/2026/08/23/%ea%b8%88%eb%a6%ac%ec%9d%b8%ec%83%81-%eb%ac%b4%ea%b2%8c-%ec%bb%a4%ec%a1%8c%eb%8b%a4%eb%ac%bc%ea%b0%80%c2%b7%eb%b6%80%eb%8f%99%ec%82%b0%c2%b7%ea%b0%80%ea%b3%84%eb%8c%80%ec%b6%9c-%ea%b2%bd/",
           "target": "content/posts/shide-assets-20260823-ea-b8-88-eb-a6-ac-ec-9d-b8-ec-83-81-eb-ac-b4-ea-b2-8c-ec-bb-a4-ec-a1-8c-eb-8b-a4-eb-ac-bc-ea-b0-80-c2-b7-eb-b6-80-eb-8f-99-ec-82-b0-c2-b7-ea-b0-80-ea-b3-84-eb-8c-80-ec-b6-9c-ea-b2-bd.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2167,
           "title": "Korea’s July Import Prices Fell Again: Separating the Currency Effect From the Cost-of-Living Signal",
           "link": "https://shawnassets.wordpress.com/2026/08/20/koreas-july-import-prices-fell-again-separating-the-currency-effect-from-the-cost-of-living-signal/",
           "target": "content/posts/shide-assets-20260820-koreas-july-import-prices-fell-again-separating-the-currency-effect-from-the-cost-of-living-signal.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2166,
           "title": "수입물가 두 달째 하락, 환율이 만든 차이와 생활비 신호를 나누어 읽는 법",
           "link": "https://shawnassets.wordpress.com/2026/08/20/%ec%88%98%ec%9e%85%eb%ac%bc%ea%b0%80-%eb%91%90-%eb%8b%ac%ec%a7%b8-%ed%95%98%eb%9d%bd-%ed%99%98%ec%9c%a8%ec%9d%b4-%eb%a7%8c%eb%93%a0-%ec%b0%a8%ec%9d%b4%ec%99%80-%ec%83%9d%ed%99%9c%eb%b9%84-%ec%8b%a0/",
           "target": "content/posts/shide-assets-20260820-ec-88-98-ec-9e-85-eb-ac-bc-ea-b0-80-eb-91-90-eb-8b-ac-ec-a7-b8-ed-95-98-eb-9d-bd-ed-99-98-ec-9c-a8-ec-9d-b4-eb-a7-8c-eb-93-a0-ec-b0-a8-ec-9d-b4-ec-99-80-ec-83-9d-ed-99-9c-eb-b9-84-ec-8b-a0.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2174,
           "title": "What a Quarterly 13F Disclosure Can and Cannot Tell You About an “AI to Memory” Rotation",
           "link": "https://shawnassets.wordpress.com/2026/08/20/what-a-quarterly-13f-disclosure-can-and-cannot-tell-you-about-an-ai-to-memory-rotation/",
           "target": "content/posts/shide-assets-20260820-what-a-quarterly-13f-disclosure-can-and-cannot-tell-you-about-an-ai-to-memory-rotation.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2173,
           "title": "분기 지분공시로 “AI에서 메모리로 갈아탔다”를 읽을 때 확인해야 할 것",
           "link": "https://shawnassets.wordpress.com/2026/08/20/%eb%b6%84%ea%b8%b0-%ec%a7%80%eb%b6%84%ea%b3%b5%ec%8b%9c%eb%a1%9c-ai%ec%97%90%ec%84%9c-%eb%a9%94%eb%aa%a8%eb%a6%ac%eb%a1%9c-%ea%b0%88%ec%95%84%ed%83%94%eb%8b%a4%eb%a5%bc-%ec%9d%bd/",
           "target": "content/posts/shide-assets-20260820-eb-b6-84-ea-b8-b0-ec-a7-80-eb-b6-84-ea-b3-b5-ec-8b-9c-eb-a1-9c-ai-ec-97-90-ec-84-9c-eb-a9-94-eb-aa-a8-eb-a6-ac-eb-a1-9c-ea-b0-88-ec-95-84-ed-83-94-eb-8b-a4-eb-a5-bc-ec-9d-bd.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1813,
@@ -2099,12 +2141,12 @@
     }
   ],
   "totals": {
-    "remote": 294,
-    "scanned": 294,
-    "unchanged": 286,
+    "remote": 300,
+    "scanned": 300,
+    "unchanged": 294,
     "updated": 0,
-    "created": 8,
+    "created": 6,
     "removed": 0,
-    "changed": 8
+    "changed": 6
   }
 }
