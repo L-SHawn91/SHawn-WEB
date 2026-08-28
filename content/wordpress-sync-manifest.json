@@ -1,31 +1,73 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-08-27T18:31:24.148Z",
+  "generated_at": "2026-08-28T18:31:19.486Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 94,
-      "fetched": 94,
-      "scanned": 94,
-      "unchanged": 92,
+      "remote_total": 100,
+      "fetched": 100,
+      "scanned": 100,
+      "unchanged": 94,
       "updated": 0,
-      "created": 2,
+      "created": 6,
       "removed": 0,
       "items": [
+        {
+          "id": 1586,
+          "title": "Why Ox Alpha Took Over AI News: The Mystery Model Was Z.ai’s GLM-5.3-Flash",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/28/ox-alpha-glm-5-3-flash-power-performance-hot-topic-en/",
+          "target": "content/posts/shide-ai-20260828-ox-alpha-glm-5-3-flash-power-performance-hot-topic-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1585,
+          "title": "Ox Alpha가 AI 업계를 뒤흔든 이유: 정체는 Z.ai GLM-5.3-Flash였다",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/28/ox-alpha-glm-5-3-flash-power-performance-hot-topic/",
+          "target": "content/posts/shide-ai-20260828-ox-alpha-glm-5-3-flash-power-performance-hot-topic.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1574,
+          "title": "Google AI Omni 1.1 Flash: When Generative Video Becomes a Controllable Developer Workflow",
+          "link": "",
+          "target": "content/posts/shide-ai-20260828-google-ai-omni-1-1-flash-developer-video-controls-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1573,
+          "title": "Google AI Omni 1.1 Flash: 영상 생성이 아니라 ‘제어 가능한 제작 흐름’이 된 이유",
+          "link": "",
+          "target": "content/posts/shide-ai-20260828-google-ai-omni-1-1-flash-developer-video-controls.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1562,
+          "title": "Research Search Is Not Just Vectors: The Hybrid Retrieval and Failure Fallback Behind Papers with Code",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/28/papers-with-code-hybrid-retrieval-fallback-en/",
+          "target": "content/posts/shide-ai-20260828-papers-with-code-hybrid-retrieval-fallback-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1561,
+          "title": "논문 검색 AI는 벡터 하나로 끝나지 않는다: Papers with Code의 하이브리드 검색과 장애 폴백",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/28/papers-with-code-hybrid-retrieval-fallback/",
+          "target": "content/posts/shide-ai-20260828-papers-with-code-hybrid-retrieval-fallback.mdx",
+          "mode": "created"
+        },
         {
           "id": 1525,
           "title": "Why AI Apps Are Becoming Graphs Again: What Gradio Workflows Change Beyond Chat",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/27/gradio-workflows-inspectable-ai-apps-en/",
           "target": "content/posts/shide-ai-20260827-gradio-workflows-inspectable-ai-apps-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1524,
           "title": "AI 앱은 왜 다시 ‘그래프’가 되는가: Gradio Workflows가 채팅형 에이전트에 던진 운영 질문",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/27/gradio-workflows-inspectable-ai-apps/",
           "target": "content/posts/shide-ai-20260827-gradio-workflows-inspectable-ai-apps.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1470,
@@ -675,41 +717,69 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 75,
-      "fetched": 75,
-      "scanned": 75,
-      "unchanged": 71,
-      "updated": 2,
-      "created": 2,
+      "remote_total": 79,
+      "fetched": 79,
+      "scanned": 79,
+      "unchanged": 75,
+      "updated": 0,
+      "created": 4,
       "removed": 0,
       "items": [
+        {
+          "id": 1475,
+          "title": "HOPE-3 데라미오셀 3상, 진행된 뒤센에서 상지 기능 차이 보고",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/28/hope-three-deramiocel-advanced-duchenne-phase-three-kor/",
+          "target": "content/posts/shide-bio-20260828-hope-three-deramiocel-advanced-duchenne-phase-three-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1473,
+          "title": "HOPE-3 reports upper-limb function results for deramiocel in advanced Duchenne",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/28/hope-three-deramiocel-advanced-duchenne-phase-three/",
+          "target": "content/posts/shide-bio-20260828-hope-three-deramiocel-advanced-duchenne-phase-three.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1461,
+          "title": "3기 흑색종 수술 전 치료 등록 결과, 군별 수치 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/28/stage-three-melanoma-neoadjuvant-registry-results-kor/",
+          "target": "content/posts/shide-bio-20260828-stage-three-melanoma-neoadjuvant-registry-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1459,
+          "title": "Stage III melanoma neoadjuvant registry results post arm-level outcomes",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/28/stage-three-melanoma-neoadjuvant-registry-results/",
+          "target": "content/posts/shide-bio-20260828-stage-three-melanoma-neoadjuvant-registry-results.mdx",
+          "mode": "created"
+        },
         {
           "id": 1438,
           "title": "성인 mRNA 백신 2상 시험, 면역반응과 안전성 결과 공개",
           "link": "https://shawnbiohub.wordpress.com/2026/08/27/adult-mrna-vaccine-phase-2-immune-response-kor/",
           "target": "content/posts/shide-bio-20260827-adult-mrna-vaccine-phase-2-immune-response-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1436,
           "title": "Adult mRNA vaccine phase 2 trial reports immune response and safety findings",
           "link": "https://shawnbiohub.wordpress.com/2026/08/27/adult-mrna-vaccine-phase-2-immune-response/",
           "target": "content/posts/shide-bio-20260827-adult-mrna-vaccine-phase-2-immune-response.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1418,
           "title": "비인두암 TPC 유도 항암요법, 고위험 국소진행군 5년 결과 공개",
           "link": "https://shawnbiohub.wordpress.com/2026/08/26/tpc-induction-nasopharyngeal-carcinoma-kor/",
           "target": "content/posts/shide-bio-20260826-tpc-induction-nasopharyngeal-carcinoma-kor.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1416,
           "title": "TPC induction chemotherapy associated with higher five-year failure-free survival in high-risk nasopharyngeal carcinoma",
           "link": "https://shawnbiohub.wordpress.com/2026/08/26/tpc-induction-nasopharyngeal-carcinoma/",
           "target": "content/posts/shide-bio-20260826-tpc-induction-nasopharyngeal-carcinoma.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 1378,
@@ -1215,9 +1285,9 @@
       "remote_total": 137,
       "fetched": 137,
       "scanned": 137,
-      "unchanged": 135,
+      "unchanged": 137,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -1225,14 +1295,14 @@
           "title": "A Consumer Price Index Item Headline: How to Read Food and AI Subscription Examples",
           "link": "https://shawnassets.wordpress.com/2026/08/27/a-consumer-price-index-item-headline-how-to-read-food-and-ai-subscription-examples/",
           "target": "content/posts/shide-assets-20260827-a-consumer-price-index-item-headline-how-to-read-food-and-ai-subscription-examples.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2224,
           "title": "소비자물가지수 품목 보도, 마라탕·AI 구독료를 읽기 전 확인할 것",
           "link": "https://shawnassets.wordpress.com/2026/08/27/%ec%86%8c%eb%b9%84%ec%9e%90%eb%ac%bc%ea%b0%80%ec%a7%80%ec%88%98-%ed%92%88%eb%aa%a9-%eb%b3%b4%eb%8f%84-%eb%a7%88%eb%9d%bc%ed%83%95%c2%b7ai-%ea%b5%ac%eb%8f%85%eb%a3%8c%eb%a5%bc-%ec%9d%bd%ea%b8%b0/",
           "target": "content/posts/shide-assets-20260827-ec-86-8c-eb-b9-84-ec-9e-90-eb-ac-bc-ea-b0-80-ec-a7-80-ec-88-98-ed-92-88-eb-aa-a9-eb-b3-b4-eb-8f-84-eb-a7-88-eb-9d-bc-ed-83-95-c2-b7ai-ea-b5-ac-eb-8f-85-eb-a3-8c-eb-a5-bc-ec-9d-bd-ea-b8-b0.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2193,
@@ -2183,12 +2253,12 @@
     }
   ],
   "totals": {
-    "remote": 306,
-    "scanned": 306,
-    "unchanged": 298,
-    "updated": 2,
-    "created": 6,
+    "remote": 316,
+    "scanned": 316,
+    "unchanged": 306,
+    "updated": 0,
+    "created": 10,
     "removed": 0,
-    "changed": 8
+    "changed": 10
   }
 }

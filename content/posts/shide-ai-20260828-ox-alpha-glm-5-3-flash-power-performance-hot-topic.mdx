@@ -1,0 +1,361 @@
+---
+title: "Ox Alpha가 AI 업계를 뒤흔든 이유: 정체는 Z.ai GLM-5.3-Flash였다"
+date: "2026-08-28"
+description: "무료 100만 토큰 stealth model로 등장한 Ox Alpha는 그 주 가장 인기 있는 모델이 됐고, 정체 공개 전부터 frontier급 코딩·agent 성능으로 화제가 됐습니다. Z.ai GLM-5.3-Flash의 성능, 비용, 중국산 칩 serving, launch 전략을 함께 분석합니다."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/hero-17.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/08/28/ox-alpha-glm-5-3-flash-power-performance-hot-topic/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1585"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/08/28/ox-alpha-glm-5-3-flash-power-performance-hot-topic/)
+
+AI NOTES · KO  KOREAN EDITION
+
+**KO · 한국어** / [EN · English](https://shawnaiintelligence.wordpress.com/2026/08/28/ox-alpha-glm-5-3-flash-power-performance-hot-topic-en/) BILINGUAL PAIR
+
+ 이름도,   회사도   공개하지   않은   무료  AI  모델   하나가   일주일   동안   개발자   사회를   휩쓸었습니다.   OpenRouter와   OpenCode에  `Ox Alpha` 라는   이름으로   등장한   이   모델은   100만   토큰  context,  강력한   코딩·agent   성능,   무료   접근을   앞세워   빠르게   화제가   됐습니다.
+
+ 그리고   2026년   8월   26일   Z.ai가   정체를   공개했습니다.  Ox  Alpha는   사라진   모델이   아니라,   공개   전   블라인드   테스트를   거친  **GLM-5.3-Flash** 였습니다.   Z.ai는  Ox  Alpha가   그   주   가장   인기   있는   모델이   됐다고   밝혔고,   이   트래픽   전체를   중국산  AI  칩에서   처리했다고   발표했습니다.[1][2]
+
+> 핵심 결론 Ox Alpha의 파괴력은 단순히 “무료 100만 토큰 모델”이라는 데 있지 않았습니다. 320B 규모의 multimodal MoE가 18B parameter만 활성화하면서 일부 코딩·agent benchmark에서 Claude Opus 4.8과 GPT-5.6 Terra를 앞섰고, 이를 무료 stealth launch로 먼저 체험하게 만든 뒤 Z.ai가 정체를 공개했습니다. 성능·가격·배포 전략을 한 번에 보여준 대형 데뷔였습니다.
+
+## 시작은 완벽한 미스터리 마케팅이었습니다
+
+Ox  Alpha는   일반적인   모델   출시   순서를   뒤집었습니다.   회사와   제품명을   먼저   공개하고   benchmark를   보여주는   대신,   모델을   먼저   무료로   풀었습니다.
+
+- OpenCode Zen: x-preview-f-free
+
+- OpenRouter: stealth/ox-alpha
+
+- Nous portal: stealth/ox-alpha
+
+- 최대 context: 1,048,576 tokens
+
+- reasoning effort: low , high , max
+
+Hermes Agent  upstream에도   8월   21일   이   route들을   지원하는   변경이   연이어   반영됐습니다.[4][5]   사용자들은   정체를   모르는   상태에서   실제   repository와  agent  workflow에   모델을   연결했습니다.   “누가   만들었나”라는   추측과   “정말   frontier급인가”라는   테스트가   동시에   확산됐습니다.
+
+ 이   전략이   강력했던   이유는   홍보   문구보다   체험이   먼저였기   때문입니다.   브랜드를   가린   상태에서   반응이   좋으면,   이름값이   아니라   실제   출력   때문에   주목받았다는   서사를   만들   수   있습니다.
+
+[![무료 접근, 100만 토큰 context, mystery marketing이 개발자의 자발적 실험과 글로벌 보도를 동시에 만들었습니다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept-17.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/concept-17.webp)
+_무료 접근, 100만 토큰 context, mystery marketing이 개발자의 자발적 실험과 글로벌 보도를 동시에 만들었습니다._
+
+## 실제로 얼마나 뜨거웠나
+
+ Z.ai는   공식   발표에서  Ox  Alpha가  ** “그   주   가장   인기   있는   모델” ** 이   됐다고   표현했습니다.[1][2]
+
+ 외부   확산도   개발자   커뮤니티   안에만   머물지   않았습니다.   8월   20~28일  Google News  RSS의   정확한  Ox Alpha  검색은   50개   결과를   반환했고,   주요   보도군에는  Bloomberg, Business Insider, CNBC, CNET, Quartz, SiliconANGLE, South China Morning Post, The New Stack, Decrypt, Yahoo Tech, 36Kr, Pandaily, GIGAZINE  등이   포함됐습니다.
+
+ 이   50개를   모두   독립   보도라고   계산하면   안   됩니다.   일부는   재전송·재인용·유사   기사입니다.   하지만   범위   자체는   분명합니다.
+
+- 미국·유럽 테크 미디어
+
+- 글로벌 비즈니스·시장 매체
+
+- 중국 기술·산업 매체
+
+- 개발자 전문 매체
+
+- YouTube·Substack·GitHub 구현 사례
+
+GitHub  검색에서도   8월   28일   기준   광범위한  matching  result가   확인됐습니다.
+
+- Ox Alpha : 5,310건
+
+- x-preview-f-free : 1,068건
+
+- stealth/ox-alpha : 1,268건
+
+ 이   수치는   고품질   채택   프로젝트   수가   아니라  broad  match입니다.   자동   생성   artifact와   단순   언급도   섞여   있습니다.   그럼에도  model picker  지원,  provider route  추가,  compatibility test, benchmark audition,  오류   보고가   여러   repository에   빠르게   생긴   것은   개발자   열기를   보여줍니다.
+
+## 정체 공개: Ox Alpha는 GLM-5.3-Flash였습니다
+
+ Z.ai는   8월   26일   공식   블로그에서   다음과   같이   밝혔습니다.
+
+> “Before release, we tested GLM-5.3-Flash anonymously as ox-alpha on OpenCode and OpenRouter to gather user feedback.”[1]
+
+ 즉  Ox  Alpha는   별도   모델이   폐기된   것이   아닙니다.  ** GLM-5.3-Flash의   공개   전   이름 ** 이었습니다.  stealth  alias가   내려간   뒤   정식   모델명과   공개  weights, API, Coding  Plan으로   전환된   것입니다.
+
+ GLM-5.3-Flash의   핵심   구조는   다음과   같습니다.[1][2][3]
+
+### 총 parameter
+
+**GLM-5.3-Flash**
+320B
+
+### 활성 parameter
+
+**GLM-5.3-Flash**
+18B
+
+### architecture
+
+**GLM-5.3-Flash**
+Mixture-of-Experts
+
+### attention
+
+**GLM-5.3-Flash**
+sparse + linear hybrid
+
+### context
+
+**GLM-5.3-Flash**
+ 최대  1M tokens
+
+### modality
+
+**GLM-5.3-Flash**
+native text·image·video·file
+
+### pretraining corpus
+
+**GLM-5.3-Flash**
+Z.ai  발표   기준  30T multimodal tokens
+
+### 공개 weights
+
+**GLM-5.3-Flash**
+Hugging Face, MIT license
+
+320B  전체를   매   token마다   쓰는   것이   아니라   18B만   활성화합니다.  GLM-4.5  계열의  32B active  parameter보다   가볍고,   layer도   92개에서   45개로   줄였습니다.   Z.ai는  GLM-5.3  대비  attention  compute를   약   3.0배,  KV  cache를   4.4배   줄였다고   설명합니다.[1][2]
+
+## 얼마나 강력했나: benchmark에서 확인할 부분
+
+ 아래   숫자는  ** Z.ai가   공개한  benchmark  결과 ** 입니다.  SHawn AI  Notes가   독립적으로   재현한   결과는   아니며,   benchmark마다  harness·context·timeout·judge  조건이   다릅니다.[1][2]
+
+### Terminal-Bench 2.1
+
+**GLM-5.3-Flash**
+84.3
+
+**GLM-5.2**
+81.0
+
+**Opus 4.8**
+85.0
+
+**GPT-5.6 Terra**
+87.4
+
+### DeepSWE v1.1
+
+**GLM-5.3-Flash**
+63.4
+
+**GLM-5.2**
+46.2
+
+**Opus 4.8**
+58.0
+
+**GPT-5.6 Terra**
+69.6
+
+### Toolathlon Verified
+
+**GLM-5.3-Flash**
+78.4
+
+**GLM-5.2**
+59.9
+
+**Opus 4.8**
+76.2
+
+**GPT-5.6 Terra**
+74.9
+
+### AutomationBench v1.0.6
+
+**GLM-5.3-Flash**
+48.8
+
+**GLM-5.2**
+26.2
+
+**Opus 4.8**
+41.0
+
+**GPT-5.6 Terra**
+37.2
+
+ 해석은   단순한   “전부   이겼다”가   아닙니다.
+
+- Terminal-Bench에서는 Opus 4.8과 GPT-5.6 Terra보다 낮았습니다.
+
+- DeepSWE에서는 Opus 4.8을 앞섰지만 GPT-5.6 Terra에는 뒤졌습니다.
+
+- Toolathlon에서는 표에 나온 Opus 4.8과 GPT-5.6 Terra보다 높았습니다.
+
+- AutomationBench에서는 비교된 두 frontier model보다 높았습니다.
+
+Z.ai  자체  Code  Bench에서도  max effort  기준  GLM-5.3-Flash 29.0, Opus 4.8  29.5로   거의   비슷했다고   보고했습니다.[1][2]
+
+ 이   조합이   주목받은   이유는   모든  benchmark  1위라서가   아닙니다.  ** flash급   비용과   활성   parameter로  frontier  model에   가까운   코딩·agent   성능을   보였다 ** 는   점입니다.
+
+[![320B MoE에서 18B parameter만 활성화하고 sparse·linear attention을 결합해 성능과 serving 비용을 함께 노렸습니다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism-17.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/mechanism-17.webp)
+_320B MoE에서 18B parameter만 활성화하고 sparse·linear attention을 결합해 성능과 serving 비용을 함께 노렸습니다._
+
+## 비용 대비 성능이 충격적이었던 이유
+
+ Z.ai는   GLM-5.3-Flash가  Artificial Analysis Intelligence Index  v4.1.1에서   57점을   기록하면서  discounted  기준   task당   $0.045였다고   밝혔습니다.   회사   설명으로는   비슷한   intelligence가   기존에는   대략   10배   비용   구간에서   가능했습니다.[1][2]
+
+ 또   GLM-5.2와   비교하면   다음   변화가   큽니다.
+
+- DeepSWE: 46.2 → 63.4
+
+- AutomationBench: 26.2 → 48.8
+
+- GLM-5.2 대비 가격: 1/10이라는 Z.ai 주장
+
+- GLM Coding Plan: GLM-5.3 대비 usable quota 3배
+
+ 여기서   $0.045는   모든  API  호출의   고정가격이   아닙니다.   특정   index와  discounted task  조건입니다.   실제   비용은  API  가격,  token  길이,  cache,  도구   호출,   배포   방식에   따라   달라집니다.
+
+## 왜 ‘Flash’인데 이렇게 강력했나
+
+### 1. 320B 전체 대신 18B만 활성화
+
+MoE  구조가   입력마다   필요한   expert만   선택합니다.   큰  model  capacity를   유지하면서   실제   연산량을   줄이는   방식입니다.
+
+### 2. Sparse attention과 linear attention 결합
+
+Local  dependency는  linear  attention으로   처리하고,   긴   범위의   관련   정보는  sparse  attention과   indexer로   찾습니다.   100만   토큰을   단순히  full  attention으로   계산하는   부담을   줄였습니다.[1][2]
+
+### 3. IndexPool로 긴 context 비용 축소
+
+ Z.ai는  1M  context에서  indexer key vector  네   개를   하나로   압축하는   IndexPool을   도입했다고   설명합니다.   긴   context를   제공하면서   memory와   latency를   줄이려는   설계입니다.[1]
+
+### 4. Vision이 coding loop 안에 들어감
+
+ GLM-5.3-Flash는   이미지를   보는   기능을   별도   부가   기능으로   두지   않습니다.  frontend, game, Blender, browser·computer  use에서   렌더링   결과를   보고   다시   수정하는  closed  loop를   목표로   합니다.[1][2]
+
+## 중국산 AI 칩으로 전체 열풍을 받아냈습니다
+
+Z.ai  발표에서   가장   전략적인   대목은  model  architecture만이   아닙니다.   회사는  Ox Alpha  preview의   트래픽   전체를   중국산  AI chip  cluster에서   처리했다고   밝혔습니다.[1][2]
+
+ 공식   설명에   따르면:
+
+- 수만 개 규모의 중국산 accelerator
+
+- SGLang 기반 전용 inference engine
+
+- Encode–Prefill–Decode 분리 architecture
+
+- W8A8 quantization
+
+- INT8·FP8·BF16 hybrid cache
+
+- initial baseline 대비 end-to-end serving 3배 향상
+
+ Z.ai는   해당   deployment에서  mainstream NVIDIA  GPU와   comparable한  hardware  efficiency와   token당   비용에   도달했다고   주장합니다.[1][2]
+
+ 이것을   “모든   중국산   칩이   모든  NVIDIA  GPU를   이겼다”는   뜻으로   확대하면   안   됩니다.   특정   model과  cluster,  Z.ai의   최적화   stack에서   나온   회사   측   결과입니다.   그래도   frontier급  model  traffic을   실제   대규모로   처리한   showcase라는   점은   큽니다.
+
+## 왜 이 launch가 마케팅적으로도 강했나
+
+Ox Alpha  launch는   세   단계를   정확히   밟았습니다.
+
+- 정체를 숨겼습니다. 브랜드 선입견 없이 출력만 평가하게 했습니다.
+
+- 무료로 대규모 사용을 만들었습니다. OpenRouter와 OpenCode에서 developer가 즉시 자신의 workflow에 넣게 했습니다.
+
+- 열기가 최고조일 때 정체를 공개했습니다. “중국 모델도 강하다”는 주장보다, 이미 인기와 사용 경험이 만들어진 뒤 GLM-5.3-Flash라는 이름을 붙였습니다.
+
+ 결과적으로  mystery, benchmark, free access, 1M context, open weights, Chinese chips,  price-performance라는   여러   화제가   한   번에   연결됐습니다.   그래서   단순   모델   발표보다   훨씬   큰   뉴스가   됐습니다.
+
+## 지금 써볼 가치가 있는가
+
+ 네.   다만   지금   선택할   것은   사라진  `ox-alpha`  alias가   아니라   정식   공개된  **GLM-5.3-Flash** 입니다.
+
+ 사용   경로는   다음과   같습니다.[1][2][3]
+
+- Z.ai API
+
+- GLM Coding Plan
+
+- ZCode
+
+- Hugging Face 공개 weights
+
+- SGLang
+
+- vLLM
+
+- Transformers
+
+- KTransformers
+
+ 추천   용도는   다음과   같습니다.
+
+- repository 단위 코딩·수정
+
+- tool-calling agent
+
+- 긴 context 기반 코드 탐색
+
+- frontend·game·3D visual coding
+
+- browser·computer use
+
+- 문서·표·PPT·PDF 등 전문 작업 흐름
+
+ 다만   민감한   code와   실제   운영에   넣기   전에는   동일   repository·동일   prompt·동일   test로   직접   비교해야   합니다.  Z.ai  benchmark가   강해도   우리   workload의   정확성,  latency, tool reliability, memory  cost가   자동으로   보장되지는   않습니다.
+
+[![Ox Alpha alias는 끝났지만 GLM-5.3-Flash는 API, Coding Plan, 공개 weights로 정식 경쟁을 시작했습니다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing-17.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/closing-17.webp)
+_Ox Alpha alias는 끝났지만 GLM-5.3-Flash는 API, Coding Plan, 공개 weights로 정식 경쟁을 시작했습니다._
+
+## Ox Alpha가 남긴 진짜 의미
+
+Ox  Alpha는   “일주일   만에   사라진   무료   모델”이   아니었습니다.  ** Z.ai가   GLM-5.3-Flash를   편견   없이   시험하게   만든  stealth  launch였고,   정체   공개   전에   이미   그   주   가장   인기   있는   모델이   됐습니다. **
+
+ 강력했던   이유는   하나가   아닙니다.
+
+- 100만 token context
+
+- 320B total / 18B active MoE
+
+- coding·agent benchmark 경쟁력
+
+- native multimodal visual coding
+
+- open weights와 MIT license
+
+- flash급 비용
+
+- 중국산 chip cluster 기반 대규모 serving
+
+- mystery를 실제 사용으로 전환한 launch strategy
+
+ 모든   benchmark에서   최고는   아니지만,   이   정도   성능·context·multimodality를   이   비용   구조로   묶은   것은   분명   큰   사건입니다.  Ox  Alpha라는   이름은   사라졌지만,   그   안의   모델은   GLM-5.3-Flash라는   정식   이름으로   이제   막   경쟁을   시작했습니다.
+
+## 참고 자료
+
+[1] Z.ai — GLM-5.3-Flash: Frontier Intelligence, Flash Cost
+
+[https://z.ai/blog/glm-5.3-flash](https://z.ai/blog/glm-5.3-flash)
+
+[2] Z.ai Developer Docs — GLM-5.3-Flash Overview
+
+[https://docs.z.ai/guides/vlm/glm-5.3-flash](https://docs.z.ai/guides/vlm/glm-5.3-flash)
+
+[3] Z.ai GLM-5.3-Flash model weights and model card
+
+[https://huggingface.co/zai-org/GLM-5.3-Flash](https://huggingface.co/zai-org/GLM-5.3-Flash)
+
+[4] Nous Research Hermes Agent — OpenCode Ox Alpha route integration
+
+[https://github.com/NousResearch/hermes-agent/commit/19c6a1192449342d297fabdedb793fa04c6f80a7](https://github.com/NousResearch/hermes-agent/commit/19c6a1192449342d297fabdedb793fa04c6f80a7)
+
+[5] Nous Research Hermes Agent — OpenRouter Ox Alpha route integration
+
+[https://github.com/NousResearch/hermes-agent/commit/c01cd26f959fb7c5bb21c89130d1d83c50012d0d](https://github.com/NousResearch/hermes-agent/commit/c01cd26f959fb7c5bb21c89130d1d83c50012d0d)
+
+* 성능   수치는   Z.ai가   공개한  benchmark  결과이며  SHawn AI  Notes의   독립   재현   결과가   아닙니다.  Google  News와  GitHub  수치는   화제   확산의  discovery  signal로   사용했으며   독립   기사·고품질   채택   수로   해석하지   않습니다. *
