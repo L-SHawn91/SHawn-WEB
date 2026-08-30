@@ -1,31 +1,59 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-08-29T18:31:23.067Z",
+  "generated_at": "2026-08-30T18:31:02.091Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 102,
-      "fetched": 102,
-      "scanned": 102,
-      "unchanged": 100,
+      "remote_total": 106,
+      "fetched": 106,
+      "scanned": 106,
+      "unchanged": 102,
       "updated": 0,
-      "created": 2,
+      "created": 4,
       "removed": 0,
       "items": [
+        {
+          "id": 1653,
+          "title": "When Ads Enter Conversational AI: Four Boundaries to Check in ChatGPT’s European Expansion",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/30/chatgpt-ads-europe-conversational-ai-boundaries-en/",
+          "target": "content/posts/shide-ai-20260830-chatgpt-ads-europe-conversational-ai-boundaries-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1652,
+          "title": "대화형 AI에 광고가 들어올 때: ChatGPT Ads 유럽 확장에서 확인할 네 가지 경계",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/30/chatgpt-ads-europe-conversational-ai-boundaries/",
+          "target": "content/posts/shide-ai-20260830-chatgpt-ads-europe-conversational-ai-boundaries.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1625,
+          "title": "GLM-5.3 Full Open Weights: Same Base as GLM-5.2, New Gains from Post-Training, and an Emergent Cyber-Capability Question",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/30/glm-5-3-open-weights-agent-engineering-en/",
+          "target": "content/posts/shide-ai-20260830-glm-5-3-open-weights-agent-engineering-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1624,
+          "title": "Z.AI GLM-5.3 풀 오픈웨이트 출시: 같은 base, post-training만으로 얻은 coding·agent·cyber capability",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/08/30/glm-5-3-open-weights-agent-engineering/",
+          "target": "content/posts/shide-ai-20260830-glm-5-3-open-weights-agent-engineering.mdx",
+          "mode": "created"
+        },
         {
           "id": 1604,
           "title": "After Zero Data Retention: Can Safety Checks Work Without Seeing Content?",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/29/zero-data-retention-private-safety-processing-en/",
           "target": "content/posts/shide-ai-20260829-zero-data-retention-private-safety-processing-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1603,
           "title": "ZDR 이후: ‘보지 않는 안전 점검’은 가능한가 — OpenAI Private Safety Processing 프리뷰",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/29/zero-data-retention-private-safety-processing/",
           "target": "content/posts/shide-ai-20260829-zero-data-retention-private-safety-processing.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1586,
@@ -731,27 +759,41 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 81,
-      "fetched": 81,
-      "scanned": 81,
-      "unchanged": 79,
+      "remote_total": 83,
+      "fetched": 83,
+      "scanned": 83,
+      "unchanged": 81,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 1505,
+          "title": "AMN 유전자치료 SBT101 안전성 기록이 시험등록부에 공개됐습니다",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/30/amn-gene-therapy-safety-record-kor/",
+          "target": "content/posts/shide-bio-20260830-amn-gene-therapy-safety-record-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1503,
+          "title": "AMN gene therapy registry posts a small SBT101 safety record",
+          "link": "https://shawnbiohub.wordpress.com/2026/08/30/amn-gene-therapy-safety-record/",
+          "target": "content/posts/shide-bio-20260830-amn-gene-therapy-safety-record.mdx",
+          "mode": "created"
+        },
+        {
           "id": 1490,
           "title": "신경내분비종양 등록 결과에 2상 군별 결과가 새로 공개됐습니다",
           "link": "https://shawnbiohub.wordpress.com/2026/08/29/neuroendocrine-tumor-registry-results-kor/",
           "target": "content/posts/shide-bio-20260829-neuroendocrine-tumor-registry-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1488,
           "title": "Neuroendocrine tumor registry results post arm-level phase 2 outcomes",
           "link": "https://shawnbiohub.wordpress.com/2026/08/29/neuroendocrine-tumor-registry-results/",
           "target": "content/posts/shide-bio-20260829-neuroendocrine-tumor-registry-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1475,
@@ -1310,27 +1352,41 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 139,
-      "fetched": 139,
-      "scanned": 139,
-      "unchanged": 137,
+      "remote_total": 141,
+      "fetched": 141,
+      "scanned": 141,
+      "unchanged": 139,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 2210,
+          "title": "A Property-Tax Reconsideration Headline: What Renters and Owners Should Verify First",
+          "link": "https://shawnassets.wordpress.com/2026/08/30/a-property-tax-reconsideration-headline-what-renters-and-owners-should-verify-first/",
+          "target": "content/posts/shide-assets-20260830-a-property-tax-reconsideration-headline-what-renters-and-owners-should-verify-first.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2209,
+          "title": "부동산 세제개편 재검토 보도, 전세와 세 부담을 읽기 전 확인할 것",
+          "link": "https://shawnassets.wordpress.com/2026/08/30/%eb%b6%80%eb%8f%99%ec%82%b0-%ec%84%b8%ec%a0%9c%ea%b0%9c%ed%8e%b8-%ec%9e%ac%ea%b2%80%ed%86%a0-%eb%b3%b4%eb%8f%84-%ec%a0%84%ec%84%b8%ec%99%80-%ec%84%b8-%eb%b6%80%eb%8b%b4%ec%9d%84-%ec%9d%bd%ea%b8%b0/",
+          "target": "content/posts/shide-assets-20260830-eb-b6-80-eb-8f-99-ec-82-b0-ec-84-b8-ec-a0-9c-ea-b0-9c-ed-8e-b8-ec-9e-ac-ea-b2-80-ed-86-a0-eb-b3-b4-eb-8f-84-ec-a0-84-ec-84-b8-ec-99-80-ec-84-b8-eb-b6-80-eb-8b-b4-ec-9d-84-ec-9d-bd-ea-b8-b0.mdx",
+          "mode": "created"
+        },
+        {
           "id": 2192,
           "title": "When Funds Appear in the Same AI Stock Story: What 13F Filings Can and Cannot Show",
           "link": "https://shawnassets.wordpress.com/2026/08/29/when-funds-appear-in-the-same-ai-stock-story-what-13f-filings-can-and-cannot-show/",
           "target": "content/posts/shide-assets-20260829-when-funds-appear-in-the-same-ai-stock-story-what-13f-filings-can-and-cannot-show.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2190,
           "title": "헤지펀드와 뮤추얼펀드가 동시에 매수했다는 AI 주식 보도, 13F로 확인하는 법",
           "link": "https://shawnassets.wordpress.com/2026/08/29/%ed%97%a4%ec%a7%80%ed%8e%80%eb%93%9c%ec%99%80-%eb%ae%a4%ec%b6%94%ec%96%bc%ed%8e%80%eb%93%9c%ea%b0%80-%eb%8f%99%ec%8b%9c%ec%97%90-%eb%a7%a4%ec%88%98%ed%96%88%eb%8b%a4%eb%8a%94-ai-%ec%a3%bc%ec%8b%9d/",
           "target": "content/posts/shide-assets-20260829-ed-97-a4-ec-a7-80-ed-8e-80-eb-93-9c-ec-99-80-eb-ae-a4-ec-b6-94-ec-96-bc-ed-8e-80-eb-93-9c-ea-b0-80-eb-8f-99-ec-8b-9c-ec-97-90-eb-a7-a4-ec-88-98-ed-96-88-eb-8b-a4-eb-8a-94-ai-ec-a3-bc-ec-8b-9d.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2225,
@@ -2295,12 +2351,12 @@
     }
   ],
   "totals": {
-    "remote": 322,
-    "scanned": 322,
-    "unchanged": 316,
+    "remote": 330,
+    "scanned": 330,
+    "unchanged": 322,
     "updated": 0,
-    "created": 6,
+    "created": 8,
     "removed": 0,
-    "changed": 6
+    "changed": 8
   }
 }

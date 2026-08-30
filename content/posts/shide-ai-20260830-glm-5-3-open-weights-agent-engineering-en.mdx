@@ -1,0 +1,359 @@
+---
+title: "GLM-5.3 Full Open Weights: Same Base as GLM-5.2, New Gains from Post-Training, and an Emergent Cyber-Capability Question"
+date: "2026-08-30"
+description: "Z.AI released full text-only GLM-5.3 on the GLM-5.2 base with all gains from post-training. This article examines the 78-layer, 1M-context, 256-expert MoE, vendor-reported Cyber..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/glm-5-3-hero-editorial-v2.png"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/08/30/glm-5-3-open-weights-agent-engineering-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1625"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/08/30/glm-5-3-open-weights-agent-engineering-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/08/30/glm-5-3-open-weights-agent-engineering/) / **EN · English** BILINGUAL PAIR
+
+On August 30, 2026, Z.AI (the commercial brand of Chinese AI lab Zhipu AI) released the full text-generation GLM-5.3 as open weights on Hugging Face. This is the second piece of the GLM-5.3 rollout that began on August 26 with the named launch of GLM-5.3-Flash. It is about the full GLM-5.3: a text-only, 1M-context, 78-layer open-weights model that uses the same base as GLM-5.2 and derives every benchmark gain from post-training, plus a license clause that puts a security review on a specific kind of large commercial operator, plus a public statement that cyber capability emerged faster than Z.AI expected.
+
+> Core takeaway GLM-5.3 is a text-generation open-weights model that Z.AI built on top of the GLM-5.2 base. The model card says plainly that “every gain comes from post-training.” On CyberGym, ExploitGym, and ExploitBench the vendor-reported numbers show GLM-5.3 leading comparable open-weights systems and roughly doubling GLM-5.2 on the upper part of the exploitation chain. The license is permissive (use, copy, modify, distribute, sublicense, sell) but adds a security-review trigger for Model-as-a-Service operators with aggregate revenue above USD 10 billion over any rolling twelve months. The architecture is a 78-layer, 256-expert MoE with 8 active experts per token and a 1,048,576-token context, all reproducible from the JSON config.
+
+## What GLM-5.3 actually changed
+
+Z.AI’s model card opens with a sentence that removes a lot of speculation: “GLM-5.3 uses the same base model as GLM-5.2 — every gain comes from post-training.”[1] That is, GLM-5.3 is not a fresh pretrain. It is the GLM-5.2 base plus a new round of alignment, instruction tuning, tool-use data, long-horizon reasoning data, and cyber-related data passed through the post-training pipeline.
+
+The benchmark table on the same model card makes the same point in numbers. Terminal Bench 2.1 moves from GLM-5.2 81.0 to GLM-5.3 88.2. Terminal Bench 3.0 moves from 4.6 to 28.3. DeepSWE v1.1 moves from 46.2 to 66.9. Toolathlon Verified moves from 59.9 to 73.0. AutomationBench v1.0.6 moves from 26.2 to 48.2. Agents’ Last Exam moves from 23.8 to 28.5. HLE w/ Tools moves from 54.7 to 62.5.[1] When a base model jumps by that much across tool-use, agent, and reasoning benchmarks in one generation, the natural read is post-training, not architecture.
+
+It is important to keep GLM-5.3 and GLM-5.3-Flash distinct. Z.AI describes Flash as “the first natively multimodal model in the GLM-5 series,” trained from a new base, with hybrid sparse-plus-linear attention and Manifold-Constrained Hyper-Connections (mHC).[2] Full GLM-5.3 is text-only and shares the GLM-5.2 base. The two releases are siblings, not twins.
+
+## Architecture: weights are new, structure is the same family
+
+The JSON config shipped with GLM-5.3 confirms the architecture quantitatively. The model is a `GlmMoeDsaForCausalLM` with 78 hidden layers, 6,144 hidden size, 12,288 dense intermediate size, 256 routed experts, 1 shared expert, 8 active experts per token, 64 attention heads, a `max_position_embeddings` of 1,048,576, and a 154,880-token vocabulary.[1] That the base is shared with GLM-5.2 is consistent with the config: the architecture string is the same on both sides. The benchmark deltas therefore come from post-training data and recipe, not from a layer-count or hidden-size rewrite. Z.AI’s one-line statement covers exactly that distinction.
+
+A side-by-side with Flash shows the product split. Full GLM-5.3 has 78 layers and a hidden size of 6,144 with 256 routed experts, focused on text. Flash has 45 layers, a hidden size of 4,096, 288 routed experts, mHC, and a 3:1 cadence of linear attention to deepseek-sparse attention in its layer types, with multimodal vision and video.[1][2] Both share the 1M-token context ceiling. The split is deliberate: Flash carries pricing, serving efficiency, and the multimodal loop, while full GLM-5.3 carries long-horizon reasoning and code-heavy agent workloads.
+
+## What the coding and agent numbers actually look like
+
+The vendor’s benchmark table compares GLM-5.3 against GLM-5.2 and six other frontier or near-frontier systems. Reading the coding and agent rows honestly:[1]
+
+### Terminal Bench 2.1
+
+**GLM-5.3**
+88.2
+
+**GLM-5.2**
+81.0
+
+**Opus 4.8**
+85.0
+
+**GPT-5.6 Sol**
+88.8
+
+### Terminal Bench 3.0
+
+**GLM-5.3**
+28.3
+
+**GLM-5.2**
+4.6
+
+**Opus 4.8**
+21.1
+
+**GPT-5.6 Sol**
+34.6
+
+### DeepSWE v1.1
+
+**GLM-5.3**
+66.9
+
+**GLM-5.2**
+46.2
+
+**Opus 4.8**
+58.0
+
+**GPT-5.6 Sol**
+72.7
+
+### Toolathlon Verified
+
+**GLM-5.3**
+73.0
+
+**GLM-5.2**
+59.9
+
+**Opus 4.8**
+76.2
+
+**GPT-5.6 Sol**
+74.9
+
+### AutomationBench v1.0.6
+
+**GLM-5.3**
+48.2
+
+**GLM-5.2**
+26.2
+
+**Opus 4.8**
+41.0
+
+**GPT-5.6 Sol**
+45.8
+
+### Agents’ Last Exam
+
+**GLM-5.3**
+28.5
+
+**GLM-5.2**
+23.8
+
+**Opus 4.8**
+25.7
+
+**GPT-5.6 Sol**
+28.6
+
+### HLE w/ Tools
+
+**GLM-5.3**
+62.5
+
+**GLM-5.2**
+54.7
+
+**Opus 4.8**
+57.9
+
+**GPT-5.6 Sol**
+64.5
+
+The headline “GLM-5.3 wins every coding benchmark” is not what the table says, and the model card does not claim it. On Terminal Bench 2.1 GLM-5.3 trails GPT-5.6 Sol by 0.6 and beats Opus 4.8 by 3.2. On Terminal Bench 3.0 it sits third behind GPT-5.6 Sol and Fable 5. On DeepSWE it sits third behind Fable 5 and GPT-5.6 Sol, ahead of Opus 4.8. On Toolathlon Verified it sits behind Fable 5, Opus 4.8, and Kimi K3. On AutomationBench v1.0.6 it leads the comparable open-weights column and sits ahead of both Opus 4.8 and GPT-5.6 Sol.
+
+What the table does show, without dispute, is that every coding and agent row jumps substantially versus GLM-5.2. The vendor’s framing — same base, all from post-training — is the simplest explanation for that pattern.
+
+[![Same base, post-training gain, and a new license boundary on a single line.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/glm-5-3-concept-editorial-v2.png)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/glm-5-3-concept-editorial-v2.png)
+_Same base, post-training gain, and a new license boundary on a single line._
+
+## Emergent cyber capability: a governance question, not a how-to
+
+The new sentence in the model card is the one about cyber capability. Z.AI writes:[1]
+
+> “Emergent Cyber Capability: As we scaled post-training, cyber capability developed faster than we expected. GLM-5.3 is state of the art on CyberGym for vulnerability discovery, and its gains are largest further up the exploitation chain, where it more than doubles GLM-5.2 on exploitation benchmarks.”
+
+The numbers behind that sentence:[1]
+
+### CyberGym
+
+**GLM-5.3**
+84.5
+
+**GLM-5.2**
+77.2
+
+**Opus 4.8**
+78.1
+
+**GPT-5.6 Sol**
+83.6
+
+### ExploitGym (2h / 6h)
+
+**GLM-5.3**
+105 / 130
+
+**GLM-5.2**
+29 / 39
+
+**Opus 4.8**
+80 / 120
+
+**GPT-5.6 Sol**
+216 / 293
+
+### ExploitBench
+
+**GLM-5.3**
+54.4
+
+**GLM-5.2**
+24.4
+
+**Opus 4.8**
+40.0
+
+**GPT-5.6 Sol**
+76.5
+
+CyberGym at 84.5 is the highest in the table. ExploitBench at 54.4 sits behind Opus 4.8 and GPT-5.6 Sol. ExploitGym at both two-hour and six-hour budgets more than doubles the GLM-5.2 score. Z.AI’s framing — “gains are largest further up the exploitation chain” — matches the gradient: vulnerability discovery gains are large, and the upper stages of the exploitation chain gain more.
+
+Two governance questions need to be separated here.
+
+The first is what it means for an open-weights model to reach this level of cyber capability on vendor-run benchmarks. Cyber capability in this context is measured against vulnerability discovery, exploit-chain reasoning, and CTF-style tasks that have defensive and research use cases. The vendor publishes a higher number; the model card does not describe how to attack systems. This article treats the number as a measurement and stops there. It does not contain offensive instructions, exploit code, target lists, or reproduction recipes.
+
+The second is whether the license imposes any additional constraint on cyber-related use. Reading the GLM-5.3 license text, the only commercial-use condition is the Model-as-a-Service security review for high-revenue operators.[1] There is no cyber-specific clause. The model card’s footnote on the cyber evaluations describes the eval setup (no web tools, domain whitelists, isolated containers) but those controls apply to the evaluation environment, not to the released weights. Governance of cyber-capable open weights therefore lives in operator policy and applicable law, not in license text.
+
+## 1M context and the chat-template details that change cost
+
+Full GLM-5.3 ships with `max_position_embeddings: 1,048,576`.[1] The model card’s note block on the chat template is the practical guide for anyone serving it:
+
+> “GLM-5.3 supports controlling the thinking budget through the reasoning_effort parameter, which accepts three levels: low , high , and max . It defaults to max if not passed (or if set to any other value). To use low or high , pass them explicitly.”[1] “In the chat template for GLM-5.3, clear_thinking defaults to false if not passed. For chat scenarios, explicitly pass clear_thinking=true .”[1]
+
+These two lines matter in production. If `reasoning_effort` is left unset, the model defaults to `max` thinking and burns tokens accordingly. Workloads with budget control need to pass `low` or `high` explicitly. If `clear_thinking` is left unset, the default `false` lets accumulated chain-of-thought persist across turns, which raises context occupancy and latency. Both defaults are defensible for benchmark reproduction, where the model card says to keep `max` and not clear thinking. They are not the defaults a chat operator wants in production.
+
+## Local deployment reality
+
+The serve paths Z.AI lists on the model card are: SGLang, vLLM, TokenSpeed, Transformers, KTransformers, and Unsloth, plus vLLM-Ascend, xLLM, and SGLang on Ascend NPU.[1] The Flash card lists the same frameworks but does not call out Ascend NPU separately.[2] Full GLM-5.3 explicitly calls out Ascend NPU support; Flash does not. That distinction matters for teams planning Chinese-domestic hardware deployments.
+
+What does serving this model actually look like? The 78-layer MoE with 256 routed experts and 8 active experts per token means a single consumer GPU cannot hold the full weight set at usable precision. Practical serving requires multi-GPU or NVLink/PCIe Gen5 host memory, or one of the Ascend NPU paths through vLLM-Ascend, xLLM, or SGLang. Transformers single-device inference is feasible as a reference but not as a production serving path. Unsloth is listed for efficient single-GPU fine-tuning, not single-GPU serving. KTransformers and vLLM are the two paths most teams will reach for first when they want expert-parallel serving on commodity hardware.
+
+The other thing the model card does not advertise but every operator will feel is that 1M-context attention is not free. Memory and latency at long context depend on the attention backend the framework exposes, and SGLang versus vLLM versus KTransformers do not expose the same curve. Teams should measure median, p95, and p99 latency on their own prompt-length distribution rather than trust benchmark numbers.
+
+[![The post-training pipeline runs alignment, tool-use, long-horizon reasoning, then release.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/glm-5-3-mechanism-editorial-v2.png)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/glm-5-3-mechanism-editorial-v2.png)
+_The post-training pipeline runs alignment, tool-use, long-horizon reasoning, then release._
+
+## License boundary: permissive, with one commercial trigger
+
+The GLM-5.3 license opens with a paragraph that reads almost like MIT.[1] Use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the Software; run, deploy, fine-tune, or otherwise modify the Software and create derivative works from it. The differences sit in section two. Z.AI defines Model as a Service as “giving a third party access to language model inference or fine-tuning (e.g., via API) in a manner that allows such third party to exercise meaningful control over the inputs, parameters, or training data.”[1] Two carve-outs exempt embedded product features and pure request relaying.
+
+The trigger then reads:
+
+> “If the Licensee or any of its affiliates operates a Model as a Service business, and the aggregate revenue of the Licensee and its affiliates exceeds 10 billion US dollars (or the equivalent in other currencies) in total over any consecutive 12 months, the Licensee must pass Z.AI’s security review before using the Software or its derivative works for any commercial purpose. The scope and method of the security review shall be reasonably determined by Z.AI.”[1]
+
+Read together, the clause applies when (a) the operator runs an inference or fine-tuning API that gives third parties meaningful control over inputs, parameters, or training data, (b) the operator’s aggregate revenue with affiliates exceeds USD 10 billion in any rolling twelve-month window, and (c) the use is commercial. Embedded product features and simple relay-to-third-party-host traffic are outside the definition, so most embedded and integration use cases do not trigger the review.
+
+The same trigger does not appear on Flash. Flash uses a standard MIT license (`license: mit` in the YAML frontmatter and the MIT header text in `LICENSE`).[2] The split is intentional. The full model is where the largest capability gains and the emergent cyber-capability signal show up, so Z.AI attached a MaaS-only commercial review trigger to it. Flash ships under MIT without that trigger.
+
+An operator in scope should answer two questions before deploying full GLM-5.3 commercially. First, does the operator’s business fit the MaaS definition, or is it embedded-only or relay-only? Second, does the operator’s aggregate revenue with affiliates clear the USD 10 billion rolling-twelve-month bar? Both answers are factual and can be reviewed by counsel. The license text itself is short enough that this is a small diligence task rather than an interpretive one.
+
+## Same base, two products
+
+Putting the two releases side by side makes the product division explicit.[1][2]
+
+### Modality
+
+**GLM-5.3 (full)**
+text-only
+
+**GLM-5.3-Flash**
+native multimodal (text, image, video, file)
+
+### num_hidden_layers
+
+**GLM-5.3 (full)**
+78
+
+**GLM-5.3-Flash**
+45
+
+### hidden_size
+
+**GLM-5.3 (full)**
+6,144
+
+**GLM-5.3-Flash**
+4,096
+
+### n_routed_experts
+
+**GLM-5.3 (full)**
+256
+
+**GLM-5.3-Flash**
+288
+
+### max_position_embeddings
+
+**GLM-5.3 (full)**
+1,048,576
+
+**GLM-5.3-Flash**
+1,048,576
+
+### Attention split
+
+**GLM-5.3 (full)**
+sparse + indexer, MLA-style
+
+**GLM-5.3-Flash**
+3:1 hybrid (linear + deepseek sparse), mHC
+
+### License
+
+**GLM-5.3 (full)**
+custom glm-5.3
+
+**GLM-5.3-Flash**
+MIT
+
+### Release date
+
+**GLM-5.3 (full)**
+2026-08-30
+
+**GLM-5.3-Flash**
+2026-08-26
+
+### Serve stack
+
+**GLM-5.3 (full)**
+SGLang, vLLM, TokenSpeed, Transformers, KTransformers, Unsloth, Ascend NPU
+
+**GLM-5.3-Flash**
+SGLang, vLLM, TokenSpeed, Transformers, KTransformers, Unsloth
+
+Full GLM-5.3 keeps layer count and hidden size high and stays text-only. Flash drops layer count, switches to mHC plus a hybrid attention cadence, picks up multimodal, and ships under MIT. The license split is the governance expression of the cyber-capability signal that surfaced in the full model.
+
+## What a team should do this week
+
+For teams deciding whether to bring this release into a real workload, the shortest useful sequence is:
+
+- Confirm the workload’s modality. Text-only workloads should evaluate full GLM-5.3; multimodal workloads should evaluate Flash.
+
+- Measure the actual long-context demand on the workload. Full GLM-5.3 supports 1M tokens, but the framework’s attention backend determines latency and memory. Re-measure p95 and p99 on the team’s prompt-length distribution rather than rely on published benchmarks.
+
+- Set reasoning_effort and clear_thinking explicitly. Leaving both at their defaults burns more tokens and adds latency than most chat workloads want.
+
+- Walk the license with security and legal before any commercial deployment. Map the MaaS definition and the USD 10 billion rolling-twelve-month threshold against the team’s business lines.
+
+- Run the team’s own acceptance suite against both full GLM-5.3 and Flash. Vendor benchmarks set an expectation but do not transfer accuracy, latency, tool reliability, or memory cost to a specific workload.
+
+- If cyber capability is part of the planned use, close the policy first. Vulnerability analysis should run only against systems the operator owns or has explicit written authorization to test. This article does not contain attack instructions, exploit code, or target lists, and operator policy should keep it that way.
+
+[![The engineering path and the governance path must be walked together to close operational risk.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/glm-5-3-closing-editorial-v2.png)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/08/glm-5-3-closing-editorial-v2.png)
+_The engineering path and the governance path must be walked together to close operational risk._
+
+## What GLM-5.3 leaves behind
+
+GLM-5.3 is evidence that post-training, on top of a stable base, can move a model across coding, agent, and cyber-capability benchmarks in a single generation. The Flash release took the same family into serving efficiency and multimodal. Full GLM-5.3 stayed text-only, kept the layer count high, and absorbed the cyber-capability signal that Z.AI flagged in the model card. That signal then turned into a license clause: a commercial security review for Model-as-a-Service operators above a USD 10 billion revenue threshold, with carve-outs for embedded use and pure relaying.
+
+Two paths fall out of the release. One is the engineering path: pull the weights, read the config, stand up SGLang or vLLM, set `reasoning_effort` and `clear_thinking` explicitly, measure the workload on the team’s own prompts, and decide based on those numbers. The other is the governance path: map the MaaS definition and revenue threshold to the team’s business lines, write the policy around cyber-capable open weights before they enter production, and keep the model’s offensive use out of scope.
+
+Both paths need to be walked together. If only the engineering path is walked, the release becomes an operational risk. If only the governance path is walked, the team misses a model that genuinely improves on what it replaces.
+
+## Sources
+
+[1] Z.AI — GLM-5.3 model card, custom `glm-5.3` license, and `config.json` (Hugging Face)
+
+[https://huggingface.co/zai-org/GLM-5.3](https://huggingface.co/zai-org/GLM-5.3)
+
+[2] Z.AI — GLM-5.3-Flash model card and MIT license (Hugging Face)
+
+[https://huggingface.co/zai-org/GLM-5.3-Flash](https://huggingface.co/zai-org/GLM-5.3-Flash)
+
+[3] Z.AI — GLM-5.3 raw `config.json` (architecture, layer count, expert count, context length)
+
+[https://huggingface.co/zai-org/GLM-5.3/blob/main/config.json](https://huggingface.co/zai-org/GLM-5.3/blob/main/config.json)
+
+*All benchmark and exploitation numbers are vendor-reported by Z.AI. SHawn AI Notes has not independently reproduced these results. Cyber-capability numbers refer to vulnerability discovery and exploitation-chain evaluation scores and do not include offensive instructions, exploit code, or target identification.*
