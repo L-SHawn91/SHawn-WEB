@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-08-30T18:31:02.091Z",
+  "generated_at": "2026-08-31T18:32:02.139Z",
   "mode": "write",
   "sources": [
     {
@@ -8,9 +8,9 @@
       "remote_total": 106,
       "fetched": 106,
       "scanned": 106,
-      "unchanged": 102,
+      "unchanged": 106,
       "updated": 0,
-      "created": 4,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -18,28 +18,28 @@
           "title": "When Ads Enter Conversational AI: Four Boundaries to Check in ChatGPT’s European Expansion",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/30/chatgpt-ads-europe-conversational-ai-boundaries-en/",
           "target": "content/posts/shide-ai-20260830-chatgpt-ads-europe-conversational-ai-boundaries-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1652,
           "title": "대화형 AI에 광고가 들어올 때: ChatGPT Ads 유럽 확장에서 확인할 네 가지 경계",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/30/chatgpt-ads-europe-conversational-ai-boundaries/",
           "target": "content/posts/shide-ai-20260830-chatgpt-ads-europe-conversational-ai-boundaries.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1625,
           "title": "GLM-5.3 Full Open Weights: Same Base as GLM-5.2, New Gains from Post-Training, and an Emergent Cyber-Capability Question",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/30/glm-5-3-open-weights-agent-engineering-en/",
           "target": "content/posts/shide-ai-20260830-glm-5-3-open-weights-agent-engineering-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1624,
           "title": "Z.AI GLM-5.3 풀 오픈웨이트 출시: 같은 base, post-training만으로 얻은 coding·agent·cyber capability",
           "link": "https://shawnaiintelligence.wordpress.com/2026/08/30/glm-5-3-open-weights-agent-engineering/",
           "target": "content/posts/shide-ai-20260830-glm-5-3-open-weights-agent-engineering.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1604,
@@ -762,9 +762,9 @@
       "remote_total": 83,
       "fetched": 83,
       "scanned": 83,
-      "unchanged": 81,
+      "unchanged": 83,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -772,14 +772,14 @@
           "title": "AMN 유전자치료 SBT101 안전성 기록이 시험등록부에 공개됐습니다",
           "link": "https://shawnbiohub.wordpress.com/2026/08/30/amn-gene-therapy-safety-record-kor/",
           "target": "content/posts/shide-bio-20260830-amn-gene-therapy-safety-record-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1503,
           "title": "AMN gene therapy registry posts a small SBT101 safety record",
           "link": "https://shawnbiohub.wordpress.com/2026/08/30/amn-gene-therapy-safety-record/",
           "target": "content/posts/shide-bio-20260830-amn-gene-therapy-safety-record.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1490,
@@ -1352,27 +1352,41 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 141,
-      "fetched": 141,
-      "scanned": 141,
+      "remote_total": 143,
+      "fetched": 143,
+      "scanned": 143,
       "unchanged": 139,
-      "updated": 0,
+      "updated": 2,
       "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 2203,
+          "title": "A Bond-Market Sentiment Headline: Separating Rates, Prices, and Exchange-Rate Risk",
+          "link": "https://shawnassets.wordpress.com/2026/08/31/a-bond-market-sentiment-headline-separating-rates-prices-and-exchange-rate-risk/",
+          "target": "content/posts/shide-assets-20260831-a-bond-market-sentiment-headline-separating-rates-prices-and-exchange-rate-risk.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2202,
+          "title": "9월 채권시장 심리 개선 보도, 금리·물가·환율을 해석하는 순서",
+          "link": "https://shawnassets.wordpress.com/2026/08/31/9%ec%9b%94-%ec%b1%84%ea%b6%8c%ec%8b%9c%ec%9e%a5-%ec%8b%ac%eb%a6%ac-%ea%b0%9c%ec%84%a0-%eb%b3%b4%eb%8f%84-%ea%b8%88%eb%a6%ac%c2%b7%eb%ac%bc%ea%b0%80%c2%b7%ed%99%98%ec%9c%a8%ec%9d%84-%ed%95%b4%ec%84%9d/",
+          "target": "content/posts/shide-assets-20260831-9-ec-9b-94-ec-b1-84-ea-b6-8c-ec-8b-9c-ec-9e-a5-ec-8b-ac-eb-a6-ac-ea-b0-9c-ec-84-a0-eb-b3-b4-eb-8f-84-ea-b8-88-eb-a6-ac-c2-b7-eb-ac-bc-ea-b0-80-c2-b7-ed-99-98-ec-9c-a8-ec-9d-84-ed-95-b4-ec-84-9d.mdx",
+          "mode": "created"
+        },
         {
           "id": 2210,
           "title": "A Property-Tax Reconsideration Headline: What Renters and Owners Should Verify First",
           "link": "https://shawnassets.wordpress.com/2026/08/30/a-property-tax-reconsideration-headline-what-renters-and-owners-should-verify-first/",
           "target": "content/posts/shide-assets-20260830-a-property-tax-reconsideration-headline-what-renters-and-owners-should-verify-first.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 2209,
           "title": "부동산 세제개편 재검토 보도, 전세와 세 부담을 읽기 전 확인할 것",
           "link": "https://shawnassets.wordpress.com/2026/08/30/%eb%b6%80%eb%8f%99%ec%82%b0-%ec%84%b8%ec%a0%9c%ea%b0%9c%ed%8e%b8-%ec%9e%ac%ea%b2%80%ed%86%a0-%eb%b3%b4%eb%8f%84-%ec%a0%84%ec%84%b8%ec%99%80-%ec%84%b8-%eb%b6%80%eb%8b%b4%ec%9d%84-%ec%9d%bd%ea%b8%b0/",
           "target": "content/posts/shide-assets-20260830-eb-b6-80-eb-8f-99-ec-82-b0-ec-84-b8-ec-a0-9c-ea-b0-9c-ed-8e-b8-ec-9e-ac-ea-b2-80-ed-86-a0-eb-b3-b4-eb-8f-84-ec-a0-84-ec-84-b8-ec-99-80-ec-84-b8-eb-b6-80-eb-8b-b4-ec-9d-84-ec-9d-bd-ea-b8-b0.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 2192,
@@ -2351,12 +2365,12 @@
     }
   ],
   "totals": {
-    "remote": 330,
-    "scanned": 330,
-    "unchanged": 322,
-    "updated": 0,
-    "created": 8,
+    "remote": 332,
+    "scanned": 332,
+    "unchanged": 328,
+    "updated": 2,
+    "created": 2,
     "removed": 0,
-    "changed": 8
+    "changed": 4
   }
 }
