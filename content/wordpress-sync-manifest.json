@@ -1,18 +1,32 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-08-31T18:32:02.139Z",
+  "generated_at": "2026-09-01T18:31:52.094Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 106,
-      "fetched": 106,
-      "scanned": 106,
+      "remote_total": 108,
+      "fetched": 108,
+      "scanned": 108,
       "unchanged": 106,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1679,
+          "title": "OpenAI Is Winding Down Its Cursor Model Contract: Where Coding-Agent Dependency Really Lives",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/09/01/openai-cursor-spacex-model-supply-dependency-en/",
+          "target": "content/posts/shide-ai-20260901-openai-cursor-spacex-model-supply-dependency-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1678,
+          "title": "OpenAI가 Cursor 모델 공급을 접는다고 했다: 코딩 에이전트의 진짜 종속성은 어디에 있나",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/09/01/openai-cursor-spacex-model-supply-dependency/",
+          "target": "content/posts/shide-ai-20260901-openai-cursor-spacex-model-supply-dependency.mdx",
+          "mode": "created"
+        },
         {
           "id": 1653,
           "title": "When Ads Enter Conversational AI: Four Boundaries to Check in ChatGPT’s European Expansion",
@@ -1352,41 +1366,69 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 143,
-      "fetched": 143,
-      "scanned": 143,
-      "unchanged": 139,
-      "updated": 2,
-      "created": 2,
+      "remote_total": 147,
+      "fetched": 147,
+      "scanned": 147,
+      "unchanged": 143,
+      "updated": 0,
+      "created": 4,
       "removed": 0,
       "items": [
+        {
+          "id": 2315,
+          "title": "What Do “Stock, Housing and Inflation Anxiety” Claims Measure in Korea?",
+          "link": "https://shawnassets.wordpress.com/2026/09/01/what-do-stock-housing-and-inflation-anxiety-claims-measure-in-korea/",
+          "target": "content/posts/shide-assets-20260901-what-do-stock-housing-and-inflation-anxiety-claims-measure-in-korea.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2314,
+          "title": "“주식·주택·물가 불안”은 무엇을 뜻하나: 서로 다른 공식 지표로 읽는 한국",
+          "link": "https://shawnassets.wordpress.com/2026/09/01/%ec%a3%bc%ec%8b%9d%c2%b7%ec%a3%bc%ed%83%9d%c2%b7%eb%ac%bc%ea%b0%80-%eb%b6%88%ec%95%88%ec%9d%80-%eb%ac%b4%ec%97%87%ec%9d%84-%eb%9c%bb%ed%95%98%eb%82%98-%ec%84%9c%eb%a1%9c-%eb%8b%a4/",
+          "target": "content/posts/shide-assets-20260901-ec-a3-bc-ec-8b-9d-c2-b7-ec-a3-bc-ed-83-9d-c2-b7-eb-ac-bc-ea-b0-80-eb-b6-88-ec-95-88-ec-9d-80-eb-ac-b4-ec-97-87-ec-9d-84-eb-9c-bb-ed-95-98-eb-82-98-ec-84-9c-eb-a1-9c-eb-8b-a4.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2283,
+          "title": "Korea’s National Growth Fund: Separating Approval, Equity, Loans, and Execution",
+          "link": "https://shawnassets.wordpress.com/2026/09/01/koreas-national-growth-fund-separating-approval-equity-loans-and-execution/",
+          "target": "content/posts/shide-assets-20260901-koreas-national-growth-fund-separating-approval-equity-loans-and-execution.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2282,
+          "title": "국민성장펀드 1조6천억 원 승인, 투자·대출·집행을 구분해 읽는 법",
+          "link": "https://shawnassets.wordpress.com/2026/09/01/%ea%b5%ad%eb%af%bc%ec%84%b1%ec%9e%a5%ed%8e%80%eb%93%9c-1%ec%a1%b06%ec%b2%9c%ec%96%b5-%ec%9b%90-%ec%8a%b9%ec%9d%b8-%ed%88%ac%ec%9e%90%c2%b7%eb%8c%80%ec%b6%9c%c2%b7%ec%a7%91%ed%96%89%ec%9d%84-%ea%b5%ac/",
+          "target": "content/posts/shide-assets-20260901-ea-b5-ad-eb-af-bc-ec-84-b1-ec-9e-a5-ed-8e-80-eb-93-9c-1-ec-a1-b06-ec-b2-9c-ec-96-b5-ec-9b-90-ec-8a-b9-ec-9d-b8-ed-88-ac-ec-9e-90-c2-b7-eb-8c-80-ec-b6-9c-c2-b7-ec-a7-91-ed-96-89-ec-9d-84-ea-b5-ac.mdx",
+          "mode": "created"
+        },
         {
           "id": 2203,
           "title": "A Bond-Market Sentiment Headline: Separating Rates, Prices, and Exchange-Rate Risk",
           "link": "https://shawnassets.wordpress.com/2026/08/31/a-bond-market-sentiment-headline-separating-rates-prices-and-exchange-rate-risk/",
           "target": "content/posts/shide-assets-20260831-a-bond-market-sentiment-headline-separating-rates-prices-and-exchange-rate-risk.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2202,
           "title": "9월 채권시장 심리 개선 보도, 금리·물가·환율을 해석하는 순서",
           "link": "https://shawnassets.wordpress.com/2026/08/31/9%ec%9b%94-%ec%b1%84%ea%b6%8c%ec%8b%9c%ec%9e%a5-%ec%8b%ac%eb%a6%ac-%ea%b0%9c%ec%84%a0-%eb%b3%b4%eb%8f%84-%ea%b8%88%eb%a6%ac%c2%b7%eb%ac%bc%ea%b0%80%c2%b7%ed%99%98%ec%9c%a8%ec%9d%84-%ed%95%b4%ec%84%9d/",
           "target": "content/posts/shide-assets-20260831-9-ec-9b-94-ec-b1-84-ea-b6-8c-ec-8b-9c-ec-9e-a5-ec-8b-ac-eb-a6-ac-ea-b0-9c-ec-84-a0-eb-b3-b4-eb-8f-84-ea-b8-88-eb-a6-ac-c2-b7-eb-ac-bc-ea-b0-80-c2-b7-ed-99-98-ec-9c-a8-ec-9d-84-ed-95-b4-ec-84-9d.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2210,
           "title": "A Property-Tax Reconsideration Headline: What Renters and Owners Should Verify First",
           "link": "https://shawnassets.wordpress.com/2026/08/30/a-property-tax-reconsideration-headline-what-renters-and-owners-should-verify-first/",
           "target": "content/posts/shide-assets-20260830-a-property-tax-reconsideration-headline-what-renters-and-owners-should-verify-first.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 2209,
           "title": "부동산 세제개편 재검토 보도, 전세와 세 부담을 읽기 전 확인할 것",
           "link": "https://shawnassets.wordpress.com/2026/08/30/%eb%b6%80%eb%8f%99%ec%82%b0-%ec%84%b8%ec%a0%9c%ea%b0%9c%ed%8e%b8-%ec%9e%ac%ea%b2%80%ed%86%a0-%eb%b3%b4%eb%8f%84-%ec%a0%84%ec%84%b8%ec%99%80-%ec%84%b8-%eb%b6%80%eb%8b%b4%ec%9d%84-%ec%9d%bd%ea%b8%b0/",
           "target": "content/posts/shide-assets-20260830-eb-b6-80-eb-8f-99-ec-82-b0-ec-84-b8-ec-a0-9c-ea-b0-9c-ed-8e-b8-ec-9e-ac-ea-b2-80-ed-86-a0-eb-b3-b4-eb-8f-84-ec-a0-84-ec-84-b8-ec-99-80-ec-84-b8-eb-b6-80-eb-8b-b4-ec-9d-84-ec-9d-bd-ea-b8-b0.mdx",
-          "mode": "updated"
+          "mode": "unchanged"
         },
         {
           "id": 2192,
@@ -2365,12 +2407,12 @@
     }
   ],
   "totals": {
-    "remote": 332,
-    "scanned": 332,
-    "unchanged": 328,
-    "updated": 2,
-    "created": 2,
+    "remote": 338,
+    "scanned": 338,
+    "unchanged": 332,
+    "updated": 0,
+    "created": 6,
     "removed": 0,
-    "changed": 4
+    "changed": 6
   }
 }
