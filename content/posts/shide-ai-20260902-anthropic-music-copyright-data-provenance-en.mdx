@@ -1,0 +1,139 @@
+---
+title: "Sony and Warner Chappell Sue Anthropic: Why AI Copyright Risk Turns on the Data Path, Not Just Training"
+date: "2026-09-02"
+description: "The music publishers’ new case against Anthropic is a complaint, not a judgment. Following its separate allegations about acquisition, training, outputs, and rights metadata sho..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/09/hero-2.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/09/02/anthropic-music-copyright-data-provenance-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1703"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/09/02/anthropic-music-copyright-data-provenance-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/09/02/anthropic-music-copyright-data-provenance/) / **EN · English** BILINGUAL PAIR
+
+Music publishers including Sony Music Publishing and Warner Chappell Music filed a complaint against Anthropic and two of its co-founders in the U.S. District Court for the Northern District of California on August 28, 2026. The publishers allege that copyrighted musical works were acquired, copied, used in model development, and reproduced in Claude outputs without authorization. Anthropic told TechCrunch that it disagrees with the claims and intends to defend itself in court.
+
+Reducing this event to “Is AI training legal or illegal?” hides the questions that matter most to people building AI systems. A complaint is not a judgment. The word *training* also compresses several different activities: acquiring source material, curating a corpus, running model training, testing outputs, preserving attribution, and responding to licensing changes. The practical issue is whether a team can explain the path a work followed from source to system—and support that explanation with records.
+
+## Start with what was filed and what has not been decided
+
+The complaint’s cover identifies case `5:26-cv-09217`, a filing date of August 28, 2026, and the U.S. District Court for the Northern District of California, San Jose Division. The plaintiffs include Sony Music Publishing (US) LLC, Warner Chappell Music, Inc., and affiliated publishers. The defendants are Anthropic PBC, Dario Amodei, and Benjamin Mann. The 48-page filing is primary evidence of what the plaintiffs alleged and what relief they requested.
+
+It is not evidence that every allegation has been proved. The court has not decided which works were present in which datasets, what each defendant knew or directed, whether particular copying qualifies as fair use, whether any output infringed protected expression, or what damages would be appropriate. Anthropic’s short public response is also not a full answer to the complaint or a detailed account of its legal defense.
+
+The accurate description is narrower. Music publishers have filed a case alleging several kinds of unauthorized acquisition, copying, training, output, and copyright-information handling. Anthropic disputes the claims. Liability, intent, the affected works, and any remedy remain undecided in this new case.
+
+## The complaint separates four routes instead of making one generic claim
+
+The filing pleads four causes of action. The first alleges direct copyright infringement through torrenting against all defendants. The second alleges contributory infringement through torrenting against Amodei and Mann. The third alleges direct infringement by Anthropic across several routes, including scraping, third-party datasets, physical scanning, model training, and outputs. The fourth alleges removal or alteration of copyright management information by Anthropic.
+
+That separation matters because a conclusion about one route does not automatically settle the others. The way a file was acquired is a different question from whether analyzing a lawfully held copy is fair use. A general explanation that a model learns statistical patterns is not the same as an assessment of whether a particular output reproduces protected expression. A filter that blocks a lyric request does not by itself answer how the source material entered a corpus.
+
+Headlines often merge these routes into one sentence: an AI company “trained on songs.” A responsible data program needs a more precise map. At minimum, it should distinguish acquisition, storage, transformation, training, evaluation, output behavior, and rights metadata. Each stage can require different evidence, permissions, controls, and remediation.
+
+## “Visible on the internet” is not a complete rights category
+
+Online content arrives under very different conditions. A work may be posted by its owner, displayed by a licensed service, placed in the public domain, distributed under a limited dataset license, copied without permission, or passed through several intermediaries with no reliable provenance. The fact that a browser can retrieve it does not by itself answer whether it may be copied at scale, redistributed, or used in a commercial training pipeline.
+
+The publishers allege that Anthropic copied lyrics from services authorized to display them but not to grant a separate training license. That allegation will have to be tested in court. The operational lesson does not require assuming that it is true: a field marked `publicly available` describes accessibility, not the full rights status or acquisition history of a record.
+
+A useful dataset entry therefore needs more than a URL. It should preserve the provider, the collection date, the applicable terms or license, the permitted uses, the collection method, stable identifiers for the original and transformed record, the datasets and training runs that consumed it, and a route for responding to later rights changes. A large corpus with no such links may look cheap during experimentation and become extremely expensive when a work-level question arrives.
+
+[![Source, license, training, and output should remain separate records rather than disappearing inside the word training.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/09/concept-2.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/09/concept-2.webp)
+_Source, license, training, and output should remain separate records rather than disappearing inside the word training._
+
+## The U.S. Copyright Office also treats source, purpose, and outputs as connected facts
+
+The U.S. Copyright Office’s May 2025 report on generative AI training does not decide this lawsuit or any other pending case. It offers a framework for applying existing copyright law and fair use. The Office says the analysis can depend on which works were used, where they came from, the purpose of the use, the controls placed on outputs, and the effect on relevant markets.
+
+That is different from either slogan at the edge of the debate. The report does not say that all AI training is fair use. It also does not say that all AI training infringes copyright. Research or analytical uses that do not substitute for expressive works can present a different case from commercial use of large collections to produce competing expression. The Office specifically observes that commercial uses built on vast troves of copyrighted works, especially when illegal access is involved, can go beyond established fair-use boundaries.
+
+Those observations are not a verdict against Anthropic. Courts decide cases based on the record, the parties’ arguments, and the applicable law. The report is useful because it gives teams four questions to carry into system design: source, purpose, output controls, and market context. “We trained a model” is not enough detail to answer any of them.
+
+## Training evidence and output evidence are related but not interchangeable
+
+An allegation that a work was present in training data and an allegation that a model reproduced part of that work may be connected. One does not automatically prove the other. Outputs can vary with the model version, system instructions, prompt, sampling settings, retrieval tools, filters, and post-processing. A single generated passage may not establish ordinary model behavior. A reproducible pattern still needs a careful comparison with protected and unprotected elements.
+
+The reverse is also important. Strong output filters do not erase questions about acquisition and storage. Filters can reduce the chance that protected text reaches a user, but they do not prove that upstream copies were acquired lawfully. Likewise, a lawfully licensed training corpus does not guarantee that every output is safe if a product repeatedly reproduces protected expression.
+
+Teams should preserve these evidence layers separately. Training records should link dataset versions, work identifiers, licenses, transformations, and run IDs. Output records should identify the model version, evaluation purpose, controlled test conditions, similarity assessment, and the action taken. Public documentation should not include prompts designed to elicit copyrighted lyrics. Evaluation can use authorized material in a restricted environment without turning an article or checklist into a reproduction guide.
+
+## Copyright management information is part of provenance, not decorative text
+
+The complaint’s fourth claim concerns copyright management information, often called CMI. Depending on the context, this can include titles, author names, copyright-owner names, notices, and other information that connects a work to its rights holder. The publishers allege that Anthropic’s text-cleaning processes removed or altered such information. That remains an allegation to be proved.
+
+The issue is familiar to data engineers even when they do not use copyright terminology. Repeated headers, footers, credits, and notices can look like noise. A cleaning pipeline may remove them to save tokens or reduce duplication. But a string that is repetitive for model training can still be essential for identifying a work, honoring a license, processing an exclusion, or calculating compensation.
+
+A better design preserves the raw source, the transformation rules, the fields removed, and a mapping between raw and derived records. The text sent to a model can be minimized while a restricted audit store keeps the rights connection intact. Data minimization and provenance are not opposites. They require different access controls, retention periods, and purposes.
+
+[![Stable identifiers should connect the raw record, rights basis, model run, and audit history.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/09/mechanism-2.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/09/mechanism-2.webp)
+_Stable identifiers should connect the raw record, rights basis, model run, and audit history._
+
+## A practical provenance ledger needs seven connected answers
+
+First, identify what was collected at the work or record level. Second, record where it came from, including the original provider and the actual delivery route. Third, preserve when and how it was collected. Fourth, connect the record to the legal or contractual basis for the intended use.
+
+Fifth, record transformations such as cleaning, deduplication, filtering, and metadata removal, including the version of each process. Sixth, connect each derived dataset to the models, evaluations, indexes, or products that used it. Seventh, define what happens when a license changes or a rights holder raises a credible objection: which raw copies, derivatives, caches, retrieval indexes, evaluation sets, and model runs can the team locate?
+
+This does not require one enormous spreadsheet. An object store, data catalog, license registry, experiment tracker, model registry, and evaluation store can be linked through stable identifiers. The choice of software matters less than the ability to answer a work-level question across the chain.
+
+Consider a hypothetical supplier delivering one million text records under a contract that permits commercial language-model training but prohibits third-party redistribution and verbatim output. The team must separate permission to train from controls on the product. If the rights status of a subset later changes, the team should be able to identify the affected dataset versions and models. Without those links, it cannot tell whether the response requires removing a retrieval record, changing an output control, retraining a model, or taking some combination of actions.
+
+## Licensing is important, but it does not repair unknown provenance by itself
+
+The Copyright Office notes that voluntary licensing may be workable in sectors where valuable content can be licensed in relatively large packages, including popular music and stock photography. Collective arrangements can reduce the number of individual transactions. Music publishing also has established rights organizations and commercial licensing practices that may support new forms of AI agreements.
+
+A license, however, does not automatically clean every older dataset or answer every rights question. Scope can vary by work, right, territory, term, model, output behavior, sublicensing rule, and deletion obligation. A musical composition and a particular sound recording can also involve different rights even when listeners think of them as the same song.
+
+Procurement teams should read beyond the phrase “AI training permitted.” Data teams need to bind contract identifiers to records and dataset versions. Product teams need controls for outputs or redistribution that the license does not permit. Legal teams need to know whether the technical system can carry out an exclusion or deletion obligation. When contracts and engineering records remain separate, a company can possess a license and still struggle to prove compliance.
+
+## Smaller teams can reduce risk without building a giant legal platform
+
+A startup cannot map every complicated rights relationship on day one. It can still avoid making unexplained corpora the default. Early experiments can prioritize public-domain works, directly created material, explicit licenses, and datasets whose terms match the intended use. Supplier contracts can require source provenance, authorized-use representations, notice of disputes, deletion support, and information about upstream providers.
+
+Prototype and production data should also be separated. Material allowed in a limited internal experiment should not flow automatically into a customer-facing commercial service. Before production, a team can freeze the dataset and model versions, run representative rights-risk evaluations, define controls against verbatim output, and identify where a person must review an exception.
+
+The unsafe shortcuts are assumptions: that models do not retain anything meaningful, that material found on the web is free for any use, or that a vendor’s dataset label settles downstream obligations. When the basis for using a source is uncertain, the safer move is to quarantine it, narrow the purpose, or wait for better documentation. This is not a call to stop innovation. It is a way to avoid making unexplainable dependencies part of the product.
+
+## Watch the evidence chain, not the largest theoretical damages headline
+
+The complaint requests statutory relief up to the legal maximum, including up to $150,000 per work for willful infringement under 17 U.S.C. §504(c). Multiplying that ceiling by the plaintiffs’ description of “tens of thousands” of compositions produces an enormous theoretical figure. It does not produce a judgment or a reliable liability estimate.
+
+The number of eligible works, registration status, liability, willfulness, available remedies, and the relationship between different claims all remain subject to litigation. “Up to” is not “owed.” A useful article should explain the request without presenting the largest multiplication as a balance-sheet fact.
+
+The next important materials will be court orders, Anthropic’s formal response, the scope of discovery, evidence connecting specific works to datasets and outputs, and the way earlier decisions are applied. More detailed public documentation from Anthropic about data provenance and output controls would also matter. The four routes pleaded in the complaint may remain connected, or the record may separate acquisition, training, output, and CMI into different factual and legal outcomes.
+
+[![An explainable provenance ledger connects data procurement, model operations, output controls, and rights requests.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/09/closing-2.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/09/closing-2.webp)
+_An explainable provenance ledger connects data procurement, model operations, output controls, and rights requests._
+
+## The durable lesson is an explainable data supply chain
+
+This lawsuit does not require readers to choose immediately between “AI” and “creators.” Treating an undecided case as a referendum hides both the legal uncertainty and the engineering problem. The question already belongs in product operations: What was collected, from where, under which terms, transformed how, used in which model, and controlled at which output surface?
+
+A provenance ledger is not a document created only after litigation starts. It is a product capability connecting data procurement, model development, release controls, and rights requests through stable evidence. When competition focused mostly on corpus size, provenance could look like friction. As rights, licensing, and supplier risk become part of model quality, an explainable path is what preserves speed, trust, and the ability to change course.
+
+## Sources
+
+- Filed complaint — Sony Music Publishing and Warner Chappell Music v. Anthropic et al.
+
+- U.S. Copyright Office — Copyright and Artificial Intelligence
+
+- U.S. Copyright Office — Part 3: Generative AI Training
+
+- Anthropic — Transparency Hub
+
+- TechCrunch — Sony Music, Warner sue Anthropic
+
+- Reuters — Sony, Warner Music sue Anthropic
+
+## Disclaimer
+
+This article is a technology and operations explainer based on a public complaint, government reports, company disclosures, and news reporting. It is not legal advice or a prediction of the case. The complaint’s allegations have not been decided by the court. Decisions about actual data use and copyright require the specific facts, contracts, applicable law, and current court record.

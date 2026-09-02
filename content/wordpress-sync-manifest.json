@@ -1,31 +1,45 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-09-01T18:31:52.094Z",
+  "generated_at": "2026-09-02T18:31:37.771Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 108,
-      "fetched": 108,
-      "scanned": 108,
-      "unchanged": 106,
+      "remote_total": 110,
+      "fetched": 110,
+      "scanned": 110,
+      "unchanged": 108,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 1703,
+          "title": "Sony and Warner Chappell Sue Anthropic: Why AI Copyright Risk Turns on the Data Path, Not Just Training",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/09/02/anthropic-music-copyright-data-provenance-en/",
+          "target": "content/posts/shide-ai-20260902-anthropic-music-copyright-data-provenance-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1702,
+          "title": "Sony·Warner Chappell의 Anthropic 소송: AI 저작권 위험은 왜 ‘학습’보다 데이터 경로에서 갈리는가",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/09/02/anthropic-music-copyright-data-provenance/",
+          "target": "content/posts/shide-ai-20260902-anthropic-music-copyright-data-provenance.mdx",
+          "mode": "created"
+        },
+        {
           "id": 1679,
           "title": "OpenAI Is Winding Down Its Cursor Model Contract: Where Coding-Agent Dependency Really Lives",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/01/openai-cursor-spacex-model-supply-dependency-en/",
           "target": "content/posts/shide-ai-20260901-openai-cursor-spacex-model-supply-dependency-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1678,
           "title": "OpenAI가 Cursor 모델 공급을 접는다고 했다: 코딩 에이전트의 진짜 종속성은 어디에 있나",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/01/openai-cursor-spacex-model-supply-dependency/",
           "target": "content/posts/shide-ai-20260901-openai-cursor-spacex-model-supply-dependency.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1653,
@@ -773,14 +787,28 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 83,
-      "fetched": 83,
-      "scanned": 83,
+      "remote_total": 85,
+      "fetched": 85,
+      "scanned": 85,
       "unchanged": 83,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1520,
+          "title": "탈케타맙 중국 다발골수종 코호트에서 치료 관련 이상반응 보고",
+          "link": "https://shawnbiohub.wordpress.com/2026/09/02/talquetamab-china-cohort-safety-report-kor/",
+          "target": "content/posts/shide-bio-20260902-talquetamab-china-cohort-safety-report-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1518,
+          "title": "Talquetamab China cohort safety report details mostly mild GPRC5D-related adverse events",
+          "link": "https://shawnbiohub.wordpress.com/2026/09/02/talquetamab-china-cohort-safety-report/",
+          "target": "content/posts/shide-bio-20260902-talquetamab-china-cohort-safety-report.mdx",
+          "mode": "created"
+        },
         {
           "id": 1505,
           "title": "AMN 유전자치료 SBT101 안전성 기록이 시험등록부에 공개됐습니다",
@@ -1369,9 +1397,9 @@
       "remote_total": 147,
       "fetched": 147,
       "scanned": 147,
-      "unchanged": 143,
+      "unchanged": 147,
       "updated": 0,
-      "created": 4,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -1379,28 +1407,28 @@
           "title": "What Do “Stock, Housing and Inflation Anxiety” Claims Measure in Korea?",
           "link": "https://shawnassets.wordpress.com/2026/09/01/what-do-stock-housing-and-inflation-anxiety-claims-measure-in-korea/",
           "target": "content/posts/shide-assets-20260901-what-do-stock-housing-and-inflation-anxiety-claims-measure-in-korea.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2314,
           "title": "“주식·주택·물가 불안”은 무엇을 뜻하나: 서로 다른 공식 지표로 읽는 한국",
           "link": "https://shawnassets.wordpress.com/2026/09/01/%ec%a3%bc%ec%8b%9d%c2%b7%ec%a3%bc%ed%83%9d%c2%b7%eb%ac%bc%ea%b0%80-%eb%b6%88%ec%95%88%ec%9d%80-%eb%ac%b4%ec%97%87%ec%9d%84-%eb%9c%bb%ed%95%98%eb%82%98-%ec%84%9c%eb%a1%9c-%eb%8b%a4/",
           "target": "content/posts/shide-assets-20260901-ec-a3-bc-ec-8b-9d-c2-b7-ec-a3-bc-ed-83-9d-c2-b7-eb-ac-bc-ea-b0-80-eb-b6-88-ec-95-88-ec-9d-80-eb-ac-b4-ec-97-87-ec-9d-84-eb-9c-bb-ed-95-98-eb-82-98-ec-84-9c-eb-a1-9c-eb-8b-a4.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2283,
           "title": "Korea’s National Growth Fund: Separating Approval, Equity, Loans, and Execution",
           "link": "https://shawnassets.wordpress.com/2026/09/01/koreas-national-growth-fund-separating-approval-equity-loans-and-execution/",
           "target": "content/posts/shide-assets-20260901-koreas-national-growth-fund-separating-approval-equity-loans-and-execution.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2282,
           "title": "국민성장펀드 1조6천억 원 승인, 투자·대출·집행을 구분해 읽는 법",
           "link": "https://shawnassets.wordpress.com/2026/09/01/%ea%b5%ad%eb%af%bc%ec%84%b1%ec%9e%a5%ed%8e%80%eb%93%9c-1%ec%a1%b06%ec%b2%9c%ec%96%b5-%ec%9b%90-%ec%8a%b9%ec%9d%b8-%ed%88%ac%ec%9e%90%c2%b7%eb%8c%80%ec%b6%9c%c2%b7%ec%a7%91%ed%96%89%ec%9d%84-%ea%b5%ac/",
           "target": "content/posts/shide-assets-20260901-ea-b5-ad-eb-af-bc-ec-84-b1-ec-9e-a5-ed-8e-80-eb-93-9c-1-ec-a1-b06-ec-b2-9c-ec-96-b5-ec-9b-90-ec-8a-b9-ec-9d-b8-ed-88-ac-ec-9e-90-c2-b7-eb-8c-80-ec-b6-9c-c2-b7-ec-a7-91-ed-96-89-ec-9d-84-ea-b5-ac.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2203,
@@ -2407,12 +2435,12 @@
     }
   ],
   "totals": {
-    "remote": 338,
-    "scanned": 338,
-    "unchanged": 332,
+    "remote": 342,
+    "scanned": 342,
+    "unchanged": 338,
     "updated": 0,
-    "created": 6,
+    "created": 4,
     "removed": 0,
-    "changed": 6
+    "changed": 4
   }
 }
