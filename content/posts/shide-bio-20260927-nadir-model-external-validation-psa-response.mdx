@@ -1,0 +1,88 @@
+---
+title: "External validation of the NADIR model reports AUC 0.80 for early PSA response in ARCHES"
+date: "2026-09-27"
+description: "A new external validation tested the locked NADIR model in 558 enzalutamide-treated patients from the ARCHES cohort. The model showed an AUC of 0.80, while the authors said pros..."
+category: "Bio Notes"
+tags: ["Bio","Science","Evidence","bio"]
+featured: false
+image: "https://shawnbiohub.wordpress.com/wp-content/uploads/2026/09/image-e112efbb3a5dfe92-en-featured-4x3-bc29bc75ddbd.png"
+source: "SHawn Bio WordPress"
+sourceUrl: "https://shawnbiohub.wordpress.com/2026/09/27/nadir-model-external-validation-psa-response/"
+wordpressStatus: "publish"
+wordpressSite: "shawnbiohub.wordpress.com"
+wordpressId: "1741"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnbiohub.wordpress.com/2026/09/27/nadir-model-external-validation-psa-response/)
+
+Authors of the paper  reported in a  Cancer validation article newly indexed by PubMed  on  September 26, 2026  that the locked NADIR model was assessed in  558 enzalutamide-treated patients with metastatic hormone-sensitive prostate cancer  and  identified early PSA-response patterns in the ARCHES cohort .  The result does not show that using the model changes treatment or improves survival ;  it suggests a possible way to separate early response risk while prospective model-guided treatment testing is still needed .
+
+The new PubMed record dated  September 26, 2026  makes this external validation available for readers to check alongside the model’s still-unanswered prospective-treatment question.
+
+ 558 analyzed  complete-predictor patients
+
+ 64% early response  PSA threshold response in the analyzed group
+
+ AUC 0.80  95% CI, 0.76-0.83
+
+[ENG](https://shawnbiohub.wordpress.com/2026/09/27/nadir-model-external-validation-psa-response/)[KOR](https://shawnbiohub.wordpress.com/2026/09/27/nadir-model-external-validation-psa-response-kor/)
+
+![Clinician and patient in a conceptual clinical model validation scene](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/09/image-d024cf124ca4e05a-bc29bc75ddbd.webp)
+
+_AI-generated conceptual illustration; not study data._
+
+## The model was tested in a distinct treatment cohort
+
+The NADIR model was built to estimate whether a patient receiving an androgen-receptor pathway inhibitor would reach an early favorable prostate-specific antigen response. In this paper, the researchers did not unlock the model and tune it again. They carried the locked version into an independent ARCHES cohort, which is the important point for a validation study: the question is whether a model travels to a different set of patients without being rebuilt around the new data.
+
+ **Study design:** independent external validation of a locked multivariable prediction model.
+
+ **Source cohort:** 574 enzalutamide-treated patients.
+
+ **Model analysis:** 558 patients with complete predictors.
+
+ **Target outcome:** PSA at or below 0.2 ng/mL by 6 months.
+
+That design separates two questions that are easy to mix together. First, can the model classify early PSA response in a new cohort? Second, would changing treatment because of that prediction help patients? This article answers only the first question, with an additional observational analysis of survival. It does not test a NADIR-guided treatment arm against a usual-care arm.
+
+Among the 558 patients who had complete predictors, 359 had an early favorable PSA response, reported as 64%. The denominator is the complete-predictor analysis group, not all 574 people originally treated. That distinction matters because a percentage can look more precise than it is when the reader loses the path from the source cohort to the analyzed cohort.
+
+![Conceptual clinical follow-up scene for an external validation cohort](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/09/image-6fb59016c37c88d2-bc29bc75ddbd.webp)
+
+_AI-generated conceptual illustration; not study data._
+
+## Prediction separated response patterns, not treatment effects
+
+The model’s discrimination was reported with an area under the receiver operating characteristic curve of 0.80, with a 95% confidence interval of 0.76-0.83.  AUC describes how well a model ranks people with and without an outcome.  It is not the percentage of patients who will respond, and it is not a guarantee for one person.
+
+Calibration and overall prediction error were also examined. The reported Brier score was 0.17 and the index of prediction accuracy was 25%; the recalibration intercept was 0.026 and the slope was 0.97. These measures ask whether predicted probabilities sit near the event rates that were observed. They are useful checks because a model can rank patients reasonably well while still giving probabilities that are systematically too high or too low.
+
+When the researchers divided predictions into decreasing probability tertiles, the observed response rates were 92%, 64%, and 37%. This gradient is the clearest reader-facing signal in the paper: the model sorted the cohort into groups with different rates of early PSA response. It does not mean that a patient in one group will respond, or that moving a patient into another group through treatment is possible.
+
+The landmark survival analysis adds context but not a treatment claim. In 547 patients, including 177 deaths, each 10-percentage-point increase in predicted probability was associated with lower mortality, with a hazard ratio of 0.90 and a 95% confidence interval of 0.85-0.96.  Calibration checks whether predicted risks agree with the rates seen in the data.  This association can support prognostic stratification; it cannot show that the model caused a survival difference or that enzalutamide worked better because the model was used.
+
+## The analysis measures prediction, not a new treatment benefit
+
+The first limitation is the denominator. The model performance results use 558 patients with complete predictors, while the landmark survival analysis uses 547 patients. The 177 deaths belong to that landmark analysis. They are not an adverse-event total, and they should not be presented as a safety result for enzalutamide or for the prediction model.
+
+The second limitation is the study question. Patients were already treated in the ARCHES setting; the paper did not randomize participants to receive care with or without the NADIR model. That means the response gradient and the mortality association describe what happened in an existing cohort. They do not estimate the benefit, harm, or fairness of changing a patient’s treatment after seeing a model score.
+
+Safety needs the same boundary. This source is a prognostic-model external-validation analysis, not a comparative safety trial. It does not provide an adverse-event comparison for model-guided care, and the mortality association should not be converted into a promise of longer life or a statement about individual risk. The authors also leave prospective validation of model-guided treatment adaptation as the next requirement.
+
+![Conceptual oncology team reviewing prediction and prospective validation questions](https://shawnbiohub.wordpress.com/wp-content/uploads/2026/09/image-10c83356dc126418-bc29bc75ddbd.webp)
+
+_AI-generated conceptual illustration; not study data._
+
+## Prospective testing is the next clinical question
+
+The paper supports a narrower conclusion than a headline about a new therapy. A locked model showed useful discrimination, calibration, and response stratification in a distinct enzalutamide-treated cohort. That makes it reasonable to ask whether the model can help enrich a future trial or identify groups that need closer follow-up. It does not justify using the score by itself to start, stop, or change treatment.
+
+A prospective study would need to set the prediction rule before outcomes are known, define how missing predictors are handled, and state what clinical decision the score is allowed to influence. It would also need to test calibration in populations that differ from ARCHES and report whether model-guided decisions improve outcomes without creating unequal burdens. Those are design questions, not details that can be recovered from this validation result.
+
+The answer to the opening question is therefore modest but useful: NADIR was externally checked and separated early PSA-response patterns in this cohort. The unresolved question is whether acting on that separation helps patients. Until a prospective model-guided study answers it, the result belongs to risk stratification and trial planning, not personal treatment decisions.
+
+ **Evidence boundary.** This article summarizes the PubMed record and the official journal article for the external validation analysis. The reported percentages, model metrics, denominators, and mortality association describe the source cohort and its analysis groups. They do not establish causation, a treatment benefit from using NADIR, regulatory approval, or an individual patient’s prognosis. The complete-predictor and landmark denominators are kept separate on purpose.
+ **References.**
+[PubMed record: PMID 42791604](https://pubmed.ncbi.nlm.nih.gov/42791604/)
+[Official journal article: 10.1002/cncr.70615](https://doi.org/10.1002/cncr.70615)
+ This article is for research information only; it is not medical advice. It is not a diagnosis, treatment recommendation, or substitute for discussion with a qualified clinician.
