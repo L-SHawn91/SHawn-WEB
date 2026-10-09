@@ -1,87 +1,101 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-08T18:32:06.806Z",
+  "generated_at": "2026-10-09T18:32:09.139Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 120,
-      "fetched": 120,
-      "scanned": 120,
-      "unchanged": 110,
+      "remote_total": 122,
+      "fetched": 122,
+      "scanned": 122,
+      "unchanged": 120,
       "updated": 0,
-      "created": 10,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1805,
+          "title": "DeepSeek V4.1-Flash: When Does KV Cache Become a Long-Context Bottleneck?",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/10/deepseek-v41-flash-kv-cache-agent-infrastructure-en/",
+          "target": "content/posts/shide-ai-20261010-deepseek-v41-flash-kv-cache-agent-infrastructure-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1804,
+          "title": "DeepSeek V4.1-Flash: 긴 문맥에서 KV 캐시는 언제 병목이 될까",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/10/deepseek-v41-flash-kv-cache-agent-infrastructure/",
+          "target": "content/posts/shide-ai-20261010-deepseek-v41-flash-kv-cache-agent-infrastructure.mdx",
+          "mode": "created"
+        },
         {
           "id": 1792,
           "title": "What Amazon–Qualcomm’s AI-Chip Collaboration Reveals About the Next Server Bottleneck",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/11/qualcomm-amazon-custom-ai-chip-collaboration-en/",
           "target": "content/posts/shide-ai-20260911-qualcomm-amazon-custom-ai-chip-collaboration-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1791,
           "title": "아마존·퀄컴 AI 칩 협력이 보여준 것: GPU 다음에는 맞춤형 실리콘과 연결망이 온다",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/11/qualcomm-amazon-custom-ai-chip-collaboration/",
           "target": "content/posts/shide-ai-20260911-qualcomm-amazon-custom-ai-chip-collaboration.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1775,
           "title": "When AI Models Change Every Few Days, Design the Operating Cycle Before the Scorecard",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/09/ai-model-release-wave-operating-cycle-en/",
           "target": "content/posts/shide-ai-20260909-ai-model-release-wave-operating-cycle-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1774,
           "title": "AI 모델이 사흘마다 바뀔 때, 성능표보다 먼저 설계해야 할 운영 주기",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/09/ai-model-release-wave-operating-cycle/",
           "target": "content/posts/shide-ai-20260909-ai-model-release-wave-operating-cycle.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1760,
           "title": "GPT‑6 Astra: How Much Should You Hand Over?",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/05/gpt-6-astra-access-monitoring-approval-en/",
           "target": "content/posts/shide-ai-20260905-gpt-6-astra-access-monitoring-approval-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1759,
           "title": "GPT‑6 Astra, 어디까지 맡겨도 될까",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/05/gpt-6-astra-access-monitoring-approval/",
           "target": "content/posts/shide-ai-20260905-gpt-6-astra-access-monitoring-approval.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1742,
           "title": "Google AI 3.8 Flash and Flash Cyber Do Not Mean the Same Access",
           "link": "",
           "target": "content/posts/shide-ai-20260904-google-ai-38-flash-and-fairwind-access-boundary-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1741,
           "title": "Google AI 3.8 Flash와 Flash Cyber는 왜 이름이 비슷해도 같은 접근 범위를 뜻하지 않는가",
           "link": "",
           "target": "content/posts/shide-ai-20260904-google-ai-38-flash-and-fairwind-access-boundary.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1724,
           "title": "Claude Fable 5.1: Access, Retention, and Safeguards",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/04/claude-fable-5-1-access-retention-safeguards-en/",
           "target": "content/posts/shide-ai-20260904-claude-fable-5-1-access-retention-safeguards-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1723,
           "title": "Claude Fable 5.1은 왜 성능표만이 아니라 접근 범위·보존 조건·안전장치로 함께 읽어야 하는가",
           "link": "https://shawnaiintelligence.wordpress.com/2026/09/04/claude-fable-5-1-access-retention-safeguards/",
           "target": "content/posts/shide-ai-20260904-claude-fable-5-1-access-retention-safeguards.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1703,
@@ -860,9 +874,9 @@
       "remote_total": 113,
       "fetched": 113,
       "scanned": 113,
-      "unchanged": 85,
+      "unchanged": 113,
       "updated": 0,
-      "created": 28,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -870,196 +884,196 @@
           "title": "NADIR 모델, ARCHES 전립선암 코호트에서 초기 PSA 반응 예측 AUC 0.80 보고",
           "link": "https://shawnbiohub.wordpress.com/2026/09/27/nadir-model-external-validation-psa-response-kor/",
           "target": "content/posts/shide-bio-20260927-nadir-model-external-validation-psa-response-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1741,
           "title": "External validation of the NADIR model reports AUC 0.80 for early PSA response in ARCHES",
           "link": "https://shawnbiohub.wordpress.com/2026/09/27/nadir-model-external-validation-psa-response/",
           "target": "content/posts/shide-bio-20260927-nadir-model-external-validation-psa-response.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1728,
           "title": "진행성 암 고령 환자의 근감소증, 중증 독성 및 1년 생존 저하와 연관",
           "link": "https://shawnbiohub.wordpress.com/2026/09/25/sarcopenia-treatment-toxicity-older-cancer-kor/",
           "target": "content/posts/shide-bio-20260925-sarcopenia-treatment-toxicity-older-cancer-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1726,
           "title": "Sarcopenia in older adults with advanced cancer linked to severe toxicity and lower survival",
           "link": "https://shawnbiohub.wordpress.com/2026/09/25/sarcopenia-treatment-toxicity-older-cancer/",
           "target": "content/posts/shide-bio-20260925-sarcopenia-treatment-toxicity-older-cancer.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1713,
           "title": "노년층 황정 90일 투여 뒤 장내 미생물과 T세포 변화 보고",
           "link": "https://shawnbiohub.wordpress.com/2026/09/24/polygonatum-odoratum-microbiome-immune-aging-kor/",
           "target": "content/posts/shide-bio-20260924-polygonatum-odoratum-microbiome-immune-aging-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1711,
           "title": "Polygonatum odoratum in older adults was linked to microbiome and T-cell changes after a 90-day trial",
           "link": "https://shawnbiohub.wordpress.com/2026/09/24/polygonatum-odoratum-microbiome-immune-aging/",
           "target": "content/posts/shide-bio-20260924-polygonatum-odoratum-microbiome-immune-aging.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1698,
           "title": "유방암 수술 후 항암치료에서 한약 복합제와 비피더스균·CD4+ T세포 변화가 함께 보고됐다",
           "link": "https://shawnbiohub.wordpress.com/2026/09/24/chinese-medicine-breast-cancer-chemotherapy-kor/",
           "target": "content/posts/shide-bio-20260924-chinese-medicine-breast-cancer-chemotherapy-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1696,
           "title": "Breast-cancer chemotherapy patients given Chinese medicine showed higher bifidobacteria and CD4+ cells",
           "link": "https://shawnbiohub.wordpress.com/2026/09/24/chinese-medicine-breast-cancer-chemotherapy/",
           "target": "content/posts/shide-bio-20260924-chinese-medicine-breast-cancer-chemotherapy.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1670,
           "title": "타미바로텐을 더한 급성골수성백혈병 치료, 기존 병용요법보다 반응 개선 확인되지 않아",
           "link": "https://shawnbiohub.wordpress.com/2026/09/20/tamibarotene-aml-combination-result-kor/",
           "target": "content/posts/shide-bio-20260920-tamibarotene-aml-combination-result-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1668,
           "title": "Tamibarotene Added to Venetoclax and Azacitidine Did Not Improve AML Responses",
           "link": "https://shawnbiohub.wordpress.com/2026/09/20/tamibarotene-aml-combination-result/",
           "target": "content/posts/shide-bio-20260920-tamibarotene-aml-combination-result.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1655,
           "title": "리고세르팁 병용 흑색종 시험, 결과 등록에서 객관적 반응 0명 기록",
           "link": "https://shawnbiohub.wordpress.com/2026/09/20/rigosertib-pembrolizumab-melanoma-results-kor/",
           "target": "content/posts/shide-bio-20260920-rigosertib-pembrolizumab-melanoma-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1653,
           "title": "Rigosertib plus pembrolizumab melanoma trial records no objective response in posted results",
           "link": "https://shawnbiohub.wordpress.com/2026/09/20/rigosertib-pembrolizumab-melanoma-results/",
           "target": "content/posts/shide-bio-20260920-rigosertib-pembrolizumab-melanoma-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1640,
           "title": "구강 종양 형광 영상 결과, 종양과 점막 구분이 충분하지 않아 시험 종료",
           "link": "https://shawnbiohub.wordpress.com/2026/09/18/tozuleristide-oral-tumor-imaging-results-kor/",
           "target": "content/posts/shide-bio-20260918-tozuleristide-oral-tumor-imaging-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1638,
           "title": "Tozuleristide oral tumor imaging results show an inconsistent fluorescence boundary",
           "link": "https://shawnbiohub.wordpress.com/2026/09/18/tozuleristide-oral-tumor-imaging-results/",
           "target": "content/posts/shide-bio-20260918-tozuleristide-oral-tumor-imaging-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1625,
           "title": "mRNA-1010 독감 백신 등록 결과, 비교 백신보다 독감 유사 질환 적게 기록",
           "link": "https://shawnbiohub.wordpress.com/2026/09/17/mrna-influenza-vaccine-registry-results-kor/",
           "target": "content/posts/shide-bio-20260917-mrna-influenza-vaccine-registry-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1623,
           "title": "mRNA-1010 influenza vaccine results show fewer illness cases in the registry",
           "link": "https://shawnbiohub.wordpress.com/2026/09/17/mrna-influenza-vaccine-registry-results/",
           "target": "content/posts/shide-bio-20260917-mrna-influenza-vaccine-registry-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1610,
           "title": "SAR443820 ALS 2상 시험에서 임상적 이득 없고 간 효소 상승 더 많아",
           "link": "https://shawnbiohub.wordpress.com/2026/09/14/sar443820-als-trial-negative-efficacy-kor/",
           "target": "content/posts/shide-bio-20260914-sar443820-als-trial-negative-efficacy-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1608,
           "title": "SAR443820 ALS trial showed no clinical benefit and more hepatic enzyme increases",
           "link": "https://shawnbiohub.wordpress.com/2026/09/14/sar443820-als-trial-negative-efficacy/",
           "target": "content/posts/shide-bio-20260914-sar443820-als-trial-negative-efficacy.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1595,
           "title": "CAR-T 치료 환자군에서 2년 삶의 질 개선과 초기 피로 신호가 함께 관찰됐다",
           "link": "https://shawnbiohub.wordpress.com/2026/09/14/car-t-quality-of-life-follow-up-kor/",
           "target": "content/posts/shide-bio-20260914-car-t-quality-of-life-follow-up-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1593,
           "title": "CAR-T therapy cohort reported two-year quality-of-life gains while early fatigue tracked later response",
           "link": "https://shawnbiohub.wordpress.com/2026/09/14/car-t-quality-of-life-follow-up/",
           "target": "content/posts/shide-bio-20260914-car-t-quality-of-life-follow-up.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1580,
           "title": "대장암 복강경 수술에서 에스케타민 투여군의 초기 불안·우울 점수 낮게 보고",
           "link": "https://shawnbiohub.wordpress.com/2026/09/12/esketamine-colorectal-surgery-early-recovery-kor/",
           "target": "content/posts/shide-bio-20260912-esketamine-colorectal-surgery-early-recovery-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1578,
           "title": "Esketamine after colorectal cancer surgery linked to lower early HADS scores in randomized trial",
           "link": "https://shawnbiohub.wordpress.com/2026/09/12/esketamine-colorectal-surgery-early-recovery/",
           "target": "content/posts/shide-bio-20260912-esketamine-colorectal-surgery-early-recovery.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1565,
           "title": "간 우세 전이 포도막흑색종 치료시험, 102명 등록 결과 공개",
           "link": "https://shawnbiohub.wordpress.com/2026/09/10/uveal-melanoma-liver-treatment-results-kor/",
           "target": "content/posts/shide-bio-20260910-uveal-melanoma-liver-treatment-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1563,
           "title": "Uveal melanoma liver-treatment trial posts results after 102-patient enrollment",
           "link": "https://shawnbiohub.wordpress.com/2026/09/10/uveal-melanoma-liver-treatment-results/",
           "target": "content/posts/shide-bio-20260910-uveal-melanoma-liver-treatment-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1550,
           "title": "상부 요로상피암 임상시험, 수술 전 항암치료 결과 공개",
           "link": "https://shawnbiohub.wordpress.com/2026/09/06/upper-tract-urothelial-carcinoma-trial-results-kor/",
           "target": "content/posts/shide-bio-20260906-upper-tract-urothelial-carcinoma-trial-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1548,
           "title": "Upper Tract Urothelial Carcinoma Trial Posts Neoadjuvant Gemcitabine-Cisplatin Results",
           "link": "https://shawnbiohub.wordpress.com/2026/09/06/upper-tract-urothelial-carcinoma-trial-results/",
           "target": "content/posts/shide-bio-20260906-upper-tract-urothelial-carcinoma-trial-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1535,
           "title": "TG4010 병용요법 2상 비소세포폐암 시험에서 제한적 반응 보고",
           "link": "https://shawnbiohub.wordpress.com/2026/09/03/tg4010-nivolumab-nsclc-phase-two-results-kor/",
           "target": "content/posts/shide-bio-20260903-tg4010-nivolumab-nsclc-phase-two-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1533,
           "title": "TG4010 plus nivolumab phase II trial reports limited benefit in NSCLC",
           "link": "https://shawnbiohub.wordpress.com/2026/09/03/tg4010-nivolumab-nsclc-phase-two-results/",
           "target": "content/posts/shide-bio-20260903-tg4010-nivolumab-nsclc-phase-two-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1520,
@@ -1663,9 +1677,9 @@
       "remote_total": 149,
       "fetched": 149,
       "scanned": 149,
-      "unchanged": 147,
+      "unchanged": 149,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -1673,14 +1687,14 @@
           "title": "Next Week’s GDP, Jobs, and Prices: How Far Does Korea’s Recovery Signal Go?",
           "link": "https://shawnassets.wordpress.com/2026/09/06/next-weeks-gdp-jobs-and-prices-how-far-does-koreas-recovery-signal-go/",
           "target": "content/posts/shide-assets-20260906-next-weeks-gdp-jobs-and-prices-how-far-does-koreas-recovery-signal-go.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2331,
           "title": "GDP·고용·물가, 경기 회복 신호는 어디까지인가? 다음 주 지표 읽는 법",
           "link": "https://shawnassets.wordpress.com/2026/09/06/gdp%c2%b7%ea%b3%a0%ec%9a%a9%c2%b7%eb%ac%bc%ea%b0%80-%ea%b2%bd%ea%b8%b0-%ed%9a%8c%eb%b3%b5-%ec%8b%a0%ed%98%b8%eb%8a%94-%ec%96%b4%eb%94%94%ea%b9%8c%ec%a7%80%ec%9d%b8%ea%b0%80-%eb%8b%a4%ec%9d%8c/",
           "target": "content/posts/shide-assets-20260906-gdp-c2-b7-ea-b3-a0-ec-9a-a9-c2-b7-eb-ac-bc-ea-b0-80-ea-b2-bd-ea-b8-b0-ed-9a-8c-eb-b3-b5-ec-8b-a0-ed-98-b8-eb-8a-94-ec-96-b4-eb-94-94-ea-b9-8c-ec-a7-80-ec-9d-b8-ea-b0-80-eb-8b-a4-ec-9d-8c.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2315,
@@ -2715,12 +2729,12 @@
     }
   ],
   "totals": {
-    "remote": 382,
-    "scanned": 382,
-    "unchanged": 342,
+    "remote": 384,
+    "scanned": 384,
+    "unchanged": 382,
     "updated": 0,
-    "created": 40,
+    "created": 2,
     "removed": 0,
-    "changed": 40
+    "changed": 2
   }
 }

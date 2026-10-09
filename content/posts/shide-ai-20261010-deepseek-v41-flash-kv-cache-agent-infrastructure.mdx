@@ -1,0 +1,214 @@
+---
+title: "DeepSeek V4.1-Flash: 긴 문맥에서 KV 캐시는 언제 병목이 될까"
+date: "2026-10-10"
+description: "DeepSeek V4.1-Flash는 긴 문맥을 더 많이 담는 데서 멈추지 않고, KV 캐시를 어디에 저장하고 무엇을 다시 계산할지까지 설계했다. 기술보고서의 압축 수치를 요청 길이·재사용률·하드웨어 조건과 함께 읽고, 실제 서비스에서 병목이 되는지 확인한다."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/hero.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/10/10/deepseek-v41-flash-kv-cache-agent-infrastructure/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1804"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/10/10/deepseek-v41-flash-kv-cache-agent-infrastructure/)
+
+AI NOTES · KO  KOREAN EDITION
+
+**KO · 한국어** / [EN · English](https://shawnaiintelligence.wordpress.com/2026/10/10/deepseek-v41-flash-kv-cache-agent-infrastructure-en/) BILINGUAL PAIR
+
+ 긴   문맥을   지원하는   모델이   나왔다고   해서   비용   문제가   자동으로   해결되지는   않습니다.  DeepSeek  V4.1-Flash의   핵심   신호는   모델이   더   많은   정보를   “기억한다”는   문구보다,   그   기억을   어디에   저장하고   언제   다시   계산할지를   설계했다는   점에   있습니다.   공식   자료는  1M  토큰   문맥,  552B  백본   파라미터,  prefill  때   토큰당  8B·decode  때  16B  활성   파라미터를   제시합니다.   다만  KV  캐시의   크기와   이동이   실제   운영비의   병목인지는   요청   길이,   캐시   재사용률,   하드웨어와   도구   지연을   함께   측정해야   판단할   수   있습니다.
+
+ DeepSeek의  [공식 모델 카드](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash) 와  [기술보고서](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf) 를   함께   읽으면   질문이   선명해집니다.   CED와  CSA2, FP4  캐시,  SWA Bounded  Replay를   묶어  runtime  KV와  persistent  KV를   줄였다는   설명은   긴   문맥   에이전트의   메모리   압박을   겨냥합니다.   반대로   이   수치가   독립적인   우월성   검증,   자동적인   총비용   절감,   어떤   에이전트에서도   같은   품질을   보장한다는   뜻은   아닙니다.
+
+ 이   글은   그   경계를   기준으로   V4.1-Flash를   읽습니다.   어떤   메모리가   줄어드는지,   줄이기   위해   무엇을   다시   계산하는지,   그   변화가   에이전트   스택의   어느   층에   닿는지,  API  별칭과   레시피   저장소가   왜   별도   운영   문제인지   순서대로   확인합니다.
+
+## 긴 문맥의 진짜 병목은 모델 크기가 아니라 기억의 이동이다
+
+ 긴   대화를   한   번에   처리하는   모델은   입력   토큰을   읽는   prefill과   다음   토큰을   생성하는   decode를   반복합니다.   이때   attention이   이전   토큰의   상태를   다시   활용하도록   key와  value  상태를   보관하는   구조가  KV  캐시입니다.   새   토큰이   추가될   때마다   모든   과거   입력을   처음부터   재계산하지   않아도   되지만,   저장해야   할   상태가   문맥   길이에   따라   커집니다.
+
+DeepSeek  기술보고서는   긴   시퀀스에서  global  KV가  runtime KV  footprint의   큰   부분을   차지하고,   이   데이터가  HBM  용량에   제약을   받는다고   설명합니다.   또  prefix  재사용을   위해   일부   KV를  persistent KV  cache로   남기면   SSD와   호스트   메모리   용량,   캐시를   옮기는   I/O와  interconnect  bandwidth가   병목이   됩니다.   따라서   문제는   “모델   파라미터가   몇   개냐”로   끝나지   않습니다.   지금   필요한   상태가   어느   메모리에   있고,   다음   요청이   그   상태를   다시   쓸   수   있는지,   이동할   때   대역폭과   지연이   얼마나   드는지가   함께   중요합니다.
+
+ 이   구분은   에이전트   작업에서   더   중요합니다.   한   번의   질문으로   끝나는   호출은   문맥이   짧을   수   있지만,   코드   탐색·문서   확인·도구   호출·오류   수정이   이어지는   작업은   이전   결과가   긴   프롬프트로   누적됩니다.   긴   문맥을   유지하면   품질에   도움이   될   가능성이   있지만,   그   문맥을   매   단계   다시   읽고   캐시를   저장·로드하는   비용도   같이   커집니다.   V4.1-Flash의   발표는   이   저장·이동   문제를   모델   아키텍처의   일부로   다룹니다.
+
+## 이번 발표의 숫자를 두 층으로 읽어야 한다
+
+ 공식   모델   카드는   V4.1-Flash를  552B  백본   파라미터를   가진   멀티모달  MoE  모델로   소개하고,   최대  1M  토큰   문맥을   지원한다고   설명합니다.   이   숫자는   모델의   표현력과   입력   용량을   보여주는   메타데이터입니다.   메모리   운영을   직접   뜻하는   “552B를   전부   매   요청마다   활성화한다”는   말은   아닙니다.   공식   설명에   따르면   prefill에서는   토큰당  8B,  decode에서는  16B  파라미터가   활성화됩니다.
+
+KV  캐시   쪽   숫자는   층이   다릅니다.  DeepSeek  기술보고서는   CSA2와  FP4 main KV  caching을   결합해  global  KV를   토큰당   890바이트로   줄였다고   적고,   이를   DeepSeek-V4-Flash의   약   1/4이라고   비교합니다.   또  SWA Bounded  Replay를   통해  persistent KV  footprint를   약   1/8로   줄였다고   설명합니다.   이   수치는   모델카드의   일반적인   제품   설명이   아니라,   DeepSeek가   자체   기술보고서에서   제시한   아키텍처·배포   측정치로   읽어야   합니다.
+
+### 552B 백본 파라미터
+
+** 무엇을   나타내나 **
+ 전체   모델   규모
+
+** 운영에서   보는   위치 **
+ 모델   저장·분산·가중치   관리
+
+### 8B / 16B 활성 파라미터
+
+** 무엇을   나타내나 **
+ prefill과   decode의   토큰별   활성   규모
+
+** 운영에서   보는   위치 **
+ 계산량과   커널   실행
+
+### 890 bytes/token global KV
+
+** 무엇을   나타내나 **
+ 보고서가   제시한  runtime global KV  크기
+
+** 운영에서   보는   위치 **
+HBM  압박
+
+### 약 1/8 persistent KV
+
+** 무엇을   나타내나 **
+SWA Bounded Replay  적용   뒤   보고서가   제시한   저장  footprint
+
+** 운영에서   보는   위치 **
+ SSD·호스트   메모리·재계산
+
+ 여기서   “1/4”와   “1/8”은   구매   견적서의   절감률이   아닙니다.   같은   문맥   길이와   비교   기준에서   제시된  vendor  claim입니다.   실제   서비스에서는   배치   크기,   동시성,  prefix  재사용률,   양자화   커널,   메모리   분할,   캐시   적중률,   네트워크와  SSD  구성에   따라   결과가   달라질   수   있습니다.   숫자를   읽을   때   비교   대상과   측정   층을   분리하지   않으면,  global  KV가   줄었다는   사실을   총   시스템   비용이   같은   비율로   내려간다는   주장으로   바꾸게   됩니다.
+
+## CED는 decoder global KV가 만들어지는 경로를 바꾼다
+
+ V4.1-Flash의  Causal Encoder-Decoder,  즉   CED는   20층  causal encoder  뒤에   20층   decoder가   이어지는   구조로   설명됩니다.   공식   모델   카드의   핵심   설명은   decoder의  global  KV가   각  decoder  층의  hidden  state에서   따로   생기는   대신,   최종  encoder hidden  states에서   투영된다는   것입니다.   이   설계가  global  KV를   어떻게   만들고   공유할지의   선택지를   바꿉니다.
+
+ 운영   관점에서는   prefill과   decode를   같은   비용으로   보면   안   됩니다.   긴   사용자   문서,   검색   결과,   도구   출력처럼   입력이   큰   작업은   먼저  prefill  부담을   만듭니다.   그   뒤의   decode는   모델이   응답을   한   토큰씩   생성하는   단계입니다.   공식   자료는  prefill  8B와  decode 16B  활성   파라미터를   각각   보고합니다.   이   수치는   두   구간을   구분해   제시하지만   CED의   기여분이나   개별   서비스의   절감폭을   따로   정량화하지는   않습니다.   입력   비중이   큰   서비스에서의   영향은   실제   요청   분포와  serving  구성을   두고   측정해야   합니다.
+
+ 이   구조가   “긴   입력은   무료가   된다”는   뜻은   아닙니다.   입력을   읽는   시간,  attention  커널의   처리,   이미지가   포함될   때의   전처리,   배치   스케줄링은   여전히   남습니다.   다만   긴   문맥에서   반복적으로   보관되는  global  상태를   어떤   표현으로   만들고,   어느   층에서   재사용할지에   대한   설계가   비용의   한   부분을   바꿉니다.   에이전트   서비스를   평가할   때   첫   토큰   지연과   이후   토큰   지연,  prefill  재계산   시간을   분리해   기록해야   하는   이유입니다.
+
+## 메모리 계층을 나눠 봐야 캐시의 의미가 보인다
+
+[![서로 다른 거리와 규모의 장치로 긴 문맥 서빙의 메모리 계층을 비유한 장면입니다. 특정 하드웨어 구성을 그대로 그린 도식은 아닙니다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/concept.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/concept.webp)
+_서로 다른 거리와 규모의 장치로 긴 문맥 서빙의 메모리 계층을 비유한 장면입니다. 특정 하드웨어 구성을 그대로 그린 도식은 아닙니다._
+
+ 긴   문맥   서비스에서   메모리는   한   덩어리가   아닙니다.   HBM은   지금   계산에   필요한  global  KV를   빠르게   붙잡아   두는   층이고,   호스트   메모리와   SSD는  prefix  재사용을   위해   더   오래   남겨둘   수   있는   상태를   맡습니다.   이   구분이   있어야   저장량이   줄었다는   말이   실제   지연과   비용의   어느   부분을   가리키는지   읽을   수   있습니다.
+
+## CSA2와 FP4는 캐시를 줄이는 서로 다른 레버다
+
+[![짧은 구간을 다시 엮는 손동작으로, SWA Bounded Replay의 재계산 절충을 비유합니다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/mechanism.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/mechanism.webp)
+_짧은 구간을 다시 엮는 손동작으로, SWA Bounded Replay의 재계산 절충을 비유합니다._
+
+Compressed Sparse Attention 2,  즉   CSA2는  attention  층   사이에서  global  KV와  indexer K, Top-K sparse-attention  index를   공유하는   방식입니다.   기술보고서는   세   가지   정적   모드를   설명합니다.  Full  모드는  global  KV를   만들고   indexing을   수행합니다.  Reindex  모드는   앞선   층의  global  KV를   재사용하면서   새   query로   index를   다시   점수화합니다.  Reuse  모드는  global  KV와  Top-K  index를   함께   재사용하고  sparse  attention을   수행합니다.
+
+ 이   구조가   하는   일은   “모든   층이   완전히   독립적으로   같은   형태의   캐시를   갖는다”는   전제를   약하게   만드는   것입니다.   각   층이   유지하는   query와  SWA  KV는   남아   있지만,  global  KV와  indexer  K의   중복을   줄일   수   있습니다.   기술보고서는   여기에  FP4 global KV  cache를   결합했다고   설명합니다.   FP4는   표현   정밀도를   낮춰   저장량과   이동량을   줄이는   레버이고,   CSA2는   층간   재사용으로   중복을   줄이는   레버입니다.
+
+ 두   레버를   하나의   마케팅   문장으로   합치면   안   됩니다.   정밀도   축소에는   정확도·안정성   검증이   필요하고,   공유   축소에는  attention  패턴과   커널   실행의   검증이   필요합니다.  V4.1-Flash  보고서가  “global KV 890  bytes/token”을   제시한   것은   이   설계   조합의   결과입니다.   특정  GPU,  배치,   서비스   트래픽에서   동일한   실측이   재현된다는   뜻은   아닙니다.
+
+## 약 1/8의 핵심은 저장하지 않고 일부를 다시 계산하는 것이다
+
+V4  계열의  SWA, Sliding-Window  Attention은   최근   일정한   window의  local  상태를   다룹니다.   기술보고서   설명에   따르면  exact  reconstruction을   하려면   최근  `L × n_win`  토큰을   다시   재생해야   합니다.   여기서  `L` 은   층   수이고  `n_win` 은  SWA window  크기입니다.
+
+ V4.1-Flash의  SWA Bounded  Replay는   이   비용을   줄이기   위해   최근  `n_win`  토큰만   replay해   필요한  SWA KV  상태를   근사적으로   재구성합니다.   DeepSeek의   실험에서는   성능   저하가   negligible하다고   보고했고,   그   대가로  SWA  KV를   SSD에   계속   저장하지   않고   작은  prefill  재계산을   받아들이는  storage–computation  trade-off를   제시합니다.   그래서  persistent KV  footprint가  V4-Flash  대비   약   1/8이라는   설명이   나옵니다.
+
+ 이   부분은   글의   결론보다   앞에서   반드시   읽어야   하는   제한입니다.  bounded  replay는   “아무것도   잃지   않고   저장량만   줄이는   압축”이   아니라,   일정한   정보를   다시   계산하는   근사   전략입니다.   보고서의   실험에서   작은   성능   저하였다는   것과,   모든   문맥   경계·도구   결과·멀티모달   입력·동시성   조건에서   같은   결과가   난다는   것은   다릅니다.   재생   범위를   줄이면  SSD  부담은   낮아질   수   있지만,  prefill  계산과   그에   따른   지연·전력·스케줄링   부담이   늘   수   있습니다.
+
+ 따라서   실무자는   다음   네   가지를   별도로   측정해야   합니다.
+
+- 캐시를 다시 쓸 수 있었을 때의 cache hit와 로드 지연
+
+- bounded replay가 발생했을 때 추가되는 prefill 시간
+
+- 도구 호출 뒤 긴 결과가 재사용되는 작업과 재사용되지 않는 작업의 차이
+
+- 재생 경계가 바뀌었을 때 품질, 인용, 함수 호출 정확도가 유지되는지
+
+ “1/8”은   이   네   항목을   측정한   뒤에야   운영상의   의미로   번역할   수   있습니다.
+
+## 에이전트 워크로드에서 바뀌는 것은 무엇인가
+
+ 긴   문맥   에이전트는   이전   단계의   상태를   매번   새   요청으로   전달합니다.   모델이   직접   도구를   실행한다는   뜻이   아니라,   도구   결과와   작업   기록이   다음   추론의   입력으로   들어가는   구조입니다.   이때  KV  cache가   작아지면   HBM에   고정되는  global  상태,   prefix를   보관하는  host  memory와  SSD,  캐시를   계층   사이에서   이동하는   bandwidth에   여유가   생길   가능성이   있습니다.
+
+ 특히   다음과   같은   작업에서   의미를   확인할   수   있습니다.
+
+- 반복 prefix가 큰 작업 : 같은 시스템 지침과 긴 코드베이스 설명을 여러 단계에서 재사용하면 persistent cache의 적중률이 핵심이 됩니다.
+
+- 긴 작업 horizon : 여러 번의 검색·검토·수정이 이어지면 문맥은 커지지만, 매 단계 모든 기록을 다시 저장할 필요가 있는지는 workload마다 다릅니다.
+
+- 입력 비중이 큰 작업 : prefill과 decode의 비용 구성이 다르므로, 응답 토큰 수보다 입력 문맥이 훨씬 큰 서비스에서는 CED의 선택이 중요할 수 있습니다.
+
+ 그렇다고   같은   모델이   모든   에이전트에서   곧바로   더   싸고   빠르다는   뜻은   아닙니다.   짧은   요청   위주   서비스에서는  KV  저장량   감소가   병목이   아닐   수   있고,  cache  hit가   낮으면  persistent cache  최적화가   효과를   내기   어렵습니다.   도구가   원격   API에   있고   네트워크   왕복이   길다면   모델의   내부  cache  개선이   전체   지연을   지배하지도   않습니다.
+
+## 모델의 메모리 최적화와 에이전트 스택은 다른 층이다
+
+ 공식  [deepseek-recipe 저장소](https://github.com/deepseek-ai/deepseek-recipe) 는  Messages, Chat Completions, Responses  형식의   요청을   Conversation으로   바꾸고,  V4·V4.1  프롬프트나  token  ID로   인코딩하고,   모델   출력을   다시  API  응답   형식으로   파싱하는   라이브러리   묶음입니다.   지원   범위에는  thinking, reasoning effort, tool call,  이미지와  streaming  응답   처리가   포함됩니다.
+
+ 하지만   같은   README는   모델  inference, tool execution, HTTP  transport는   외부에서   제공해야   한다고   명시합니다.   이   구분은   중요합니다.  KV cache  압축은   모델의   attention·메모리   경로와  serving  시스템의   일부를   개선할   수   있지만,   실제   에이전트가   어떤   도구를   호출할지,   권한을   어떻게   제한할지,   외부   서버가   얼마나   빨리   응답할지,   실패한   작업을   어떻게   재시도할지는   해결하지   않습니다.
+
+ 따라서   “V4.1-Flash가   에이전트   인프라를   바꾼다”는   표현은   좁게   써야   합니다.   모델   내부의   긴   문맥   저장·재구성   비용을   낮출   수   있는   사례라는   뜻이지,   에이전트   전체의   실행·보안·관측·네트워크   문제가   사라진다는   뜻은   아닙니다.   이   글은   기능   목록보다   긴   문맥에서   기억이   어디에   놓이고   무엇을   다시   계산하는지에   초점을   둡니다.
+
+## API 별칭 변경은 메커니즘과 다른 운영 신호다
+
+ 2026년   10월   10일   확인한  [DeepSeek API Models & Pricing](https://api-docs.deepseek.com/quick_start/pricing) 은  `deepseek-flash` 를   모델   이름으로   사용하라고   안내합니다.  `deepseek-v4-flash` 와  `deepseek-v4-flash-vision-exp` 는   기존   별칭으로   계속   허용되지만,   해당   모델은  retired  상태이며   요청은   DeepSeek-V4.1-Flash가   처리하고  Flash  가격으로   청구된다는   설명입니다.   이는   조회일의   공식   문서   내용이므로   실제   배포   전   다시   확인해야   합니다.
+
+ 이   정보는  KV cache  설계의   증거가   아닙니다.  API  호환성과   모델   수명주기를   읽는   운영   신호입니다.   기존   클라이언트가   어떤   이름을   쓰는지,   새   이름으로   고정할지,   응답·tool  call·vision  처리의   차이를   별도로   확인해야   합니다.  API  별칭이   유지된다고   해서   모든  feature flag, rate limit, latency  profile이   같다고   가정해서도   안   됩니다.
+
+## 벤치마크와 가격을 어디까지 말할 수 있나
+
+ 공식   모델   카드의  benchmark  표는   DeepSeek의   내부   평가   프레임워크와   정해진   샷   수,  temperature, top-p, reasoning effort, harness  조건을   사용합니다.  instruct  결과는   최대  reasoning effort  설정을   사용하고,   코드   에이전트   평가   일부는  1M  토큰   문맥을,   시각   에이전트   평가는  512K  문맥을   사용합니다.   따라서   그   표는   “DeepSeek가   명시한   조건에서   얻은   결과”로   인용해야   합니다.
+
+ 그   결과를   독립적인   보편   우월성의   증거로   확대하면   안   됩니다.   실제   환경에서는  task mix, tool latency, prompt  구성,   실패   재시도,   평가   샘플   수,  agent  scaffold가   달라집니다.   기술보고서   자체도  science-oriented agentic  task처럼   거대   모델과   격차가   남는   영역을   인정합니다.   모델의   표준   점수와   서비스의   성공률은   같은   지표가   아닙니다.
+
+ 가격도   같은   원칙이   필요합니다.  [공식 pricing 페이지](https://api-docs.deepseek.com/quick_start/pricing) 는  1M  입력·출력   토큰,  cache hit·miss,  peak·off-peak를   나눠   설명하고   가격이   변경될   수   있다고   알립니다.   이   글은   특정   숫자를   견적처럼   제시하지   않습니다.  cache  hit가   늘어도  replay, prefill, tool execution,  네트워크,   저장장치   비용이   함께   남기   때문입니다.   가격표를   읽을   때는   조회   시각과   모델   이름,   입력·출력   구분,  peak  조건을   함께   기록해야   합니다.
+
+## 긴 문맥 서비스를 도입하기 전에 확인할 네 가지
+
+[![엔지니어가 모듈을 살펴보는 장면으로, 실제 요청 분포와 성능을 먼저 측정하라는 권고를 비유합니다.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/closing.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/closing.webp)
+_엔지니어가 모듈을 살펴보는 장면으로, 실제 요청 분포와 성능을 먼저 측정하라는 권고를 비유합니다._
+
+ 첫째는  ** 문맥   구성 ** 입니다.   평균   토큰   수만   보지   말고,  p95·p99  입력   길이,   반복  prefix  비율,   도구   결과의   크기,   이미지   포함   여부를   분리해야   합니다.   길이가   짧은   요청이   대부분이면  1M  문맥과  KV  압축이   핵심   투자   항목이   아닐   수   있습니다.
+
+ 둘째는  ** 메모리와   재계산의   경계 ** 입니다.   HBM에   남는  global KV, host  memory·SSD에   남는  persistent KV, bounded  replay가   만드는  prefill  추가분을   각각   계측해야   합니다.   저장장치   사용량이   줄어도  CPU·GPU  재계산으로   지연이   커지는지   확인해야   합니다.
+
+ 셋째는  ** 품질   경계 ** 입니다.   짧은   요약   하나가   아니라,   긴   문서의   초반   사실   회수,   여러   도구   결과의   충돌   해결,   중간에   이미지가   들어간   대화,   함수   호출   인자   보존을   따로   시험해야   합니다.   DeepSeek가   보고한  negligible  degradation을   그대로   서비스   보증으로   옮기지   말고,   자신의   작업   분포에서   확인해야   합니다.
+
+ 넷째는  ** 호환성과   책임   경계 ** 입니다.  `deepseek-flash` 와  legacy  이름의   라우팅,   recipe가   변환하는   프로토콜   범위,  inference backend, tool executor, HTTP  계층을   별도   소유자로   문서화해야   합니다.   장애가   났을   때   모델   캐시   문제인지,   변환   문제인지,   외부   도구   문제인지   구분할   수   있어야   합니다.
+
+### workload
+
+** 바로   물어볼   질문 **
+ 긴   입력과   반복   prefix가   실제   요청의   어느   비율인가?
+
+### cache
+
+** 바로   물어볼   질문 **
+global KV, persistent KV, cache  hit를   각각   측정하고   있는가?
+
+### replay
+
+** 바로   물어볼   질문 **
+ 추가  prefill  시간이  p95  지연과   비용에   어떤   영향을   주는가?
+
+### quality
+
+** 바로   물어볼   질문 **
+ 경계   문맥과  tool  call에서   품질   저하를   별도   평가했는가?
+
+### ownership
+
+** 바로   물어볼   질문 **
+inference·tool execution·HTTP  transport의   책임자가   분리되어   있는가?
+
+## 이번 사례가 증명하는 것과 증명하지 않는 것
+
+DeepSeek  V4.1-Flash는   긴   문맥을   모델   크기만으로   해결하지   않고,   CED로  global KV  생성   경로를   바꾸고,   CSA2로   층간   재사용을   늘리고,   FP4로   캐시   정밀도를   낮추고,  SWA Bounded  Replay로   일부   저장을   재계산으로   바꾸는   사례를   제시합니다.   기술보고서의  890 bytes/token,  약  1/4 global KV,  약  1/8 persistent  KV라는   수치는   이   설계   방향을   구체화합니다.
+
+ 동시에   이   결과는  vendor technical  report의   측정치입니다.   독립적인   모든   모델·하드웨어·트래픽   조건에서   같은   비율의   비용   절감이   난다는   증거가   아니며,   긴   문맥   에이전트의   품질과   도구   실행,   네트워크   지연을   자동으로   해결하지도   않습니다.   특히  bounded  replay는   저장   공간과   재계산   사이의   교환입니다.   적게   저장하는   대신   다시   읽고   계산하는   시간이   어디에   나타나는지   확인해야   합니다.
+
+ 그래서   이   모델을   읽는   가장   안전한   문장은  “KV  cache를   서비스   설계의   1급   자원으로   다루는   공개   사례”입니다.  1M  토큰이라는   상한보다   HBM·호스트   메모리·SSD·대역폭·prefill   재계산을   하나의   관측면으로   묶었다는   점이   더   중요합니다.   도입   판단은   모델   이름이나   벤치마크   한   줄이   아니라,   자신의   에이전트   요청   분포와   캐시   적중률,   품질   경계,  API  책임   구조를   측정한   뒤   내려야   합니다.
+
+## 출처
+
+- DeepSeek-V4.1-Flash official model card
+
+- DeepSeek-V4.1-Flash Technical Report
+
+- DeepSeek API: Models & Pricing
+
+- deepseek-recipe official repository
+
+ 기술   수치와  API lifecycle  설명은   위   공식   자료에   귀속했습니다.   가격·벤치마크·압축률은   조회   시점과   평가   조건에   따라   달라질   수   있으며,   독립적인   운영   검증   없이   일반화하지   않았습니다.
