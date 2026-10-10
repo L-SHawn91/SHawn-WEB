@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-09T18:32:09.139Z",
+  "generated_at": "2026-10-10T18:32:10.601Z",
   "mode": "write",
   "sources": [
     {
@@ -8,9 +8,9 @@
       "remote_total": 122,
       "fetched": 122,
       "scanned": 122,
-      "unchanged": 120,
+      "unchanged": 122,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -18,14 +18,14 @@
           "title": "DeepSeek V4.1-Flash: When Does KV Cache Become a Long-Context Bottleneck?",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/10/deepseek-v41-flash-kv-cache-agent-infrastructure-en/",
           "target": "content/posts/shide-ai-20261010-deepseek-v41-flash-kv-cache-agent-infrastructure-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1804,
           "title": "DeepSeek V4.1-Flash: 긴 문맥에서 KV 캐시는 언제 병목이 될까",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/10/deepseek-v41-flash-kv-cache-agent-infrastructure/",
           "target": "content/posts/shide-ai-20261010-deepseek-v41-flash-kv-cache-agent-infrastructure.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1792,
@@ -871,14 +871,28 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 113,
-      "fetched": 113,
-      "scanned": 113,
+      "remote_total": 115,
+      "fetched": 115,
+      "scanned": 115,
       "unchanged": 113,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1759,
+          "title": "햇빛 광역학 치료 연구, TIMP-1 변화만 통계적으로 유의",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/10/daylight-photodynamic-therapy-skin-marker-study-kor/",
+          "target": "content/posts/shide-bio-20261010-daylight-photodynamic-therapy-skin-marker-study-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1757,
+          "title": "Daylight photodynamic therapy study finds one significant marker change",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/10/daylight-photodynamic-therapy-skin-marker-study/",
+          "target": "content/posts/shide-bio-20261010-daylight-photodynamic-therapy-skin-marker-study.mdx",
+          "mode": "created"
+        },
         {
           "id": 1743,
           "title": "NADIR 모델, ARCHES 전립선암 코호트에서 초기 PSA 반응 예측 AUC 0.80 보고",
@@ -1674,14 +1688,28 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 149,
-      "fetched": 149,
-      "scanned": 149,
+      "remote_total": 151,
+      "fetched": 151,
+      "scanned": 151,
       "unchanged": 149,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 2384,
+          "title": "Worried About a Product at Home? Meeting News or a Recall Notice?",
+          "link": "https://shawnassets.wordpress.com/2026/10/10/consumer-safety-meeting-recall-notice-20261009-en/",
+          "target": "content/posts/shide-assets-20261010-consumer-safety-meeting-recall-notice-20261009-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2383,
+          "title": "집에 둔 제품이 걱정될 때, 간담회 소식과 회수 공지 중 무엇을 확인해야 할까요?",
+          "link": "https://shawnassets.wordpress.com/2026/10/10/consumer-safety-meeting-recall-notice-20261009/",
+          "target": "content/posts/shide-assets-20261010-consumer-safety-meeting-recall-notice-20261009.mdx",
+          "mode": "created"
+        },
         {
           "id": 2332,
           "title": "Next Week’s GDP, Jobs, and Prices: How Far Does Korea’s Recovery Signal Go?",
@@ -2729,12 +2757,12 @@
     }
   ],
   "totals": {
-    "remote": 384,
-    "scanned": 384,
-    "unchanged": 382,
+    "remote": 388,
+    "scanned": 388,
+    "unchanged": 384,
     "updated": 0,
-    "created": 2,
+    "created": 4,
     "removed": 0,
-    "changed": 2
+    "changed": 4
   }
 }
