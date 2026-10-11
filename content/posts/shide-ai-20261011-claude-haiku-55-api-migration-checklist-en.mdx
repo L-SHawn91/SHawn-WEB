@@ -1,0 +1,123 @@
+---
+title: "Before Switching to Claude Haiku 5.5, What Should You Recheck in Your API?"
+date: "2026-10-11"
+description: "Moving to Claude Haiku 5.5 means more than swapping a model name. This article walks the Messages API compatibility changes Anthropic documents—tokenizer, thinking settings, con..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/hero-1.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/10/11/claude-haiku-55-api-migration-checklist-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "1830"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/10/11/claude-haiku-55-api-migration-checklist-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/10/11/claude-haiku-55-api-migration-checklist/) / **EN · English** BILINGUAL PAIR
+
+You change the model ID, deploy, and expect the same request to keep working. Then a subset of calls starts returning a 400 error, the interface appears to show no answer, or requests reach a token limit sooner than they used to. A model migration can change more than the name in your configuration: token counts, thinking settings, response-block parsing, tool loops, and the replay of stored conversations may all need another look.
+
+Anthropic released [Claude Haiku 5.5 on October 7, 2026](https://www.anthropic.com/claude-haiku-5-5), positioning it for high-volume, latency-sensitive work. This article is for teams moving a Haiku 4.5 Messages API client to the new model.
+
+Anthropic’s migration guide lists the compatibility changes for moving a Messages API integration from Claude Haiku 4.5 to Claude Haiku 5.5. Not every service needs to change every item. The work depends on which request shapes and features the integration actually uses.
+
+This article focuses on the code paths an operator can test, rather than treating a launch announcement or benchmark table as evidence that an upgrade will work in a particular service. The practical answer is to identify the features in use, replay a fixed evaluation set against the new model, and move traffic only after request and response handling have been checked.
+
+## A model-name change is simple only for some integrations
+
+Claude Haiku 5.5 was [released on October 7, 2026](https://platform.claude.com/docs/en/models/haiku-5-5/overview). The model ID for the Claude API is `claude-haiku-5-5`. If a Haiku 4.5 request uses `claude-haiku-4-5-20251001` or `claude-haiku-4-5`, replacing it with the new API ID is the beginning of the migration. Haiku 5.5 has a fixed ID without a date suffix or a separate alias.
+
+Do not copy that API ID into every hosted environment. Anthropic’s [migration guide](https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide) lists different ID formats for Amazon Bedrock, Google Cloud, Microsoft Foundry, and Claude Platform on AWS. Check whether the SDK calls the Claude API directly or passes through another provider. Otherwise, the model may be available while the client sends an identifier that is wrong for the platform it uses.
+
+Anthropic says Claude Managed Agents require no change beyond updating the model name. That exception applies to the named managed execution environment. It is not a promise that a custom Messages API client, an SDK wrapper, or another hosted platform needs no work.
+
+Anthropic positions Haiku 5.5 for high-volume, latency-sensitive tasks such as classification, extraction, and routing. That is product guidance, not an independent measurement of speed or cost in a particular service. A real decision should use the service’s own latency, accuracy, refusal, and token-usage measurements.
+
+## Recount the same text to see the new budget
+
+Haiku 5.5 uses a different tokenizer from Haiku 4.5. Anthropic’s [model overview](https://platform.claude.com/docs/en/models/haiku-5-5/overview) says the same input text produces approximately 30% more tokens on average, while emphasizing that the increase depends on the content. A prompt-token count saved from the previous model should not be reused as the new model’s cost or capacity estimate.
+
+For example, if a fixed evaluation prompt counted about 10,000 tokens on Haiku 4.5, a simple 30% illustration would be about 13,000 tokens on Haiku 5.5. That is arithmetic to make the scale tangible, not a prediction for any actual prompt. Anthropic recommends recounting prompts with the new model ID. Code, multilingual text, JSON, and long documents should be measured directly in the integration being evaluated.
+
+Anthropic says the Messages API request, response, and streaming-event shapes remain the same. What changes is the token budget and how the client handles content blocks. A higher token count changes how much of the context window the same text occupies. It can also make a `max_tokens` value chosen for Haiku 4.5 cut off an equivalent answer. Haiku 5.5 uses adaptive thinking by default, and thinking tokens count toward `max_tokens`. Inspect the actual response and its `stop_reason` rather than assuming that the previous visible answer length will remain available.
+
+A price list alone cannot supply the new cost estimate. The [current model overview](https://platform.claude.com/docs/en/models/haiku-5-5/overview) lists input at $0.10 per million tokens and output at $0.50 per million tokens for prompts up to 100,000 tokens; above that threshold, the rates are $0.50 and $2.50. At the lower tier, 10,000 input tokens cost $0.001, while the illustrative 13,000-token prompt costs $0.0013 for input alone. Those figures exclude output, cache reads or writes, and batch pricing. Retokenization can move a request closer to the threshold, while thinking and output length also affect the bill. Do not apply Anthropic’s advertised average cost reduction directly to your workload. Recalculate from the new model’s actual `usage` and the pricing terms that apply to the service.
+
+[![A sparse thread spool beside a tightly wound one, used as a tactile metaphor for the same text producing more tokens on the new model.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/concept-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/concept-1.webp)
+_A sparse thread spool beside a tightly wound one, used as a tactile metaphor for the same text producing more tokens on the new model._
+
+## Thinking settings and response parsing change together
+
+A Haiku 4.5 request that sends `thinking: &#123;"type": "enabled", "budget_tokens": N&#125;` returns a 400 error on Haiku 5.5. The migration guide instead describes `thinking: &#123;"type": "adaptive"&#125;` and `output_config.effort` as the control for how much the model thinks. Effort levels such as `low`, `medium`, and `high` are not a direct transfer of the old numeric token budget.
+
+A less obvious change is that a response can contain a thinking block before a text block even when the request did not explicitly set thinking. If the client treats `content[0]` as the final answer, it may display what looks like an empty response. Parse each content block by its `type`, then select the text intended for the user.
+
+When a thinking block is sent back with tool results, the guide says to pass it through unmodified. A small `max_tokens` value can be consumed by thinking before the model produces visible text. Test the response parser, the function that appends tool results, empty-text handling, and the output limit as one integration path—not as unrelated configuration edits.
+
+## Remove sampling values and assistant prefill from the request
+
+The `temperature`, `top_p`, and `top_k` fields that were tuned for Haiku 4.5 also need review. Anthropic’s migration guide recommends omitting all three for Haiku 5.5 and using the prompt to guide behavior. Unsupported values or combinations can return 400 errors. Check whether the SDK silently adds defaults; removing a field from your application code does not prove it disappeared from the serialized request.
+
+Haiku 5.5 also rejects a final assistant message that it is expected to continue, even when thinking is turned off. If a prefill was used to constrain output format, consider structured outputs or a tool schema with enum fields. If it was used to request a particular opening, ask for that in the system prompt. If it represented a continuation after an interrupted reply, move the continuation context into a user turn.
+
+These are not always edits to one prompt template. A shared request serializer, retry handler, or SDK may contribute fields to the payload. Compare the actual requests for each production call type before concluding that the whole service is compatible.
+
+## If you use computer tools, update the declaration and the loop
+
+Text-only services can skip this branch. But an integration using computer use on the Claude API or Google Cloud cannot keep Haiku 4.5’s `computer_20250124` declaration unchanged. Haiku 5.5 supports computer use there through `computer_toolset_20260801`; declaring the old tool returns a 400 error.
+
+Changing the declared tool name is not the whole migration. Anthropic says the client should dispatch on each `tool_use` block’s `name` and `toolset_name`, handle every tool request returned in a turn, and echo `toolset_name` on results. The toolset enables zoom by default; if the execution environment does not implement it, the documentation describes disabling it in the tool configuration. Remove the `computer-use-2025-01-24` and `fine-grained-tool-streaming-2025-05-14` beta headers if they remain in the payload; either can cause a toolset request to return 400.
+
+Haiku 5.5 also supports a browser-use tool on the Claude API and Google Cloud. Adding that capability is a separate change from migrating an existing computer-use call. Turning it on at the same time makes it harder to tell whether a failure came from model compatibility or from the new browser workflow.
+
+[![A hand lowers a glass leaf into a copper-wire cradle, evoking the careful preservation of thinking blocks when they are sent back with tool results.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/mechanism-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/mechanism-1.webp)
+_A hand lowers a glass leaf into a copper-wire cradle, evoking the careful preservation of thinking blocks when they are sent back with tool results._
+
+## Stored conversations can be tied to an account and an unchanged prefix
+
+Services that store conversations and replay them later should record which account produced each thinking block. Haiku 5.5 thinking blocks work only in the producing account or an account linked to it. If another account sends the block, the request can succeed while the API drops the block before the model sees it. An HTTP success alone therefore does not prove that the earlier reasoning was restored.
+
+The prefix before a thinking block also matters. If the `system` prompt, `tools`, or earlier `messages` change, a new account can return a 400 error. Prefix checking is enabled by default for accounts created on or after August 31, 2026, 00:00 UTC; older accounts enforce it on requests that set `thinking.block_binding.prefix_mismatch_behavior`. Anthropic’s [preserved-thinking documentation](https://platform.claude.com/docs/en/build-with-claude/preserved-thinking) describes the mismatch options, including rejecting or dropping invalid blocks. Keep the conversation append-only so the same code behaves consistently across accounts.
+
+A middleware layer that rebuilds system instructions on every request, trims old tool results, summarizes earlier turns, or re-renders the first user message can affect replay. Preserve the original payload and account association, then test same-account replay separately from replay through another account. A successful request that silently loses a block is a different failure from a 400 error, but both can change the resulting answer.
+
+## Refusals and capacity need their own checks
+
+Haiku 5.5 runs safety classifiers that can decline a request. The API can return `stop_reason: "refusal"` and a refusal category. A request that passed on Haiku 4.5 is not guaranteed to behave identically after the switch. Anthropic’s [Haiku 5.5 prompting guide](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5) says there is no server-side fallback. The client must handle the refusal as an explicit response state; sending the same request again should not be assumed to fix it.
+
+The correct response is not a retry rule designed to bypass a safeguard. Decide how the product should communicate a refusal, whether the task should stop, and whether a separately approved alternative path exists under your own policy. If refusal categories are logged, keep only the operational details needed for review and avoid retaining sensitive inputs unnecessarily.
+
+Organizations using Priority Tier capacity for Haiku 4.5 should also verify their service plan independently. Anthropic says Priority Tier is not supported on Haiku 5.5. A model-ID change does not establish that the previous throughput or service-tier conditions carry over.
+
+## Compare small, fixed test sets before moving all traffic
+
+Start with a fixed evaluation set that does not contain live user traffic. It can include ordinary short requests, long context, JSON output, tool calls, resumed conversations, and prompts likely to be refused. Send the same inputs to both models. For Haiku 5.5, recount the tokens with the new model ID, inspect every block in `content`, and include a case where one response contains more than one tool request.
+
+Accuracy is not the only useful result. Check for 400 errors, answers cut off at `max_tokens`, refusal states that reach the right client branch, token usage, and actual latency. If prompts approach 100,000 tokens, include examples near that pricing boundary. If the service replays stored conversations, distinguish replay through the original account from replay through another account.
+
+Then use a limited canary share to observe the same measures in the real service. Keep model selection separate from the rest of the deployment so a failed canary can return to Haiku 4.5 without rolling back unrelated code. The migration guide identifies compatibility changes; each team still has to set its own quality, latency, error, and cost thresholds. Documentation narrows what to test, but it cannot test a codebase on your behalf.
+
+[![A single capsule lit inside a brass cradle while the rest stay quietly in a tray, evoking a small canary batch before a wider rollout.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/closing-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/closing-1.webp)
+_A single capsule lit inside a brass cradle while the rest stay quietly in a tray, evoking a small canary batch before a wider rollout._
+
+## Decide what to change and what to measure together
+
+Not every service will need the same amount of work. A simple Messages API call may need little more than a model-ID change and a fresh token count. An integration that stores thinking blocks, uses assistant prefill, or runs computer use may need changes to request construction and response handling. Conversation replay and refusal outcomes are particularly easy to miss if monitoring looks only at HTTP status codes.
+
+So the useful next step is not to switch every call at once. Identify the features your client really uses, measure those request paths against the new model, and move traffic only when the results meet your service’s own requirements. Anthropic’s documentation identifies the migration points; the actual cost, error rate, latency, and answer quality still have to be checked in your system.
+
+## Sources
+
+- Introducing Claude Haiku 5.5 — Anthropic
+
+- Claude Haiku 5.5 model overview — Anthropic
+
+- Claude Haiku 5.5 migration guide — Anthropic
+
+- Prompting Claude Haiku 5.5 — Anthropic
+
+- Preserved thinking — Anthropic Anthropic’s official documentation describes the API and model behavior. Published compatibility guidance does not guarantee that a particular codebase has migrated successfully; that has to be verified in the actual service.

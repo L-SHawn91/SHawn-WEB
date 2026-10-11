@@ -1,18 +1,32 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-10T18:32:10.601Z",
+  "generated_at": "2026-10-11T18:31:24.927Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 122,
-      "fetched": 122,
-      "scanned": 122,
+      "remote_total": 124,
+      "fetched": 124,
+      "scanned": 124,
       "unchanged": 122,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1830,
+          "title": "Before Switching to Claude Haiku 5.5, What Should You Recheck in Your API?",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/11/claude-haiku-55-api-migration-checklist-en/",
+          "target": "content/posts/shide-ai-20261011-claude-haiku-55-api-migration-checklist-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1829,
+          "title": "Claude Haiku 5.5로 바꿀 때, 기존 API에서 먼저 확인할 것은?",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/11/claude-haiku-55-api-migration-checklist/",
+          "target": "content/posts/shide-ai-20261011-claude-haiku-55-api-migration-checklist.mdx",
+          "mode": "created"
+        },
         {
           "id": 1805,
           "title": "DeepSeek V4.1-Flash: When Does KV Cache Become a Long-Context Bottleneck?",
@@ -874,9 +888,9 @@
       "remote_total": 115,
       "fetched": 115,
       "scanned": 115,
-      "unchanged": 113,
+      "unchanged": 115,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -884,14 +898,14 @@
           "title": "햇빛 광역학 치료 연구, TIMP-1 변화만 통계적으로 유의",
           "link": "https://shawnbiohub.wordpress.com/2026/10/10/daylight-photodynamic-therapy-skin-marker-study-kor/",
           "target": "content/posts/shide-bio-20261010-daylight-photodynamic-therapy-skin-marker-study-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1757,
           "title": "Daylight photodynamic therapy study finds one significant marker change",
           "link": "https://shawnbiohub.wordpress.com/2026/10/10/daylight-photodynamic-therapy-skin-marker-study/",
           "target": "content/posts/shide-bio-20261010-daylight-photodynamic-therapy-skin-marker-study.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1743,
@@ -1688,27 +1702,41 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 151,
-      "fetched": 151,
-      "scanned": 151,
-      "unchanged": 149,
+      "remote_total": 153,
+      "fetched": 153,
+      "scanned": 153,
+      "unchanged": 151,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 2398,
+          "title": "Gyeonggi’s September CPI Hit 3.0%, with Petroleum and Semiconductor Durables Leading",
+          "link": "https://shawnassets.wordpress.com/2026/10/11/gyeonggis-september-cpi-hit-3-0-with-petroleum-and-semiconductor-durables-leading/",
+          "target": "content/posts/shide-assets-20261011-gyeonggis-september-cpi-hit-3-0-with-petroleum-and-semiconductor-durables-leading.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2397,
+          "title": "경기 9월 소비자물가 3.0%, 석유류와 반도체 내구재가 3%대 두 달 연속 상승을 끌었다",
+          "link": "https://shawnassets.wordpress.com/2026/10/11/%ea%b2%bd%ea%b8%b0-9%ec%9b%94-%ec%86%8c%eb%b9%84%ec%9e%90%eb%ac%bc%ea%b0%80-3-0-%ec%84%9d%ec%9c%a0%eb%a5%98%ec%99%80-%eb%b0%98%eb%8f%84%ec%b2%b4-%eb%82%b4%ea%b5%ac%ec%9e%ac%ea%b0%80-3%eb%8c%80/",
+          "target": "content/posts/shide-assets-20261011-ea-b2-bd-ea-b8-b0-9-ec-9b-94-ec-86-8c-eb-b9-84-ec-9e-90-eb-ac-bc-ea-b0-80-3-0-ec-84-9d-ec-9c-a0-eb-a5-98-ec-99-80-eb-b0-98-eb-8f-84-ec-b2-b4-eb-82-b4-ea-b5-ac-ec-9e-ac-ea-b0-80-3-eb-8c-80.mdx",
+          "mode": "created"
+        },
+        {
           "id": 2384,
           "title": "Worried About a Product at Home? Meeting News or a Recall Notice?",
           "link": "https://shawnassets.wordpress.com/2026/10/10/consumer-safety-meeting-recall-notice-20261009-en/",
           "target": "content/posts/shide-assets-20261010-consumer-safety-meeting-recall-notice-20261009-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2383,
           "title": "집에 둔 제품이 걱정될 때, 간담회 소식과 회수 공지 중 무엇을 확인해야 할까요?",
           "link": "https://shawnassets.wordpress.com/2026/10/10/consumer-safety-meeting-recall-notice-20261009/",
           "target": "content/posts/shide-assets-20261010-consumer-safety-meeting-recall-notice-20261009.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2332,
@@ -2757,9 +2785,9 @@
     }
   ],
   "totals": {
-    "remote": 388,
-    "scanned": 388,
-    "unchanged": 384,
+    "remote": 392,
+    "scanned": 392,
+    "unchanged": 388,
     "updated": 0,
     "created": 4,
     "removed": 0,
