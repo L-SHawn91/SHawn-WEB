@@ -1,31 +1,45 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-11T18:31:24.927Z",
+  "generated_at": "2026-10-12T18:31:27.603Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 124,
-      "fetched": 124,
-      "scanned": 124,
-      "unchanged": 122,
+      "remote_total": 126,
+      "fetched": 126,
+      "scanned": 126,
+      "unchanged": 124,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 1851,
+          "title": "Anthropic’s ‘Unintended Model Actions’ Report: What Operators Should Read First",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/12/anthropic-unintended-agent-actions-persistence-training-en/",
+          "target": "content/posts/shide-ai-20261012-anthropic-unintended-agent-actions-persistence-training-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1850,
+          "title": "Anthropic이 공개한 ‘평가 중 의도되지 않은 Claude의 행동’: 운영자가 알아두어야 할 것은?",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/12/anthropic-unintended-agent-actions-persistence-training/",
+          "target": "content/posts/shide-ai-20261012-anthropic-unintended-agent-actions-persistence-training.mdx",
+          "mode": "created"
+        },
+        {
           "id": 1830,
           "title": "Before Switching to Claude Haiku 5.5, What Should You Recheck in Your API?",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/11/claude-haiku-55-api-migration-checklist-en/",
           "target": "content/posts/shide-ai-20261011-claude-haiku-55-api-migration-checklist-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1829,
           "title": "Claude Haiku 5.5로 바꿀 때, 기존 API에서 먼저 확인할 것은?",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/11/claude-haiku-55-api-migration-checklist/",
           "target": "content/posts/shide-ai-20261011-claude-haiku-55-api-migration-checklist.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1805,
@@ -885,14 +899,28 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 115,
-      "fetched": 115,
-      "scanned": 115,
+      "remote_total": 117,
+      "fetched": 117,
+      "scanned": 117,
       "unchanged": 115,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1794,
+          "title": "수술 가능 폐암 3상 등록 결과, 아테졸리주맙 병합군서 병리 반응률 높게 보고",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/12/neoadjuvant-lung-cancer-trial-results-kor/",
+          "target": "content/posts/shide-bio-20261012-neoadjuvant-lung-cancer-trial-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1792,
+          "title": "Atezolizumab Combination Reports Higher Pathological Response in Resectable Lung Cancer Trial",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/12/neoadjuvant-lung-cancer-trial-results/",
+          "target": "content/posts/shide-bio-20261012-neoadjuvant-lung-cancer-trial-results.mdx",
+          "mode": "created"
+        },
         {
           "id": 1759,
           "title": "햇빛 광역학 치료 연구, TIMP-1 변화만 통계적으로 유의",
@@ -1705,9 +1733,9 @@
       "remote_total": 153,
       "fetched": 153,
       "scanned": 153,
-      "unchanged": 151,
-      "updated": 0,
-      "created": 2,
+      "unchanged": 152,
+      "updated": 1,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -1715,14 +1743,14 @@
           "title": "Gyeonggi’s September CPI Hit 3.0%, with Petroleum and Semiconductor Durables Leading",
           "link": "https://shawnassets.wordpress.com/2026/10/11/gyeonggis-september-cpi-hit-3-0-with-petroleum-and-semiconductor-durables-leading/",
           "target": "content/posts/shide-assets-20261011-gyeonggis-september-cpi-hit-3-0-with-petroleum-and-semiconductor-durables-leading.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2397,
           "title": "경기 9월 소비자물가 3.0%, 석유류와 반도체 내구재가 3%대 두 달 연속 상승을 끌었다",
           "link": "https://shawnassets.wordpress.com/2026/10/11/%ea%b2%bd%ea%b8%b0-9%ec%9b%94-%ec%86%8c%eb%b9%84%ec%9e%90%eb%ac%bc%ea%b0%80-3-0-%ec%84%9d%ec%9c%a0%eb%a5%98%ec%99%80-%eb%b0%98%eb%8f%84%ec%b2%b4-%eb%82%b4%ea%b5%ac%ec%9e%ac%ea%b0%80-3%eb%8c%80/",
           "target": "content/posts/shide-assets-20261011-ea-b2-bd-ea-b8-b0-9-ec-9b-94-ec-86-8c-eb-b9-84-ec-9e-90-eb-ac-bc-ea-b0-80-3-0-ec-84-9d-ec-9c-a0-eb-a5-98-ec-99-80-eb-b0-98-eb-8f-84-ec-b2-b4-eb-82-b4-ea-b5-ac-ec-9e-ac-ea-b0-80-3-eb-8c-80.mdx",
-          "mode": "created"
+          "mode": "updated"
         },
         {
           "id": 2384,
@@ -2785,12 +2813,12 @@
     }
   ],
   "totals": {
-    "remote": 392,
-    "scanned": 392,
-    "unchanged": 388,
-    "updated": 0,
+    "remote": 396,
+    "scanned": 396,
+    "unchanged": 391,
+    "updated": 1,
     "created": 4,
     "removed": 0,
-    "changed": 4
+    "changed": 5
   }
 }
