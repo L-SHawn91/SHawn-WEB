@@ -1,31 +1,45 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-13T18:31:30.866Z",
+  "generated_at": "2026-10-14T18:31:30.644Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 128,
-      "fetched": 128,
-      "scanned": 128,
-      "unchanged": 126,
+      "remote_total": 130,
+      "fetched": 130,
+      "scanned": 130,
+      "unchanged": 128,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 1900,
+          "title": "Frontier Model Week, Explained: Why Google AI 4 Argon Goes Longer and Deeper While Meta Muse Wonder Brings Active Memory and Active Focus",
+          "link": "",
+          "target": "content/posts/shide-ai-20261014-frontier-model-week-google-ai-4-argon-muse-wonder-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1899,
+          "title": "10월 둘째 주 프런티어 모델 신기: Google AI 4 Argon이 ‘더 오래 더 깊게’, Meta Muse Wonder가 ‘기억과 집중을 가진 개인 비서’로 나온 이유",
+          "link": "",
+          "target": "content/posts/shide-ai-20261014-frontier-model-week-google-ai-4-argon-muse-wonder.mdx",
+          "mode": "created"
+        },
+        {
           "id": 1878,
           "title": "How Google’s Google AI Agent Bundles ‘All Work Into One Box’: What the October 8 Keynote Actually Changes",
           "link": "",
           "target": "content/posts/shide-ai-20261013-google-google-ai-agent-enterprise-work-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1877,
           "title": "구글 AI 에이전트가 ‘모든 일을 하나로’ 묶은 방식: 10월 8일 키노트가 바꾼 기업용 AI의 약속",
           "link": "",
           "target": "content/posts/shide-ai-20261013-google-google-ai-agent-enterprise-work.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1851,
@@ -2827,9 +2841,9 @@
     }
   ],
   "totals": {
-    "remote": 398,
-    "scanned": 398,
-    "unchanged": 396,
+    "remote": 400,
+    "scanned": 400,
+    "unchanged": 398,
     "updated": 0,
     "created": 2,
     "removed": 0,
