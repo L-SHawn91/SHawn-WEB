@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-14T18:31:30.644Z",
+  "generated_at": "2026-10-15T18:32:39.694Z",
   "mode": "write",
   "sources": [
     {
@@ -8,9 +8,9 @@
       "remote_total": 130,
       "fetched": 130,
       "scanned": 130,
-      "unchanged": 128,
+      "unchanged": 130,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -18,14 +18,14 @@
           "title": "Frontier Model Week, Explained: Why Google AI 4 Argon Goes Longer and Deeper While Meta Muse Wonder Brings Active Memory and Active Focus",
           "link": "",
           "target": "content/posts/shide-ai-20261014-frontier-model-week-google-ai-4-argon-muse-wonder-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1899,
           "title": "10월 둘째 주 프런티어 모델 신기: Google AI 4 Argon이 ‘더 오래 더 깊게’, Meta Muse Wonder가 ‘기억과 집중을 가진 개인 비서’로 나온 이유",
           "link": "",
           "target": "content/posts/shide-ai-20261014-frontier-model-week-google-ai-4-argon-muse-wonder.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1878,
@@ -927,14 +927,28 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 117,
-      "fetched": 117,
-      "scanned": 117,
+      "remote_total": 119,
+      "fetched": 119,
+      "scanned": 119,
       "unchanged": 117,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1813,
+          "title": "뒤센근이영양증 엑손 44 임상시험, 분자 지표 변화 보고…기능 개선은 아직 미확인",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/16/duchenne-exon-44-skipping-trial-molecular-results-kor/",
+          "target": "content/posts/shide-bio-20261016-duchenne-exon-44-skipping-trial-molecular-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1811,
+          "title": "Duchenne exon-44 skipping trial reports molecular changes, not yet functional benefit",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/16/duchenne-exon-44-skipping-trial-molecular-results/",
+          "target": "content/posts/shide-bio-20261016-duchenne-exon-44-skipping-trial-molecular-results.mdx",
+          "mode": "created"
+        },
         {
           "id": 1794,
           "title": "수술 가능 폐암 3상 등록 결과, 아테졸리주맙 병합군서 병리 반응률 높게 보고",
@@ -1758,14 +1772,28 @@
     },
     {
       "site": "shawnassets.wordpress.com",
-      "remote_total": 153,
-      "fetched": 153,
-      "scanned": 153,
+      "remote_total": 155,
+      "fetched": 155,
+      "scanned": 155,
       "unchanged": 153,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 2487,
+          "title": "Gyeonggi Supplementary Budget Restores 21.6 Billion Won — 17 Programs, 51.4% of the Original Demand",
+          "link": "https://shawnassets.wordpress.com/2026/10/15/gyeonggi-supplementary-budget-restores-21-6-billion-won-17-programs-51-4-of-the-original-demand/",
+          "target": "content/posts/shide-assets-20261015-gyeonggi-supplementary-budget-restores-21-6-billion-won-17-programs-51-4-of-the-original-demand.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2486,
+          "title": "경기도 추경안 216억 원 민생예산 복원, 17개 사업 51.4% 합의",
+          "link": "https://shawnassets.wordpress.com/2026/10/15/%ea%b2%bd%ea%b8%b0%eb%8f%84-%ec%b6%94%ea%b2%bd%ec%95%88-216%ec%96%b5-%ec%9b%90-%eb%af%bc%ec%83%9d%ec%98%88%ec%82%b0-%eb%b3%b5%ec%9b%90-17%ea%b0%9c-%ec%82%ac%ec%97%85-51-4-%ed%95%a9%ec%9d%98/",
+          "target": "content/posts/shide-assets-20261015-ea-b2-bd-ea-b8-b0-eb-8f-84-ec-b6-94-ea-b2-bd-ec-95-88-216-ec-96-b5-ec-9b-90-eb-af-bc-ec-83-9d-ec-98-88-ec-82-b0-eb-b3-b5-ec-9b-90-17-ea-b0-9c-ec-82-ac-ec-97-85-51-4-ed-95-a9-ec-9d-98.mdx",
+          "mode": "created"
+        },
         {
           "id": 2398,
           "title": "Gyeonggi’s September CPI Hit 3.0%, with Petroleum and Semiconductor Durables Leading",
@@ -2841,12 +2869,12 @@
     }
   ],
   "totals": {
-    "remote": 400,
-    "scanned": 400,
-    "unchanged": 398,
+    "remote": 404,
+    "scanned": 404,
+    "unchanged": 400,
     "updated": 0,
-    "created": 2,
+    "created": 4,
     "removed": 0,
-    "changed": 2
+    "changed": 4
   }
 }
