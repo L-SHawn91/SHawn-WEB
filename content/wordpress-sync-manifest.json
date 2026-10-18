@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-16T18:31:31.463Z",
+  "generated_at": "2026-10-18T18:31:25.759Z",
   "mode": "write",
   "sources": [
     {
@@ -8,9 +8,9 @@
       "remote_total": 132,
       "fetched": 132,
       "scanned": 132,
-      "unchanged": 130,
+      "unchanged": 132,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -18,14 +18,14 @@
           "title": "FTC’s October 14 Civil Investigative Demands to OpenAI and Anthropic: What the 50-Page ‘Subpoena’ Asks and What It Does Not Guarantee",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/16/ftc-civil-investigative-demands-openai-anthropic-consumer-harms-en/",
           "target": "content/posts/shide-ai-20261016-ftc-civil-investigative-demands-openai-anthropic-consumer-harms-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1923,
           "title": "10월 14일 FTC가 OpenAI와 Anthropic에 보낸 ’50쪽 CID’: 무엇을 요구하고 무엇을 보장하지는 않는가",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/16/ftc-civil-investigative-demands-openai-anthropic-consumer-harms/",
           "target": "content/posts/shide-ai-20261016-ftc-civil-investigative-demands-openai-anthropic-consumer-harms.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1900,
@@ -941,27 +941,41 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 121,
-      "fetched": 121,
-      "scanned": 121,
-      "unchanged": 119,
+      "remote_total": 123,
+      "fetched": 123,
+      "scanned": 123,
+      "unchanged": 121,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 1847,
+          "title": "CAR-T 뒤 NKTR-255 시험, 6개월 완전반응 결과 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/19/nktr-255-after-car-t-lymphoma-results-kor/",
+          "target": "content/posts/shide-bio-20261019-nktr-255-after-car-t-lymphoma-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1845,
+          "title": "NKTR-255 after CAR-T: Registry posts month-six response counts",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/19/nktr-255-after-car-t-lymphoma-results/",
+          "target": "content/posts/shide-bio-20261019-nktr-255-after-car-t-lymphoma-results.mdx",
+          "mode": "created"
+        },
+        {
           "id": 1830,
           "title": "MVA 코로나19 백신 1상에서 면역반응 제한적으로 나타나",
           "link": "https://shawnbiohub.wordpress.com/2026/10/17/mva-covid-vaccine-phase-one-immunogenicity-kor/",
           "target": "content/posts/shide-bio-20261017-mva-covid-vaccine-phase-one-immunogenicity-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1828,
           "title": "MVA COVID-19 vaccine trial finds weak immune response",
           "link": "https://shawnbiohub.wordpress.com/2026/10/17/mva-covid-vaccine-phase-one-immunogenicity/",
           "target": "content/posts/shide-bio-20261017-mva-covid-vaccine-phase-one-immunogenicity.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1813,
@@ -2897,12 +2911,12 @@
     }
   ],
   "totals": {
-    "remote": 408,
-    "scanned": 408,
-    "unchanged": 404,
+    "remote": 410,
+    "scanned": 410,
+    "unchanged": 408,
     "updated": 0,
-    "created": 4,
+    "created": 2,
     "removed": 0,
-    "changed": 4
+    "changed": 2
   }
 }
