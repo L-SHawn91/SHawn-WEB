@@ -1,18 +1,32 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-18T18:31:25.759Z",
+  "generated_at": "2026-10-20T18:31:35.525Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 132,
-      "fetched": 132,
-      "scanned": 132,
+      "remote_total": 134,
+      "fetched": 134,
+      "scanned": 134,
       "unchanged": 132,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1963,
+          "title": "Why the NYC Comptroller Asked Anthropic to Pause Its IPO: The October 14 Letter, Anthropic’s Same-Week Evaluator Update, and the Monitoring Items an Operator Should Add This Week",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/20/anthropic-comptroller-ipo-delay-request-en/",
+          "target": "content/posts/shide-ai-20261020-anthropic-comptroller-ipo-delay-request-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1962,
+          "title": "NYC Comptroller가 Anthropic IPO 일시 중단을 요청한 이유: 10월 14일 편지, 같은 주 Anthropic의 제3자 평가자 업데이트, 그리고 운영자가 이번 주에 추가할 모니터링 항목",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/20/anthropic-comptroller-ipo-delay-request/",
+          "target": "content/posts/shide-ai-20261020-anthropic-comptroller-ipo-delay-request.mdx",
+          "mode": "created"
+        },
         {
           "id": 1924,
           "title": "FTC’s October 14 Civil Investigative Demands to OpenAI and Anthropic: What the 50-Page ‘Subpoena’ Asks and What It Does Not Guarantee",
@@ -944,9 +958,9 @@
       "remote_total": 123,
       "fetched": 123,
       "scanned": 123,
-      "unchanged": 121,
+      "unchanged": 123,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -954,14 +968,14 @@
           "title": "CAR-T 뒤 NKTR-255 시험, 6개월 완전반응 결과 공개",
           "link": "https://shawnbiohub.wordpress.com/2026/10/19/nktr-255-after-car-t-lymphoma-results-kor/",
           "target": "content/posts/shide-bio-20261019-nktr-255-after-car-t-lymphoma-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1845,
           "title": "NKTR-255 after CAR-T: Registry posts month-six response counts",
           "link": "https://shawnbiohub.wordpress.com/2026/10/19/nktr-255-after-car-t-lymphoma-results/",
           "target": "content/posts/shide-bio-20261019-nktr-255-after-car-t-lymphoma-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1830,
@@ -2911,9 +2925,9 @@
     }
   ],
   "totals": {
-    "remote": 410,
-    "scanned": 410,
-    "unchanged": 408,
+    "remote": 412,
+    "scanned": 412,
+    "unchanged": 410,
     "updated": 0,
     "created": 2,
     "removed": 0,
