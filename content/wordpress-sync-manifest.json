@@ -1,31 +1,45 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-20T18:31:35.525Z",
+  "generated_at": "2026-10-24T18:31:30.389Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 134,
-      "fetched": 134,
-      "scanned": 134,
-      "unchanged": 132,
+      "remote_total": 136,
+      "fetched": 136,
+      "scanned": 136,
+      "unchanged": 134,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 2036,
+          "title": "Anthropic Is Committing 5% of Its Shares to a New Public Benefit Fund: What the October 18 Post Settles, and What It Leaves Open",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/24/anthropic-public-benefit-fund-equity-commitment-en/",
+          "target": "content/posts/shide-ai-20261024-anthropic-public-benefit-fund-equity-commitment-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2035,
+          "title": "Anthropic의 10월 18일 공익 기금 발표가 정한 것과 남겨 둔 것",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/24/anthropic-public-benefit-fund-equity-commitment/",
+          "target": "content/posts/shide-ai-20261024-anthropic-public-benefit-fund-equity-commitment.mdx",
+          "mode": "created"
+        },
+        {
           "id": 1963,
           "title": "Why the NYC Comptroller Asked Anthropic to Pause Its IPO: The October 14 Letter, Anthropic’s Same-Week Evaluator Update, and the Monitoring Items an Operator Should Add This Week",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/20/anthropic-comptroller-ipo-delay-request-en/",
           "target": "content/posts/shide-ai-20261020-anthropic-comptroller-ipo-delay-request-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1962,
           "title": "NYC Comptroller가 Anthropic IPO 일시 중단을 요청한 이유: 10월 14일 편지, 같은 주 Anthropic의 제3자 평가자 업데이트, 그리고 운영자가 이번 주에 추가할 모니터링 항목",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/20/anthropic-comptroller-ipo-delay-request/",
           "target": "content/posts/shide-ai-20261020-anthropic-comptroller-ipo-delay-request.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1924,
@@ -2925,9 +2939,9 @@
     }
   ],
   "totals": {
-    "remote": 412,
-    "scanned": 412,
-    "unchanged": 410,
+    "remote": 414,
+    "scanned": 414,
+    "unchanged": 412,
     "updated": 0,
     "created": 2,
     "removed": 0,
