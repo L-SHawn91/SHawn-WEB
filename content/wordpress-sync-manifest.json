@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-24T18:31:30.389Z",
+  "generated_at": "2026-10-25T18:31:31.505Z",
   "mode": "write",
   "sources": [
     {
@@ -8,9 +8,9 @@
       "remote_total": 136,
       "fetched": 136,
       "scanned": 136,
-      "unchanged": 134,
+      "unchanged": 136,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -18,14 +18,14 @@
           "title": "Anthropic Is Committing 5% of Its Shares to a New Public Benefit Fund: What the October 18 Post Settles, and What It Leaves Open",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/24/anthropic-public-benefit-fund-equity-commitment-en/",
           "target": "content/posts/shide-ai-20261024-anthropic-public-benefit-fund-equity-commitment-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2035,
           "title": "Anthropic의 10월 18일 공익 기금 발표가 정한 것과 남겨 둔 것",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/24/anthropic-public-benefit-fund-equity-commitment/",
           "target": "content/posts/shide-ai-20261024-anthropic-public-benefit-fund-equity-commitment.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1963,
@@ -969,14 +969,28 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 123,
-      "fetched": 123,
-      "scanned": 123,
+      "remote_total": 125,
+      "fetched": 125,
+      "scanned": 125,
       "unchanged": 123,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1870,
+          "title": "헌팅턴병 임상시험 사후 분석, 항도파민성 약물 복용군에서 평가 지표 악화 관찰",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/26/huntington-disease-medication-trial-outcomes-kor/",
+          "target": "content/posts/shide-bio-20261026-huntington-disease-medication-trial-outcomes-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1868,
+          "title": "Huntington Disease Trial Analysis Links Antidopaminergic Medication Use With Faster Measure Decline",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/26/huntington-disease-medication-trial-outcomes/",
+          "target": "content/posts/shide-bio-20261026-huntington-disease-medication-trial-outcomes.mdx",
+          "mode": "created"
+        },
         {
           "id": 1847,
           "title": "CAR-T 뒤 NKTR-255 시험, 6개월 완전반응 결과 공개",
@@ -2939,9 +2953,9 @@
     }
   ],
   "totals": {
-    "remote": 414,
-    "scanned": 414,
-    "unchanged": 412,
+    "remote": 416,
+    "scanned": 416,
+    "unchanged": 414,
     "updated": 0,
     "created": 2,
     "removed": 0,
