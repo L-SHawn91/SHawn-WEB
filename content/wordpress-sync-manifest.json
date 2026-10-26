@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-25T18:31:31.505Z",
+  "generated_at": "2026-10-26T18:31:35.248Z",
   "mode": "write",
   "sources": [
     {
@@ -969,27 +969,41 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 125,
-      "fetched": 125,
-      "scanned": 125,
-      "unchanged": 123,
+      "remote_total": 127,
+      "fetched": 127,
+      "scanned": 127,
+      "unchanged": 125,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 1887,
+          "title": "AVERT 분석에서 여러 항암제 분류군의 아픽사반군 혈전 위험비가 낮게 보고됐습니다",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/27/apixaban-chemotherapy-class-avert-analysis-kor/",
+          "target": "content/posts/shide-bio-20261027-apixaban-chemotherapy-class-avert-analysis-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1885,
+          "title": "Apixaban Linked to Lower Clot Risk Across Chemotherapy Groups in AVERT Analysis",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/27/apixaban-chemotherapy-class-avert-analysis/",
+          "target": "content/posts/shide-bio-20261027-apixaban-chemotherapy-class-avert-analysis.mdx",
+          "mode": "created"
+        },
+        {
           "id": 1870,
           "title": "헌팅턴병 임상시험 사후 분석, 항도파민성 약물 복용군에서 평가 지표 악화 관찰",
           "link": "https://shawnbiohub.wordpress.com/2026/10/26/huntington-disease-medication-trial-outcomes-kor/",
           "target": "content/posts/shide-bio-20261026-huntington-disease-medication-trial-outcomes-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1868,
           "title": "Huntington Disease Trial Analysis Links Antidopaminergic Medication Use With Faster Measure Decline",
           "link": "https://shawnbiohub.wordpress.com/2026/10/26/huntington-disease-medication-trial-outcomes/",
           "target": "content/posts/shide-bio-20261026-huntington-disease-medication-trial-outcomes.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1847,
@@ -2953,9 +2967,9 @@
     }
   ],
   "totals": {
-    "remote": 416,
-    "scanned": 416,
-    "unchanged": 414,
+    "remote": 418,
+    "scanned": 418,
+    "unchanged": 416,
     "updated": 0,
     "created": 2,
     "removed": 0,
