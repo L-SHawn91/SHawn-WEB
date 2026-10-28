@@ -1,18 +1,32 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-26T18:31:35.248Z",
+  "generated_at": "2026-10-28T18:32:52.001Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 136,
-      "fetched": 136,
-      "scanned": 136,
+      "remote_total": 138,
+      "fetched": 138,
+      "scanned": 138,
       "unchanged": 136,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 2159,
+          "title": "Kimi K3.1 Pro’s Cyber Benchmark: 90.5 Without the Removal, 81.0 for the Released Model, and the Chart’s Other Columns",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/28/kimi-k3-1-pro-open-weight-cyber-capability-reduction-en/",
+          "target": "content/posts/shide-ai-20261028-kimi-k3-1-pro-open-weight-cyber-capability-reduction-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2158,
+          "title": "Kimi K3.1 Pro의 사이버 벤치마크: 완화 조치 없이 학습한 체크포인트 90.5, 공개본 81.0, 채점표의 다른 열",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/28/kimi-k3-1-pro-open-weight-cyber-capability-reduction/",
+          "target": "content/posts/shide-ai-20261028-kimi-k3-1-pro-open-weight-cyber-capability-reduction.mdx",
+          "mode": "created"
+        },
         {
           "id": 2036,
           "title": "Anthropic Is Committing 5% of Its Shares to a New Public Benefit Fund: What the October 18 Post Settles, and What It Leaves Open",
@@ -969,27 +983,55 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 127,
-      "fetched": 127,
-      "scanned": 127,
-      "unchanged": 125,
+      "remote_total": 131,
+      "fetched": 131,
+      "scanned": 131,
+      "unchanged": 127,
       "updated": 0,
-      "created": 2,
+      "created": 4,
       "removed": 0,
       "items": [
+        {
+          "id": 1920,
+          "title": "코판리십 병용 임상시험, 용량·안전성 결과 공개…효능 지표는 미보고",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/29/copanlisib-immunotherapy-registry-results-kor/",
+          "target": "content/posts/shide-bio-20261029-copanlisib-immunotherapy-registry-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1918,
+          "title": "Copanlisib combination trial posts dose-finding and safety results, but no efficacy outcomes",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/29/copanlisib-immunotherapy-registry-results/",
+          "target": "content/posts/shide-bio-20261029-copanlisib-immunotherapy-registry-results.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1905,
+          "title": "이식 부적합 거대 B세포 림프종 2차 치료 시험에서 잠토셀군 무진행 사건 생존기간이 길게 보고됐습니다",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/28/zamto-cel-second-line-large-b-cell-lymphoma-trial-kor/",
+          "target": "content/posts/shide-bio-20261028-zamto-cel-second-line-large-b-cell-lymphoma-trial-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1903,
+          "title": "Zamto-cel shows longer median event-free survival than R-GemOx in a phase 2 lymphoma trial",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/28/zamto-cel-second-line-large-b-cell-lymphoma-trial/",
+          "target": "content/posts/shide-bio-20261028-zamto-cel-second-line-large-b-cell-lymphoma-trial.mdx",
+          "mode": "created"
+        },
         {
           "id": 1887,
           "title": "AVERT 분석에서 여러 항암제 분류군의 아픽사반군 혈전 위험비가 낮게 보고됐습니다",
           "link": "https://shawnbiohub.wordpress.com/2026/10/27/apixaban-chemotherapy-class-avert-analysis-kor/",
           "target": "content/posts/shide-bio-20261027-apixaban-chemotherapy-class-avert-analysis-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1885,
           "title": "Apixaban Linked to Lower Clot Risk Across Chemotherapy Groups in AVERT Analysis",
           "link": "https://shawnbiohub.wordpress.com/2026/10/27/apixaban-chemotherapy-class-avert-analysis/",
           "target": "content/posts/shide-bio-20261027-apixaban-chemotherapy-class-avert-analysis.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1870,
@@ -2967,12 +3009,12 @@
     }
   ],
   "totals": {
-    "remote": 418,
-    "scanned": 418,
-    "unchanged": 416,
+    "remote": 424,
+    "scanned": 424,
+    "unchanged": 418,
     "updated": 0,
-    "created": 2,
+    "created": 6,
     "removed": 0,
-    "changed": 2
+    "changed": 6
   }
 }

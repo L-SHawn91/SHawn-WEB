@@ -1,0 +1,127 @@
+---
+title: "Kimi K3.1 Pro’s Cyber Benchmark: 90.5 Without the Removal, 81.0 for the Released Model, and the Chart’s Other Columns"
+date: "2026-10-28"
+description: "Moonshot AI announced Kimi K3.1 Pro and reported that on its own in-house benchmark xdev-bench-hard, a checkpoint trained without cyber-related data removal reached 90.5% while ..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/hero-46.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/10/28/kimi-k3-1-pro-open-weight-cyber-capability-reduction-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "2159"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/10/28/kimi-k3-1-pro-open-weight-cyber-capability-reduction-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/10/28/kimi-k3-1-pro-open-weight-cyber-capability-reduction/) / **EN · English** BILINGUAL PAIR
+
+Moonshot AI published two numbers from its own benchmark when it announced Kimi K3.1 Pro. A checkpoint trained with cyber-related data left in scored 90.5%, and the final K3.1 Pro scored 81.0%. Both were measured on the same benchmark, but they came from two checkpoints trained differently — and one thing sits in the way of reading anything into the gap between them: the denominator behind the two numbers.
+
+The chart that carries those numbers has columns the announcement body never discusses. It records the harness each model ran on, a column whose order disagrees with the pass@3 one, and the tokens each successful trajectory consumed. And the total number of problems behind all of it is printed nowhere in the announcement body or on the chart. That missing denominator is the thing worth starting with.
+
+## How many problems is this
+
+Reading the figure cell by cell gives six rows: 100, 90.5, 85.7, 81.0, 57.1, and 33.3. The column heading is “Problems Solved (pass@3)” and the cells carry no unit, even though the announcement body describes 90.5 and 81.0 as shares of problems solved. An asterisk marks one row, GPT-5.6 Sol, and the footnote reads third-party evaluation. The chart does not name the evaluating party for the other five rows.
+
+Read those five unstarred cells against a denominator of 21 and the pattern is immediate: 19/21, 18/21, 17/21, 12/21 and 7/21. The catch is that nobody wrote 21 down. The chart shows one decimal place, so 90.5 is not exactly 19/21 even if the fit looks tidy, and neither the figure nor the announcement body mentions a denominator at all. A pattern that fits is not the same as a number that was published.
+
+The two headline figures sit 9.5 points apart, which is 10.5% measured against 90.5 — a relative figure computed on a rate whose denominator has not been published, so it is not the first number to reach for.
+
+Whether 81.0 counts as low is a question about the comparison, not the figure, and the announcement supplies the comparison. Moonshot AI writes that K3.1 Pro’s offensive cyber capability is by design below what its pipeline can produce, and remains behind frontier proprietary models that have been publicly available for at least three months. The figure reads as a lowered result without reading as a safe level.
+
+What that benchmark actually measures is set out in the announcement rather than left implicit. Moonshot AI calls xdev-bench-hard its in-house benchmark of expert-curated, source-code-based vulnerability discovery and exploitation tasks, calibrated so that it still separates models at their current capability level. The tasks are reproductions, not inventions: most of them faithfully replay a recently disclosed vulnerability from software such as the Linux kernel, Node.js, JavaScriptCore, Exim and VirGL, and the corresponding mitigations are left enabled. An agent is handed the vulnerable source code, a short bug hint and the matching binary, then has to develop an exploit, achieve arbitrary code execution in a separate sandbox, and retrieve a secret string so the run can be verified automatically. Scoring uses pass@3 over a random subset of runs, with no hard timeouts and no output token limits.
+
+## Two checkpoints, two training conditions
+
+Two different things were done to the training data, and the announcement body describes them as two separate steps rather than one. The first is mid-training: cyber-related content was found in the general corpus and taken out. The second is the reinforcement-learning environment: cyber-related tasks that sat in the environment mix were filtered, while the general-purpose coding tasks were kept. Both are described as applying to the model being released openly.
+
+Against that background sit the two numbers. The 90.5 comes from a checkpoint with no cyber-related data removal at mid-training and no cyber-related RL environment filtering. The 81.0 comes from the final K3.1 Pro, with both measures applied. Both figures are reported in the announcement body as Moonshot AI’s own. Moonshot AI writes that the comparison shows data removal meaningfully reduces cyber capability relative to what the same training pipeline would otherwise produce.
+
+The announcement also carries an observation that comes earlier, and it points the other way. Moonshot AI writes that as K3.1 Pro became more capable, it spent a correspondingly larger share of its effort understanding where cyber capability comes from and how much of it can be controlled, and that during development it observed vulnerability research performance improving steadily as post-training scaled. It also notes that cyber-related content was embedded within the general mid-training corpus, and cyber-related tasks present in the RL environment mix — a natural byproduct of training on broad data. That last sentence records the presence of such content; it does not point at the cause of the performance improvement.
+
+The announcement also carries preliminary experiments on internal models: without data removal at either the mid-training or the RL stage, downstream cyber capability would increase substantially. Read literally, that sentence leaves open whether it describes lacking one stage or lacking both. On either reading, the announcement body gives no separate quantitative figure for the case it describes, no figure for whether one stage would have sufficed, and no statement of what else differed between the two checkpoints.
+
+[![An overhead flat-lay of two brass trays of different size and contents on linen, evoking how removing cyber-related data was split across two separate stages of one release.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/concept-46.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/concept-46.webp)
+_An overhead flat-lay of two brass trays of different size and contents on linen, evoking how removing cyber-related data was split across two separate stages of one release._
+
+## Three things the chart figure says that the prose does not
+
+The announcement’s alt text moves the six pass@3 values and the footnote, and it names the average success rate and average tokens columns without carrying their values; the harness column it does not mention at all. Opening the figure itself surfaces three things.
+
+The first of those is the token column, and it is the least quotable of the three. Its heading is “Avg. Tokens per Successful Trajectory (Input / Output)”. Kimi K3.1 Pro shows 159.8M input and 546K output; DeepSeek-V4.1-Flash shows 162.2M and 1.5M. DeepSeek scores higher on pass@3 while spending roughly 2.7 times the output tokens per successful trajectory, and K3.1 Pro uses about 26 percent less input than the 216.4M of the Kimi checkpoint trained without the risk-reduction measures. These are token counts, not prices: turning them into money needs unit prices the chart does not carry, and the rows used different tooling. Reading them as a cost advantage would be a mistake.
+
+The second is average success rate, and it does not follow the pass@3 order. Only one adjacent pair swaps — DeepSeek-V4.1-Flash and K3.1 Pro — while the other four positions stay where they were. K3.1 Pro posts 64.5, 7.4 points above DeepSeek-V4.1-Flash’s 57.1, and 6.9 points below the risk-reduction-free Kimi checkpoint’s 71.4. DeepSeek, ahead of K3.1 Pro on pass@3, drops behind on this column, and the chart does not explain why. It does not define what the two columns count differently either. On neither of the two columns is K3.1 Pro the top row.
+
+The third is the harness. Kimi K3.1 Pro, the Kimi checkpoint trained without cyber risk-reduction, and the previous Kimi K3 were run on kimi-code; DeepSeek-V4.1-Flash and GLM-5.3 on claude-code; GPT-5.6 Sol on codex. Results obtained on different agent scaffolds compare models and harnesses at the same time. The figure’s printed title is “Internal xdev-bench-hard” with “pass@3” beneath it.
+
+The six rows also fall into two groups: three Kimi rows (K3.1 Pro, the checkpoint trained without risk-reduction, and the previous generation K3) and three non-Kimi rows (DeepSeek-V4.1-Flash, GLM-5.3 and GPT-5.6 Sol). The two figures the announcement body presents as Moonshot AI’s own results are 90.5 and 81.0, and the remaining rows carry no evaluating party named against them. Only the asterisked GPT-5.6 Sol row is marked as an external evaluation.
+
+## What the vendor claims, and where the claim stops
+
+The same chart also carries Kimi K3 at 33.3. So the three Kimi rows read: a checkpoint trained without the risk-reduction measures at 90.5, the final K3.1 Pro at 81.0, and the previous generation K3 at 33.3. In the same announcement Moonshot AI writes that K3.1 Pro improves substantially over its predecessor, and gives the reason as stronger general coding and long-horizon debugging capabilities generalizing to cyber tasks — a sentence that carries the condition that this holds even after targeted data removal.
+
+The announcement body does not introduce a controlled comparison of a data-removed checkpoint against an unremoved one on general capability. So lowering cyber capability cannot be said to have left general capability untouched; that causal reading is Moonshot AI’s interpretation, and this article does not go past it.
+
+Whether anyone outside Moonshot AI has reproduced 81.0 cannot be read off the table. The announcement body presents no reproduction of 81.0 by an outside body and no verification by another party. That is why the sentence “Kimi K3.1 Pro’s cyber benchmark dropped from 90.5% to 81.0%” has to become “Moonshot AI reports 81.0%”. The 90.5 is a measured score of a checkpoint trained with the cyber data left in, not the result of any released model.
+
+## Two stated aims, and the reasoning above them
+
+Moonshot AI frames the open-weight decision as two principles. One is a boundary it will not cross: no open weights that extend the absolute frontier of cyber capability. The other points the other way: the cyber capability available in open weights is meant to rise gradually over time. A boundary and a direction are not the same kind of statement, and neither is a finding.
+
+Above them sits an argument about where defenders end up. Moonshot AI’s case is that an open model running on infrastructure its own users control hands the ability to audit maintained code to far more teams, including the legacy systems that almost never get a dedicated security review, and that spreading the capability gradually beats concentrating it inside a few proprietary systems, so that all software ends up safer. Nothing in the announcement tests that. It remains the company’s argument.
+
+The conditions attached to use are thin. Kimi Enterprise administrators can enable K3.1 Pro for their organization, access is off by default at launch, and Zero Data Retention is available for API customers. What the model can do gets published, and so do the product surfaces it appears on. Under what conditions, and by whom, that capability may be used is not something the announcement body sets out.
+
+An index computed by someone else tells a different picture. [The Decoder published a full piece](https://the-decoder.com/chinese-ai-model-kimi-k3-1-pro-is-closing-in-on-anthropics-claude-opus-5-5/). Its frame was the Artificial Analysis Intelligence Index, where K3.1 Pro lands in fourth place with 55 points, an 11-point jump over K3, behind Claude Opus 5.5, Claude Sonnet 5.5, and Muse Wonder Full. That index scores something other than what xdev-bench-hard scores. The piece attaches a calculation with an explicit condition: if Moonshot releases the weights as planned by November 4, 2026, K3.1 Pro becomes the highest-scoring open-weights model, and the gap between open and proprietary models shrinks from 12 points to 3 — assuming nothing else changes by then. Without that condition, the 3-point figure does not hold.
+
+[![A ceramic tray of grey mineral grit with one rectangular section excavated out, the removed block set beside it, and a brass tag reading REMOVED, evoking the act of cutting a block of training data away.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/mechanism-46.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/mechanism-46.webp)
+_A ceramic tray of grey mineral grit with one rectangular section excavated out, the removed block set beside it, and a brass tag reading REMOVED, evoking the act of cutting a block of training data away._
+
+## The performance sheet is closer to a table of conditions than a scoreboard
+
+Pull the performance figures out on their own and they read like a scoreboard. Read the footnotes attached to them first, though, and the meaning of each number gets fixed. The blog states that unless otherwise specified, K3.1 Pro’s own results use reasoning effort ‘max’, temperature 1.0, and top-p 0.95. In the Terminal-Bench 4.0 entry specifically, K3.1 Pro is evaluated with the Claude-Code harness, and the competitor scores in that entry are the maximum value reported in either those vendors’ blog posts or on the official Terminal-Bench 4.0 leaderboard. The Claude-Code harness and the way the competitor scores are collected attach to the Terminal-Bench 4.0 entry alone, while the reasoning-effort, temperature and top-p settings attach to every K3.1 Pro result reported without a separate note. These are therefore numbers gathered under differing conditions rather than a same-conditions head-to-head. The useful reading is “roughly where each model lands”, not “which one is best”.
+
+[In Moonshot AI’s Kimi K3.1 Pro technical blog](https://www.kimi.com/en/blog/kimi-k3-1-pro), Terminal-Bench 4.0 is reported at 65.7% for K3.1 Pro, 58.2% for GPT-6 Astra, and 66.4% for Claude Opus 5.5 — 7.5 points ahead of one and 0.7 points behind the other. BenchCAD with tools is reported at 92.7%, against 96.2% for Claude Opus 5.5 and 95.9% for GPT-6 Astra, which puts it behind both. On Kimi Code Bench 3.0 Long-horizon, which Moonshot AI describes as its own internal benchmark, it reports 61.2% against K3’s 55.95%, a gap of 5.25 points. OfficeQA Pro v2 is reported at 64.4, on complex fiscal data analysis over real financial documents through retrieval, cross-document verification, and multi-step numerical reasoning.
+
+The Kimi Hallu Bench Hard, which the announcement calls an internal benchmark, works the same way. Moonshot AI reports a claim-level hallucination rate that fell from 23.4% for K3 to 8.3%, while the share of responses containing at least one factual error came to 42.4% of its predecessor’s rate. The caveat is attached in the same breath: it is a stress test whose examples were deliberately crafted to probe situations where models are prone to errors, and the reported rates do not represent overall error rates in daily use. Note the pattern — a vendor-built measure, a vendor-run evaluation, and a vendor-written limit on how far the number travels.
+
+## Price, context, and the K2 clock
+
+The prices live on the [Kimi API pricing page](https://platform.kimi.ai/docs/pricing/chat) rather than in the announcement, and the page defines the unit before the numbers: 1 MTok is one million tokens. `kimi-k3.1-pro` is $2.00 input and $10.00 output per MTok, with cached input at $0.20, 5-minute cache writes at $2.00, and 1-hour cache writes at $4.00. The high-speed variant carries the model ID `kimi-k3.1-pro-highspeed` at $4.00 input and $20.00 output per MTok, twice the standard variant; the doubling is a price-side fact, and the speed figure comes separately from the announcement body, which describes that variant as running at 2-3× the speed of K3.1 Pro.
+
+Set the two generations side by side and the direction is unambiguous. The preceding generation `kimi-k3` is $3.00 input and $15.00 output per MTok, with cached input at $0.30, 5-minute writes at $3.00, and 1-hour writes at $6.00, so K3.1 Pro comes down by about a third on input and on output alike. A million input tokens cost $2.00 on kimi-k3.1-pro against $3.00 on kimi-k3; a million output tokens cost $10.00 against $15.00. Prices exclude applicable taxes and are list prices rather than total cost of ownership.
+
+Two variants shipped, not one. Moonshot AI writes that Kimi K3.1 Pro and Kimi K3.1 Pro Highspeed are available on Kimi.com, Kimi Work, Kimi Code, and the Kimi API. Context is a 1-million-token window, according to the [Kimi K3.1 Pro quickstart](https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart). The exact 262,144-token figure for the K2 series is on the pricing page, and setting the two side by side gives roughly a fourfold difference. On the retirement schedule, starting October 31, 2026, K2-series models will no longer be available to newly registered users, existing users are not affected, and Moonshot AI plans to retire all K2-series models by the end of December 2026. A generation change and a price cut arriving together means anyone picking a model now has to weigh unit price against context length and retirement date at the same time.
+
+## Whether the number can be checked
+
+The blog page text documents the benchmark’s construction and scoring but does not set out how to run it, and the figure carries numbers rather than a way to reproduce them. The links on the page point at other benchmarks and at competitor model pages rather than at any artefact of xdev-bench-hard. What a reader can do instead is build a small set of vulnerability-discovery tasks from their own environment and measure how many their own model solves — though that produces the reader’s own figure rather than a comparable one.
+
+The harder question concerns identity rather than measurement. The announcement says the data was removed and that the final K3.1 Pro reaches 81.0%, and it does not say whether the model served through the Kimi API today is the same checkpoint as the weights promised by November 4. That identity is not stated, so a result obtained through the API and the same weights run afterwards may not amount to the same thing.
+
+## What was committed, and what was left open
+
+One question survives all of it for anyone running this model inside an organization, and it is a policy question rather than a technical one: what are you willing to put inside a permitted environment. A model scoring 81.0 on the vulnerability-discovery benchmark Moonshot AI built is a different proposition as an automated security-review tool than it is as a coding agent with operational access. The 9.5-point gap changed the inputs to that judgment. It did not make the judgment.
+
+That question can only be answered against what the announcement actually committed to, and against what it left out. Two aims were stated out loud: do not extend the absolute frontier of cyber capability, and raise the cyber capability available in open weights gradually over time. What the document does not settle is who holds the line on those two aims afterward, or how the security governance of open-weight models should be handled.
+
+What it does commit to is narrower and checkable. Cyber-related data was removed from both training stages for the model being released openly, and the resulting difference was left on the record in Moonshot AI’s own measurement. Publishing a lowered result alongside the neighbouring scores means the evaluation and the product decision sat in the same document.
+
+Back to the opening question. The answer is that the total number of problems behind this benchmark is not published in the announcement body or on the chart. Without that denominator, the 9.5 points Moonshot AI left in the announcement can only be read as a gap on a yardstick the company built.
+
+[![A heavy moss-green cast-iron gate standing ajar at the end of a stone passage, carrying a brass plate reading NOVEMBER 4, evoking a weight release that is promised but not yet downloadable as a threshold still ahead.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/closing-46.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/10/closing-46.webp)
+_A heavy moss-green cast-iron gate standing ajar at the end of a stone passage, carrying a brass plate reading NOVEMBER 4, evoking a weight release that is promised but not yet downloadable as a threshold still ahead._
+
+## Sources
+
+- Moonshot AI: Kimi K3.1 Pro Tech Blog — Advancing Open Intelligence (page update date 2026-10-24)
+
+- Kimi API Platform: Kimi K3.1 Pro quickstart
+
+- Kimi API Platform: Model Inference Pricing Explanation
+
+- The Decoder: Chinese AI model Kimi K3.1 Pro is closing in on Anthropic’s Claude Opus 5.5 (2026-10-24 KST)
