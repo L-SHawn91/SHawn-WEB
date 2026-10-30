@@ -1,31 +1,45 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-28T18:32:52.001Z",
+  "generated_at": "2026-10-30T18:32:42.013Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 138,
-      "fetched": 138,
-      "scanned": 138,
-      "unchanged": 136,
+      "remote_total": 140,
+      "fetched": 140,
+      "scanned": 140,
+      "unchanged": 138,
       "updated": 0,
       "created": 2,
       "removed": 0,
       "items": [
         {
+          "id": 2288,
+          "title": "How to Read Anthropic’s S-1: Why $16.3 Billion in Revenue and an $80.7 Billion Net Loss Sit in the Same Table",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/30/anthropic-s1-filing-frontier-lab-unit-economics-en/",
+          "target": "content/posts/shide-ai-20261030-anthropic-s1-filing-frontier-lab-unit-economics-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2287,
+          "title": "Anthropic의 S-1을 읽는 법: 매출 163억 달러와 순손실 807억 달러가 같은 표에 있는 이유",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/10/30/anthropic-s1-filing-frontier-lab-unit-economics/",
+          "target": "content/posts/shide-ai-20261030-anthropic-s1-filing-frontier-lab-unit-economics.mdx",
+          "mode": "created"
+        },
+        {
           "id": 2159,
           "title": "Kimi K3.1 Pro’s Cyber Benchmark: 90.5 Without the Removal, 81.0 for the Released Model, and the Chart’s Other Columns",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/28/kimi-k3-1-pro-open-weight-cyber-capability-reduction-en/",
           "target": "content/posts/shide-ai-20261028-kimi-k3-1-pro-open-weight-cyber-capability-reduction-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2158,
           "title": "Kimi K3.1 Pro의 사이버 벤치마크: 완화 조치 없이 학습한 체크포인트 90.5, 공개본 81.0, 채점표의 다른 열",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/28/kimi-k3-1-pro-open-weight-cyber-capability-reduction/",
           "target": "content/posts/shide-ai-20261028-kimi-k3-1-pro-open-weight-cyber-capability-reduction.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2036,
@@ -983,41 +997,55 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 131,
-      "fetched": 131,
-      "scanned": 131,
-      "unchanged": 127,
+      "remote_total": 133,
+      "fetched": 133,
+      "scanned": 133,
+      "unchanged": 131,
       "updated": 0,
-      "created": 4,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1938,
+          "title": "전립선 방사선치료 시험 등록소에 2년 삶의 질 결과 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/30/prostate-radiotherapy-quality-of-life-registry-results-kor/",
+          "target": "content/posts/shide-bio-20261030-prostate-radiotherapy-quality-of-life-registry-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1936,
+          "title": "Prostate radiotherapy registry reports bowel and urinary quality-of-life results",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/30/prostate-radiotherapy-quality-of-life-registry-results/",
+          "target": "content/posts/shide-bio-20261030-prostate-radiotherapy-quality-of-life-registry-results.mdx",
+          "mode": "created"
+        },
         {
           "id": 1920,
           "title": "코판리십 병용 임상시험, 용량·안전성 결과 공개…효능 지표는 미보고",
           "link": "https://shawnbiohub.wordpress.com/2026/10/29/copanlisib-immunotherapy-registry-results-kor/",
           "target": "content/posts/shide-bio-20261029-copanlisib-immunotherapy-registry-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1918,
           "title": "Copanlisib combination trial posts dose-finding and safety results, but no efficacy outcomes",
           "link": "https://shawnbiohub.wordpress.com/2026/10/29/copanlisib-immunotherapy-registry-results/",
           "target": "content/posts/shide-bio-20261029-copanlisib-immunotherapy-registry-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1905,
           "title": "이식 부적합 거대 B세포 림프종 2차 치료 시험에서 잠토셀군 무진행 사건 생존기간이 길게 보고됐습니다",
           "link": "https://shawnbiohub.wordpress.com/2026/10/28/zamto-cel-second-line-large-b-cell-lymphoma-trial-kor/",
           "target": "content/posts/shide-bio-20261028-zamto-cel-second-line-large-b-cell-lymphoma-trial-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1903,
           "title": "Zamto-cel shows longer median event-free survival than R-GemOx in a phase 2 lymphoma trial",
           "link": "https://shawnbiohub.wordpress.com/2026/10/28/zamto-cel-second-line-large-b-cell-lymphoma-trial/",
           "target": "content/posts/shide-bio-20261028-zamto-cel-second-line-large-b-cell-lymphoma-trial.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1887,
@@ -3009,12 +3037,12 @@
     }
   ],
   "totals": {
-    "remote": 424,
-    "scanned": 424,
-    "unchanged": 418,
+    "remote": 428,
+    "scanned": 428,
+    "unchanged": 424,
     "updated": 0,
-    "created": 6,
+    "created": 4,
     "removed": 0,
-    "changed": 6
+    "changed": 4
   }
 }
