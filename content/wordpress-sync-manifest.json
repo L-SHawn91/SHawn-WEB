@@ -1,6 +1,6 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-30T18:32:42.013Z",
+  "generated_at": "2026-10-31T18:32:32.705Z",
   "mode": "write",
   "sources": [
     {
@@ -8,9 +8,9 @@
       "remote_total": 140,
       "fetched": 140,
       "scanned": 140,
-      "unchanged": 138,
+      "unchanged": 140,
       "updated": 0,
-      "created": 2,
+      "created": 0,
       "removed": 0,
       "items": [
         {
@@ -18,14 +18,14 @@
           "title": "How to Read Anthropic’s S-1: Why $16.3 Billion in Revenue and an $80.7 Billion Net Loss Sit in the Same Table",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/30/anthropic-s1-filing-frontier-lab-unit-economics-en/",
           "target": "content/posts/shide-ai-20261030-anthropic-s1-filing-frontier-lab-unit-economics-en.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2287,
           "title": "Anthropic의 S-1을 읽는 법: 매출 163억 달러와 순손실 807억 달러가 같은 표에 있는 이유",
           "link": "https://shawnaiintelligence.wordpress.com/2026/10/30/anthropic-s1-filing-frontier-lab-unit-economics/",
           "target": "content/posts/shide-ai-20261030-anthropic-s1-filing-frontier-lab-unit-economics.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 2159,
@@ -997,27 +997,55 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 133,
-      "fetched": 133,
-      "scanned": 133,
-      "unchanged": 131,
+      "remote_total": 137,
+      "fetched": 137,
+      "scanned": 137,
+      "unchanged": 133,
       "updated": 0,
-      "created": 2,
+      "created": 4,
       "removed": 0,
       "items": [
+        {
+          "id": 1971,
+          "title": "펨브롤리주맙 병용요법, 폐암 시험 등록 결과에서 종양 반응 보고",
+          "link": "https://shawnbiohub.wordpress.com/2026/11/01/pembrolizumab-combinations-lung-cancer-results-kor/",
+          "target": "content/posts/shide-bio-20261101-pembrolizumab-combinations-lung-cancer-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1969,
+          "title": "Pembrolizumab combinations show tumor responses in newly posted lung cancer trial results",
+          "link": "https://shawnbiohub.wordpress.com/2026/11/01/pembrolizumab-combinations-lung-cancer-results/",
+          "target": "content/posts/shide-bio-20261101-pembrolizumab-combinations-lung-cancer-results.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1954,
+          "title": "대장암 간 전이 시험, 1년 무재발 결과 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/31/colorectal-liver-metastasis-trial-results-kor/",
+          "target": "content/posts/shide-bio-20261031-colorectal-liver-metastasis-trial-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1952,
+          "title": "Colorectal liver metastasis trial posts one-year relapse-free results",
+          "link": "https://shawnbiohub.wordpress.com/2026/10/31/colorectal-liver-metastasis-trial-results/",
+          "target": "content/posts/shide-bio-20261031-colorectal-liver-metastasis-trial-results.mdx",
+          "mode": "created"
+        },
         {
           "id": 1938,
           "title": "전립선 방사선치료 시험 등록소에 2년 삶의 질 결과 공개",
           "link": "https://shawnbiohub.wordpress.com/2026/10/30/prostate-radiotherapy-quality-of-life-registry-results-kor/",
           "target": "content/posts/shide-bio-20261030-prostate-radiotherapy-quality-of-life-registry-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1936,
           "title": "Prostate radiotherapy registry reports bowel and urinary quality-of-life results",
           "link": "https://shawnbiohub.wordpress.com/2026/10/30/prostate-radiotherapy-quality-of-life-registry-results/",
           "target": "content/posts/shide-bio-20261030-prostate-radiotherapy-quality-of-life-registry-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1920,
@@ -3037,9 +3065,9 @@
     }
   ],
   "totals": {
-    "remote": 428,
-    "scanned": 428,
-    "unchanged": 424,
+    "remote": 432,
+    "scanned": 432,
+    "unchanged": 428,
     "updated": 0,
     "created": 4,
     "removed": 0,
