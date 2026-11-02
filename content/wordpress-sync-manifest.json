@@ -1,18 +1,32 @@
 {
   "schema_version": "shawn_web.wordpress_sync.v2",
-  "generated_at": "2026-10-31T18:32:32.705Z",
+  "generated_at": "2026-11-02T18:32:36.572Z",
   "mode": "write",
   "sources": [
     {
       "site": "shawnaiintelligence.wordpress.com",
-      "remote_total": 140,
-      "fetched": 140,
-      "scanned": 140,
+      "remote_total": 142,
+      "fetched": 142,
+      "scanned": 142,
       "unchanged": 140,
       "updated": 0,
-      "created": 0,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 2318,
+          "title": "Mistral Large 4 Releases Open Weights: What Is Actually Open, and Which Numbers to Cite",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/11/02/mistral-large-4-open-weights-what-is-open-and-conditional-en/",
+          "target": "content/posts/shide-ai-20261102-mistral-large-4-open-weights-what-is-open-and-conditional-en.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 2317,
+          "title": "Mistral Large 4 가중치가 공개됐다: 열린 범위와 조건, 그리고 문서마다 다른 숫자를 읽는 법",
+          "link": "https://shawnaiintelligence.wordpress.com/2026/11/02/mistral-large-4-open-weights-what-is-open-and-conditional/",
+          "target": "content/posts/shide-ai-20261102-mistral-large-4-open-weights-what-is-open-and-conditional.mdx",
+          "mode": "created"
+        },
         {
           "id": 2288,
           "title": "How to Read Anthropic’s S-1: Why $16.3 Billion in Revenue and an $80.7 Billion Net Loss Sit in the Same Table",
@@ -997,41 +1011,55 @@
     },
     {
       "site": "shawnbiohub.wordpress.com",
-      "remote_total": 137,
-      "fetched": 137,
-      "scanned": 137,
-      "unchanged": 133,
+      "remote_total": 139,
+      "fetched": 139,
+      "scanned": 139,
+      "unchanged": 137,
       "updated": 0,
-      "created": 4,
+      "created": 2,
       "removed": 0,
       "items": [
+        {
+          "id": 1989,
+          "title": "만성 림프구성 백혈병 Panzyga 3상, 주요 감염 수와 사망 기록 공개",
+          "link": "https://shawnbiohub.wordpress.com/2026/11/03/panzyga-cll-infection-prevention-trial-results-kor/",
+          "target": "content/posts/shide-bio-20261103-panzyga-cll-infection-prevention-trial-results-kor.mdx",
+          "mode": "created"
+        },
+        {
+          "id": 1987,
+          "title": "Panzyga CLL Prevention Trial Reports Fewer Major Infections, With Key Limits",
+          "link": "https://shawnbiohub.wordpress.com/2026/11/03/panzyga-cll-infection-prevention-trial-results/",
+          "target": "content/posts/shide-bio-20261103-panzyga-cll-infection-prevention-trial-results.mdx",
+          "mode": "created"
+        },
         {
           "id": 1971,
           "title": "펨브롤리주맙 병용요법, 폐암 시험 등록 결과에서 종양 반응 보고",
           "link": "https://shawnbiohub.wordpress.com/2026/11/01/pembrolizumab-combinations-lung-cancer-results-kor/",
           "target": "content/posts/shide-bio-20261101-pembrolizumab-combinations-lung-cancer-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1969,
           "title": "Pembrolizumab combinations show tumor responses in newly posted lung cancer trial results",
           "link": "https://shawnbiohub.wordpress.com/2026/11/01/pembrolizumab-combinations-lung-cancer-results/",
           "target": "content/posts/shide-bio-20261101-pembrolizumab-combinations-lung-cancer-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1954,
           "title": "대장암 간 전이 시험, 1년 무재발 결과 공개",
           "link": "https://shawnbiohub.wordpress.com/2026/10/31/colorectal-liver-metastasis-trial-results-kor/",
           "target": "content/posts/shide-bio-20261031-colorectal-liver-metastasis-trial-results-kor.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1952,
           "title": "Colorectal liver metastasis trial posts one-year relapse-free results",
           "link": "https://shawnbiohub.wordpress.com/2026/10/31/colorectal-liver-metastasis-trial-results/",
           "target": "content/posts/shide-bio-20261031-colorectal-liver-metastasis-trial-results.mdx",
-          "mode": "created"
+          "mode": "unchanged"
         },
         {
           "id": 1938,
@@ -3065,9 +3093,9 @@
     }
   ],
   "totals": {
-    "remote": 432,
-    "scanned": 432,
-    "unchanged": 428,
+    "remote": 436,
+    "scanned": 436,
+    "unchanged": 432,
     "updated": 0,
     "created": 4,
     "removed": 0,

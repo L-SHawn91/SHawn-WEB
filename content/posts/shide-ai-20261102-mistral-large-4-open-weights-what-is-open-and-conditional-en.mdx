@@ -1,0 +1,233 @@
+---
+title: "Mistral Large 4 Releases Open Weights: What Is Actually Open, and Which Numbers to Cite"
+date: "2026-11-02"
+description: "Mistral released the weights of the trillion-parameter Mistral Large 4 on October 29, 2026. The license permits commercial use, with one condition: a Model-as-a-Service business..."
+category: "AI Notes"
+tags: ["AI","Tools","Field Notes","ai"]
+featured: false
+image: "https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/11/hero-1.webp"
+source: "SHawn AI Notes WordPress"
+sourceUrl: "https://shawnaiintelligence.wordpress.com/2026/11/02/mistral-large-4-open-weights-what-is-open-and-conditional-en/"
+wordpressStatus: "publish"
+wordpressSite: "shawnaiintelligence.wordpress.com"
+wordpressId: "2318"
+---
+
+> 원문 링크: [WordPress 원문](https://shawnaiintelligence.wordpress.com/2026/11/02/mistral-large-4-open-weights-what-is-open-and-conditional-en/)
+
+AI NOTES · EN  ENGLISH EDITION
+
+[KO · 한국어](https://shawnaiintelligence.wordpress.com/2026/11/02/mistral-large-4-open-weights-what-is-open-and-conditional/) / **EN · English** BILINGUAL PAIR
+
+Two documents published the same day print different numbers for the same benchmark. Mistral’s own announcement on October 29, 2026 puts Mistral Large 4 on Terminal-Bench 4.0 at 41%. A Hugging Face post published the same day puts it at 28.3%. Mistral’s announcement presents 41 as a 13-point improvement over the public preview, and 28.3 is the preview figure exactly. What is unexplained is not the distance between the two documents but the fact that a post dated October 29 still carries the preview number. If you are writing an evaluation, or choosing a baseline for a model you did not build, that is the first thing you have to resolve, and no amount of reading will resolve it for you.
+
+That is not the only decision waiting in this release. Mistral put the weights of a one-trillion-parameter model on Hugging Face under a license that permits commercial use, with one condition attached: a Model-as-a-Service business must sign a separate commercial license with Mistral before any commercial use, and there is no revenue threshold above or below which the condition disappears. Two other questions sit next to it. How much of the model is actually open, once the license text is read? And if you run it yourself, what does the hardware and the tokens actually cost?
+
+Three documents describe this model’s performance, and they are not the same document repeated. The October 6 preview blog, Mistral’s October 29 official announcement, and the October 29 Hugging Face post each publish figures. The Hugging Face post is written by eleven Hugging Face accounts and relays Mistral’s preview numbers in a third-person voice, which makes it a restatement of the vendor’s claims rather than a second measurement of them. What Mistral measured about its own model stays Mistral’s own claim. The underlying data from outside evaluators such as Artificial Analysis and Surge was not read directly here, and a number without that distinction attached is a number that will be quoted back at you without it.
+
+## What Opened, and What Stayed Conditional
+
+The Mistral Large 4 weights landed on Hugging Face on October 29, 2026. The model card’s YAML metadata lists the languages it covers, and Korean appears in that list. The card body says the model is “natively fluent in 160+ languages, including all official languages of the European Union”. How Mistral counted the languages is not stated anywhere in the public material. Context length is 1 million tokens. Reasoning effort has three settings, low, medium, and high, with high as the default. Recommended sampling is temperature 1.0 and top_p 0.95. Input is text and images, output is text only, and the vision encoder is Pixtral-style.
+
+The deployment paths are open as well. vLLM is the recommended route, with SGLang, transformers, and llama.cpp all supported. The weight formats split into FP8 and NVFP4, and the NVFP4 checkpoint is stated to target Blackwell GPUs. Unsloth and the llama.cpp team publish GGUF quantizations, including 2-bit builds that the llama.cpp team reports running on a single Apple Silicon Ultra machine with 512 GB of unified RAM. The checkpoint ships with an embedded DSpark speculative-decoding draft head. Mistral Forge is offered for adapting the model to a company’s own security data and policies. The API is available through Mistral Studio, the Mistral API, OpenRouter, and an NVIDIA NIM container.
+
+The conditional part starts at the license. Section 2 defines Model as a Service and then requires that business to sign a separate commercial license with Mistral before using the model for any commercial purpose. There is no revenue threshold. Mistral’s own framing of it is “a single condition”. The exceptions are written into the clause as well. End-user products with model capabilities embedded only within specific features or harnesses, and mere relaying of requests to models hosted by others, fall outside the definition. Section 3 removes internal use and access through Mistral’s official products from the requirement. Section 2 reaches the licensee’s affiliates as well.
+
+That structure has been covered before, and the difference matters. An August 30 article on z.ai’s [GLM-5.3 open weights](https://shawnaiintelligence.wordpress.com/2026/08/30/glm-5-3-open-weights-agent-engineering/) read a Model-as-a-Service license clause in detail. z.ai’s condition was threshold-based: only a business whose aggregate revenue across the licensee and its affiliates exceeded USD 10 billion over any consecutive 12 months had to pass z.ai’s security review before commercial use. Mistral’s clause has no revenue threshold at all. A small Model-as-a-Service business must also sign a separate commercial license before commercial use. The definitions are not identical either. z.ai wrote “language model inference or fine-tuning”, while Mistral wrote “the Model or its derivative works for inference or post-training”. The point is not to explain what Model as a Service means again, but to note where each condition attaches: z.ai required review from large businesses, while Mistral placed the commercial use of Model-as-a-Service operators behind a separate contract, regardless of size. This summary describes the clause text as written and is not legal advice for any specific business.
+
+## Where the Numbers Diverge
+
+Start with Terminal-Bench 4.0. The October 6 preview blog says “28.3% on Terminal-Bench 4.0”. The Hugging Face post, dated October 29, also says 28.3%. Mistral’s own October 29 open-weight announcement says the model “improved by 13 percentage points to 41% compared to its public preview”. The chart data embedded on that same page gives 41.4 for Mistral Large 4, 28 for the self-reported preview, 40 for GLM-5.3, 31 for DeepSeek V4.1 Flash 1017, 21 for Kimi K3, 6 for Muse Spark Open, and 3 for Beam 1.0. Subtracting 28.3 from 41.4 gives 13.1, which matches the stated 13-point gain. The move from preview to release is internally consistent with Mistral’s own account.
+
+The difficulty comes after that. The Mistral announcement of October 29 says 41; the Hugging Face post, also October 29, says 28.3. That 28.3 is the same figure the October 6 preview published, and the Hugging Face post also relays the preview numbers in a third-person voice. On Mistral’s own account, 41 is the result of a 13-point improvement over the public preview. So what is unexplained is not the difference between 41 and 28.3 but the fact that a post dated October 29 still carries the preview number. Whether it is a harness difference, a checkpoint difference, or a figure that was not refreshed is not something the public material settles. The point is not to say Mistral got it wrong. Three facts are established: both documents are dated the same day, 28.3 matches the preview figure, and Mistral’s own announcement rests the 13-point gain on the 41 figure. Whether an evaluation adopts 41 or 28.3 depends on an explanation that has not appeared.
+
+The Artificial Analysis Coding Agent Index has the same shape. The model card says 48% and adds that it is “effectively tied with the leading open-weight model, GLM-5.3, while using 47% fewer tokens per task on average”. The October 6 preview says 49.8%, and the Hugging Face post cites 49.8%. A 1.8-point gap between 48 and 49.8 is not a rounding difference. Which conditions produced which measurement is not stated in either document.
+
+The active parameter count is a different kind of difference. The model card’s opening paragraph says “49 billion active parameters per token (52 billion including embeddings and output layers)”. The Key Features line in the same card says “~1T total / ~52B active parameters”. The first sentence is the precise one; the Key Features line shortens the inclusive count. The October 6 preview’s “52 billion active parameters” uses that same inclusive basis. This is a difference in basis, not a contradiction. Read as the card writes it, 49 billion parameters are active per token and 52 billion counts embeddings and output layers. The 3 billion between them is the difference.
+
+The Cyber Index measures something else. The October 29 announcement says Mistral Large 4 “scores 51% on the Artificial Analysis Cyber Index”, with a chart data value of 50.9, and explains that the index covers discovering vulnerabilities in a codebase, reproducing and validating them, and patching them without breaking existing functionality. The 82% is a separate line. It is the vulnerability-reproduction-and-patching sub-test score, cited by both the October 6 preview and the Hugging Face post. The October 6 preview also said that Claude Opus 5.5 and GPT-6 Astra “score near zero on the same test because they refuse to perform the task”. That sentence does not reappear in the October 29 announcement. The two figures should not be read as a rise or a fall: one is the index aggregate and the other is one sub-test inside it.
+
+The table below sorts the figures by the document that published them. Where a decimal appears, it is the value from the chart data Mistral embedded on that page, carried over as published rather than replaced with the rounded axis label. The last two rows need a note on attribution and on what they measure. FinWorkBench is a benchmark for creating and editing spreadsheets in finance and accounting workflows, and Finch in parentheses on the chart title is the name Mistral uses for it. B3 agent security resistance is the share of attacks, including system prompt exfiltration and malicious code injection, that the model resists. The 95.3% preview refusal and the 67.4% preview FinWorkBench value come from the preview bars in Mistral’s own October 29 charts, not from the October 6 preview text, which reports neither figure as a decimal.
+
+### Terminal-Bench 4.0
+
+**Oct 6 preview**
+28.3%
+
+**Oct 29 Mistral announcement**
+41% (chart 41.4)
+
+**Oct 29 Hugging Face**
+28.3%
+
+**Model card**
+—
+
+### AA Coding Agent Index
+
+**Oct 6 preview**
+49.8%
+
+**Oct 29 Mistral announcement**
+48%
+
+**Oct 29 Hugging Face**
+49.8%
+
+**Model card**
+48%
+
+### AA Cyber Index
+
+**Oct 6 preview**
+82% sub-test
+
+**Oct 29 Mistral announcement**
+50.9% (prose 51%)
+
+**Oct 29 Hugging Face**
+82% sub-test
+
+**Model card**
+—
+
+### Refusal on malicious cyber requests
+
+**Oct 6 preview**
+95.3% (Oct 29 chart, preview bar)
+
+**Oct 29 Mistral announcement**
+96.6% (prose and chart)
+
+**Oct 29 Hugging Face**
+“higher than any other open weight model”
+
+**Model card**
+—
+
+### Active parameters
+
+**Oct 6 preview**
+52B
+
+**Oct 29 Mistral announcement**
+—
+
+**Oct 29 Hugging Face**
+49B
+
+**Model card**
+49B (52B incl. embeddings)
+
+### AA Intelligence Index v5
+
+**Oct 6 preview**
+—
+
+**Oct 29 Mistral announcement**
+—
+
+**Oct 29 Hugging Face**
+5th among open weights
+
+**Model card**
+26, highest among western open weights
+
+### FinWorkBench (Finch)
+
+**Oct 6 preview**
+67.4% (Oct 29 chart, preview bar)
+
+**Oct 29 Mistral announcement**
+73.3% (chart)
+
+**Oct 29 Hugging Face**
+—
+
+**Model card**
+—
+
+### B3 agent security resistance
+
+**Oct 6 preview**
+93.3%
+
+**Oct 29 Mistral announcement**
+97.1% (chart)
+
+**Oct 29 Hugging Face**
+93.3%
+
+**Model card**
+—
+
+[![Two engraved brass numerals, 41 and 28, stand upright on a scratched wooden work surface. A brass plate engraved with the matching number lies beside each one. Below them a compartmented wooden tray holds rows of grey metal type, and to the right loose type sits beside a heavily black-stained cloth. Warm light from the corner throws long shadows from the numerals.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/11/concept-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/11/concept-1.webp)
+_Two engraved brass numerals, 41 and 28, stand upright on a scratched wooden work surface. A brass plate engraved with the matching number lies beside each one. Below them a compartmented wooden tray holds rows of grey metal type, and to the right loose type sits beside a heavily black-stained cloth. Warm light from the corner throws long shadows from the numerals._
+
+## Where Mistral’s Lead Actually Sits
+
+Reading the table leaves one question open: what does Mistral itself claim for this model? The October 29 announcement says Mistral Large 4 leads open-weight models on Terminal-Bench 4.0. The chart data on that same page shows how thin the margin is. Mistral Large 4 is 41.4, GLM-5.3 is 40, DeepSeek V4.1 Flash 1017 is 31, Kimi K3 is 21, Muse Spark Open is 6, and Beam 1.0 is 3. That is 1.4 points. On the AA Cyber Index, Mistral Large 4 is 50.9 while DeepSeek-V4.1-Flash 1017 is 57, MiMo-V2.6-Pro is 56, GLM-5.3 Flash is 50, Kimi K3 is 41, GLM-5.3 is 36, and Beam 1.0 is 34. On that index Mistral sits in the upper middle rather than at the front. BrowseComp goes the other way too: Kimi K3 is 91.2 against Mistral’s 84.5. On FinWorkBench, Kimi K3 is 77.33 against Mistral’s 73.3. Several more places where Mistral trails show up in Mistral’s own charts.
+
+Cognition’s private FrontierCode 2.0 benchmark follows the same pattern. Mistral Large 4 is 19.7, DeepSeek V4.1 Flash is 19.3, GLM-5.3 is 17.8, and Kimi K3 is 17.3. Mistral describes the benchmark as assessing whether a repository maintainer would merge an agent’s change, and it is private with no published confidence intervals, so a 0.4-point gap is not a lead worth acting on. Mistral’s comparative margins are mostly narrow. In the published charts the narrowest gap is FrontierCode 2.0 at 19.7 against 19.3, which is 0.4 points, and Terminal-Bench 4.0 at 41.4 against GLM-5.3 at 40 comes to 1.4 points.
+
+## The One Result Mistral Left Unsoftened
+
+There is one comparison Mistral left unsoftened. The Surge Code blind pairwise chart data shows the share of prompts where Mistral Large 4’s answer was preferred: 64% against GLM-5.3, 64% against Kimi K3, 56% against DeepSeek V4.1 Flash, and 22% against Claude Opus 5.5. Read the last figure the other way and graders preferred Claude Opus 5.5 on about 78% of prompts. Mistral’s announcement says Claude Opus 5.5 was the only model in the evaluated set that ranked ahead of Mistral Large 4. Mistral won against the other three and lost to the one competitor that was ahead. A pairwise preference is not a ranking: this comparison covers the set of models the announcement used, and the prompt count and statistical detail were not confirmed here. Even so, that single line tells a coding-model buyer more than the rest of the table.
+
+## Intelligence Index: 26 and Fifth Place Describe One State
+
+The Artificial Analysis Intelligence Index shows two documents dividing one state in two. The model card says the model scores 26 on that index and calls it “the highest among western open-weight models”. The same card then adds, immediately: “The leading open-weight models from China score higher on this aggregate index.” The Hugging Face post describes Mistral Large 4 as “the fifth best open weights model” on that index as of October 29, 2026. Those statements do not contradict each other. A score of 26 as the highest among western open-weight models, a concession that leading Chinese open-weight models score higher, and a fifth-place position among open weights all describe the same state. The card drew its own boundary. There is no sentence here that says Mistral leads that index.
+
+The refusal figures show the same structure. Mistral says the model reached a 96.6% average refusal rate on cyber-related prompts from JailbreakBench, StrongREJECT, and AgentHarm, and calls it “the highest we measure among open models”. The chart data on that page lists 95.3% for the preview, 96.6% for Mistral Large 4, 93.6% for Kimi K3, 87.1% for GLM-5.3, 84.1% for Gemma-4-31B, and 50.7% for DeepSeek-V4-Pro. The October 6 preview summarized the preview figure as “higher than all OSS models”, and the Hugging Face post wrote “higher than any other open weight model”. The two phrasings differ while meaning the same thing. A 96.6% refusal rate counts how often malicious cyber requests were declined. It is not a measurement of achieved security level, and it says nothing about how defensive requests were handled.
+
+## What Mistral Said About Cyber Capability Itself
+
+A trillion-scale model released as open weights cannot avoid the cyber question. Mistral left one significant disclosure in the October 29 announcement. After the preview, Mistral says it watched live traffic: “Though we observed the model refusing to comply with black-box attacks against live targets, we see a potential for uplift to conduct real attacks. We are modifying our guardrails accordingly, and will continue updating them in the months to come.”
+
+Mistral wrote “potential for uplift”. It did not write that attacks occurred. It said guardrails are being modified, and it did not say whether that modification applies to the public weights, to the API, or to both. The weights Mistral published permit commercial use, with the exception that a Model-as-a-Service business needs a separate agreement first. The direction Mistral chose was to adjust the guardrails rather than restrict the weights’ general availability. That is a description of Mistral’s choice, not a basis for ranking one policy above another.
+
+Mistral disclosed one more fact alongside it. The vendor gives enterprise design partners, Orange Cyberdefense among them, preview access to a specialized variant optimized for penetration testing, vulnerability assessment, and red-teaming. Access is subject to rigorous vetting and contractual safeguards, and testing is restricted to owned or explicitly authorized systems. A specialist organization receives a specialist variant under controlled terms. That is a channel separate from the public weights. [Kimi took a different route with K3.1 Pro](https://shawnaiintelligence.wordpress.com/2026/10/28/kimi-k3-1-pro-open-weight-cyber-capability-reduction/), reducing the capability at training time, while Mistral left the public weights in place and separated the access channel for the specialist variant. One divided at the training stage, the other at the access stage. Which is preferable is outside the scope of this article.
+
+## What Scale and Cost Actually Mean
+
+Mistral Large 4 is roughly 1 trillion parameters in total. It routes to 4 of 128 experts per token, plus 1 shared expert. Mistral says it trained the model from scratch on 3,800 NVIDIA Grace Blackwell GPUs in its own datacenters in Europe. Mistral’s documents do not connect that GPU count to model performance, and a reader should not supply that connection.
+
+That 49 billion active parameters means each token draws on that slice of the trillion, and for a team weighing self-hosting the binding constraint is memory and bandwidth. The deployment recipe in the Hugging Face post uses 8 NVIDIA H200 GPUs. It splits the FP8 weights across all eight with tensor-parallel and expert-parallel, uses the model’s built-in DSpark draft head for speculative decoding, serves up to 131K tokens of context, and processes up to 16 requests at a time. The stated observations are about 0.6 seconds to first token for a 1K-token prompt, roughly 65 tok/s generation on a single request, and 120 to 138 tok/s on chat prompts. Those are figures from one configuration, and they need that condition attached. The 1 million token context in the model card and the 131K in the recipe are not the same number. The NVFP4 checkpoint is stated to target Blackwell GPUs with a smaller memory footprint, which is a hardware statement rather than a verified performance figure.
+
+Cost splits into two paths. From October 29, the hosted price is $0.70 per million input tokens, $0.07 per million cached input tokens, and $2.10 per million output tokens. Cached input is exactly one tenth of input, and output is three times input. This price is not new. The October 6 preview already listed $0.7 input and $2.1 output per million tokens. Mistral attached “Starting today” to it, but the price table itself did not change. No comparator price was published, so there is no basis for calling it cheap or cheaper than anything else. A hardware-plus-power-plus-engineering bill also cannot be compared directly with a per-token price, because the two are calculated on different bases. What a self-hosting team can compare is the GPU count the deployment recipe requires, the context ceiling it carries, and whether that configuration carries the traffic the team actually has.
+
+For a team that cannot justify 8 H200s, the Hugging Face post publishes a lower rung. The llama.cpp team reports that the 2-bit quantizations run on a single Apple Silicon Ultra machine with 512 GB of unified RAM, giving roughly 90 tokens per second prefill and 15 tok/s generation on an M3 Ultra. On 4 x RTX6000 Pro, the NVFP4 build serves a 32K context at 130 to 590 tokens per second prefill and about 10 tok/s generation. These are community measurements on one machine each, and they are the clearest published bridge between the two cost paths. They still do not produce a break-even number, because no GPU-hour cost, no target token volume, and no comparable published price for a competing model were given.
+
+## When the Input Changes, the Work Changes Shape
+
+Mistral Large 4 takes text and images together. The Pixtral-style vision encoder is stated to be trained for variable image sizes and aspect ratios, and output remains text. The model card describes visual grounding as “state-of-the-art visual grounding among open weights”. That is Mistral’s own card language and is not a claim independently confirmed by an outside evaluator. For anyone considering this model for chart-reading or technical-drawing work, the sensible move is to put a real document image in front of it rather than to rely on that sentence.
+
+Taking an image changes the shape of an agent workload. Capturing a screen, passing the problem along with a log or a technical drawing, and letting the model reason over both is a different call structure from a text-only one. Mistral’s native function calling, JSON output, and strict JSON schema enforcement are the pieces that hold that flow together. Taking an image in while still emitting only text is a different matter from a model that drives the interface itself.
+
+The Mistral Forge path leaves room for building smaller, task-specific variants from the same base. Mistral says well-defined cybersecurity tasks can be optimized into variants with greater accuracy. The Hugging Face post approaches the same idea from a different direction: with TRL, smaller models can be fine-tuned from Mistral Large 4 traces patching a codebase, and reproduce-then-patch tasks use a verifiable reward, which fits RL environments for training smaller security models. The first decision for a reader is not scale. Whether a trillion-parameter model is something you can run at all matters less than which task runs at which latency. Mistral’s Recommended Settings says to keep the tool list well-defined and limited to the minimum the use case requires, and to pick the reasoning effort per task: low for simple chat, medium for everyday work, and high where precision and thoroughness are required. One checkpoint covers a range of latency and quality trade-offs.
+
+## What to Judge Now, and What Is Still Unknown
+
+Judge the license text and the deployment recipe directly, because those are the two things a reader can read without asking anyone’s permission. The license permits commercial use, and a Model-as-a-Service business needs a separate commercial agreement before it uses the model commercially, with no revenue threshold and no carve-out for small businesses. The deployment recipe tells you the hardware: 8 H200s for the 131K context configuration, or, as the llama.cpp team reports, a 512 GB unified-memory machine for the 2-bit build. The context length in the model card, the active parameter split, the refusal behaviour on malicious cyber prompts, and the hosted price are all directly readable from the documents they came from.
+
+Set the evaluation baseline yourself, and keep the layers apart. The 28.3 and 41.4 on Terminal-Bench 4.0 sit in two documents dated the same day, and 28.3 matches the preview figure, so an evaluation that cites 41 without naming its source is citing a number whose conditions are unknown. The 48 and 49.8 on the Coding Agent Index are the same story. The 49 billion and 52 billion on active parameters are a difference in basis, not a conflict. The 50.9 and 82 on the Cyber Index are an index aggregate and one sub-test. The 26 and fifth place on the Artificial Analysis Intelligence Index do not contradict each other, and Mistral’s card drew that boundary itself. A claim resting on a gap of a point or two, like 41.4 against 40, does not by itself carry a decision.
+
+What is still unknown is the part that matters most to a team about to deploy. Saying guardrails will be modified means the guardrail state at release and the state afterwards need not be the same, and Mistral did not say which path the modification applies to. It wrote “potential for uplift” rather than reporting attacks. Whether a trillion-parameter open-weight model with 49 billion active parameters holds up under your own conditions is something only a team that has pulled the model and measured it can answer. Mistral’s technical report was not found in the sources reviewed here, and the underlying data behind the outside evaluations was not reviewed here either.
+
+[![A large server board seen from above on a dark mat. A silver finned heatsink fills the left centre, and upright green memory modules stand in parallel rows to its right. Thick black braided cables loop behind the board. A person](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/11/mechanism-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/11/mechanism-1.webp)
+_A large server board seen from above on a dark mat. A silver finned heatsink fills the left centre, and upright green memory modules stand in parallel rows to its right. Thick black braided cables loop behind the board. A person’s hands and forearms appear at the left and lower foreground. A brass plate on the mat reads SERVER NODE._
+
+[![Three rough-textured dark metal weights with rounded knobs are grouped on a grey stone surface veined with white. Two brass plates at the left, each fixed with round fasteners, read SINGLE CONDITION and NOT RANKED. A large sheet of textured off-white paper fills the lower foreground with a single thin pencil line across it. The view is from above at an angle, under soft directional light.](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/11/closing-1.webp)](https://shawnaiintelligence.wordpress.com/wp-content/uploads/2026/11/closing-1.webp)
+_Three rough-textured dark metal weights with rounded knobs are grouped on a grey stone surface veined with white. Two brass plates at the left, each fixed with round fasteners, read SINGLE CONDITION and NOT RANKED. A large sheet of textured off-white paper fills the lower foreground with a single thin pencil line across it. The view is from above at an angle, under soft directional light._
+
+## Sources
+
+- Mistral official blog: Mistral Large 4 (Le Chonk) open-weight release announcement (2026-10-29)
+
+- Mistral official blog: Mistral Large 4 public preview (2026-10-06)
+
+- Hugging Face model card: mistralai/Mistral-Large-4-1T-A52B
+
+- Hugging Face repository license text: Mistral Ecosystem Open-Weight License
+
+- Hugging Face blog: Welcome Le Chonk – Mistral Large 4 on Hugging Face (2026-10-29, 11 Hugging Face accounts)
